@@ -1,0 +1,65 @@
+@import "./variables";
+@import "./mixins";
+
+html,
+body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.login_div{
+    width: 100wh;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: $background-color;
+    .center_div {
+        img {
+            display: flex;
+            margin: auto;
+            width: 90px;
+            height: 90px;
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+      
+        width: auto;
+        height: auto;
+        @include vertical-list;
+        background:$box_color;
+        padding: 60px 30px;
+        border-radius: .5rem;
+        box-shadow: -3px -3px 5px #c8c8c873, 2px 2px 2px rgb(26, 154, 233);
+    }
+
+    #content_input {
+        @include vertical-list;
+        border: none;
+        width: 330px;
+        background: $background-color;
+        border-radius: 10px;
+        padding: 18px 6px;
+        box-shadow: $shadow;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .login_button {
+        width: 30%;
+        border: none;
+        background: $btn-color;
+        color: white;
+        font-size: 1rem;
+        margin-top: 1rem;
+        padding: 0.5rem 1.5rem;
+        border-radius: 0.2rem;
+      
+    }
+}

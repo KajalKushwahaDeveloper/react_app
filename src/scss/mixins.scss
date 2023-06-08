@@ -1,0 +1,13 @@
+
+@mixin vertical-list {
+    display: flex;
+    align-items: center;
+    align-items: center;
+}
+@mixin main{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  

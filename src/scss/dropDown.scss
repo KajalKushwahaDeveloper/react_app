@@ -1,0 +1,18 @@
+@import "./variables";
+@import "./mixins";
+
+.combobox_customized {
+  @include vertical-list;
+  border: none;
+  width: 330px;
+  background: $background-color;
+  border-radius: 10px;
+  // padding: 18px 6px;
+  box-shadow: $shadow;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+
+  &:focus {
+      outline: none;
+  }
+}
