@@ -1,24 +1,47 @@
-import React from 'react';
-import Navbar from './components/navbar.js';
-import MapSection from './components/map.js' ;
+import React, { useEffect } from "react";
+import Navbar from "./components/navbar.js";
+
 import "./scss/home.scss";
 
-const location = {
-  address: '1600 Amphitheatre Parkway, Mountain View, california.',
-  lat: 37.42216,
-  lng: -122.08427,
-} // our location object from earlier
+const API = "http://64.226.101.239:8080/emulator"; // API server URL
+
+const fetchApiData = async (url) => {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": "track_spot_api_key",
+        "Access-Control-Allow-Origin": "http://localhost:3000/login"
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const Home = () => {
+  useEffect(() => {
+    fetchApiData(API); // Use the proxy server URL instead of the API server URL
+  }, []);
+
+ 
+
   return (
-   <>
-    <Navbar/>
-    <div className='home_div'>
-      <img src="images/home_img.png" style={{width:"20%", height:"40%"}}/>
-      <MapSection location={location} zoomLevel={17} />
-    </div>
-   </>
-  )
-}
+    <>
+      <Navbar />
+      <div className="home_div">
+        <button onClick={Home}>click</button>
+      </div>
+    </>
+  );
+};
 
 export default Home;
