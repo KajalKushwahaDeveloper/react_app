@@ -55,11 +55,17 @@ const LoginPage = () => {
   const userLogin = async () => {
     const item = { username, password };
   
+    
+
+const API = "http://64.226.101.239:8080/admin/log-in"; // LIVE API server URL
+// const API = "http://192.168.1.123:8080/admin/log-in"; // LOCAL API server URL
+
     try {
-      const response = await fetch("http://192.168.1.123:8080/admin/log-in", {
+      const response = await fetch(API, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-API-KEY": "track_spot_api_key"
         },
         body: JSON.stringify(item),
       });
@@ -68,8 +74,9 @@ const LoginPage = () => {
         return { success: false, error: "Invalid credentials" };
       }
   
-      const result = await response.json();
-      const token = result.token;
+      // const result = await response.json();
+      // const token = result.token;
+      const token = "TOKEN";
       localStorage.setItem("token", token);
       return { success: true };
     } catch (error) {

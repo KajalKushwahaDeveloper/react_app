@@ -6,8 +6,8 @@ import Dropdown from "./components/dropDown.js";
 import Form from "./components/form.js";
 // import Map from "./components/map.js";
 
-// const API = "http://64.226.101.239:8080/emulator"; // API server URL
-const API = "http://192.168.1.123:8080/emulator"; // API server URL
+const API = "http://64.226.101.239:8080/emulator"; // LIVE API server URL
+// const API = "http://192.168.1.123:8080/emulator"; // LOCAL API server URL
 
 const Home = () => {
   const [emulator, setEmulator] = useState();
@@ -29,7 +29,8 @@ const Home = () => {
         const response = await axios.get(API, {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${token}`,
+            "X-API-KEY": "track_spot_api_key",
             // 'Access-Control-Allow-Origin': '*'
           },
         });
