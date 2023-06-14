@@ -7,15 +7,14 @@ import "../scss/dropDown.scss";
 
 
 const  DropDown = (props) => {
-  const {emulator} = props
-  console.log("props", emulator)
+  const { emulator, onEmulatorChange, emulatorValue , setFcmToken} = props
+  // console.log("props", emulator)
 
-  const [age, setAge] = React.useState('');
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
+  const Token = (fcmToken) =>{
+    setFcmToken(fcmToken)
+    console.log('fcm id', fcmToken);
+  }
+ 
 
   return (
     <div>
@@ -24,8 +23,8 @@ const  DropDown = (props) => {
         <Select
           labelId="demo-simple-select-filled-label"
           id="demo-simple-select-filled"
-          value={age}
-          onChange={handleChange}
+          value={emulatorValue}
+          onChange={onEmulatorChange}
           sx={{ color: "green" }}
         >
           <MenuItem value="" sx={{ color: "green" }}>
@@ -33,7 +32,7 @@ const  DropDown = (props) => {
           </MenuItem>
 
           {emulator?.map((currentData) => (
-            <MenuItem key={currentData.id} value={currentData.id}>
+            <MenuItem onClick = {() => Token(currentData.fcmToken)} key={currentData.id} value={currentData.id}>
               {currentData.emulatorName}
             </MenuItem>
           ))}
