@@ -6,7 +6,8 @@ import Dropdown from "./components/dropDown.js";
 import Form from "./components/form.js";
 // import Map from "./components/map.js";
 
-const API = "http://64.226.101.239:8080/emulator"; // API server URL
+// const API = "http://64.226.101.239:8080/emulator"; // API server URL
+const API = "http://192.168.1.123:8080/emulator"; // API server URL
 
 const Home = () => {
   const [emulator, setEmulator] = useState();
@@ -23,10 +24,12 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem('token'); 
+        console.log("token : ", token);
         const response = await axios.get(API, {
           headers: {
             "Content-Type": "application/json",
-            "X-API-KEY": "track_spot_api_key",
+            "Authorization": `Bearer ${token}`
             // 'Access-Control-Allow-Origin': '*'
           },
         });

@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./scss/login.scss";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [responseError, setResponseError] = useState("");
 
-  const handleUserChange = (e) => {
-    setUser(e.target.value);
+  useEffect(() => {
+    const user = localStorage.getItem('token');
+    if (user) {
+      console.log("Logged In User: ", user); //User already logged in, redirect to home
+      navigate("/home");
+    }
+  }, [navigate]);
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -18,50 +28,56 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!user) {
-      setError("Please enter user");
+    setResponseError("");
+    setUsernameError("");
+    setPasswordError("");
+    if (!username) {
+      setUsernameError("Please enter a username");
     } else if (!password) {
-      setError("Please enter password");
+      setPasswordError("Please enter a password");
     } else {
       try {
-        setError("");
-        await userLogin();
-        console.log("Login successful");
-        // Redirect to the home page
-        navigate("/home");
+        const { success, error } = await userLogin();
+  
+        if (success) {
+          console.log("Login successful");
+          navigate("/home"); // Redirect to the home page
+        } else {
+          setResponseError(error || "Invalid credentials"); // Display appropriate error message
+        }
       } catch (error) {
-        setError("Login failed. Please try again.");
-        console.log(error);
+        console.log("Error occurred during login:", error);
+        setResponseError("An error occurred during login"); // Display a generic error message
       }
     }
   };
-
+  
   const userLogin = async () => {
-    const item = { user, password }; // Assuming 'user' and 'password' variables are defined
+    const item = { username, password };
   
     try {
-      const response = await fetch("http://64.226.101.239:8080/admin/log-in", {
+      const response = await fetch("http://192.168.1.123:8080/admin/log-in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-API-KEY": "track_spot_api_key",
         },
         body: JSON.stringify(item),
       });
   
-      if (!response.ok) {
-        throw new Error("Failed to log in");
+      if (!response.ok || response.status !== 200) {
+        return { success: false, error: "Invalid credentials" };
       }
   
       const result = await response.json();
-      localStorage.setItem("users", JSON.stringify(result));
+      const token = result.token;
+      localStorage.setItem("token", token);
+      return { success: true };
     } catch (error) {
       console.error("Error occurred during login:", error);
+      throw error; // Rethrow the error to be caught by the caller (handleSubmit)
     }
   };
-  
-  // userLogin();
+
 
   return (
     <>
@@ -84,12 +100,12 @@ const LoginPage = () => {
                   <input
                     type="text"
                     id="content_input"
-                    name="user"
-                    placeholder="Enter your user"
-                    value={user}
-                    onChange={handleUserChange}
+                    name="username"
+                    placeholder="Enter your username"
+                    value={username}
+                    onChange={handleUsernameChange}
                   />
-                  {error && <p className="error">{error}</p>}
+                  {usernameError && <p className="error">{usernameError}</p>}
                   <input
                     type="password"
                     id="content_input"
@@ -98,10 +114,11 @@ const LoginPage = () => {
                     value={password}
                     onChange={handlePasswordChange}
                   />
-                  {error && <p className="error">{error}</p>}
+                  {passwordError && <p className="error">{passwordError}</p>}
                   <button className="login_button" type="submit">
                     Login
                   </button>
+                  {responseError && <p className="error">{responseError}</p>}
                   <a href="#">Sign In?</a>
                 </form>
               </div>

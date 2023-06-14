@@ -1,6 +1,8 @@
 import "../scss/login.scss";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Form = ({ fcmToken }) => {
   const [long, setLong] = useState("");
@@ -46,17 +48,22 @@ const Form = ({ fcmToken }) => {
     fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log("FCM Success", result);
-        setLoading(false);
+        console.log("FCM Success", result)
+        setLat("")
+        setLong("")
+        setLoading(false)
+        toast.success("Sent Lat Long to device");
       })
       .catch((error) => {
-        console.log("FCM error", error);
-        setLoading(false);
+        toast.error("Error sending Lat Long");
+        console.log("FCM error", error)
+        setLoading(false)
       });
   };
 
   return (
     <div className="center_div">
+      <ToastContainer /> 
       <div className="content">
         <form onSubmit={handleSubmit}>
           <input
