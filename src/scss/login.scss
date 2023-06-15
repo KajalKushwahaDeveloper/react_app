@@ -83,11 +83,7 @@ body {
   }
 }
 
-// form component//
-.form_component {
-  box-shadow: $shadow;
-  padding: 3rem 0rem;
-}
+
 
 @mixin default-view {
   padding: 0 15px;

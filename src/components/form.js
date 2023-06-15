@@ -1,8 +1,8 @@
-import "../scss/login.scss";
+import "../scss/form.scss";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Form = ({ fcmToken }) => {
   const [long, setLong] = useState("");
@@ -35,6 +35,7 @@ const Form = ({ fcmToken }) => {
           longitude: long,
         },
       },
+      priority: 10,
       to: fcmToken,
     });
 
@@ -48,24 +49,36 @@ const Form = ({ fcmToken }) => {
     fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log("FCM Success", result)
-        setLat("")
-        setLong("")
-        setLoading(false)
+        console.log("FCM Success", result);
+        setLat("");
+        setLong("");
+        setLoading(false);
         toast.success("Sent Lat Long to device");
       })
       .catch((error) => {
         toast.error("Error sending Lat Long");
-        console.log("FCM error", error)
-        setLoading(false)
+        console.log("FCM error", error);
+        setLoading(false);
       });
   };
 
   return (
     <div className="center_div">
-      <ToastContainer /> 
+      <ToastContainer />
       <div className="content">
         <form onSubmit={handleSubmit}>
+          {/* <label>current latitude</label>
+          <input
+            type="text"
+            id="content_input"
+            name="lat"
+            placeholder="Enter your current latitude"
+            value={lat}
+            onChange={handlePasswordChange}
+          />*/}
+
+          <label>latitude</label>
+
           <input
             type="text"
             id="content_input"
@@ -74,7 +87,16 @@ const Form = ({ fcmToken }) => {
             value={lat}
             onChange={handlePasswordChange}
           />
-
+          {/* <label>current longitude</label>
+          <input
+            type="text"
+            id="content_input"
+            name="long"
+            placeholder="Enter your current longitude"
+            value={long}
+            onChange={handleUserChange}
+          /> */}
+          <label>longitude</label>
           <input
             type="text"
             id="content_input"
@@ -83,7 +105,6 @@ const Form = ({ fcmToken }) => {
             value={long}
             onChange={handleUserChange}
           />
-          
 
           {isLoading ? (
             <div className="loader">
