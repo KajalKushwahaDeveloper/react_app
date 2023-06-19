@@ -29,9 +29,7 @@ const Home = () => {
         const response = await axios.get(API, {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "X-API-KEY": "track_spot_api_key",
-            // 'Access-Control-Allow-Origin': '*'
+            "Authorization": `Bearer ${token}`
           },
         });
         // console.log(response.data); // Handle the response data here

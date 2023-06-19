@@ -64,8 +64,7 @@ const API = "http://64.226.101.239:8080/admin/log-in"; // LIVE API server URL
       const response = await fetch(API, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "X-API-KEY": "track_spot_api_key"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(item),
       });
@@ -74,9 +73,9 @@ const API = "http://64.226.101.239:8080/admin/log-in"; // LIVE API server URL
         return { success: false, error: "Invalid credentials" };
       }
   
-      // const result = await response.json();
-      // const token = result.token;
-      const token = "TOKEN";
+      const result = await response.json();
+      const token = result.token;
+      // const token = "TOKEN";
       localStorage.setItem("token", token);
       return { success: true };
     } catch (error) {
