@@ -4,6 +4,8 @@ import axios from "axios";
 import "./scss/home.scss";
 import Dropdown from "./components/dropDown.js";
 import Form from "./components/form.js";
+import LicenseTable from "./components/table.js";
+import PopUp from "./components/popup.js";
 // import Map from "./components/map.js";
 
 const API = "http://64.226.101.239:8080/emulator"; // LIVE API server URL
@@ -13,7 +15,7 @@ const Home = () => {
   const [emulator, setEmulator] = useState();
   const [emulatorValue, setEmulatorValue] = useState("");
   const [visibleForm, setVisibleForm] = useState(false);
-  const [fcmToken  , setFcmToken] = useState("");
+  const [fcmToken, setFcmToken] = useState("");
 
   const onEmulatorChange = (e) => {
     !visibleForm && setVisibleForm(true);
@@ -24,12 +26,12 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token'); 
+        const token = localStorage.getItem("token");
         console.log("token : ", token);
         const response = await axios.get(API, {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
         });
         // console.log(response.data); // Handle the response data here
@@ -46,7 +48,7 @@ const Home = () => {
     <>
       <Navbar />
       <div className="home_div">
-        <div>
+        {/* <div>
           {console.log(emulator)}
           <Dropdown
             onEmulatorChange={onEmulatorChange}
@@ -54,14 +56,23 @@ const Home = () => {
             emulator={emulator}
             setFcmToken={setFcmToken}
           />
+        </div> */}
+
+        <div>
+          <LicenseTable />
         </div>
         <div className="form_component">
           {visibleForm && <Form fcmToken={fcmToken} />}
         </div>
+        <div>
+          <PopUp />
+        </div>
+        {/* <div className="add_items">
+      <button onClick={onEmulatorChange}>click</button>
+      </div> */}
       </div>
     </>
   );
 };
 
 export default Home;
- 

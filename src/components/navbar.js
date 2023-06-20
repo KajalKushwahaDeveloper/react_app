@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate} from "react-router-dom";
 import "../scss/navbar.scss"
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
@@ -8,6 +8,11 @@ import CloseIcon from "@mui/icons-material/Close";
 
 const Navbar = () => {
   const [menuIcon, setMenuIcon] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    navigate('/login');
+  };
 
   return (
     <>
@@ -17,7 +22,7 @@ const Navbar = () => {
           <div className="logo">
             <img
               className="logo_image"
-              style={{ width: "17rem", height: "auto" }}
+              // style={{ width: "17rem", height: "auto" }}
               src="images/logo2.png"
               alt="logo"
             />
@@ -39,7 +44,7 @@ const Navbar = () => {
               </li>
               <li>
                 <NavLink
-                  to="/about"
+                  to="/gps"
                   className="navbar-link"
                   onClick={() => setMenuIcon(false)}
                 >
@@ -50,7 +55,7 @@ const Navbar = () => {
              
               <li>
                 <NavLink
-                  to="/career"
+                  to="/settings"
                   className="navbar-link"
                   onClick={() => setMenuIcon(false)}
                 >
@@ -68,11 +73,11 @@ const Navbar = () => {
               </li>
               <li>
                 <NavLink
-                  to="/hire"
+                  to="/"
                   className="navbar-link-btn"
-                  onClick={() => setMenuIcon(false)}
+                  onClick={() => handleLogout()}
                 >
-                 Login
+                 Logout
                 </NavLink>
               </li>
             </ul>
@@ -95,28 +100,3 @@ const Navbar = () => {
 
 export default Navbar;
 
-
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import "../scss/button.scss";
-
-// const Navbar = () => {
-//   const navigate = useNavigate();
-//   const handleLogout = () => {
-//     localStorage.removeItem('token')
-//     navigate('/login');
-//   };
-  
-//   return (
-//     <>
-    
-//       <div className="" style={{padding:"1rem 0", overflow:"hidden"}}>
-//         <a className="navbar-brand">
-//         <button onClick={handleLogout} type="button" className="login_button ">Logout</button>
-//         </a>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Navbar;

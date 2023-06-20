@@ -1,307 +1,358 @@
 @import "./variables";
 @import "./mixins";
-.header{ 
-     width: 100%;
+
+.header {
+    width: 100%;
     height: auto;
     background-color: $background-color;
     color: $white-color;
     position: fixed;
     z-index: 999999;
-  a {
-    text-decoration: none;
-    color: white;
-    opacity:1;
-  }
 
-  li {
-    list-style: none;
-  }
-
-  .main-nav {
-    width: 100%;
-    height: auto;
-    display: grid;
-    grid-template-columns: 0rem 1fr 2fr 0rem;
-  }
-
-  .logo {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin-left: 3rem;
-  }
-
-  .menu-link {
-    grid-column: 3/4;
-    color:$white-color;
-  }
-
-  .menu-link ul {
-    height: auto;
-    padding: 0rem 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  }
-
-
-  /* ----------- Grid part ends ----------------- */
-
-  .menu-link ul li {
-    font-size: 1.8rem;
-    padding: 0.6rem 1rem;
-
-    &:hover {
-      background:  $active_color;
-      padding: 0.6rem 1rem;
-      border-radius: 0.4rem;
+    a {
+        text-decoration: none;
+        color: white;
+        opacity: 1;
     }
-  }
-  .active {
-    background:  $active_color;
-    padding: 0.4rem .5rem;
-    border-radius: 0.4rem;
-    color: white;
-  }
-  .menu-link ul li a {
-    text-transform: capitalize;
-    color: $white-color;
-    transition: 0.5s;
-    font-size: 1.2rem;
-  }
-  .menu-link ul li:hover > a {
-    transform-origin: left;
-    opacity: .9;
-    transition: 0.5s;
-  }
 
-  .social-media .hamburger-menu {
-    display: none;
-  }
-}
-  /* responsive css style  */
-  @media (max-width: 1080px) {
+    li {
+        list-style: none;
+    }
+
     .main-nav {
-      width: 100%;
-      height: 7rem;
-      display: grid;
-      grid-template-columns: 0rem 0.8fr 2fr 0rem;
+        width: 100%;
+        height: auto;
+        display: grid;
+        align-items: center;
+        margin: 0rem 1rem;
+        grid-template-columns: 0rem 1fr 2fr 0rem;
+        
+            .logo {
+                display: flex;
+                justify-content: start;
+                align-items: center;
+        img{
+            width:15rem;
+            height: auto;
+        }
+            }
     }
-    .menu-link ul li {
-      font-size: 1.8rem;
-      padding: 0 0.5rem;
 
-      &:hover {
-        background:  $active_color;
-        padding: 0.5rem;
-      }
+    .menu-link {
+        grid-column: 3/4;
+        color: $white-color;
+    }
+
+    .menu-link ul {
+        height: auto;
+        padding: 0rem 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+
+    /* ----------- Grid part ends ----------------- */
+
+    .menu-link ul li {
+        font-size: 1.1rem;
+        padding: .8rem .6rem;
+
+        &:hover {
+            background: $active_color;
+            padding: 0.4rem .6rem;
+            border-radius: 0.1rem;
+        }
+    }
+
+    .active {
+        background: $active_color;
+        padding: 0.4rem .5rem;
+        border-radius: 0.1rem;
+        color: white;
+    }
+
+    .menu-link ul li a {
+        text-transform: capitalize;
+        color: $white-color;
+        transition: 0.5s;
+        font-size: 1.1rem;
+    }
+
+    .menu-link ul li:hover>a {
+        transform-origin: left;
+        opacity: .9;
+        transition: 0.5s;
+    }
+
+    .social-media {
+        .hamburger-menu {
+            display: block;
+            font-size: 1.5rem;
+            padding-right: 1.5rem;
+        }
+    }
+
+}
+
+/* responsive css style  */
+@media (max-width: 1080px) {
+    .main-nav {
+        width: 100%;
+        height: 7rem;
+        display: grid;
+        align-items: center;
+        grid-template-columns: 0rem 0.8fr 2fr 0rem;
+    }
+
+    .menu-link ul {
+        height: auto;
+        padding: 0rem 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .menu-link ul li {
+        font-size: 1.8rem;
+        padding: 0 0.5rem;
+
+        &:hover {
+            background: $active_color;
+            padding: 0.5rem;
+        }
     }
 
     .logo,
     .menu-link ul,
     .social-media ul {
-      height: 8rem;
+        height: 8rem;
     }
-  }
+}
 
-  /* responsive css style  */
-  @media (max-width: 998px) {
+/* responsive css style  */
+@media (max-width: 998px) {
 
     .main-nav {
-      height: 7rem;
-      grid-template-columns: 1rem 2fr 3fr 0rem;
+        height: 7rem;
+        grid-template-columns: 1rem 2fr 3fr 0rem;
     }
 
     .menu-link {
-      display: none;
+        display: none;
     }
 
     .logo,
     .social-media ul {
-      height: 7rem;
+        height: 7rem;
     }
 
     .mobile-menu-link {
-      grid-column: 2/4;
-      position: relative;
-      z-index: 99;
+        grid-column: 2/4;
+        position: relative;
+        z-index: 99;
     }
 
     .mobile-menu-link {
-      background-color: $background-color;
-      position: absolute;
-      left: 0;
-      top: 8rem;
-      transition: all 0.5s ease-out;
-      width: 100%;
-      height: 100vh;
-      display: block;
-   
-      align-items: center;
-      padding: 29.7rem 0;
-   
+        background-color: $background-color;
+        position: absolute;
+        left: 0;
+        top: 8rem;
+        transition: all 0.5s ease-out;
+        width: 100%;
+        height: 100vh;
+        display: block;
+
+        align-items: center;
+        padding: 29.7rem 0;
+
     }
 
     .mobile-menu-link ul {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      color: $white-color;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        color: $white-color;
     }
+
     .menu-link ul li {
-      font-size: 1.6rem;
-      padding: 0.1rem 1.6rem;
-      &:hover {
-        background:  $active_color;
-        padding: 0.1rem 1rem;
-        border-radius: 0.4rem;
-      }
+        font-size: 1.6rem;
+        padding: 0.1rem 1.6rem;
+
+        &:hover {
+            background: $active_color;
+            padding: 0.1rem 1rem;
+            border-radius: 0.4rem;
+        }
     }
+
     .mobile-menu-link ul li a {
-      color: $white-color;
-      font-size: 2.2rem;
+        color: $white-color;
+        font-size: 2.2rem;
     }
 
     .social-media {
-      grid-row: 1/2;
-      grid-column: 3/5;
-      justify-items: end;
-      align-items: center;
-   
+        grid-row: 1/2;
+        grid-column: 3/5;
+        justify-items: end;
+        align-items: center;
+
     }
 
     .social-media {
-      height: 7rem;
-      display: flex;
-      justify-self: end;
-      align-items: center;
+        height: 7rem;
+        display: flex;
+        justify-self: end;
+        align-items: center;
     }
 
-    .social-media .hamburger-menu {
-      display: block;
-      font-size: 2.5rem;
-      margin-right: 1rem;
+    .social-media {
+        .hamburger-menu {
+            display: block;
+            font-size: 2.5rem;
+            margin-right: 1rem;
+        }
     }
+
     .hire-btn {
-      padding: 0rem 4rem;
-      font-size: 1rem;
+        padding: 0rem 4rem;
+        font-size: 1rem;
     }
-  }
-  @media (max-width: 798px) {
-  
+}
+
+@media (max-width: 798px) {
+
 
     .main-nav {
-      height: 7rem;
-      padding: 0 1rem;
-      grid-template-columns: 1rem 2fr 1fr 0rem;
+        height: 7rem;
+        padding: 0 1rem;
+        grid-template-columns: 1rem 2fr 1fr 0rem;
     }
 
     .logo,
     .social-media ul {
-      height: 6rem;
+        height: 6rem;
     }
 
     .social-media {
-      height: 6rem;
-      display: flex;
-      justify-self: end;
-      align-items: center;
+        height: 6rem;
+        display: flex;
+        justify-self: end;
+        align-items: center;
     }
+
     .menu-link ul li {
-      font-size: 1.8rem;
-      padding: 0.1rem 1.6rem;
+        font-size: 1.8rem;
+        padding: 0.1rem 1.6rem;
 
-      &:hover {
-        background:  $active_color;
-        padding: 0.1rem 1rem;
-        border-radius: 0.4rem;
-      }
+        &:hover {
+            background: $active_color;
+            padding: 0.1rem 1rem;
+            border-radius: 0.4rem;
+        }
     }
+
     .mobile-menu-link ul li a {
-      color: $white-color;
-      font-size: 2.2rem;
+        color: $white-color;
+        font-size: 2.2rem;
     }
-    .mobile-menu-link {
-      background-color: $background-color;
-      position: absolute;
-      left: 0;
-      top: 8rem;
-      transition: all 0.5s ease-out;
-      width: 100%;
-      height: 100vh;
-      display: block;
-   
-      align-items: center;
-      padding: 35rem 0;
-   
-    }
-    .hamburger-menu {
-      display: block;
-      font-size: 2.5rem;
-    }
-  }
 
-  @media (max-width: 520px) {
-  
+    .mobile-menu-link {
+        background-color: $background-color;
+        position: absolute;
+        left: 0;
+        top: 8rem;
+        transition: all 0.5s ease-out;
+        width: 100%;
+        height: 100vh;
+        display: block;
+
+        align-items: center;
+        padding: 35rem 0;
+
+    }
+
+    .hamburger-menu {
+        display: block;
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 520px) {
+
     .main-nav {
-      height: 7rem;
-      grid-template-columns: 1rem 4fr 1fr 0rem;
+        height: 7rem;
+        grid-template-columns: 1rem 4fr 1fr 0rem;
+        .logo{
+           img{
+                width: 1rem;
+                height: 1rem;
+            }
+        }
     }
 
-    .logo,
     .social-media ul {
-      height: 6rem;
+        height: 6rem;
     }
 
-    .hamburger-menu {
-      display: block;
-      font-size: 6.5rem;
-      padding-left: 1rem;
+    .social-media {
+        .hamburger-menu {
+            display: block;
+            font-size: 1.5rem;
+            padding-left: 0rem;
+
+        }
     }
+
     .menu-link ul li {
-      font-size: 1.8rem;
-      padding: 0.1rem 1rem;
-
-      &:hover {
-        background:  $active_color;
+        font-size: 1.8rem;
         padding: 0.1rem 1rem;
-        border-radius: 0.4rem;
-      }
-    }
-    .mobile-menu-link {
-      position: relative;
-      z-index: 99;
+
+        &:hover {
+            background: $active_color;
+            padding: 0.1rem 1rem;
+            border-radius: 0.4rem;
+        }
     }
 
     .mobile-menu-link {
-      background-color: $background-color;
-      position: absolute;
-      left: 0;
-      top: 8rem;
-      transition: all 0.5s ease-out;
-      width: 100%;
-      height: 100vh;
-      display: block;
-      align-items: center;
-      padding: 25rem 0;
-   
+        position: relative;
+        z-index: 99;
     }
+
+    .mobile-menu-link {
+        background-color: $background-color;
+        position: relative;
+       
+        transition: all 0.5s ease-out;
+        width: 100%;
+        height: 100vh;
+     
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+
+    }
+
     .mobile-menu-link ul {
-      height: auto;
-      display: flex;
-      justify-content: space-around;
-      flex-direction: column;
-      align-items: center;
-      color: $white-color;
-      .navbar-link-btn {
-        background:  $active_color;
-        padding: 0.8rem 1.2rem;
-        border-radius: 0.4rem;
-      }
+        height: auto;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        align-items: center;
+        color: $white-color;
+
+        .navbar-link-btn {
+            background: $active_color;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.4rem;
+        }
     }
+
     .mobile-menu-link ul li a {
-      color: $white-color;
-      font-size: 2.2rem;
+        color: $white-color;
+        font-size: 2.2rem;
     }
-  }
+}

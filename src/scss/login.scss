@@ -109,16 +109,16 @@ input {
 
 button {
   @include default-view;
-  background: $accent-color;
+  background: $background-color;
   margin: 40px 15px 20px 15px;
-  color: $secondary-color;
+  color: $white-color;
   transition: all 500ms ease-out;
   animation: lights 4000ms infinite ease-in;
   border: 0;
 
   &:hover {
-    border: 1px solid $secondary-color;
-    box-shadow: 0px 0px 10px 2px $secondary-color;
+    border: 1px solid $background-color;
+    box-shadow: 0px 0px 10px 2px $background-color;
     animation: none;
   }
 }
