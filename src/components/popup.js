@@ -22,13 +22,13 @@ const style = {
 
 
 const PopUp = () => {
-  const [open, setOpen] = React.useState(false);
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [responseError, setResponseError] = useState("");
+    const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [date, setDate] = useState("");
+  const [error, setError] = useState("");
+  
   const handleOpen = () => {
     setOpen(true);
   };
@@ -36,31 +36,21 @@ const PopUp = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    const user = localStorage.getItem('token');
-    if (user) {
-      console.log("Logged In User: ", user); //User already logged in, redirect to home
-      navigate("/home");
-    }
-  }, [navigate]);
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handleMobileChange = (e) => {
+    setMobile(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponseError("");
-    setUsernameError("");
-    setPasswordError("");
-    if (!username) {
-      setUsernameError("Please enter a username");
-    } else if (!password) {
-      setPasswordError("Please enter a password");
+ 
+    if (!email) {
+      setEmail("Please enter your email");
+    } else if (!mobile) {
+      setMobile("Please enter your mobile number");
     } else {
       try {
         const { success, error } = await userLogin();
@@ -79,7 +69,7 @@ const PopUp = () => {
   };
   
   const userLogin = async () => {
-    const item = { username, password };
+    const item = { email, password };
   
     
 
@@ -121,29 +111,37 @@ const API = "http://64.226.101.239:8080/admin/log-in"; // LIVE API server URL
       >
         <Box sx={{ ...style, width: 400 }}>
         <form onSubmit={handleSubmit}>
-                  <h1>Log in</h1>
+                  <h1>SignUp</h1>
                   <input
                     type="text"
                     id="content_input"
-                    name="username"
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={handleUsernameChange}
+                    name="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={handleEmailChange}
                   />
-                  {usernameError && <p className="error">{usernameError}</p>}
+            
                   <input
-                    type="password"
+                    type="number"
                     id="content_input"
-                    name="password"
+                    name="mobile"
                     placeholder="Enter your password"
-                    value={password}
-                    onChange={handlePasswordChange}
+                    value={mobile}
+                    onChange={handleMobileChange}
                   />
-                  {passwordError && <p className="error">{passwordError}</p>}
+                   <input
+                    type="date"
+                    id="content_input"
+                    name="date"
+                    placeholder="Enter your Registration date"
+                    value={date}
+                    onChange={handleDateChange}
+                  />
+               
                   <button className="login_button" type="submit">
                     Login
                   </button>
-                  {responseError && <p className="error">{responseError}</p>}
+                  {error && <p className="error">{error}</p>}
                   <a href="#">Sign In?</a>
                 </form>
         
