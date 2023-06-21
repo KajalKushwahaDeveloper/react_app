@@ -144,6 +144,7 @@ const Root = styled("div")(
   }
   `
 );
+
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
     /* Remove the spacer element */

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./scss/login.scss";
+import { ADMIN_LOGIN } from './constants';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [responseError, setResponseError] = useState("");
 
@@ -18,8 +19,8 @@ const LoginPage = () => {
     }
   }, [navigate]);
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -29,10 +30,10 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setResponseError("");
-    setUsernameError("");
+    setEmailError("");
     setPasswordError("");
-    if (!username) {
-      setUsernameError("Please enter a username");
+    if (!email) {
+      setEmailError("Please enter a email");
     } else if (!password) {
       setPasswordError("Please enter a password");
     } else {
@@ -53,15 +54,10 @@ const LoginPage = () => {
   };
   
   const userLogin = async () => {
-    const item = { username, password };
-  
-    
-
-const API = "http://64.226.101.239:8080/admin/log-in"; // LIVE API server URL
-// const API = "http://192.168.1.123:8080/admin/log-in"; // LOCAL API server URL
+    const item = { email, password };
 
     try {
-      const response = await fetch(API, {
+      const response = await fetch(ADMIN_LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -106,12 +102,12 @@ const API = "http://64.226.101.239:8080/admin/log-in"; // LIVE API server URL
                   <input
                     type="text"
                     id="content_input"
-                    name="username"
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={handleUsernameChange}
+                    name="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={handleEmailChange}
                   />
-                  {usernameError && <p className="error">{usernameError}</p>}
+                  {emailError && <p className="error">{emailError}</p>}
                   <input
                     type="password"
                     id="content_input"

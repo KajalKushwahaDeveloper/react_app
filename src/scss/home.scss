@@ -1,3 +1,4 @@
+@import "./variables.scss";
 .home_div{
     display:flex;
     align-items: center;
@@ -7,6 +8,11 @@
 .add_items{
   width: auto;
   border-radius: 0rem;
+}
+.add_user{
+  width: auto;
+  height: auto;
+  box-shadow:$shadow ;
 }
 @media (min-width: 768px) {
     .d-md-table-header-group {

@@ -6,10 +6,11 @@ import Dropdown from "./components/dropDown.js";
 import Form from "./components/form.js";
 import LicenseTable from "./components/table.js";
 import PopUp from "./components/popup.js";
-// import Map from "./components/map.js";
-
-const API = "http://64.226.101.239:8080/emulator"; // LIVE API server URL
-// const API = "http://192.168.1.123:8080/emulator"; // LOCAL API server URL
+import AddUser from "./components/add_user.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { EMULATOR_URL } from "./constants.js";
+import Table2 from "./components/table2.js";
 
 const Home = () => {
   const [emulator, setEmulator] = useState();
@@ -17,10 +18,17 @@ const Home = () => {
   const [visibleForm, setVisibleForm] = useState(false);
   const [fcmToken, setFcmToken] = useState("");
 
-  const onEmulatorChange = (e) => {
-    !visibleForm && setVisibleForm(true);
-    setEmulatorValue(e.target.value);
-    // setEmulatorId("");
+  // const onEmulatorChange = (e) => {
+  //   !visibleForm && setVisibleForm(true);
+  //   setEmulatorValue(e.target.value);
+  //   // setEmulatorId("");
+  // };
+
+  // Define the method to be called
+  const showToast = (message, type) => {
+    // Your toast logic here
+    console.log("Showing toast...");
+    toast[type](message); // Use the 'type' argument to determine the toast type
   };
 
   useEffect(() => {
@@ -28,7 +36,7 @@ const Home = () => {
       try {
         const token = localStorage.getItem("token");
         console.log("token : ", token);
-        const response = await axios.get(API, {
+        const response = await axios.get(EMULATOR_URL, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -46,6 +54,7 @@ const Home = () => {
 
   return (
     <>
+    <ToastContainer style={{zIndex:3}}/>
       <Navbar />
       <div className="home_div">
         {/* <div>
@@ -59,13 +68,16 @@ const Home = () => {
         </div> */}
 
         <div>
-          <LicenseTable />
+          <Table2 showToast={showToast} />
         </div>
         <div className="form_component">
           {visibleForm && <Form fcmToken={fcmToken} />}
         </div>
         <div>
-          <PopUp />
+          <PopUp showToast={showToast} />
+        </div>
+        <div>
+          <AddUser />
         </div>
         {/* <div className="add_items">
       <button onClick={onEmulatorChange}>click</button>
