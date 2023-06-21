@@ -122,7 +122,7 @@ const PopUp = ({ showToast }) => {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Add User</Button>
+      <Button className="login_button" style={{width:'auto', margin:'1rem'}} onClick={handleOpen}>Add User</Button>
       <Modal
         open={open}
         onClose={handleClose}

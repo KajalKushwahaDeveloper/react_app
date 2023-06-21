@@ -22,7 +22,7 @@ const LicenseTable = () => {
   };
 
   return (
-    <Root sx={{ width: 500, maxWidth: "100%" }}>
+    <Root sx={{ width: 'auto', maxWidth: "100%" }}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>

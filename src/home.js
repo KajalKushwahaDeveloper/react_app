@@ -10,7 +10,8 @@ import AddUser from "./components/add_user.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EMULATOR_URL } from "./constants.js";
-import Table2 from "./components/table2.js";
+import Table2 from "./components/emulator_table.js";
+import Table3 from "./components/user_table.js";
 
 const Home = () => {
   const [emulator, setEmulator] = useState();
@@ -57,6 +58,8 @@ const Home = () => {
     <ToastContainer style={{zIndex:3}}/>
       <Navbar />
       <div className="home_div">
+
+
         {/* <div>
           {console.log(emulator)}
           <Dropdown
@@ -66,19 +69,14 @@ const Home = () => {
             setFcmToken={setFcmToken}
           />
         </div> */}
-
-        <div>
-          <Table2 showToast={showToast} />
-        </div>
-        <div className="form_component">
-          {visibleForm && <Form fcmToken={fcmToken} />}
-        </div>
-        <div>
-          <PopUp showToast={showToast} />
-        </div>
-        <div>
-          <AddUser />
-        </div>
+          <div>
+            <Table2 showToast={showToast} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <PopUp showToast={showToast} />
+            <Table3 showToast={showToast} />
+          </div>
+        
         {/* <div className="add_items">
       <button onClick={onEmulatorChange}>click</button>
       </div> */}

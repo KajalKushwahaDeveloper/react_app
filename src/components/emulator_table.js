@@ -7,6 +7,7 @@ import TablePagination, {
 import { styled } from "@mui/system";
 import { EMULATOR_URL } from '../constants';
 import "../scss/table.scss";
+import "../scss/button.scss";
 
 
 const Table2 =  ({ showToast }) => {
@@ -79,15 +80,15 @@ const Table2 =  ({ showToast }) => {
     }
     
   return (
-    <Root sx={{ width: 500, maxWidth: '100%' }}>
+    <Root sx={{ width: 'auto', maxWidth: '100%' }}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>
-            <th>Status</th>
-            <th>MAC</th>
-            <th>Number</th>
-            <th>Assign</th>
-            <th>Action</th>
+            <th>STATUS</th>
+            <th>SERIAL NO</th>
+            <th>NUMBER</th>
+            <th>ASSIGNED</th>
+            <th>ACTION</th>
           </tr>
         </thead>
         <tbody>
@@ -108,6 +109,7 @@ const Table2 =  ({ showToast }) => {
               </td>
               <td style={{ width: 120 }} align="right">
                 {/* Action buttons */}
+                <button>unassign</button>
               </td>
             </tr>
           ))}
