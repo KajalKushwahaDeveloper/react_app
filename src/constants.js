@@ -13,3 +13,4 @@ export const EMULATOR_URL = BASE_URL + "emulator";
 
 //USER
 export const USER_URL = BASE_URL + "user";
+export const USER_CHANGE_STATUS_URL = USER_URL + "/change-status";

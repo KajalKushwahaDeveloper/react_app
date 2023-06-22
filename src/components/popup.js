@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import Button from "@mui/material/Button";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../scss/login.scss";
 import { USER_URL } from "../constants";
@@ -19,24 +18,25 @@ const style = {
   pb: 3,
 };
 
-const PopUp = ({ showToast }) => {
+const PopUp = ({ showToast, handleClose, handleOpen, open, userToEdit }) => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  useEffect(() => {
+    if (userToEdit) {
+      setId(userToEdit.id);
+      setEmail(userToEdit.email);
+      setTelephone(userToEdit.telephone);
+      setFirstName(userToEdit.firstName);
+      setLastName(userToEdit.lastName);
+    }
+  }, [userToEdit]);
+  
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -53,10 +53,6 @@ const PopUp = ({ showToast }) => {
     setLastName(e.target.value);
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -64,8 +60,6 @@ const PopUp = ({ showToast }) => {
       setError("Please enter your email");
     } else if (!telephone) {
       setError("Please enter your telephone number");
-    } else if (!password) {
-      setError("Please enter your password");
     } else if (!lastName) {
       setError("Please enter your lastName");
     } else if (!firstName) {
@@ -76,11 +70,11 @@ const PopUp = ({ showToast }) => {
 
         if (success) {
           console.log("User added successfully");
-          handleClose();
+          handleClose(userToEdit?.id);
           showToast("User Added", "success"); // Call the showToast method with two arguments
           // navigate("/home"); // Redirect to the home page
         } else {
-          showToast(error || "Failed to add user", "success"); // Call the showToast method with two arguments
+          showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
           setError(error || "Failed to add user"); // Display appropriate error message
         }
       } catch (error) {
@@ -92,11 +86,11 @@ const PopUp = ({ showToast }) => {
 
   const addUser = async () => {
     const user = {
+      id,
       firstName,
       lastName,
       email,
       telephone,
-      password,
     };
 
     const token = localStorage.getItem("token");
@@ -122,16 +116,16 @@ const PopUp = ({ showToast }) => {
 
   return (
     <div>
-      <Button className="login_button" style={{width:'auto', margin:'1rem'}} onClick={handleOpen}>Add User</Button>
       <Modal
         open={open}
+        userToEdit={userToEdit}
         onClose={handleClose}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
           <form onSubmit={handleSubmit}>
-            <h1>Sign Up</h1>
+            <h1>{userToEdit === null ? "Add User" : "Edit User"}</h1>
             <input
               type="text"
               id="content_input"
@@ -145,13 +139,6 @@ const PopUp = ({ showToast }) => {
               placeholder="Enter your last name"
               value={lastName}
               onChange={handleLastNameChange}
-            />
-            <input
-              type="password"
-              id="content_input"
-              placeholder="Enter your password"
-              value={password}
-              onChange={handlePasswordChange}
             />
             <input
               type="text"
@@ -168,7 +155,7 @@ const PopUp = ({ showToast }) => {
               onChange={handleTelephoneChange}
             />
             <button className="login_button" type="submit">
-              Add User
+              {userToEdit === null ? "Add User" : "Edit User"}
             </button>
             {error && <p className="error">{error}</p>}
           </form>
