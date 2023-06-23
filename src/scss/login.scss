@@ -66,7 +66,7 @@ body {
           height: 380px;
           box-shadow: $shadow;
 
-          button {
+          .login_button {
             @include vertical-list;
             text-align: center;
           }
@@ -83,11 +83,7 @@ body {
   }
 }
 
-// form component//
-.form_component {
-  box-shadow: $shadow;
-  padding: 3rem 0rem;
-}
+
 
 @mixin default-view {
   padding: 0 15px;
@@ -111,18 +107,18 @@ input {
   }
 }
 
-button {
+.login_button {
   @include default-view;
-  background: $accent-color;
+  background: $background-color;
   margin: 40px 15px 20px 15px;
-  color: $secondary-color;
+  color: $white-color;
   transition: all 500ms ease-out;
   animation: lights 4000ms infinite ease-in;
   border: 0;
 
   &:hover {
-    border: 1px solid $secondary-color;
-    box-shadow: 0px 0px 10px 2px $secondary-color;
+    border: 1px solid $background-color;
+    box-shadow: 0px 0px 10px 2px $background-color;
     animation: none;
   }
 }

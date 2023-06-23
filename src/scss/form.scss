@@ -1,0 +1,16 @@
+@import "./variables";
+@import "./mixins";
+
+.form_component {
+    box-shadow: $shadow;
+    padding: 3rem 0rem;
+
+    .content {
+        width: 40rem;
+        padding: 2rem;
+
+       input {
+           padding: 0.7rem;
+        }
+    }
+}
