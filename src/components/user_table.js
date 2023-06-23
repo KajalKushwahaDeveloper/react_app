@@ -6,13 +6,13 @@ import TablePagination, {
 
 import { styled } from "@mui/system";
 import { USER_URL } from "../constants";
-import { USER_CHANGE_STATUS_URL} from "../constants";
+import { USER_CHANGE_STATUS_URL } from "../constants";
 import "../scss/table.scss";
 import "../scss/button.scss";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 
-const UserTable = ({ showToast, handleEditButtonClick , editedId }) => {
+const UserTable = ({ showToast, handleEditButtonClick, editedId }) => {
   // State variables
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
@@ -34,10 +34,10 @@ const UserTable = ({ showToast, handleEditButtonClick , editedId }) => {
   }, [editedId]);
 
   const handleActionButtonClick = async (id, status) => {
-    if(status=='ENABLED'){
-      status = 'DISABLED'
+    if (status == "ENABLED") {
+      status = "DISABLED";
     } else {
-      status = 'ENABLED'
+      status = "ENABLED";
     }
     const userStatusChange = {
       id,
@@ -58,17 +58,17 @@ const UserTable = ({ showToast, handleEditButtonClick , editedId }) => {
     if (!response.ok || response.status !== 200) {
       return { success: false, error: "Failed to add user" };
     }
-    console.log('Data Previous : ' + data);
+    console.log("Data Previous : " + data);
     const result = await response.text();
     console.log("result:", result);
     const updatedData = data.map((item) => {
       if (item.id === id) {
-        console.log('Data Found');
+        console.log("Data Found");
         return { ...item, status: userStatusChange.status };
       }
       return item;
     });
-    console.log('Data Updated : ' + data);
+    console.log("Data Updated : " + data);
     setData(updatedData);
   };
 
@@ -100,7 +100,6 @@ const UserTable = ({ showToast, handleEditButtonClick , editedId }) => {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     setLoading(true);
@@ -156,8 +155,14 @@ const UserTable = ({ showToast, handleEditButtonClick , editedId }) => {
                         <li>Tel. # : {row.telephone || "N/A"}</li>
                         <li>Registration Date : {formattedDate}</li>
                         <li>
-                          Active Emulators : {row.activeEmulators || "Err"}/
-                          {row.allEmulators || "Err"}
+                          Active Emulators :
+                          {row.emulatorCount?.activeEmulatorsCount !== undefined
+                            ? row.emulatorCount?.activeEmulatorsCount
+                            : "Err"}
+                          /
+                          {row.emulatorCount?.allEmulatorsCount !== undefined
+                            ? row.emulatorCount?.allEmulatorsCount
+                            : "Err"}
                         </li>
                       </ul>
                     </div>

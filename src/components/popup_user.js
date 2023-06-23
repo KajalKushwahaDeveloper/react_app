@@ -18,7 +18,7 @@ const style = {
   pb: 3,
 };
 
-const PopUp = ({ showToast, handleClose, handleOpen, open, userToEdit }) => {
+const PopUpUser = ({ showToast, handleClose, handleOpen, open, userToEdit }) => {
   const navigate = useNavigate();
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
@@ -70,7 +70,11 @@ const PopUp = ({ showToast, handleClose, handleOpen, open, userToEdit }) => {
 
         if (success) {
           console.log("User added successfully");
-          handleClose(userToEdit?.id);
+          if(userToEdit != null){
+            handleClose(userToEdit?.id);
+          } else {
+            handleClose(0);
+          }
           showToast("User Added", "success"); // Call the showToast method with two arguments
           // navigate("/home"); // Redirect to the home page
         } else {
@@ -165,4 +169,4 @@ const PopUp = ({ showToast, handleClose, handleOpen, open, userToEdit }) => {
   );
 };
 
-export default PopUp;
+export default PopUpUser;

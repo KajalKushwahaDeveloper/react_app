@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./components/navbar.js";
 import axios from "axios";
 import "./scss/home.scss";
-import PopUp from "./components/popup.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EMULATOR_URL } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
+import Download_Apk from "./components/download_apk.js";
+import PopUpUser from "./components/popup_user.js";
+import PopUpAssignUser from "./components/popup_assign_user.js";
 
 const Home = () => {
   const [emulator, setEmulator] = useState();
@@ -16,8 +18,11 @@ const Home = () => {
   const [visibleForm, setVisibleForm] = useState(false);
   const [fcmToken, setFcmToken] = useState("");
 
-  const [open, setOpen] = useState(false, null);
+  const [openUserPopup, setOpenUserPopup] = useState(false);
+  const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
+  const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
+  const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
   const [editedId, setEditedId] = useState(null);
 
   const showToast = (message, type) => {
@@ -26,21 +31,35 @@ const Home = () => {
   };
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpenUserPopup(true);
     setUserToEdit(null);
   };
 
   const handleClose = (id) => {
-    setOpen(false);
+    setOpenUserPopup(false);
     setUserToEdit(null);
-    if(id!=null && !isNaN(+id))
-    setEditedId(id);
+    setOpenUserAssignPopup(false);
+    setEmulatorToAssignUser(null);
+    if (id != null && !isNaN(+id)) setEditedId(id);
   };
-  
+
   const handleEditButtonClick = (data) => {
-    console.log('IconButton clicked with data:', data);
+    console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
-    setOpen(true);
+    setOpenUserPopup(true);
+  };
+
+  const handleAssignUserButtonClick = (data) => {
+    console.log("Assign Button clicked with data:", data);
+    setEmulatorToAssignUser(data);
+    setOpenUserAssignPopup(true);
+  };
+
+  const handleAssignedUserToEmulator = (success, error, data) => {
+    console.log("assignedUserToEmulator with data:", data);
+    setUserAssingedEmulator(data)
+    setEmulatorToAssignUser(null);
+    setOpenUserAssignPopup(false);
   };
 
   useEffect(() => {
@@ -66,17 +85,50 @@ const Home = () => {
 
   return (
     <>
-    <ToastContainer style={{zIndex:3}}/>
+      <ToastContainer style={{ zIndex: 3 }} />
       <Navbar />
       <div className="home_div">
-          <div>
-            <EmulatorTable showToast={showToast} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Button className="login_button" style={{width:'auto', margin:'1rem'}} onClick={handleOpen}>Add User</Button>
-            <PopUp showToast={showToast} handleOpen={handleOpen} handleClose={handleClose} open={open} userToEdit = {userToEdit}/>
-            <UserTable showToast={showToast} handleEditButtonClick = {handleEditButtonClick} editedId = {editedId}/>
-          </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "0rem 1rem",
+          }}
+        >
+          <Download_Apk />
+          <EmulatorTable
+            showToast={showToast}
+            handleAssignUserButtonClick={handleAssignUserButtonClick}
+            userAssingedEmulator={userAssingedEmulator}
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Button
+            className="login_button"
+            style={{ width: "3rem", padding:"1rem",  margin: "1rem" }}
+            onClick={handleOpen}
+          >
+            Add User
+          </Button>
+          <PopUpUser
+            showToast={showToast}
+            handleClose={handleClose}
+            open={openUserPopup}
+            userToEdit={userToEdit}
+          />
+          <PopUpAssignUser
+            showToast={showToast}
+            handleClose={handleClose}
+            open={openUserAssignPopup}
+            emulatorToAssignUser={emulatorToAssignUser}
+            handleAssignedUserToEmulator={handleAssignedUserToEmulator}
+          />
+          <UserTable
+            showToast={showToast}
+            handleEditButtonClick={handleEditButtonClick}
+            editedId={editedId}
+          />
+        </div>
       </div>
     </>
   );

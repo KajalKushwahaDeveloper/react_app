@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
-
+import { Button, Modal } from "@mui/material";
 import { styled } from "@mui/system";
-import { EMULATOR_URL } from "../constants";
+import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 import "../scss/table.scss";
 import "../scss/button.scss";
 
-const EmulatorTable = ({ showToast }) => {
+const EmulatorTable = ({
+  showToast,
+  handleAssignUserButtonClick,
+  emulatorAssingedEmulator: userAssingedEmulator,
+}) => {
   // State variables
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
@@ -18,19 +22,48 @@ const EmulatorTable = ({ showToast }) => {
   const [itemsPerPage] = useState(5); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const handleModalOpen = (row) => {
-    setSelectedRow(row);
-    setShowModal(true);
+
+  const handleActionButtonClick = async (row) => {
+    if (row.user != null) {
+      const token = localStorage.getItem("token");
+      console.log("token : ", token);
+      try {
+        const response = await fetch(USER_ASSIGN_EMULATOR_URL + "/" + row.id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("response:", response);
+
+        if (!response.ok || response.status !== 200) {
+          showToast("Failed to unassign user", "error");
+          return { success: false, error: "Failed to unassign user" };
+        }
+        console.log("Data Previous : " + data);
+        const result = await response.text();
+        console.log("result:", result);
+        const updatedData = data.map((item) => {
+          if (item.id === row.id) {
+            console.log("Data Found");
+            return { ...item, user: null };
+          }
+          return item;
+        });
+        showToast(`User Un-Assigned`, "success");
+        console.log("Data Updated : " + data);
+        setData(updatedData);
+      } catch (error) {
+        showToast(`Failed to unassign user ${error}`, "error");
+      }
+    } else {
+      handleAssignUserButtonClick(row);
+    }
   };
 
-  const handleModalClose = () => {
-    setShowModal(false);
-  };
   // Fetch data from API
   const fetchData = async () => {
-  
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(EMULATOR_URL, {
@@ -66,6 +99,22 @@ const EmulatorTable = ({ showToast }) => {
     }
   }, []);
 
+  useEffect(() => {
+    console.log("emulatorAssingedEmulator:", userAssingedEmulator);
+    if(userAssingedEmulator!=null){
+      console.log("result:", userAssingedEmulator);
+      const updatedData = data.map((item) => {
+        if (item.id === userAssingedEmulator.id) {
+          console.log('Data Found');
+          return { ...item, user: userAssingedEmulator.user };
+        }
+        return item;
+      });
+      console.log('Data Updated : ' + data);
+      setData(updatedData);
+    }
+  }, [userAssingedEmulator]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -99,9 +148,6 @@ const EmulatorTable = ({ showToast }) => {
           </tr>
         </thead>
         <tbody>
-          {/* <Modal open={showModal} onClose={handleModalClose}>
-            <h1>user</h1>
-          </Modal> */}
           {(rowsPerPage > 0
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
@@ -115,11 +161,19 @@ const EmulatorTable = ({ showToast }) => {
                 {row.id}
               </td>
               <td style={{ width: 120 }} align="right">
-                {row.user?.username || "N/A"}
+                {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
               <td style={{ width: 120 }} align="right">
-                {/* Action buttons */}
-                <button onClick={() => handleModalOpen(row)}>unassign</button>
+                <button
+                  style={{
+                    height: "45px",
+                    backgroundColor: row.user === null ? "green" : "red",
+                    color: "white",
+                  }}
+                  onClick={() => handleActionButtonClick(row)}
+                >
+                  {row.user === null ? "assign" : "unassign"}
+                </button>
               </td>
             </tr>
           ))}
