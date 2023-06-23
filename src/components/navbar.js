@@ -1,22 +1,52 @@
-import React, { useState } from "react";
-import { NavLink, useNavigate} from "react-router-dom";
-import "../scss/navbar.scss"
+import React, { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import "../scss/navbar.scss";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
-
-
 const Navbar = () => {
   const [menuIcon, setMenuIcon] = useState(false);
+  const [data, setData] = useState();
+  const [error, setError] = useState();
   const navigate = useNavigate();
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    navigate('/login');
+    localStorage.removeItem("token");
+    navigate("/login");
   };
+
+  const fetchAdminData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("http://192.168.1.112:8080/admin/current", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok || response.status !== 200) {
+        return { success: false, error: "Invalid credentials" };
+      } else {
+        const responseData = await response.text();
+        console.log("responseData navbar:", responseData);
+        const deserializedData = JSON.parse(responseData);
+        setData(deserializedData);
+        console.log("deserializedData navbar:", deserializedData);
+        return { success: true, error: null };
+      }
+    } catch (error) {
+      console.log("Data Error: " + error);
+      setError(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const { success, error } = fetchAdminData();
+  }, []);
 
   return (
     <>
-    <div className="header">
+      <div className="header">
         <div className="main-nav">
           {/* 1st logo part  */}
           <div className="logo">
@@ -52,7 +82,7 @@ const Navbar = () => {
                 </NavLink>
               </li>
               {/* Drop down  */}
-             
+
               <li>
                 <NavLink
                   to="/settings"
@@ -63,13 +93,8 @@ const Navbar = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="/portfolio"
-                  className="navbar-link"
-                  onClick={() => setMenuIcon(false)}
-                >
-                  firstname lastname
-                </NavLink>
+                  {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
+                  {data?.username || "N/A"})
               </li>
               <li>
                 <NavLink
@@ -77,7 +102,7 @@ const Navbar = () => {
                   className="navbar-link-btn"
                   onClick={() => handleLogout()}
                 >
-                 Logout
+                  Logout
                 </NavLink>
               </li>
             </ul>
@@ -93,10 +118,9 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-    </div>
+      </div>
     </>
   );
 };
 
 export default Navbar;
-

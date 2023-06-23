@@ -18,3 +18,6 @@ export const USER_CHANGE_STATUS_URL = USER_URL + "/change-status";
 
 //USER ASSIGN EMULATOR
 export const USER_ASSIGN_EMULATOR_URL = BASE_URL + "/user-assign-emulator";
+
+//DOWNLOAD
+export const DOWNLOAD_APK = BASE_URL + "/download";
