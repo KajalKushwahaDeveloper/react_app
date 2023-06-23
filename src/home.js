@@ -105,7 +105,7 @@ const Home = () => {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Button
             className="login_button"
-            style={{ width: "3rem", padding:"1rem",  margin: "1rem" }}
+            style={{ padding:"1rem",  margin: "1rem" }}
             onClick={handleOpen}
           >
             Add User

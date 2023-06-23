@@ -12,7 +12,7 @@ import "../scss/button.scss";
 const EmulatorTable = ({
   showToast,
   handleAssignUserButtonClick,
-  emulatorAssingedEmulator: userAssingedEmulator,
+  userAssingedEmulator,
 }) => {
   // State variables
   const [data, setData] = useState([]);
