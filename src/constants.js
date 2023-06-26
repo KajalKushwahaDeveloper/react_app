@@ -7,6 +7,7 @@ export const BASE_URL = LIVE_API;
 //ADMIN
 export const ADMIN_URL = BASE_URL + "/admin";
 export const ADMIN_LOGIN = ADMIN_URL + "/log-in";
+export const ADMIN_CURRENT = ADMIN_URL + "/current";
 
 //EMULATOR
 export const EMULATOR_URL = BASE_URL + "/emulator";

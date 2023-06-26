@@ -88,7 +88,7 @@ const Home = () => {
       <ToastContainer style={{ zIndex: 3 }} />
       <Navbar />
       <div className="home_div">
-        <div
+        <div className="emulator_table"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -103,7 +103,7 @@ const Home = () => {
             setUserAssingedEmulator={setUserAssingedEmulator}
           />
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="user_table" style={{ display: "flex", flexDirection: "column" }}>
           <Button
             className="login_button"
             style={{ padding:"1rem",  margin: "1rem" }}
