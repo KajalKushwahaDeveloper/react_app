@@ -29,7 +29,11 @@ const UserTable = ({
 
   useEffect(() => {
     if (editedId != null) {
-      refreshUserEdit(editedId);
+      if(editedId == 0){
+        fetchUsers();
+      } else {
+        refreshUserEdit(editedId);
+      }
     }
   }, [editedId]);
 
