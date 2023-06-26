@@ -180,7 +180,7 @@ const EmulatorTable = ({
                 {row.emulatorSsid}
               </td>
               <td style={{ width: 120 }} align="right">
-                {row.id}
+                {row.telephone}
               </td>
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
@@ -210,7 +210,7 @@ const EmulatorTable = ({
           <tr>
             <CustomTablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
+              colSpan={5}
               count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}

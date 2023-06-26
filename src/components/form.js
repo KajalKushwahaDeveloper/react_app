@@ -122,4 +122,3 @@ const Form = ({ fcmToken }) => {
 };
 
 export default Form;
-
