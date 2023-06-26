@@ -13,6 +13,7 @@ const EmulatorTable = ({
   showToast,
   handleAssignUserButtonClick,
   userAssingedEmulator,
+  setUserAssingedEmulator,
 }) => {
   // State variables
   const [data, setData] = useState([]);
@@ -41,6 +42,14 @@ const EmulatorTable = ({
           showToast("Failed to unassign user", "error");
           return { success: false, error: "Failed to unassign user" };
         }
+        // Send the removed user ID to refresh in user table
+        const userAssignedEmulator = { 
+          user: {
+            id: row.user?.id, 
+          },
+        };
+        setUserAssingedEmulator(userAssignedEmulator);
+
         console.log("Data Previous : " + data);
         const result = await response.text();
         console.log("result:", result);
@@ -99,18 +108,31 @@ const EmulatorTable = ({
     }
   }, []);
 
+  //Refresh component after 30000 ms/ 30 seconds
   useEffect(() => {
-    console.log("emulatorAssingedEmulator:", userAssingedEmulator);
-    if(userAssingedEmulator!=null){
-      console.log("result:", userAssingedEmulator);
+    const fetchDataInterval = setInterval(() => {
+      setLoading(true);
+      const { success, error } = fetchData();
+      if (success) {
+        showToast("Fetched Emulators successfully", "success");
+      } else {
+        showToast(error, "error");
+      }
+    }, 30000);
+
+    return () => {
+      clearInterval(fetchDataInterval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (userAssingedEmulator != null) {
       const updatedData = data.map((item) => {
         if (item.id === userAssingedEmulator.id) {
-          console.log('Data Found');
           return { ...item, user: userAssingedEmulator.user };
         }
         return item;
       });
-      console.log('Data Updated : ' + data);
       setData(updatedData);
     }
   }, [userAssingedEmulator]);
@@ -188,7 +210,7 @@ const EmulatorTable = ({
           <tr>
             <CustomTablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={5}
+              colSpan={3}
               count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}
@@ -229,7 +251,7 @@ const grey = {
 const Root = styled("div")(
   ({ theme }) => `
     table {
-      font-family: IBM Plex Sans, sans-serif;
+      font-family: Raleway, sans-serif;
       font-size: 0.875rem;
       border-collapse: collapse;
       width: auto;

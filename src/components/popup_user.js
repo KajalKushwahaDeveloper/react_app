@@ -18,7 +18,13 @@ const style = {
   pb: 3,
 };
 
-const PopUpUser = ({ showToast, handleClose, handleOpen, open, userToEdit }) => {
+const PopUpUser = ({
+  showToast,
+  handleClose,
+  handleOpen,
+  open,
+  userToEdit,
+}) => {
   const navigate = useNavigate();
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
@@ -36,7 +42,7 @@ const PopUpUser = ({ showToast, handleClose, handleOpen, open, userToEdit }) => 
       setLastName(userToEdit.lastName);
     }
   }, [userToEdit]);
-  
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -70,7 +76,7 @@ const PopUpUser = ({ showToast, handleClose, handleOpen, open, userToEdit }) => 
 
         if (success) {
           console.log("User added successfully");
-          if(userToEdit != null){
+          if (userToEdit != null) {
             handleClose(userToEdit?.id);
           } else {
             handleClose(0);
@@ -99,23 +105,26 @@ const PopUpUser = ({ showToast, handleClose, handleOpen, open, userToEdit }) => 
 
     const token = localStorage.getItem("token");
     console.log("token : ", token);
-    const response = await fetch(USER_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(user),
-    });
-    console.log("response:", response);
-    if (!response.ok || response.status !== 200) {
-      return { success: false, error: "Failed to add user" };
+    try {
+      const response = await fetch(USER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(user),
+      });
+      console.log("addUser response:", response);
+      if (!response.ok || response.status !== 200) {
+        const text = await response.text();
+        console.error("addUser error:", text);
+        return { success: false, error: text };
+      }
+      return { success: true };
+    } catch (e) {
+      showToast(`Failed to unassign user ${e}`, "error");
+      return { success: false, error: e};
     }
-
-    const result = await response.json();
-    console.log("result:", result);
-    // Process the response as needed
-    return { success: true };
   };
 
   return (

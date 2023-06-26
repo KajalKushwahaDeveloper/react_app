@@ -1,8 +1,8 @@
 export const MY_CONSTANT_STRING = "Hello, World!";
 export const LOCAL_API = "http://192.168.1.112:8080";
-export const LIVE_API = "http://64.226.112.239";
+export const LIVE_API = "http://64.226.101.239:8080";
 
-export const BASE_URL = LOCAL_API;
+export const BASE_URL = LIVE_API;
 
 //ADMIN
 export const ADMIN_URL = BASE_URL + "/admin";

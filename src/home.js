@@ -57,7 +57,7 @@ const Home = () => {
 
   const handleAssignedUserToEmulator = (success, error, data) => {
     console.log("assignedUserToEmulator with data:", data);
-    setUserAssingedEmulator(data)
+    setUserAssingedEmulator(data);
     setEmulatorToAssignUser(null);
     setOpenUserAssignPopup(false);
   };
@@ -100,6 +100,7 @@ const Home = () => {
             showToast={showToast}
             handleAssignUserButtonClick={handleAssignUserButtonClick}
             userAssingedEmulator={userAssingedEmulator}
+            setUserAssingedEmulator={setUserAssingedEmulator}
           />
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -127,6 +128,7 @@ const Home = () => {
             showToast={showToast}
             handleEditButtonClick={handleEditButtonClick}
             editedId={editedId}
+            userAssingedEmulator={userAssingedEmulator}
           />
         </div>
       </div>
