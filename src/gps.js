@@ -4,9 +4,10 @@ import axios from "axios";
 import "./scss/home.scss";
 import Dropdown from "./components/dropDown.js";
 import Form from "./components/form.js";
+import {EMULATOR_URL} from "./constants.js"
 // import Map from "./components/map.js";
 
-const API = "http://64.226.101.239:8080/emulator"; // LIVE API server URL
+// const API = "http://64.226.101.239:8080/emulator"; // LIVE API server URL
 // const API = "http://192.168.1.123:8080/emulator"; // LOCAL API server URL
 
 const GPS = () => {
@@ -26,12 +27,10 @@ const GPS = () => {
       try {
         const token = localStorage.getItem('token'); 
         console.log("token : ", token);
-        const response = await axios.get(API, {
+        const response = await axios.get(EMULATOR_URL, {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
-            "X-API-KEY": "track_spot_api_key",
-            // 'Access-Control-Allow-Origin': '*'
           },
         });
         // console.log(response.data); // Handle the response data here

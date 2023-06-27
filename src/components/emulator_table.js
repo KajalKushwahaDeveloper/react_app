@@ -18,13 +18,14 @@ const EmulatorTable = ({
   // State variables
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const handleActionButtonClick = async (row) => {
+    console.log("row data in emulator_page:", row)
     if (row.user != null) {
       const token = localStorage.getItem("token");
       console.log("token : ", token);
@@ -87,6 +88,7 @@ const EmulatorTable = ({
       } else {
         const responseData = await response.text();
         const deserializedData = JSON.parse(responseData);
+        console.log("")
         setData(deserializedData);
         setLoading(false);
         return { success: true, error: null };
@@ -174,13 +176,13 @@ const EmulatorTable = ({
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           ).map((row) => (
-            <tr key={row.id}>
-              <td>{row.status}</td>
+            <tr key={row.id || "N/A"}>
+              <td>{row.status || "N/A"}</td>
               <td style={{ width: 120 }} align="right">
-                {row.emulatorSsid}
+                {row.emulatorSsid || "N/A"}
               </td>
               <td style={{ width: 120 }} align="right">
-                {row.telephone}
+                {row.telephone || "N/A"}
               </td>
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
@@ -209,7 +211,7 @@ const EmulatorTable = ({
         <tfoot>
           <tr>
             <CustomTablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
               colSpan={5}
               count={data.length}
               rowsPerPage={rowsPerPage}

@@ -19,15 +19,24 @@ const Download_Apk = () => {
       .then(blob => {
         // Create a temporary URL for the blob
         const url = window.URL.createObjectURL(blob);
-  
+
         // Create a temporary link and trigger the download
         const link = document.createElement('a');
         link.href = url;
         link.download = 'trackspot.apk'; // Set the desired filename
         link.click();
-  
+
         // Clean up the temporary URL
         window.URL.revokeObjectURL(url);
+
+        // Copy the download link to clipboard
+        navigator.clipboard.writeText(url)
+          .then(() => {
+            console.log('Download link copied to clipboard:', url);
+          })
+          .catch(error => {
+            console.error('Error copying download link to clipboard:', error);
+          });
       })
       .catch(error => {
         // Handle error
