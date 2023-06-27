@@ -29,10 +29,10 @@ const Navbar = () => {
         return { success: false, error: "Invalid credentials" };
       } else {
         const responseData = await response.text();
-        // console.log("responseData navbar:", responseData);
+        console.log("responseData navbar:", responseData);
         const deserializedData = JSON.parse(responseData);
         setData(deserializedData);
-        // console.log("deserializedData navbar:", deserializedData);
+        console.log("deserializedData navbar:", deserializedData);
         return { success: true, error: null };
       }
     } catch (error) {

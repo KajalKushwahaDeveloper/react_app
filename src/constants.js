@@ -4,6 +4,9 @@ export const LIVE_API = "http://64.226.101.239:8080";
 
 export const BASE_URL = LOCAL_API;
 
+//BASE
+export const RESET_PASSWORD = BASE_URL + "/reset-password";
+
 //ADMIN
 export const ADMIN_URL = BASE_URL + "/admin";
 export const ADMIN_LOGIN = ADMIN_URL + "/log-in";
