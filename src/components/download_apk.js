@@ -6,12 +6,10 @@ const Download_Apk = () => {
   const handleDownloadFile = async () => {
     const token = localStorage.getItem("token");
     console.log("token : ", token);
-
     fetch(DOWNLOAD_APK, {
       method: 'GET',
       responseType: 'blob', // Specify the response type as blob,
       headers: {
-        "Content-Type": "application/vnd.android.package-archive",
         Authorization: `Bearer ${token}`,
       },
     })
