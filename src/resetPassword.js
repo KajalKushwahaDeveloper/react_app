@@ -3,6 +3,8 @@ import { RESET_PASSWORD } from "./constants";
 import { useSearchParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import "./scss/home.scss";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
@@ -43,7 +45,7 @@ const ResetPasswordPage = () => {
         .then((response) => {
           if (response.ok) {
             // Password reset successful, navigate to the desired page
-            navigate("/gps");
+            toast.success("Password reset successful");
           } else {
             throw new Error("An error occurred during password reset");
           }
