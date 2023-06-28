@@ -8,7 +8,7 @@ import { EMULATOR_URL } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";
 import { Button } from "@mui/material";
-import Download_Apk from "./components/download_apk.js";
+import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 
@@ -95,7 +95,7 @@ const Home = () => {
             padding: "0rem 1rem",
           }}
         >
-          <Download_Apk />
+          <DownloadApk />
           <EmulatorTable
             showToast={showToast}
             handleAssignUserButtonClick={handleAssignUserButtonClick}

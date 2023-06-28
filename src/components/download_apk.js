@@ -2,43 +2,33 @@ import React from "react";
 import { Typography, Button, Card, CardContent } from "@mui/material";
 import { DOWNLOAD_APK } from "../constants";
 
-const Download_Apk = () => {
+const DownloadApk = () => {
   const handleDownloadFile = async () => {
     const token = localStorage.getItem("token");
     console.log("token : ", token);
+    
     fetch(DOWNLOAD_APK, {
-      method: 'GET',
-      responseType: 'blob', // Specify the response type as blob,
       headers: {
         Authorization: `Bearer ${token}`,
-      },
+      }
     })
-      .then(response => response.blob())
-      .then(blob => {
-        // Create a temporary URL for the blob
-        const url = window.URL.createObjectURL(blob);
-
-        // Create a temporary link and trigger the download
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'trackspot.apk'; // Set the desired filename
-        link.click();
-
-        // Clean up the temporary URL
-        window.URL.revokeObjectURL(url);
-
-        // Copy the download link to clipboard
-        navigator.clipboard.writeText(url)
-          .then(() => {
-            console.log('Download link copied to clipboard:', url);
-          })
-          .catch(error => {
-            console.error('Error copying download link to clipboard:', error);
-          });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error downloading file');
+        }
+        return response.blob();
       })
-      .catch(error => {
-        // Handle error
-        console.error('Error downloading file:', error);
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'trackspot.apk'; // Set the desired file name
+        a.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        window.alert(error);
+        console.error('Download error:', error);
       });
   };
 
@@ -74,4 +64,4 @@ const Download_Apk = () => {
   );
 };
 
-export default Download_Apk;
+export default DownloadApk;

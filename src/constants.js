@@ -1,9 +1,10 @@
 export const MY_CONSTANT_STRING = "Hello, World!";
 export const LOCAL_API = "http://192.168.1.112:8080";
+export const LOCAL_API_2 = "http://192.168.1.137:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
-export const BASE_URL = LOCAL_API;
+export const BASE_URL = LOCAL_API_2;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
@@ -25,5 +26,4 @@ export const USER_CHANGE_STATUS_URL = USER_URL + "/change-status";
 export const USER_ASSIGN_EMULATOR_URL = BASE_URL + "/user-assign-emulator";
 
 //DOWNLOAD
-export const DOWNLOAD_URL = BASE_URL + "/download";
-export const DOWNLOAD_APK = DOWNLOAD_URL + "/apk";
+export const DOWNLOAD_APK = BASE_URL + "/download";
