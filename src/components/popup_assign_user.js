@@ -66,9 +66,7 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
         return { success: false, error: "Invalid credentials" };
       } else {
         const responseData = await response.text();
-        console.log("User responseData " + responseData);
         const deserializedData = JSON.parse(responseData);
-        console.log("deserializedData " + deserializedData);
         setUsers(deserializedData);
         setLoading(false);
         return { success: true, error: null};
@@ -113,7 +111,13 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
     const userData = fetchUsers();
   }, []);
 
-  
+  useEffect(() => {
+    setLoading(true);
+    if (open) {
+      const userData = fetchUsers();
+      // Additional logic for handling the fetched data
+    }
+  }, [open]);
 
   return (
     <div>
@@ -130,15 +134,22 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
         ) : (
           <Box sx={{ ...style, width: 400 }}>
             <h1>Select a user:</h1>
-            <ul>
+            <ul >
               {users?.map((user) => (
-                <li
+                <div sx={{ marginBottom:"1rem"}}
                   key={user.id}
                   onClick={() => handleUserSelect(user.id)}
-                  style={{ cursor: 'pointer' }}
+                  style={{
+                    cursor: 'pointer',
+                    border: '1px solid #007dc6',
+                    background: '#C7C7C735',
+                    padding: '0.5rem',
+                    marginBottom: '1rem',
+                    borderRadius: '10px' // Adjust the value as per your preference
+                  }}
                 >
                   {user.firstName} {user.lastName}
-                </li>
+                </div>
               ))}
             </ul>
             {error && <p className="error">{error}</p>}

@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import "../scss/navbar.scss";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { ADMIN_CURRENT } from "../constants";
 
 const Navbar = () => {
   const [menuIcon, setMenuIcon] = useState(false);
@@ -17,7 +18,7 @@ const Navbar = () => {
   const fetchAdminData = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://192.168.1.112:8080/admin/current", {
+      const response = await fetch(ADMIN_CURRENT, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

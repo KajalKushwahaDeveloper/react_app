@@ -13,17 +13,19 @@ const EmulatorTable = ({
   showToast,
   handleAssignUserButtonClick,
   userAssingedEmulator,
+  setUserAssingedEmulator,
 }) => {
   // State variables
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Number of items to display per page
+  const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const handleActionButtonClick = async (row) => {
+    console.log("row data in emulator_page:", row)
     if (row.user != null) {
       const token = localStorage.getItem("token");
       console.log("token : ", token);
@@ -41,6 +43,14 @@ const EmulatorTable = ({
           showToast("Failed to unassign user", "error");
           return { success: false, error: "Failed to unassign user" };
         }
+        // Send the removed user ID to refresh in user table
+        const userAssignedEmulator = { 
+          user: {
+            id: row.user?.id, 
+          },
+        };
+        setUserAssingedEmulator(userAssignedEmulator);
+
         console.log("Data Previous : " + data);
         const result = await response.text();
         console.log("result:", result);
@@ -78,6 +88,7 @@ const EmulatorTable = ({
       } else {
         const responseData = await response.text();
         const deserializedData = JSON.parse(responseData);
+        console.log("")
         setData(deserializedData);
         setLoading(false);
         return { success: true, error: null };
@@ -99,18 +110,31 @@ const EmulatorTable = ({
     }
   }, []);
 
+  //Refresh component after 30000 ms/ 30 seconds
   useEffect(() => {
-    console.log("emulatorAssingedEmulator:", userAssingedEmulator);
-    if(userAssingedEmulator!=null){
-      console.log("result:", userAssingedEmulator);
+    const fetchDataInterval = setInterval(() => {
+      setLoading(true);
+      const { success, error } = fetchData();
+      if (success) {
+        showToast("Fetched Emulators successfully", "success");
+      } else {
+        showToast(error, "error");
+      }
+    }, 30000);
+
+    return () => {
+      clearInterval(fetchDataInterval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (userAssingedEmulator != null) {
       const updatedData = data.map((item) => {
         if (item.id === userAssingedEmulator.id) {
-          console.log('Data Found');
           return { ...item, user: userAssingedEmulator.user };
         }
         return item;
       });
-      console.log('Data Updated : ' + data);
       setData(updatedData);
     }
   }, [userAssingedEmulator]);
@@ -152,13 +176,13 @@ const EmulatorTable = ({
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           ).map((row) => (
-            <tr key={row.id}>
-              <td>{row.status}</td>
+            <tr key={row.id || "N/A"}>
+              <td>{row.status || "N/A"}</td>
               <td style={{ width: 120 }} align="right">
-                {row.emulatorSsid}
+                {row.emulatorSsid || "N/A"}
               </td>
               <td style={{ width: 120 }} align="right">
-                {row.id}
+                {row.telephone || "N/A"}
               </td>
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
@@ -187,7 +211,7 @@ const EmulatorTable = ({
         <tfoot>
           <tr>
             <CustomTablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
               colSpan={5}
               count={data.length}
               rowsPerPage={rowsPerPage}
@@ -229,7 +253,7 @@ const grey = {
 const Root = styled("div")(
   ({ theme }) => `
     table {
-      font-family: IBM Plex Sans, sans-serif;
+      font-family: Raleway, sans-serif;
       font-size: 0.875rem;
       border-collapse: collapse;
       width: auto;

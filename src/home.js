@@ -57,7 +57,7 @@ const Home = () => {
 
   const handleAssignedUserToEmulator = (success, error, data) => {
     console.log("assignedUserToEmulator with data:", data);
-    setUserAssingedEmulator(data)
+    setUserAssingedEmulator(data);
     setEmulatorToAssignUser(null);
     setOpenUserAssignPopup(false);
   };
@@ -88,7 +88,7 @@ const Home = () => {
       <ToastContainer style={{ zIndex: 3 }} />
       <Navbar />
       <div className="home_div">
-        <div
+        <div className="emulator_table"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -100,9 +100,10 @@ const Home = () => {
             showToast={showToast}
             handleAssignUserButtonClick={handleAssignUserButtonClick}
             userAssingedEmulator={userAssingedEmulator}
+            setUserAssingedEmulator={setUserAssingedEmulator}
           />
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="user_table" style={{ display: "flex", flexDirection: "column" }}>
           <Button
             className="login_button"
             style={{ padding:"1rem",  margin: "1rem" }}
@@ -127,6 +128,7 @@ const Home = () => {
             showToast={showToast}
             handleEditButtonClick={handleEditButtonClick}
             editedId={editedId}
+            userAssingedEmulator={userAssingedEmulator}
           />
         </div>
       </div>

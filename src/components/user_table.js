@@ -5,33 +5,43 @@ import TablePagination, {
 } from "@mui/base/TablePagination";
 
 import { styled } from "@mui/system";
-import { USER_URL } from "../constants";
+import { EMULATOR_URL, USER_URL } from "../constants";
 import { USER_CHANGE_STATUS_URL } from "../constants";
 import "../scss/table.scss";
 import "../scss/button.scss";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 
-const UserTable = ({ showToast, handleEditButtonClick, editedId }) => {
+const UserTable = ({
+  showToast,
+  handleEditButtonClick,
+  editedId,
+  userAssingedEmulator,
+}) => {
   // State variables
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    const { success, error } = fetchUsers();
-    if (success) {
-      editedId = null;
-      showToast("Fetched Users successfully", "success");
-    } else {
-      showToast(error, "error");
+    if (editedId != null) {
+      if(editedId == 0){
+        fetchUsers();
+      } else {
+        refreshUserEdit(editedId);
+      }
     }
   }, [editedId]);
+
+  useEffect(() => {
+    if (userAssingedEmulator != null) {
+      refreshUser(userAssingedEmulator.user?.id);
+    }
+  }, [userAssingedEmulator]);
 
   const handleActionButtonClick = async (id, status) => {
     if (status == "ENABLED") {
@@ -73,6 +83,88 @@ const UserTable = ({ showToast, handleEditButtonClick, editedId }) => {
   };
 
   // Fetch data from API
+  const refreshUserEdit = async (userId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(USER_URL + "/" + userId, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok || response.status !== 200) {
+        showToast("Failed to update user table", "error");
+        return { success: false, error: "Failed to unassign user" };
+      }
+      const responseData = await response.text();
+      const result = JSON.parse(responseData);
+      const updatedData = data.map((item) => {
+        if (item.id === result.id) {
+          return result;
+        };
+        return item;
+      });
+      showToast(`Updated user table!`, "success");
+      setData(updatedData);
+    } catch (error) {
+      console.log("refreshUser error : " + error);
+      showToast(`Failed to update user table ${error}`, "error");
+    }
+  };
+
+  // Fetch data from API
+  const refreshUser = async (userId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(USER_URL + "/" + userId, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("refreshUser response:", response);
+
+      if (!response.ok || response.status !== 200) {
+        showToast("Failed to update user table", "error");
+        return { success: false, error: "Failed to unassign user" };
+      }
+      const responseData = await response.text();
+      console.log("refreshUser  " + responseData);
+      const result = JSON.parse(responseData);
+      console.log("refreshUser result : " + result);
+      console.log("refreshUser emulatorCount : " + result.emulatorCount);
+      console.log(
+        "refreshUser allEmulatorsCount : " +
+          result.emulatorCount?.allEmulatorsCount
+      );
+      console.log(
+        "refreshUser activeEmulatorsCount : " +
+          result.emulatorCount?.activeEmulatorsCount
+      );
+      const updatedData = data.map((item) => {
+        if (item.id === result.id) {
+          return {
+            ...item,
+            emulatorCount: {
+              ...item.emulatorCount,
+              allEmulatorsCount: result.emulatorCount?.allEmulatorsCount,
+              activeEmulatorsCount: result.emulatorCount?.activeEmulatorsCount,
+            },  
+          };
+        }
+        return item;
+      });
+      showToast(`Updated user table!`, "success");
+      setData(updatedData);
+    } catch (error) {
+      console.log("refreshUser error : " + error);
+      showToast(`Failed to update user table ${error}`, "error");
+    }
+  };
+
+  // Fetch data from API
   const fetchUsers = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -87,9 +179,7 @@ const UserTable = ({ showToast, handleEditButtonClick, editedId }) => {
         return { success: false, error: "Invalid credentials" };
       } else {
         const responseData = await response.text();
-        console.log("User responseData " + responseData);
         const deserializedData = JSON.parse(responseData);
-        console.log("deserializedData " + deserializedData);
         setData(deserializedData);
         setLoading(false);
         return { success: true, error: null };
@@ -139,7 +229,6 @@ const UserTable = ({ showToast, handleEditButtonClick, editedId }) => {
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           ).map((row) => {
-            console.log("USER : " + row.user);
             const createdAtDate = new Date(row.createdAt);
             const formattedDate = createdAtDate.toISOString().split("T")[0];
 
@@ -193,7 +282,7 @@ const UserTable = ({ showToast, handleEditButtonClick, editedId }) => {
 
           {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
-              <td colSpan={5} />
+              <td colSpan={3} />
             </tr>
           )}
         </tbody>
@@ -242,85 +331,85 @@ const grey = {
 
 const Root = styled("div")(
   ({ theme }) => `
-    table {
-      font-family: IBM Plex Sans, sans-serif;
-      font-size: 0.875rem;
-      border-collapse: collapse;
-      width: auto;
-      padding:0.5rem;
-    }
-  
-    td,
-    th {
-      border: 1px solid ${
-        theme.palette.mode === "dark" ? grey[800] : grey[200]
-      };
-      text-align: left;
-      padding: 12px;
-    }
-  
-    th {
-      background-color: ${
-        theme.palette.mode === "dark" ? grey[900] : grey[100]
-      };
-    }
-    `
+              table {
+                font-family: 'Raleway', sans-serif;
+                font-size: 0.875rem;
+                border-collapse: collapse;
+                width: auto;
+                padding:0.5rem;
+              }
+              
+              td,
+              th {
+                border: 1px solid ${
+                  theme.palette.mode === "dark" ? grey[800] : grey[200]
+                };
+                text-align: left;
+                padding: 12px;
+              }
+              
+              th {
+                background-color: ${
+                  theme.palette.mode === "dark" ? grey[900] : grey[100]
+                };
+              }
+              `
 );
 
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
-      /* Remove the spacer element */
-      & .${classes.spacer} {
-        display: none;
-      }
-    
-      /* Update the toolbar styles */
-      & .${classes.toolbar} {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content:space-arround;
-        gap: 10px;
-      }
-    
-      /* Update the select label styles */
-      & .${classes.selectLabel} {
-        margin: 0;
-      }
-    
-      /* Update the select styles */
-      & .${classes.select} {
-        padding: 2px;
-        border: 1px solid ${
-          theme.palette.mode === "dark" ? grey[800] : grey[200]
-        };
-        border-radius: 50px;
-        background-color: transparent;
-    
-        &:hover {
-          background-color: ${
-            theme.palette.mode === "dark" ? grey[800] : grey[50]
-          };
-        }
-    
-        &:focus {
-          outline: 1px solid ${
-            theme.palette.mode === "dark" ? blue[400] : blue[200]
-          };
-        }
-      }
-    
-      /* Update the actions styles */
-      .${classes.actions} {
-        padding: 2px;
-        border-radius: 50px;
-        text-align: center;
-        display: flex;
-      }
-    
-      /* Update the displayed rows styles */
-      & .${classes.displayedRows} {
-        margin-left: 2rem;
-      }
-      `
+                /* Remove the spacer element */
+                & .${classes.spacer} {
+                  display: none;
+                }
+                
+                /* Update the toolbar styles */
+                & .${classes.toolbar} {
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  justify-content:space-arround;
+                  gap: 10px;
+                }
+                
+                /* Update the select label styles */
+                & .${classes.selectLabel} {
+                  margin: 0;
+                }
+                
+                /* Update the select styles */
+                & .${classes.select} {
+                  padding: 2px;
+                  border: 1px solid ${
+                    theme.palette.mode === "dark" ? grey[800] : grey[200]
+                  };
+                  border-radius: 50px;
+                  background-color: transparent;
+                  
+                  &:hover {
+                    background-color: ${
+                      theme.palette.mode === "dark" ? grey[800] : grey[50]
+                    };
+                  }
+                  
+                  &:focus {
+                    outline: 1px solid ${
+                      theme.palette.mode === "dark" ? blue[400] : blue[200]
+                    };
+                  }
+                }
+                
+                /* Update the actions styles */
+                .${classes.actions} {
+                  padding: 2px;
+                  border-radius: 50px;
+                  text-align: center;
+                  display: flex;
+                }
+                
+                /* Update the displayed rows styles */
+                & .${classes.displayedRows} {
+                  margin-left: 2rem;
+                }
+                `
 );
