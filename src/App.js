@@ -3,13 +3,14 @@ import LoginPage from "./login_page";
 import Home from "./home";
 import GPS from "./gps";
 import Logout from "./logout.js";
+import Settings from "./settings.js";
 import ResetPasswordPage from "./resetPassword";
 import { Routes, Route, BrowserRouter as Router, useLocation } from "react-router-dom";
 import ApiService from "./ApiService";
 import { CLIENT_CURRENT } from "./constants";
 import { useNavigate } from "react-router-dom";
 
-
+import Navbar from "./components/navbar";
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -65,16 +66,20 @@ function App() {
 
   //TODO :  When checkToken is running, we need to show a redirecting page....
   
-  return (
-    <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/gps" element={<GPS />} />
-      <Route path="/logout" element={<Logout />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-    </Routes>
-  );
-}
+    return (
+      <>
+        <Navbar/>
+          <Routes>
+            <Route  path="/" element={<LoginPage/>} /> 
+            <Route path="/login" element={<LoginPage/>} />
+            <Route path="/home" element={<Home/>} />
+            <Route path="/gps" element={<GPS/>} />
+            <Route path="/settings" element={<Settings/>} />
+            <Route path="/logout" element={<Logout/>} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+      </Routes>
+      </>
+    );
+  }
 
-export default App;
+  export default App;

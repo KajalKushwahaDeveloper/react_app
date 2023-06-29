@@ -1,68 +1,99 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "./components/navbar.js";
-import axios from "axios";
-import "./scss/home.scss";
-import Dropdown from "./components/dropDown.js";
-import Form from "./components/form.js";
-import {EMULATOR_URL} from "./constants.js"
-// import Map from "./components/map.js";
+import React, { useState } from "react";
+import GoogleMapReact from "google-map-react";
+import GpsTable from "./components/table";
+import CurrentLocation from "./components/current_location";
+import "./scss/map.scss";
+import CreateTable from "./components/create_table";
+// import { toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
-// const API = "http://64.226.101.239:8080/emulator"; // LIVE API server URL
-// const API = "http://192.168.1.123:8080/emulator"; // LOCAL API server URL
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const GPS = () => {
-  const [emulator, setEmulator] = useState();
-  const [emulatorValue, setEmulatorValue] = useState("");
-  const [visibleForm, setVisibleForm] = useState(false);
-  const [fcmToken  , setFcmToken] = useState("");
+  const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
 
-  const onEmulatorChange = (e) => {
-    !visibleForm && setVisibleForm(true);
-    setEmulatorValue(e.target.value);
-    // setEmulatorId("");
+  const defaultProps = {
+    center: {
+      lat: 10.99835602,
+      lng: 77.01502627,
+    },
+    zoom: 11,
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token'); 
-        console.log("token : ", token);
-        const response = await axios.get(EMULATOR_URL, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        // console.log(response.data); // Handle the response data here
-        setEmulator(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <>
-      <Navbar />
-      <div className="home_div">
-        <div>
-          {console.log(emulator)}
-          <Dropdown
-            onEmulatorChange={onEmulatorChange}
-            emulatorValue={emulatorValue}
-            emulator={emulator}
-            setFcmToken={setFcmToken}
-          />
+
+      <div className="gps_page">
+        <div className="gps_tables">
+          <GpsTable />
+
+          <CurrentLocation />
+
+          <CreateTable />
+
+          <button className="login_button">START</button>
         </div>
-        <div className="form_component">
-          {visibleForm && <Form fcmToken={fcmToken} />}
+        <div className="gps_map">
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: "" }}
+            defaultCenter={defaultProps.center}
+            defaultZoom={defaultProps.zoom}
+          >
+            <AnyReactComponent
+              lat={59.955413}
+              lng={30.337844}
+              text="My Marker"
+            />
+          </GoogleMapReact>
         </div>
       </div>
     </>
   );
 };
-
 export default GPS;
- 
+
+// import React, { useState } from "react";
+// import "./scss/map.scss";
+// import "./scss/login.scss";
+// import GoogleMapReact from "google-map-react";
+// import LocationPin from "./components/location_pin";
+
+// const Settings = ({ location, zoomLevel }) => {
+//   const [search, setSearch] = useState("");
+
+//   const handleChange = (e) => {
+//     e.preventDefault();
+//     setSearch(e.target.value);
+//     console.log(e.target.value);
+//   };
+
+//   if (!location) {
+//     return null; // Return null or handle the case when location is undefined
+//   }
+
+//   return (
+//     <>
+//       <div className="map">
+//         {/* <h2 className="map-h2">Come Visit Us At Our Campus</h2> */}
+//         <input
+//           type="text"
+//           className="content_input"
+//           placeholder="search here"
+//           value={search}
+//           onChange={handleChange}
+//         />
+//         <div className="google-map">
+//           <GoogleMapReact
+//             bootstrapURLKeys={{ key: "YOUR_API_KEY" }} // Replace with your Google Maps API key
+//             defaultCenter={location}
+//             defaultZoom={zoomLevel}
+//           >
+//             <LocationPin lat={location.lat} lng={location.lng} text={location.address} />
+//           </GoogleMapReact>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Settings;
