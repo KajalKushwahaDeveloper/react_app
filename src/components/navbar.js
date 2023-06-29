@@ -15,7 +15,7 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const fetchAdminData = async () => {
+  const fetchClientData = async () => {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(ADMIN_CURRENT, {
@@ -42,7 +42,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const { success, error } = fetchAdminData();
+    const { success, error } = fetchClientData();
   }, []);
 
   return (

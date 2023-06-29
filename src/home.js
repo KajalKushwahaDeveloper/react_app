@@ -13,11 +13,6 @@ import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 
 const Home = () => {
-  const [emulator, setEmulator] = useState();
-  const [emulatorValue, setEmulatorValue] = useState("");
-  const [visibleForm, setVisibleForm] = useState(false);
-  const [fcmToken, setFcmToken] = useState("");
-
   const [openUserPopup, setOpenUserPopup] = useState(false);
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
@@ -61,27 +56,6 @@ const Home = () => {
     setEmulatorToAssignUser(null);
     setOpenUserAssignPopup(false);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log("token : ", token);
-        const response = await axios.get(EMULATOR_URL, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        // console.log(response.data); // Handle the response data here
-        setEmulator(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <>

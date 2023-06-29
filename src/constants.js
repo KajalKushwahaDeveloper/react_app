@@ -4,10 +4,11 @@ export const LOCAL_API_2 = "http://192.168.1.137:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
-export const BASE_URL = LIVE_API_CLIENT;
+export const BASE_URL = LOCAL_API_2;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
+export const CLIENT_CURRENT = BASE_URL + "/current";
 
 //ADMIN
 export const ADMIN_URL = BASE_URL + "/admin";

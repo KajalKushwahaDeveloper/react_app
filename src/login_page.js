@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./scss/login.scss";
 import ApiService from "./ApiService";
-import { ADMIN_LOGIN } from "./constants";
+import { ADMIN_LOGIN, CLIENT_CURRENT } from "./constants";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -13,12 +13,47 @@ const LoginPage = () => {
   const [responseError, setResponseError] = useState("");
 
   useEffect(() => {
-    const user = localStorage.getItem("token");
-    if (user) {
-      console.log("Logged In User: ", user); //User already logged in, redirect to home
-      navigate("/home");
+    fetchData();
+  });
+
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    console.error("CLIENT_CURRENT: token : ", token);
+    if (token != null) {
+      try {
+        console.error("CLIENT_CURRENT: RAN");
+        const { success, data, error } = await ApiService.makeApiCall(
+          CLIENT_CURRENT,
+          "GET",
+          null,
+          token
+        );
+        if (success) {
+          console.error("CLIENT_CURRENT: ", data);
+          const authorities = data.authorities;
+          let isRoleAdmin = false;
+          authorities.forEach((authority) => {
+            if (authority.authority === "ROLE_ADMIN") {
+              isRoleAdmin = true;
+              return; // Exit the loop early if ROLE_ADMIN is found
+            }
+          });
+          if (isRoleAdmin) {
+            navigate("/home"); // Redirect to the home page
+          } else {
+            navigate("/gps"); // Redirect to the gps page
+          }
+        } else {
+          console.error("CLIENT_CURRENT Error: ", error);
+          localStorage.removeItem("token");
+        }
+      } catch (error) {
+        console.error("CLIENT_CURRENT 2 Error: ", error);
+        localStorage.removeItem("token");
+      }
     }
-  }, [navigate]);
+  };
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
