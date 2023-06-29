@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./scss/login.scss";
-import { ADMIN_LOGIN } from './constants';
+import ApiService from "./ApiService";
+import { ADMIN_LOGIN } from "./constants";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const LoginPage = () => {
   const [responseError, setResponseError] = useState("");
 
   useEffect(() => {
-    const user = localStorage.getItem('token');
+    const user = localStorage.getItem("token");
     if (user) {
       console.log("Logged In User: ", user); //User already logged in, redirect to home
       navigate("/home");
@@ -38,9 +39,16 @@ const LoginPage = () => {
       setPasswordError("Please enter a password");
     } else {
       try {
-        const { success, error } = await userLogin();
-  
+        const payload = { email, password };
+        const { success, data, error } = await ApiService.makeApiCall(
+          ADMIN_LOGIN,
+          "POST",
+          payload,
+          null
+        );
         if (success) {
+          const token = data.token;
+          localStorage.setItem("token", token);
           console.log("Login successful");
           navigate("/home"); // Redirect to the home page
         } else {
@@ -52,34 +60,6 @@ const LoginPage = () => {
       }
     }
   };
-  
-  const userLogin = async () => {
-    const item = { email, password };
-
-    try {
-      const response = await fetch(ADMIN_LOGIN, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(item),
-      });
-  
-      if (!response.ok || response.status !== 200) {
-        return { success: false, error: "Invalid credentials" };
-      }
-  
-      const result = await response.json();
-      const token = result.token;
-      // const token = "TOKEN";
-      localStorage.setItem("token", token);
-      return { success: true };
-    } catch (error) {
-      console.error("Error occurred during login:", error);
-      throw error; // Rethrow the error to be caught by the caller (handleSubmit)
-    }
-  };
-
 
   return (
     <>
@@ -88,7 +68,9 @@ const LoginPage = () => {
           <div className="image">
             <img src="images/logo2.png" />
             <hr className="hr"></hr>
-          <p className="para">Vivamus at dui consequat, dapibus tellus vitae</p>
+            <p className="para">
+              Vivamus at dui consequat, dapibus tellus vitae
+            </p>
           </div>
         </div>
 
