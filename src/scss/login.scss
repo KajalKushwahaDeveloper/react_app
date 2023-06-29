@@ -11,13 +11,16 @@ body {
 
 .main_div {
   display: flex;
+  height: 100vh; 
+  overflow: hidden; 
 
   .left {
-    flex: 1;
     background: $background-color;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column; 
 
     .hr {
       border: 2px solid white;
@@ -39,6 +42,7 @@ body {
 
   .right {
     width: 50%;
+  
 
     .map_img {
       width: 50%;
@@ -49,10 +53,11 @@ body {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(10%, -50%);
+        transform: translate(10%, -70%);
         z-index: 1;
         display: flex;
         align-items: center;
+        justify-content: center;
 
         form {
           display: flex;
