@@ -5,9 +5,11 @@ import Logout from "./logout.js";
 import Settings from "./settings.js";
 import ResetPasswordPage from "./resetPassword";
 import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
+import Navbar from "./components/navbar";
 function App() {
   return (
-    
+    <>
+      <Navbar/>
         <Routes>
           <Route  path="/" element={<LoginPage/>} /> 
           <Route path="/login" element={<LoginPage/>} />
@@ -17,6 +19,7 @@ function App() {
           <Route path="/logout" element={<Logout/>} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
     </Routes>
+    </>
   );
 }
 

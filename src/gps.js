@@ -45,7 +45,7 @@ const GPS = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="home_div">
         <div>
           {console.log(emulator)}

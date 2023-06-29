@@ -160,7 +160,7 @@ const EmulatorTable = ({
   }
 
   return (
-    <Root sx={{ width: "auto", maxWidth: "100%" }}>
+    <div sx={{ width: "auto", maxWidth: "100%" }}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>
@@ -226,7 +226,7 @@ const EmulatorTable = ({
           </tr>
         </tfoot>
       </table>
-    </Root>
+    </div>
   );
 };
 
@@ -250,32 +250,6 @@ const grey = {
   900: "#1A2027",
 };
 
-const Root = styled("div")(
-  ({ theme }) => `
-    table {
-      font-family: Raleway, sans-serif;
-      font-size: 0.875rem;
-      border-collapse: collapse;
-      width: auto;
-      padding:0.5rem;
-    }
-  
-    td,
-    th {
-      border: 1px solid ${
-        theme.palette.mode === "dark" ? grey[800] : grey[200]
-      };
-      text-align: left;
-      padding: 12px;
-    }
-  
-    th {
-      background-color: ${
-        theme.palette.mode === "dark" ? grey[900] : grey[100]
-      };
-    }
-    `
-);
 
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
