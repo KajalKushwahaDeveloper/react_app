@@ -44,24 +44,27 @@ function App() {
             }
           });
           if (isRoleAdmin) {
-            if (location.pathname === "/login") {
+            if (location.pathname === "/login" || location.pathname === "/") {
               navigate("/home");
             }
           } else {
-            if (location.pathname === "/login") {
-              navigate("/gps");
-            }
-            if (location.pathname === "/home") {
+            if (
+              location.pathname === "/login" ||
+              location.pathname === "/" ||
+              location.pathname === "/home"
+            ) {
               navigate("/gps");
             }
           }
         } else {
           console.error("CLIENT_CURRENT Error: ", error);
           localStorage.removeItem("token");
+          navigate("/login");
         }
       } catch (error) {
         console.error("CLIENT_CURRENT 2 Error: ", error);
         localStorage.removeItem("token");
+        navigate("/login");
       }
     }
   };

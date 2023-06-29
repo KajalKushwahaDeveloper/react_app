@@ -44,8 +44,10 @@ const ResetPasswordPage = () => {
       })
         .then((response) => {
           if (response.ok) {
-            // Password reset successful, navigate to the desired page
-            toast.success("Password reset successful");
+            window.alert("SAVED PASSWORD");
+            console.log("SAVED PASSWORD", token);
+            localStorage.setItem("token", token);
+            navigate("/gps");
           } else {
             throw new Error("An error occurred during password reset");
           }
