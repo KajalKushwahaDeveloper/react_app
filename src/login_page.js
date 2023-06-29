@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./scss/login.scss";
 import ApiService from "./ApiService";
-import { ADMIN_LOGIN, CLIENT_CURRENT } from "./constants";
+import { CLIENT_LOGIN } from "./constants";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -11,49 +11,6 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [responseError, setResponseError] = useState("");
-
-  useEffect(() => {
-    fetchData();
-  });
-
-  const fetchData = async () => {
-    const token = localStorage.getItem("token");
-    console.error("CLIENT_CURRENT: token : ", token);
-    if (token != null) {
-      try {
-        console.error("CLIENT_CURRENT: RAN");
-        const { success, data, error } = await ApiService.makeApiCall(
-          CLIENT_CURRENT,
-          "GET",
-          null,
-          token
-        );
-        if (success) {
-          console.error("CLIENT_CURRENT: ", data);
-          const authorities = data.authorities;
-          let isRoleAdmin = false;
-          authorities.forEach((authority) => {
-            if (authority.authority === "ROLE_ADMIN") {
-              isRoleAdmin = true;
-              return; // Exit the loop early if ROLE_ADMIN is found
-            }
-          });
-          if (isRoleAdmin) {
-            navigate("/home"); // Redirect to the home page
-          } else {
-            navigate("/gps"); // Redirect to the gps page
-          }
-        } else {
-          console.error("CLIENT_CURRENT Error: ", error);
-          localStorage.removeItem("token");
-        }
-      } catch (error) {
-        console.error("CLIENT_CURRENT 2 Error: ", error);
-        localStorage.removeItem("token");
-      }
-    }
-  };
-
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -76,7 +33,7 @@ const LoginPage = () => {
       try {
         const payload = { email, password };
         const { success, data, error } = await ApiService.makeApiCall(
-          ADMIN_LOGIN,
+          CLIENT_LOGIN,
           "POST",
           payload,
           null

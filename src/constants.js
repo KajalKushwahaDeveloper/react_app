@@ -9,6 +9,7 @@ export const BASE_URL = LOCAL_API_2;
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
 export const CLIENT_CURRENT = BASE_URL + "/current";
+export const CLIENT_LOGIN = BASE_URL + "/log-in";
 
 //ADMIN
 export const ADMIN_URL = BASE_URL + "/admin";
