@@ -60,7 +60,7 @@ const Home = () => {
   return (
     <>
       <ToastContainer style={{ zIndex: 3 }} />
-      <Navbar />
+
       <div className="home_div">
         <div className="emulator_table"
           style={{

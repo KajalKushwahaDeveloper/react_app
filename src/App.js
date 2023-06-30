@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import LoginPage from "./login_page";
 import Home from "./home";
 import GPS from "./gps";
 import Logout from "./logout.js";
 import Settings from "./settings.js";
+import Navbar from "./components/navbar";
 import ResetPasswordPage from "./resetPassword";
+
 import {
   Routes,
   Route,
@@ -16,10 +18,11 @@ import ApiService from "./ApiService";
 import { CLIENT_CURRENT } from "./constants";
 import { useNavigate } from "react-router-dom";
 
-import Navbar from "./components/navbar";
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State variable for login status
 
   const checkToken = async () => {
     const token = localStorage.getItem("token");
@@ -43,6 +46,16 @@ function App() {
               return; // Exit the loop early if ROLE_ADMIN is found
             }
           });
+          setIsAdmin(isRoleAdmin);
+          if (location.pathname === "/redirect") {
+            if (isRoleAdmin) {
+              navigate("/home");
+            } else {
+              navigate("/gps");
+            }
+            return;
+          }
+
           if (isRoleAdmin) {
             if (location.pathname === "/login" || location.pathname === "/") {
               navigate("/home");
@@ -64,6 +77,7 @@ function App() {
       } catch (error) {
         console.error("CLIENT_CURRENT 2 Error: ", error);
         localStorage.removeItem("token");
+        setIsLoggedIn(false); // Set login status to false
         navigate("/login");
       }
     }
@@ -73,25 +87,26 @@ function App() {
     checkToken();
   }, [location.pathname]);
 
-  //TODO :  When checkToken is running, we need to show a redirecting page....
+  // TODO: When checkToken is running, we need to show a redirecting page....
+
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
-      <Route element={<AuthenticatedLayout />}>
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route element={<AuthenticatedLayout isAdmin={isAdmin} />}>
         <Route path="/home" element={<Home />} />
         <Route path="/gps" element={<GPS />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/logout" element={<Logout />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Route>
     </Routes>
   );
 }
 
-const AuthenticatedLayout = () => {
+const AuthenticatedLayout = ({ isAdmin }) => {
   return (
     <>
-      <Navbar />
+      <Navbar isAdmin={isAdmin} />
       <Outlet />
     </>
   );

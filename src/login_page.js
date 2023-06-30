@@ -42,7 +42,7 @@ const LoginPage = () => {
           const token = data.token;
           localStorage.setItem("token", token);
           console.log("Login successful");
-          navigate("/home"); // Redirect to the home page
+           navigate("/home"); // Redirect to the home page
         } else {
           setResponseError(error || "Invalid credentials"); // Display appropriate error message
         }
@@ -74,7 +74,7 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                   <h1>Log in</h1>
                   <input
-                    type="text"
+                    type="email"
                     id="content_input"
                     name="email"
                     placeholder="Enter your email"

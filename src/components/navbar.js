@@ -5,17 +5,20 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { CLIENT_CURRENT } from "../constants";
 
-const Navbar = () => {
+const Navbar = ({ isAdmin }) => {
   const [menuIcon, setMenuIcon] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState();
+
   const navigate = useNavigate();
+  
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
   const fetchClientData = async () => {
+    console.log("fetchClientData isAdmin : "  + isAdmin);
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(CLIENT_CURRENT, {
@@ -64,15 +67,17 @@ const Navbar = () => {
             className={menuIcon ? "menu-link mobile-menu-link" : "menu-link"}
           >
             <ul className="">
-              <li>
-                <NavLink
-                  to="/home"
-                  className="navbar-link"
-                  onClick={() => setMenuIcon(false)}
-                >
-                  Licenses
-                </NavLink>
-              </li>
+              {isAdmin && (
+                <li>
+                  <NavLink
+                    to="/home"
+                    className="navbar-link"
+                    onClick={() => setMenuIcon(false)}
+                  >
+                    Licenses
+                  </NavLink>
+                </li>
+              )}
               <li>
                 <NavLink
                   to="/gps"
@@ -83,7 +88,6 @@ const Navbar = () => {
                 </NavLink>
               </li>
               {/* Drop down  */}
-
               <li>
                 <NavLink
                   to="/settings"
@@ -94,8 +98,8 @@ const Navbar = () => {
                 </NavLink>
               </li>
               <li>
-                  {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
-                  {data?.username || "N/A"})
+                {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
+                {data?.username || "N/A"})
               </li>
               <li>
                 <NavLink
@@ -108,7 +112,6 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
-
           {/* 3rd social media links */}
           <div className="social-media">
             {/* hamburger menu start  */}
