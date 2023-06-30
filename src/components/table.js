@@ -36,7 +36,7 @@ const GpsTable = () => {
         </thead>
         <tbody>
         <tr>
-              <td>online</td>
+              <td style={{background:"limegreen"}}>online</td>
               <td style={{ width: "4rem", padding:"0 .5rem" }} align="right">
                EML1
               </td>
