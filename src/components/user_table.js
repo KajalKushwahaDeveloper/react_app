@@ -5,12 +5,14 @@ import TablePagination, {
 } from "@mui/base/TablePagination";
 
 import { styled } from "@mui/system";
-import { EMULATOR_URL, USER_URL } from "../constants";
+import { USER_URL } from "../constants";
 import { USER_CHANGE_STATUS_URL } from "../constants";
 import "../scss/table.scss";
 import "../scss/button.scss";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ApiService from "../ApiService";
 
 const UserTable = ({
   showToast,
@@ -19,7 +21,7 @@ const UserTable = ({
   userAssingedEmulator,
 }) => {
   // State variables
-  const [data, setData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,18 +70,42 @@ const UserTable = ({
     if (!response.ok || response.status !== 200) {
       return { success: false, error: "Failed to add user" };
     }
-    console.log("Data Previous : " + data);
+    console.log("Data Previous : " + userData);
     const result = await response.text();
     console.log("result:", result);
-    const updatedData = data.map((item) => {
+    const updatedData = userData.map((item) => {
       if (item.id === id) {
         console.log("Data Found");
         return { ...item, status: userStatusChange.status };
       }
       return item;
     });
-    console.log("Data Updated : " + data);
-    setData(updatedData);
+    console.log("Data Updated : " + userData);
+    setUserData(updatedData);
+  };
+
+
+  const handleDeleteButtonClick = async (user) => {
+    const confirmed = window.confirm('Delete this user : ' + user.firstName + ' ' + user.lastName + '?');
+    if (confirmed) {
+      const token = localStorage.getItem("token");
+      const { success, data, error } = await ApiService.makeApiCall(
+        USER_URL,
+        "DELETE",
+        null,
+        token,
+        user.id
+      );
+
+      if (success) {
+        const updatedData = data.filter((item) => item.id !== user.id);
+        console.log("Data Updated : " + data);
+        setUserData(updatedData);
+        showToast("User deleted", "success")
+      } else {
+        showToast("User not deleted", "error")
+      }
+    }
   };
 
   // Fetch data from API
@@ -99,14 +125,14 @@ const UserTable = ({
       }
       const responseData = await response.text();
       const result = JSON.parse(responseData);
-      const updatedData = data.map((item) => {
+      const updatedData = userData.map((item) => {
         if (item.id === result.id) {
           return result;
         };
         return item;
       });
       showToast(`Updated user table!`, "success");
-      setData(updatedData);
+      setUserData(updatedData);
     } catch (error) {
       console.log("refreshUser error : " + error);
       showToast(`Failed to update user table ${error}`, "error");
@@ -143,7 +169,7 @@ const UserTable = ({
         "refreshUser activeEmulatorsCount : " +
           result.emulatorCount?.activeEmulatorsCount
       );
-      const updatedData = data.map((item) => {
+      const updatedData = userData.map((item) => {
         if (item.id === result.id) {
           return {
             ...item,
@@ -157,7 +183,7 @@ const UserTable = ({
         return item;
       });
       showToast(`Updated user table!`, "success");
-      setData(updatedData);
+      setUserData(updatedData);
     } catch (error) {
       console.log("refreshUser error : " + error);
       showToast(`Failed to update user table ${error}`, "error");
@@ -180,7 +206,7 @@ const UserTable = ({
       } else {
         const responseData = await response.text();
         const deserializedData = JSON.parse(responseData);
-        setData(deserializedData);
+        setUserData(deserializedData);
         setLoading(false);
         return { success: true, error: null };
       }
@@ -211,7 +237,7 @@ const UserTable = ({
   };
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, userData.length - page * rowsPerPage);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -226,8 +252,8 @@ const UserTable = ({
       <table aria-label="custom pagination table">
         <tbody>
           {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
+            ? userData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : userData
           ).map((row) => {
             const createdAtDate = new Date(row.createdAt);
             const formattedDate = createdAtDate.toISOString().split("T")[0];
@@ -256,10 +282,16 @@ const UserTable = ({
                       </ul>
                     </div>
                     <IconButton
-                      style={{ height: "auto", width: "40px", margin: "40px" }}
+                      style={{ height: "auto", width: "40px", margin: "2px" }}
                       aria-label="edit"
                     >
                       <EditIcon onClick={() => handleEditButtonClick(row)} />
+                    </IconButton>
+                    <IconButton
+                      style={{ height: "auto", width: "40px", margin: "2px" }}
+                      aria-label="delete"
+                    >
+                      <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
                     </IconButton>
                     <button
                       style={{
@@ -292,7 +324,7 @@ const UserTable = ({
             <CustomTablePagination
               rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
               colSpan={3}
-              count={data.length}
+              count={userData.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
