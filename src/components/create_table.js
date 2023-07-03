@@ -19,7 +19,6 @@ const CreateTable = () => {
             <tr>
               <td>1</td>
               <td>
-                {" "}
                 <div className="container">
                   <SearchBar />
                 </div>
@@ -28,7 +27,6 @@ const CreateTable = () => {
             <tr>
               <td>2</td>
               <td>
-                {" "}
                 <div className="container">
                   <SearchBar />
                 </div>

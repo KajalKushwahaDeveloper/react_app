@@ -4,13 +4,26 @@ import GpsTable from "./components/table";
 import CurrentLocation from "./components/current_location";
 import "./scss/map.scss";
 import CreateTable from "./components/create_table";
-// import { toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
+
+const showToast = (message, type) => {
+  console.log("Showing toast...");
+  toast[type](message); // Use the 'type' argument to determine the toast type
+};
+
 const GPS = () => {
   const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
+  const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
+  const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
+  const handleAssignUserButtonClick = (data) => {
+    console.log("Assign Button clicked with data:", data);
+    setEmulatorToAssignUser(data);
+    setOpenUserAssignPopup(true);
+  };
 
   const defaultProps = {
     center: {
@@ -25,7 +38,12 @@ const GPS = () => {
 
       <div className="gps_page">
         <div className="gps_tables">
-          <GpsTable />
+          <GpsTable
+           showToast={showToast}
+           handleAssignUserButtonClick={handleAssignUserButtonClick}
+           userAssingedEmulator={userAssingedEmulator}
+           setUserAssingedEmulator={setUserAssingedEmulator}
+          />
 
           <CurrentLocation />
 

@@ -1,15 +1,143 @@
-import * as React from "react";
-import { styled } from "@mui/system";
+import React, { useEffect, useState } from "react";
+
 import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
+import { Button, Modal } from "@mui/material";
+import { styled } from "@mui/system";
+import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 import "../scss/table.scss";
-const GpsTable = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(3);
+import "../scss/button.scss";
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+const GpsTable = ({
+  showToast,
+  handleAssignUserButtonClick,
+  userAssingedEmulator,
+  setUserAssingedEmulator,
+}) => {
+  // State variables
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(3); // Number of items to display per page
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const handleActionButtonClick = async (row) => {
+    console.log("row data in emulator_page:", row)
+    if (row.user != null) {
+      const token = localStorage.getItem("token");
+      console.log("token : ", token);
+      try {
+        const response = await fetch(USER_ASSIGN_EMULATOR_URL + "/" + row.id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("response:", response);
+
+        if (!response.ok || response.status !== 200) {
+          showToast("Failed to unassign user", "error");
+          return { success: false, error: "Failed to unassign user" };
+        }
+        // Send the removed user ID to refresh in user table
+        const userAssignedEmulator = { 
+          user: {
+            id: row.user?.id, 
+          },
+        };
+        setUserAssingedEmulator(userAssignedEmulator);
+
+        console.log("Data Previous : " + data);
+        const result = await response.text();
+        console.log("result:", result);
+        const updatedData = data.map((item) => {
+          if (item.id === row.id) {
+            console.log("Data Found");
+            return { ...item, user: null };
+          }
+          return item;
+        });
+        showToast(`User Un-Assigned`, "success");
+        console.log("Data Updated : " + data);
+        setData(updatedData);
+      } catch (error) {
+        showToast(`Failed to unassign user ${error}`, "error");
+      }
+    } else {
+      handleAssignUserButtonClick(row);
+    }
+  };
+
+  // Fetch data from API
+  const fetchData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(EMULATOR_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok || response.status !== 200) {
+        return { success: false, error: "Invalid credentials" };
+      } else {
+        const responseData = await response.text();
+        const deserializedData = JSON.parse(responseData);
+        console.log("")
+        setData(deserializedData);
+        setLoading(false);
+        return { success: true, error: null };
+      }
+    } catch (error) {
+      console.log("Data Error: " + error);
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    const { success, error } = fetchData();
+    if (success) {
+      showToast("Fetched Emulators successfully", "success");
+    } else {
+      showToast(error, "error");
+    }
+  }, []);
+
+  //Refresh component after 30000 ms/ 30 seconds
+  useEffect(() => {
+    const fetchDataInterval = setInterval(() => {
+      setLoading(true);
+      const { success, error } = fetchData();
+      if (success) {
+        showToast("Fetched Emulators successfully", "success");
+      } else {
+        showToast(error, "error");
+      }
+    }, 30000);
+
+    return () => {
+      clearInterval(fetchDataInterval);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (userAssingedEmulator != null) {
+      const updatedData = data.map((item) => {
+        if (item.id === userAssingedEmulator.id) {
+          return { ...item, user: userAssingedEmulator.user };
+        }
+        return item;
+      });
+      setData(updatedData);
+    }
+  }, [userAssingedEmulator]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -20,11 +148,21 @@ const GpsTable = () => {
     setPage(0);
   };
 
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    //Driver table start//
-    <div sx={{ width: 'auto', maxWidth: "100%"}}>
+    <div sx={{ width: "auto", maxWidth: "100%" }}>
       <table aria-label="custom pagination table">
-        <thead>
+      <thead>
           <tr>
             <th>Status</th>
             <th>ID</th>
@@ -34,68 +172,50 @@ const GpsTable = () => {
             <th>Trailer</th>
           </tr>
         </thead>
+  
         <tbody>
-        <tr>
-              <td style={{background:"limegreen"}}>online</td>
-              <td style={{ width: "4rem", padding:"0 .5rem" }} align="right">
-               EML1
-              </td>
-              <td style={{ width: "4rem", padding:"0 .5rem" }} align="right">
-                123-456-7890
-              </td>
-              <td style={{ width: "4rem", padding:"0 .5rem" }} align="right">
-               Viktor vovk
-              </td>
-              <td style={{ width: "4rem", padding:"0 .5rem" }} align="right">
-               11
-              </td>
-              <td style={{ width: "4rem", padding:"0 .5rem" }} align="right">
-               33452
-              </td>
-            </tr>
-          {/* {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
+          {(rowsPerPage > 0
+            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : data
           ).map((row) => (
-            <tr key={row.status}>
-              <td>{row.status}</td>
+            <tr key={row.id || "N/A"}>
+              <td>{row.status || "N/A"}</td>
               <td style={{ width: 120 }} align="right">
-                {row.mac}
+                {row.emulatorSsid || "N/A"}
               </td>
               <td style={{ width: 120 }} align="right">
-                {row.number}
+                {row.telephone || "N/A"}
               </td>
               <td style={{ width: 120 }} align="right">
-                {row.assign}
+               viktor vovk
               </td>
               <td style={{ width: 120 }} align="right">
-                {row.action}
+              11
+              </td>
+              <td style={{ width: 120 }} align="right">
+              312456
               </td>
             </tr>
-          ))} */}
+          ))}
 
           {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
-              <td colSpan={3} />
+              <td colSpan={5} />
             </tr>
           )}
         </tbody>
+    
         <tfoot>
           <tr>
             <CustomTablePagination
-              rowsPerPageOptions={[3, 5, { label: "All", value: -1 }]}
-              colSpan={rows.length}
-              count={rows.length}
+              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+              colSpan={6}
+              count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}
-              slotProps={{
-                select: {
-                  "aria-label": "rows per page",
-                },
-                actions: {
-                  showFirstButton: true,
-                  showLastButton: true,
-                },
+              SelectProps={{
+                inputProps: { "aria-label": "rows per page" },
+                native: true,
               }}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
@@ -104,19 +224,10 @@ const GpsTable = () => {
         </tfoot>
       </table>
     </div>
-    //Driver table ui end//
   );
 };
+
 export default GpsTable;
-
-function createData(status, mac, number, assign, action) {
-  return { status, mac, number, assign, action };
-}
-
-const rows = [
- 
-];
-
 
 const blue = {
   200: "#A5D8FF",
@@ -137,74 +248,60 @@ const grey = {
 };
 
 
-
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
-    /* Remove the spacer element */
-    & .${classes.spacer} {
-      display: none;
-    }
-  
-    /* Update the toolbar styles */
-    & .${classes.toolbar} {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content:space-arround;
-      gap: 10px;
-    }
-  
-    /* Update the select label styles */
-    & .${classes.selectLabel} {
-      margin: 0;
-    }
-  
-    /* Update the select styles */
-    & .${classes.select} {
-      padding: 2px;
-      border: 1px solid ${
-        theme.palette.mode === "dark" ? grey[800] : grey[200]
-      };
-      border-radius: 50px;
-      background-color: transparent;
-  
-      &:hover {
-        background-color: ${
-          theme.palette.mode === "dark" ? grey[800] : grey[50]
-        };
-      }
-  
-      &:focus {
-        outline: 1px solid ${
-          theme.palette.mode === "dark" ? blue[400] : blue[200]
-        };
-      }
-    }
-  
-    /* Update the actions styles */
-    & .${classes.actions} {
-      padding: 2px;
- 
-   border-radius: 50px;
-      text-align: center;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-  
-      /* Hide the sort button */
-      & button {
+      /* Remove the spacer element */
+      & .${classes.spacer} {
         display: none;
       }
-  
-      /* Show only the navigation buttons */
-      & > :not(:first-child):not(:last-child) {
-        display: block;
+    
+      /* Update the toolbar styles */
+      & .${classes.toolbar} {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content:space-arround;
+        gap: 10px;
       }
-    }
-  
-    /* Update the displayed rows styles */
-    & .${classes.displayedRows} {
-      margin-left: 2rem;
-    }
-    `
+    
+      /* Update the select label styles */
+      & .${classes.selectLabel} {
+        margin: 0;
+      }
+    
+      /* Update the select styles */
+      & .${classes.select} {
+        padding: 2px;
+        border: 1px solid ${
+          theme.palette.mode === "dark" ? grey[800] : grey[200]
+        };
+        border-radius: 50px;
+        background-color: transparent;
+    
+        &:hover {
+          background-color: ${
+            theme.palette.mode === "dark" ? grey[800] : grey[50]
+          };
+        }
+    
+        &:focus {
+          outline: 1px solid ${
+            theme.palette.mode === "dark" ? blue[400] : blue[200]
+          };
+        }
+      }
+    
+      /* Update the actions styles */
+      .${classes.actions} {
+        padding: 2px;
+        border-radius: 50px;
+        text-align: center;
+        display: flex;
+      }
+    
+      /* Update the displayed rows styles */
+      & .${classes.displayedRows} {
+        margin-left: 2rem;
+      }
+      `
 );
