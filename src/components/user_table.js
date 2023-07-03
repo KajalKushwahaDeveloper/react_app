@@ -86,24 +86,26 @@ const UserTable = ({
 
 
   const handleDeleteButtonClick = async (user) => {
-    const token = localStorage.getItem("token");
-    const { success, data, error } = await ApiService.makeApiCall(
-      USER_URL,
-      "DELETE",
-      null,
-      token,
-      user.id
-    );
+    const confirmed = window.confirm('Delete this user : ' + user.firstName + ' ' + user.lastName + '?');
+    if (confirmed) {
+      const token = localStorage.getItem("token");
+      const { success, data, error } = await ApiService.makeApiCall(
+        USER_URL,
+        "DELETE",
+        null,
+        token,
+        user.id
+      );
 
-    if (success) {
-      const updatedData = data.filter((item) => item.id !== user.id);
-      console.log("Data Updated : " + data);
-      setUserData(updatedData);
-      showToast("User deleted", "success")
-    } else {
-      showToast("User not deleted", "error")
+      if (success) {
+        const updatedData = data.filter((item) => item.id !== user.id);
+        console.log("Data Updated : " + data);
+        setUserData(updatedData);
+        showToast("User deleted", "success")
+      } else {
+        showToast("User not deleted", "error")
+      }
     }
-
   };
 
   // Fetch data from API
