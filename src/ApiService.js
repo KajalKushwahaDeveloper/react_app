@@ -1,6 +1,9 @@
 class ApiService {
-  static async makeApiCall(url, method, payload, token) {
+  static async makeApiCall(url, method, payload, token, pathVariable) {
     try {
+      if(pathVariable!=null) {
+        url = url+ "/" + pathVariable
+      }
       const headers = {
         "Content-Type": "application/json",
       };
@@ -26,12 +29,26 @@ class ApiService {
       const response = await fetch(url, requestOptions);
 
       if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error || "Request failed");
+        let errorData;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          errorData = await response.json();
+        } else {
+          errorData = await response.text();
+        }
+        throw new Error(errorData || "Request failed");
       }
 
-      const result = await response.json();
+      let result;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json();
+      } else {
+        result = await response.text();
+      }
+
       return { success: true, data: result, error: null };
+      
     } catch (error) {
       console.error("Error occurred during API call:", error);
       return {
