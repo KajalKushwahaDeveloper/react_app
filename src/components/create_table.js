@@ -1,4 +1,5 @@
 import React from "react";
+import SearchBar from '../components/location/SearchBar.js';
 import { styled, TextField } from "@mui/material";
 
 const CreateTable = () => {
@@ -19,28 +20,18 @@ const CreateTable = () => {
               <td>1</td>
               <td>
                 {" "}
-                <TextField
-                  id="standard-basic"
-                  label="from"
-                  variant="standard"
-                  style={{
-                    width: "100%",
-                  }}
-                />
+                <div className="container">
+                  <SearchBar />
+                </div>
               </td>
             </tr>
             <tr>
               <td>2</td>
               <td>
                 {" "}
-                <TextField
-                  id="standard-basic"
-                  label="to"
-                  variant="standard"
-                  style={{
-                    width: "100%",
-                  }}
-                />
+                <div className="container">
+                  <SearchBar />
+                </div>
               </td>
             </tr>
             <tr>
