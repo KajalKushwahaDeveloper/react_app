@@ -128,6 +128,7 @@ class SearchBar extends React.Component {
               </div>
             );
           }}
+           
         </PlacesAutocomplete>
         {errorMessage.length > 0 && (
           <div className="Demo__error-message">{this.state.errorMessage}</div>
