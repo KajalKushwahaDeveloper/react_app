@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import GoogleMapReact from "google-map-react";
-import GpsTable from "./components/table";
+import GpsTable from "./components/gps_page_table";
 import CurrentLocation from "./components/current_location";
 import "./scss/map.scss";
-import CreateTable from "./components/create_table";
+import CreateTable from "./components/user_emulator_table";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
