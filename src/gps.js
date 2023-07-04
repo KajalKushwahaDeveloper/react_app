@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import GpsTable from "./components/gps_page_table";
 import CurrentLocation from "./components/current_location";
 import "./scss/map.scss";
-import CreateTable from "./components/user_emulator_table";
+import CreateTripTable from "./components/create_trip_table";
 import { ToastContainer, toast } from "react-toastify";
 import WrappedMap from "./components/location/Map";
 import useFetch from "./components/hooks/useFetch";
@@ -47,7 +47,7 @@ const GPS = () => {
 
           <CurrentLocation />
 
-          <CreateTable />
+          <CreateTripTable />
 
           <button className="login_button">START</button>
         </div>

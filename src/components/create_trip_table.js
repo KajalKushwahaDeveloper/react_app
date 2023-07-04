@@ -2,7 +2,7 @@ import React from "react";
 import SearchBar from './location/SearchBar.js';
 import { styled, TextField } from "@mui/material";
 
-const CreateTable = () => {
+const CreateTripTable = () => {
   return (
     <div>
       <div sx={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>
@@ -44,4 +44,4 @@ const CreateTable = () => {
   );
 };
 
-export default CreateTable;
+export default CreateTripTable;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
-import { Button, Modal,Checkbox } from "@mui/material";
+import { Checkbox } from "@mui/material";
 import { styled } from "@mui/system";
 import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 import "../scss/table.scss";
@@ -23,9 +23,10 @@ const GpsTable = ({
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedEmulator, setSelectedEmulator] = useState(1);
 
   const handleActionButtonClick = async (row) => {
-    console.log("row data in emulator_page:", row)
+    console.log("row data in emulator_page:", row);
     if (row.user != null) {
       const token = localStorage.getItem("token");
       console.log("token : ", token);
@@ -44,25 +45,25 @@ const GpsTable = ({
           return { success: false, error: "Failed to unassign user" };
         }
         // Send the removed user ID to refresh in user table
-        const userAssignedEmulator = { 
+        const userAssignedEmulator = {
           user: {
-            id: row.user?.id, 
+            id: row.user?.id,
           },
         };
         setUserAssingedEmulator(userAssignedEmulator);
 
-        console.log("Data Previous : " + data);
+        // console.log("Data Previous : " + data);
         const result = await response.text();
-        console.log("result:", result);
+        // console.log("result:", result);
         const updatedData = data.map((item) => {
           if (item.id === row.id) {
-            console.log("Data Found");
+            // console.log("Data Found");
             return { ...item, user: null };
           }
           return item;
         });
         showToast(`User Un-Assigned`, "success");
-        console.log("Data Updated : " + data);
+        // console.log("Data Updated : " + data);
         setData(updatedData);
       } catch (error) {
         showToast(`Failed to unassign user ${error}`, "error");
@@ -88,7 +89,7 @@ const GpsTable = ({
       } else {
         const responseData = await response.text();
         const deserializedData = JSON.parse(responseData);
-        console.log("")
+        console.log("");
         setData(deserializedData);
         setLoading(false);
         return { success: true, error: null };
@@ -148,6 +149,14 @@ const GpsTable = ({
     setPage(0);
   };
 
+  const handleEmulatorCheckboxChange = (id) => {
+    setSelectedEmulator(id);
+    // console.log("onClick Checkbox ID:", id);
+    const selectedRow = data.find((row) => row.id === id);
+    // console.log("Selected Row:", selectedRow);
+
+  };
+
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
@@ -162,47 +171,67 @@ const GpsTable = ({
   return (
     <div sx={{ width: "auto", maxWidth: "100%" }}>
       <table aria-label="custom pagination table">
-      <thead>
+        <thead>
           <tr>
             <th>Status</th>
             <th>ID</th>
             <th>Number</th>
+            <th>Address</th>
             <th>Select</th>
           </tr>
         </thead>
-  
+
         <tbody>
           {(rowsPerPage > 0
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           ).map((row) => (
             <tr key={row.id || "N/A"}>
-              <td>{row.status || "N/A"}</td>
-              <td style={{ width: "auto" , padding:"1rem"}} align="right">
+              <td
+                style={{
+                  background:
+                    row.status === "active"
+                      ? "green" : "#ff4d4d",
+                      // : row.status === "inactive"
+                      // ? "green"
+                      // : row.status === "idle"
+                      // ? "yellow"
+                      // : "",
+                }}
+              >
+                {row.status || "N/A"}
+              </td>
+              <td style={{ width: "auto" }} align="right">
                 {row.emulatorSsid || "N/A"}
               </td>
-              <td style={{ width: "auto", padding:"1rem" }} align="right">
+              <td style={{ width: "auto" }} align="right">
                 {row.telephone || "N/A"}
               </td>
-              <td style={{ width: "auto", padding:"1rem" }} align="right">
-              <Checkbox  />
+              <td style={{ width: "auto" }} align="right">
+                {row.address || "N/A"}
+              </td>
+              <td style={{ width: "auto" }} align="right">
+                <Checkbox 
+                  checked={selectedEmulator === row.id}
+                  onChange={() => handleEmulatorCheckboxChange(row.id)}
+                  />
               </td>
             </tr>
           ))}
+         
 
           {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
               <td colSpan={5} />
             </tr>
           )}
-          
         </tbody>
-    
+
         <tfoot>
           <tr>
             <CustomTablePagination
               rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-              colSpan={3}
+              colSpan={5}
               count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}
@@ -216,9 +245,11 @@ const GpsTable = ({
           </tr>
         </tfoot>
       </table>
+      
     </div>
   );
 };
+
 
 export default GpsTable;
 
@@ -239,7 +270,6 @@ const grey = {
   800: "#2D3843",
   900: "#1A2027",
 };
-
 
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
