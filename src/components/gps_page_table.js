@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
-import { Button, Modal } from "@mui/material";
+import { Button, Modal,Checkbox } from "@mui/material";
 import { styled } from "@mui/system";
 import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 import "../scss/table.scss";
@@ -167,9 +167,7 @@ const GpsTable = ({
             <th>Status</th>
             <th>ID</th>
             <th>Number</th>
-            <th>Driver</th>
-            <th>Truck</th>
-            <th>Trailer</th>
+            <th>Select</th>
           </tr>
         </thead>
   
@@ -180,20 +178,14 @@ const GpsTable = ({
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
-              <td style={{ width: 120 }} align="right">
+              <td style={{ width: "auto" , padding:"1rem"}} align="right">
                 {row.emulatorSsid || "N/A"}
               </td>
-              <td style={{ width: 120 }} align="right">
+              <td style={{ width: "auto", padding:"1rem" }} align="right">
                 {row.telephone || "N/A"}
               </td>
-              <td style={{ width: 120 }} align="right">
-               viktor vovk
-              </td>
-              <td style={{ width: 120 }} align="right">
-              11
-              </td>
-              <td style={{ width: 120 }} align="right">
-              312456
+              <td style={{ width: "auto", padding:"1rem" }} align="right">
+              <Checkbox  />
               </td>
             </tr>
           ))}
@@ -203,13 +195,14 @@ const GpsTable = ({
               <td colSpan={5} />
             </tr>
           )}
+          
         </tbody>
     
         <tfoot>
           <tr>
             <CustomTablePagination
               rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-              colSpan={6}
+              colSpan={3}
               count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}

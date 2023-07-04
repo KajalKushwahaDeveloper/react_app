@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import GpsTable from "./components/table";
+import GpsTable from "./components/gps_page_table";
 import CurrentLocation from "./components/current_location";
 import "./scss/map.scss";
-import CreateTable from "./components/create_table";
+import CreateTable from "./components/user_emulator_table";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 import WrappedMap from "./components/location/Map";
 import useFetch from "./components/hooks/useFetch";
 

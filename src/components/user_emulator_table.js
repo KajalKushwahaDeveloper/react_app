@@ -1,5 +1,5 @@
 import React from "react";
-import SearchBar from '../components/location/SearchBar.js';
+import SearchBar from './location/SearchBar.js';
 import { styled, TextField } from "@mui/material";
 
 const CreateTable = () => {
