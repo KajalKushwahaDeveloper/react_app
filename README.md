@@ -133,3 +133,6 @@ Save the changes to the 000-default.conf file, and then restart the Apache servi
 With this configuration, the FallbackResource directive instructs Apache to serve the index.html file for any URL that does not match an existing file on the server. This allows your React application to handle client-side routing properly.
 
 After restarting Apache, try accessing the '/login' route in your deployed React application. It should now work as expected.
+
+npm cache clean --force
+npm install @material-ui/core --legacy-peer-deps

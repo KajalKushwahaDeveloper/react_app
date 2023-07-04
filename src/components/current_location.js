@@ -18,6 +18,7 @@ const CurrentLocation = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      
       if (!response.ok || response.status !== 200) {
         return { success: false, error: "Invalid credentials" };
       } else {
@@ -36,7 +37,7 @@ const CurrentLocation = () => {
   };
  useEffect(() => {
     const { success, error } = fetchData();
-  }, [fetchData]);
+  }, []);
   return (
     <div>
       <div style={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>

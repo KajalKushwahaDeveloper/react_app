@@ -17,7 +17,7 @@ const CreateTripTable = () => {
           </thead>
           <tbody>
             <tr>
-              <td>1</td>
+              
               <td>
                 <div className="container">
                   <SearchBar />
@@ -25,7 +25,7 @@ const CreateTripTable = () => {
               </td>
             </tr>
             <tr>
-              <td>2</td>
+          
               <td>
                 <div className="container">
                   <SearchBar />

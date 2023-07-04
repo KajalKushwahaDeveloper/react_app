@@ -117,7 +117,7 @@ class SearchBar extends React.Component {
                     })}
                     <div className="Demo__dropdown-footer">
                       <div>
-                        <img
+                        <img style={{width:"2rem"}}
                           src={require('../../images/powered_by_google_default.png')}
                           className="Demo__dropdown-footer-image"
                         />
