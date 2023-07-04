@@ -92,6 +92,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route element={<AuthenticatedLayout isAdmin={isAdmin} />}>
         <Route path="/home" element={<Home />} />
