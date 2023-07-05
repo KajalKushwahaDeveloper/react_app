@@ -18,6 +18,7 @@ const CurrentLocation = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+      
       if (!response.ok || response.status !== 200) {
         return { success: false, error: "Invalid credentials" };
       } else {

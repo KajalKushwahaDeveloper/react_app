@@ -1,8 +1,9 @@
 import React from "react";
 import SearchBar from './location/SearchBar.js';
-import { styled, TextField } from "@mui/material";
+
 
 const CreateTripTable = () => {
+  const [lat, setLat] = useState();
   return (
     <div>
       <div sx={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>
@@ -17,7 +18,7 @@ const CreateTripTable = () => {
           </thead>
           <tbody>
             <tr>
-              <td>1</td>
+              
               <td>
                 <div className="container">
                   <SearchBar />
@@ -25,7 +26,7 @@ const CreateTripTable = () => {
               </td>
             </tr>
             <tr>
-              <td>2</td>
+          
               <td>
                 <div className="container">
                   <SearchBar />
