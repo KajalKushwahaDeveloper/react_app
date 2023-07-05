@@ -9,6 +9,7 @@ import useFetch from "./components/hooks/useFetch";
 
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
+import { TRIP_URL } from "./constants";
 
 const showToast = (message, type) => {
   console.log("Showing toast...");
@@ -17,7 +18,7 @@ const showToast = (message, type) => {
 
 const GPS = () => {
   const { data: paths } = useFetch(
-    "https://61a4a0604c822c0017041d33.mockapi.io/shuttle/v1/path"
+    TRIP_URL + '/1'
   );
   const { data: stops } = useFetch(
     "https://61a4a0604c822c0017041d33.mockapi.io/shuttle/v1/stops"

@@ -11,11 +11,21 @@ function useFetch(url) {
         setData(null);
         setError(null);
 
+        const token = localStorage.getItem("token");
+        console.error("CLIENT_CURRENT: token : ", token);
+
         const source = axios.CancelToken.source();
-        axios.get(url, { cancelToken: source.token })
+        axios.get(url, { cancelToken: source.token, headers: {
+            Authorization: `Bearer ${token}`,
+        }})
             .then(res => {
                 setLoading(false);
-                res && res.data && setData(res.data);
+                console.log("res : ", res );
+                if(res!=null && res.data.tripDetails!= null && res.data.tripDetails.tripPoints!=null ) {
+                    setData(res.data.tripDetails.tripPoints);
+                } else {
+                    res && res.data && setData(res.data);
+                }
             })
             .catch(err => {
                 setLoading(false);
