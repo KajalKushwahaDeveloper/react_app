@@ -1,8 +1,9 @@
 import React from "react";
 import SearchBar from './location/SearchBar.js';
-import { styled, TextField } from "@mui/material";
+
 
 const CreateTripTable = () => {
+  const [lat, setLat] = useState();
   return (
     <div>
       <div sx={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>
