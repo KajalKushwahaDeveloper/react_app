@@ -3,7 +3,7 @@ import SearchBar from './location/SearchBar.js';
 
 
 const CreateTripTable = () => {
-  const [lat, setLat] = useState();
+  // const [lat, setLat] = useState();
   return (
     <div>
       <div sx={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>
