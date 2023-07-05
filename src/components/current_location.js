@@ -36,7 +36,7 @@ const CurrentLocation = () => {
   };
  useEffect(() => {
     const { success, error } = fetchData();
-  }, [fetchData]);
+  }, []);
   return (
     <div>
       <div style={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>

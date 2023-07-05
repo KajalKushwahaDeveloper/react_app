@@ -31,3 +31,7 @@ export const USER_ASSIGN_EMULATOR_URL = BASE_URL + "/user-assign-emulator";
 export const DOWNLOAD_APK_URL = BASE_URL + "/download";
 export const COPY_DOWNLOAD_APK_URL = DOWNLOAD_APK_URL + "/apkLink";
 
+
+//TRIP
+export const TRIP_URL = BASE_URL + "/trip";
+export const CREATE_TRIP_URL = BASE_URL + "/trip";
