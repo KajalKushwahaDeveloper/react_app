@@ -37,7 +37,7 @@ class SearchBar extends React.Component {
       })
       .catch(error => {
         this.setState({ isGeocoding: false });
-        console.log('error', error); // eslint-disable-line no-console
+        console.log('error', error); 
       });
   };
 
@@ -50,12 +50,13 @@ class SearchBar extends React.Component {
   };
 
   handleError = (status, clearSuggestions) => {
-    console.log('Error from Google Maps API', status); // eslint-disable-line no-console
+    console.log('Error from Google Maps API', status); 
     this.setState({ errorMessage: status }, () => {
       clearSuggestions();
     });
   };
 
+  
   render() {
     const {
       address,
@@ -84,25 +85,28 @@ class SearchBar extends React.Component {
                       className: 'Demo__search-input',
                     })}
                   />
-                  {this.state.address.length > 0 && (
-                    <button
+                  
+                </div>
+                {this.state.address.length > 0 && (
+                   <div style={{float:"right"}}>
+                     <button
                       className="Demo__clear-button"
                       onClick={this.handleCloseClick}
                     >
                       x
                     </button>
+                   </div>
                   )}
-                </div>
                 {suggestions.length > 0 && (
-                  <div className="Demo__autocomplete-container">
+                  <div className="Demo__autocomplete-container" style={{display:"flex",flexDirection:"column" , overflowY : 'scroll', maxHeight: '100px' }}>
                     {suggestions.map(suggestion => {
                       const className = classnames('Demo__suggestion-item', {
                         'Demo__suggestion-item--active': suggestion.active,
                       });
 
                       return (
-                        /* eslint-disable react/jsx-key */
-                        <div
+                  
+                        <div  
                           {...getSuggestionItemProps(suggestion, { className })}
                         >
                           <strong>
@@ -113,8 +117,9 @@ class SearchBar extends React.Component {
                           </small>
                         </div>
                       );
-                      /* eslint-enable react/jsx-key */
+                 
                     })}
+                   
                     <div className="Demo__dropdown-footer">
                       <div>
                         <img style={{width:"2rem"}}
