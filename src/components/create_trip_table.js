@@ -1,39 +1,52 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "./location/SearchBar.js";
+import { CREATE_TRIP_URL } from "../constants.js";
 
-const CreateTripTable = () => {
+const CreateTripTable = ({ showToast,selectedEmId }) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
   const [toLong, setToLong] = useState();
 
-  useEffect(() => {
-    if (fromLat != null || fromLat != undefined) {
-      setFromLat(fromLat);
-    }
-    if (fromLong != null || fromLong != undefined) {
-      setFromLong(fromLong);
-    }
-    if (toLat != null || toLat != undefined) {
-      setToLat(toLat);
-    }
-    if (toLong != null || toLong != undefined) {
-      setToLong(toLong);
-    }
-  }, [fromLat, fromLong, toLat, toLong]);
+  const handleAddClick = async () => {
+console.log("id: " + selectedEmId);
+    const token = localStorage.getItem("token");
+    const payload = {
+      startLat: fromLat,
+      startLong: fromLong,
+      endLat: toLat,
+      endLong: toLong,
+      tripTime: 7200,
+      emulatorDetailsId:selectedEmId,
+    };
+    console.log("payload create trip: " , payload )
+  
+    try {
+      const response = await fetch(CREATE_TRIP_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
-  const handleAddClick = () => {
-    
-    setFromLat(fromLat);
-    setFromLong(fromLong);
-    setToLat(toLat);
-    setToLong(toLong);
-    
-    // console.log("create trip fromLat :" + fromLat)
-    // console.log("create trip  fromLong:" + fromLong)
-    // console.log("create trip fromLat :" + toLat)
-    // console.log("create trip  fromLong:" + toLong)
-  }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        const errorMessage = errorData.message || "An error occurred";
+        console.error("API Error:", errorMessage);
+        showToast(errorMessage, "error");
+      } else {
+        showToast("Added successfully", "success");
+      }
+    } catch (error) {
+      console.log("API Error: " + error);
+      showToast("An error occurred", "error");
+      console.log("Response:", error.response); 
+    }
+   
+  };
 
   return (
     <div>
@@ -62,7 +75,15 @@ const CreateTripTable = () => {
               </td>
             </tr>
             <tr>
-              <th onClick = {handleAddClick} colSpan="2" style={{ cursor:"pointer", width: "100%", textAlign: "center" }}>
+              <th
+                onClick={handleAddClick}
+                colSpan="2"
+                style={{
+                  cursor: "pointer",
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
                 Add
               </th>
             </tr>

@@ -17,6 +17,8 @@ const showToast = (message, type) => {
 };
 
 const GPS = () => {
+  const [selectedEmId,setSelectedEmId ] = useState();
+
   const { data: paths } = useFetch(
     TRIP_URL + '/1'
   );
@@ -40,6 +42,7 @@ const GPS = () => {
       <div className="gps_page">
         <div className="gps_tables">
           <GpsTable
+          setSelectedEmId={setSelectedEmId}
             showToast={showToast}
             handleAssignUserButtonClick={handleAssignUserButtonClick}
             userAssingedEmulator={userAssingedEmulator}
@@ -48,7 +51,7 @@ const GPS = () => {
 
           <CurrentLocation />
 
-          <CreateTripTable />
+          <CreateTripTable  selectedEmId={selectedEmId} showToast={showToast}/>
 
           <button className="login_button">START</button>
         </div>

@@ -14,6 +14,7 @@ const GpsTable = ({
   handleAssignUserButtonClick,
   userAssingedEmulator,
   setUserAssingedEmulator,
+  setSelectedEmId
 }) => {
   // State variables
   const [data, setData] = useState([]);
@@ -151,10 +152,10 @@ const GpsTable = ({
 
   const handleEmulatorCheckboxChange = (id) => {
     setSelectedEmulator(id);
-    // console.log("onClick Checkbox ID:", id);
-    const selectedRow = data.find((row) => row.id === id);
-    // console.log("Selected Row:", selectedRow);
 
+    const selectedRow = data.find((row) => row.id === id);
+
+     setSelectedEmId(id);
   };
 
   const emptyRows =
