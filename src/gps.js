@@ -42,11 +42,8 @@ const GPS = () => {
       <div className="gps_page">
         <div className="gps_tables">
           <GpsTable
-          setSelectedEmId={setSelectedEmId}
             showToast={showToast}
-            handleAssignUserButtonClick={handleAssignUserButtonClick}
-            userAssingedEmulator={userAssingedEmulator}
-            setUserAssingedEmulator={setUserAssingedEmulator}
+            setSelectedEmId={setSelectedEmId}
           />
 
           <CurrentLocation />
