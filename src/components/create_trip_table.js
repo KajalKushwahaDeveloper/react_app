@@ -9,7 +9,7 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
   const [toLong, setToLong] = useState();
 
   const handleAddClick = async () => {
-console.log("id: " + selectedEmId);
+    console.log("selectedEmId:", selectedEmId);
     const token = localStorage.getItem("token");
     const payload = {
       startLat: fromLat,

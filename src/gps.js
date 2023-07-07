@@ -20,7 +20,7 @@ const GPS = () => {
   const [selectedEmId,setSelectedEmId ] = useState();
 
   const { data: paths } = useFetch(
-    TRIP_URL + '/1'
+    TRIP_URL + `/${selectedEmId}`
   );
   const { data: stops } = useFetch(
     "https://61a4a0604c822c0017041d33.mockapi.io/shuttle/v1/stops"

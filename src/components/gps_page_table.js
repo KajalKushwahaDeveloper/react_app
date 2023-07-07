@@ -24,7 +24,7 @@ const GpsTable = ({
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedEmulator, setSelectedEmulator] = useState(1);
+  const [selectedEmulator, setSelectedEmulator] = useState();
 
   const handleActionButtonClick = async (row) => {
     console.log("row data in emulator_page:", row);
