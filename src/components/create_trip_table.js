@@ -42,7 +42,7 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
       }
     } catch (error) {
       console.log("API Error: " + error);
-      showToast("An error occurred", "error");
+      showToast("An error occurred : " + error, "error");
       console.log("Response:", error.response); 
     }
    

@@ -9,10 +9,7 @@ import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 import "../scss/table.scss";
 import "../scss/button.scss";
 
-const GpsTable = ({
-  showToast,
-  setSelectedEmId
-}) => {
+const GpsTable = ({ showToast, setSelectedEmId }) => {
   // State variables
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
@@ -21,7 +18,7 @@ const GpsTable = ({
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedEmulator, setSelectedEmulator] = useState();
+  const [selectedEmulator, setSelectedEmulator] = useState(1);
 
   // Fetch data from API
   const fetchData = async () => {
@@ -40,7 +37,10 @@ const GpsTable = ({
         const responseData = await response.text();
         const deserializedData = JSON.parse(responseData);
         console.log("");
-        setData(deserializedData);
+        if (deserializedData != null) {
+          setData(deserializedData);
+          setSelectedEmId(deserializedData[0].id);
+        }
         setLoading(false);
         return { success: true, error: null };
       }
@@ -61,22 +61,6 @@ const GpsTable = ({
     }
   }, []);
 
-  //Refresh component after 30000 ms/ 30 seconds
-  useEffect(() => {
-    const fetchDataInterval = setInterval(() => {
-      setLoading(true);
-      const { success, error } = fetchData();
-      if (success) {
-        showToast("Fetched Emulators successfully", "success");
-      } else {
-        showToast(error, "error");
-      }
-    }, 30000);
-
-    return () => {
-      clearInterval(fetchDataInterval);
-    };
-  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -124,14 +108,12 @@ const GpsTable = ({
             <tr key={row.id || "N/A"}>
               <td
                 style={{
-                  background:
-                    row.status === "active"
-                      ? "green" : "#ff4d4d",
-                      // : row.status === "inactive"
-                      // ? "green"
-                      // : row.status === "idle"
-                      // ? "yellow"
-                      // : "",
+                  background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
+                  // : row.status === "inactive"
+                  // ? "green"
+                  // : row.status === "idle"
+                  // ? "yellow"
+                  // : "",
                 }}
               >
                 {row.status || "N/A"}
@@ -146,14 +128,13 @@ const GpsTable = ({
                 {row.address || "N/A"}
               </td>
               <td style={{ width: "auto" }} align="right">
-                <Checkbox 
+                <Checkbox
                   checked={selectedEmulator === row.id}
                   onChange={() => handleEmulatorCheckboxChange(row.id)}
-                  />
+                />
               </td>
             </tr>
           ))}
-         
 
           {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
@@ -180,11 +161,9 @@ const GpsTable = ({
           </tr>
         </tfoot>
       </table>
-      
     </div>
   );
 };
-
 
 export default GpsTable;
 

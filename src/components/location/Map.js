@@ -171,7 +171,7 @@ const Map = ({paths, stops})=> {
         
         <div className='gMapCont'>
           <GoogleMap
-              defaultZoom={17}
+              defaultZoom={8}
               defaultCenter={{ lat: centerPathLat, lng: centerpathLng }}
           >
             <Polyline

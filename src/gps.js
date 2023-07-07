@@ -27,15 +27,6 @@ const GPS = () => {
   );
   const mapURL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAOJ2QPH1vPWF7wXqdHMGFR54Vzlb13M1E`;
 
-  const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
-  const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
-  const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
-  const handleAssignUserButtonClick = (data) => {
-    console.log("Assign Button clicked with data:", data);
-    setEmulatorToAssignUser(data);
-    setOpenUserAssignPopup(true);
-  };
-
   return (
     <>
       <ToastContainer style={{ zIndex: 3 }} />
