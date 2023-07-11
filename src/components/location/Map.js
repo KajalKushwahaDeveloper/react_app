@@ -20,7 +20,15 @@ const Map = ({ showToast }) => {
 
   const [progress, setProgress] = useState(null);
   const [selectedEmId, setSelectedEmId] = useState(1);
+  const [createTrip, setCreateTrip] = useState(false);
 
+  const [pathsRoute, setPathsRoute] = useState(null);
+  const [centerPathLat, setCenterPathLat] = useState(null);
+  const [centerpathLng, setCenterpathLng] = useState(null);
+
+  const handleCreateTripButton = () => {
+    setCreateTrip(true);
+  };
   const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(
     "https://61a4a0604c822c0017041d33.mockapi.io/shuttle/v1/stops"
@@ -35,17 +43,13 @@ const Map = ({ showToast }) => {
     scale: 0.7,
   };
 
-  const [pathsRoute, setPathsRoute] = useState(null);
-  const [centerPathLat, setCenterPathLat] = useState(null);
-  const [centerpathLng, setCenterpathLng] = useState(null);
-
   useEffect(() => {
     console.log("Map PATH REFRESHING........");
-    if(paths === null){
+    if (paths === null) {
       return;
     }
     calculatePath();
-    const center = parseInt(paths.length / 2)
+    const center = parseInt(paths.length / 2);
     setCenterPathLat(paths[center].lat);
     setCenterpathLng(paths[center + 5].lng);
     return () => {
@@ -107,25 +111,27 @@ const Map = ({ showToast }) => {
   };
 
   const calculatePath = () => {
-    setPathsRoute(paths.map((coordinates, i, array) => {
-      if (i === 0) {
-        return { ...coordinates, distance: 0 }; // it begins here!
-      }
-      const { lat: lat1, lng: lng1 } = coordinates;
-      const latLong1 = new window.google.maps.LatLng(lat1, lng1);
+    setPathsRoute(
+      paths.map((coordinates, i, array) => {
+        if (i === 0) {
+          return { ...coordinates, distance: 0 }; // it begins here!
+        }
+        const { lat: lat1, lng: lng1 } = coordinates;
+        const latLong1 = new window.google.maps.LatLng(lat1, lng1);
 
-      const { lat: lat2, lng: lng2 } = array[0];
-      const latLong2 = new window.google.maps.LatLng(lat2, lng2);
+        const { lat: lat2, lng: lng2 } = array[0];
+        const latLong2 = new window.google.maps.LatLng(lat2, lng2);
 
-      // in meters:
-      const distance =
-        window.google.maps.geometry.spherical.computeDistanceBetween(
-          latLong1,
-          latLong2
-        );
+        // in meters:
+        const distance =
+          window.google.maps.geometry.spherical.computeDistanceBetween(
+            latLong1,
+            latLong2
+          );
 
-      return { ...coordinates, distance };
-    }))
+        return { ...coordinates, distance };
+      })
+    );
   };
 
   const startSimulation = useCallback(() => {
@@ -186,12 +192,27 @@ const Map = ({ showToast }) => {
           Start Simulation
         </Button>
       </div>
-
+      <div>
+        <button
+          style={{
+            zIndex: 3,
+            position: "absolute",
+            top: 10,
+            left: 170,
+            padding: ".65rem",
+          }}
+          onClick={handleCreateTripButton}
+        >
+          Create Trip
+        </button>
+      </div>
       {/* tables */}
       <div className="gps_overlay">
         <GpsTable showToast={showToast} setSelectedEmId={setSelectedEmId} />
         <CurrentLocation />
-        <CreateTripTable selectedEmId={selectedEmId} showToast={showToast} />
+        {createTrip && (
+          <CreateTripTable selectedEmId={selectedEmId} showToast={showToast} />
+        )}
       </div>
       {/* table */}
 

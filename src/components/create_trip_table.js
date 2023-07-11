@@ -16,7 +16,7 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
       startLong: fromLong,
       endLat: toLat,
       endLong: toLong,
-      tripTime: 7200,
+      speed: 60,
       emulatorDetailsId:selectedEmId,
     };
     console.log("payload create trip: " , payload )
@@ -30,21 +30,27 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
         },
         body: JSON.stringify(payload),
       });
-
-
+    
       if (!response.ok) {
-        const errorData = await response.json();
-        const errorMessage = errorData.message || "An error occurred";
-        console.error("API Error:", errorMessage);
-        showToast(errorMessage, "error");
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          const errorMessage = errorData.message || "An error occurred";
+          console.error("API Error:", errorMessage);
+          showToast(errorMessage, "error");
+        } else {
+          const errorMessage = "Non-JSON error response";
+          console.error("API Error:", errorMessage);
+          showToast(errorMessage, "error");
+        }
       } else {
         showToast("Added successfully", "success");
       }
     } catch (error) {
       console.log("API Error: " + error);
-      showToast("An error occurred : " + error, "error");
-      console.log("Response:", error.response); 
+      showToast("An error occurred: " + error.message, "error");
     }
+    
    
   };
 
