@@ -36,9 +36,9 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
       } else {
         const responseData = await response.text();
         const deserializedData = JSON.parse(responseData);
-        console.log("");
         if (deserializedData != null) {
           setData(deserializedData);
+          console.log("useFetch Sending ID : ", deserializedData[0].id);
           setSelectedEmId(deserializedData[0].id);
         }
         setLoading(false);
@@ -88,7 +88,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%" }}>
+    <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
       <table aria-label="custom pagination table">
         <thead>
           <tr>

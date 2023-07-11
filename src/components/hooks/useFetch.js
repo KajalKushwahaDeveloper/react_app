@@ -10,9 +10,7 @@ function useFetch(url) {
         setLoading('Loading.....');
         setData(null);
         setError(null);
-
         const token = localStorage.getItem("token");
-        console.error("CLIENT_CURRENT: token : ", token);
 
         const source = axios.CancelToken.source();
         axios.get(url, { cancelToken: source.token, headers: {
@@ -20,8 +18,7 @@ function useFetch(url) {
         }})
             .then(res => {
                 setLoading(false);
-                console.log("res : ", res );
-                if(res!=null && res.data.tripDetails!= null && res.data.tripDetails.tripPoints!=null ) {
+                if(res!=null && res.data!=null && res.data.tripDetails!= null && res.data.tripDetails.tripPoints!=null ) {
                     setData(res.data.tripDetails.tripPoints);
                 } else {
                     res && res.data && setData(res.data);
@@ -29,7 +26,11 @@ function useFetch(url) {
             })
             .catch(err => {
                 setLoading(false);
-                setError('An error occured. ', err)
+                if (err.response && err.response.data) {
+                    setError(`${err.response.data.message}: ${err.response.data.description}`);
+                } else {
+                    setError('An error occurred.', err);
+                }
             })
             return () => {
                 source.cancel();

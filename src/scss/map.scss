@@ -1,30 +1,69 @@
 @import "./mixins.scss";
 @import "./variables.scss";
 
+body{
+  @include main;
+}
+.gps_page {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100vh;
+}
+
+.gps_map {
+  flex: 1;
+  position: relative;
+}
+
+.gps_overlay {
+  position: absolute;
+  top: 0;
+  right: 0; /* Position at the top right corner */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: 20px;
+  z-index: 2;
+}
+
+
 .gps_page {
   display: flex;
   flex-wrap: nowrap;
   padding-top: 5rem;
 }
 
+
 .gps_tables {
-  flex-basis: 30%;
-  margin: 0.5rem 1rem;
-  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .gps_map {
   flex-basis: 70%;
   height: 100vh;
 }
+.create_trip_button {
+  position: absolute;
+  top: 0;
+  left: 50;
+  padding: 10px;
+}
+.create_trip_button button {
+  padding: 8px 12px;
+}
 //table//
 table {
   font-family: Raleway, sans-serif;
   font-size: 0.875rem;
   border-collapse: collapse;
-  width: 100%;
+  width: 30%;
   padding: 0.5rem;
   margin-bottom: 2rem;
+  background: $light-grey;
 }
 
 td,
@@ -36,7 +75,7 @@ th {
 }
 
 th {
-  background-color: $tableBG;
+  background-color: $background-color;
 }
 
 @media screen and (max-width: 768px) {
@@ -61,7 +100,7 @@ th {
 }
 
 .mapContainer {
-  height: calc(100vh - 80px);
+  height:100vh;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -69,12 +108,8 @@ th {
   flex-shrink: 0;
   position: static;
   color: #fff;
-  /* margin-top: 20px; */
 }
 
-.mapContainer > div {
-  margin: 20px 20px;
-}
 
 .btnCont {
   display: flex;

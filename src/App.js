@@ -26,10 +26,8 @@ function App() {
 
   const checkToken = async () => {
     const token = localStorage.getItem("token");
-    console.error("CLIENT_CURRENT: token : ", token);
     if (token != null) {
       try {
-        console.error("CLIENT_CURRENT: RAN");
         const { success, data, error } = await ApiService.makeApiCall(
           CLIENT_CURRENT,
           "GET",
@@ -37,7 +35,6 @@ function App() {
           token
         );
         if (success) {
-          console.error("CLIENT_CURRENT: ", data);
           const authorities = data.authorities;
           let isRoleAdmin = false;
           authorities.forEach((authority) => {
