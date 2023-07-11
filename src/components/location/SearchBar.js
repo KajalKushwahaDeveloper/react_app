@@ -14,6 +14,7 @@ class SearchBar extends React.Component {
       errorMessage: "",
       latitude: null,
       longitude: null,
+      addressComponent: null,
       isGeocoding: false,
     };
   }
@@ -23,6 +24,7 @@ class SearchBar extends React.Component {
       address,
       latitude: null,
       longitude: null,
+      addressComponent: null,
       errorMessage: "",
     });
   };
@@ -30,7 +32,11 @@ class SearchBar extends React.Component {
   handleSelect = (selected) => {
     this.setState({ isGeocoding: true, address: selected });
     geocodeByAddress(selected)
-      .then((res) => getLatLng(res[0]))
+      .then((res) => {
+        console.log(res[0].address_components);
+        res[0].address_components && this.setState({ addressComponent : res[0].address_components}); // Save addressComponent in state
+        return getLatLng(res[0])
+      })
       .then(({ lat, lng }) => {
         this.setState({
           latitude: lat,
@@ -49,6 +55,7 @@ class SearchBar extends React.Component {
       address: "",
       latitude: null,
       longitude: null,
+      addressComponent: null,
     });
   };
 
@@ -60,10 +67,12 @@ class SearchBar extends React.Component {
   };
 
   render() {
-    const { address, errorMessage, latitude, longitude, isGeocoding } =
+    const { address, errorMessage, latitude, longitude, addressComponent, isGeocoding } =
       this.state;
  
+    console.log("CHECK : ", latitude);
     this.props.setLat(latitude);
+    this.props.setAddress(addressComponent);
     this.props.setLong(longitude);
 
     return (

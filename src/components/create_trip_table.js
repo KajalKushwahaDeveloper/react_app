@@ -7,6 +7,8 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
   const [toLong, setToLong] = useState();
+  const [fromAddress, setFromAddress] = useState();
+  const [toAddress, setToAddress] = useState();
 
   const handleAddClick = async () => {
     console.log("selectedEmId:", selectedEmId);
@@ -16,6 +18,8 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
       startLong: fromLong,
       endLat: toLat,
       endLong: toLong,
+      fromAddress: fromAddress,
+      toAddress: toAddress,
       speed: 60,
       emulatorDetailsId:selectedEmId,
     };
@@ -69,14 +73,14 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
             <tr>
               <td>
                 <div className="container">
-                  <SearchBar setLat={setFromLat} setLong={setFromLong} />
+                  <SearchBar setLat={setFromLat} setLong={setFromLong} setAddress={setFromAddress} />
                 </div>
               </td>
             </tr>
             <tr>
               <td>
                 <div className="container">
-                  <SearchBar setLat={setToLat} setLong={setToLong} />
+                  <SearchBar setLat={setToLat} setLong={setToLong} setAddress={setToAddress} />
                 </div>
               </td>
             </tr>
