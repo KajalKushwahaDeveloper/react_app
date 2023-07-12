@@ -3,8 +3,10 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "../../autocomplete";
+import TextField from "@material-ui/core/TextField";
 import { classnames } from "../../helpers";
 import "../../css/auto_complete.css";
+import "../../scss/map.scss";
 
 class SearchBar extends React.Component {
   constructor(props) {
@@ -88,14 +90,14 @@ class SearchBar extends React.Component {
             return (
               <div className="Demo__search-bar-container">
                 <div className="Demo__search-input-container">
-                  <input
+                <TextField id="filled-basic" label="Filled" variant="filled" 
                     {...getInputProps({
                       placeholder: "Search Places...",
                       className: "Demo__search-input",
                     })}
                   />
                 </div>
-                {this.state.address.length > 0 && (
+                {/* {this.state.address.length > 0 && (
                   <div style={{ float: "right" }}>
                     <button
                       className="Demo__clear-button"
@@ -104,7 +106,7 @@ class SearchBar extends React.Component {
                       x
                     </button>
                   </div>
-                )}
+                )} */}
                 {suggestions.length > 0 && (
                   <div
                     className="Demo__autocomplete-container"
@@ -113,6 +115,7 @@ class SearchBar extends React.Component {
                       flexDirection: "column",
                       overflowY: "scroll",
                       maxHeight: "100px",
+                      width:"100%",cursor:"pointer"
                     }}
                   >
                     {suggestions.map((suggestion) => {
@@ -153,7 +156,7 @@ class SearchBar extends React.Component {
           <div className="Demo__error-message">{this.state.errorMessage}</div>
         )}
 
-        {((latitude && longitude) || isGeocoding) && (
+        {/* {((latitude && longitude) || isGeocoding) && (
           <div>
             <h3 className="Demo__geocode-result-header">Geocode result</h3>
             {isGeocoding ? (
@@ -173,7 +176,7 @@ class SearchBar extends React.Component {
               </div>
             )}
           </div>
-        )}
+        )} */}
       </div>
     );
   }

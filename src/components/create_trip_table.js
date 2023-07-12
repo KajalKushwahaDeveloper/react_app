@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "./location/SearchBar.js";
 import { CREATE_TRIP_URL } from "../constants.js";
+import CloseIcon from '@mui/icons-material/Close';
+import "../scss/map.scss";
 
-const CreateTripTable = ({ showToast,selectedEmId }) => {
+const CreateTripTable = ({ showToast,selectedEmId ,setIsTableVisible}) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
   const [toLong, setToLong] = useState();
   const [fromAddress, setFromAddress] = useState();
   const [toAddress, setToAddress] = useState();
+
+
+  const handleTableClose = () => {
+    setIsTableVisible(false);
+  };
 
   const handleAddClick = async () => {
     console.log("selectedEmId:", selectedEmId);
@@ -59,27 +66,29 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
   };
 
   return (
-    <div>
-      <div sx={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>
+    <div style={{ width: "40%"}}>
+  
+      <div style={{ width: "100%", padding: ".5rem", maxWidth: "100%" }}>
         <table aria-label="custom pagination table">
           <thead>
             <tr>
-              <th colSpan="2" style={{ width: "100%" }}>
+              <th colSpan="2" style={{ width: "auto" , display:"flex", alignItems:"center", justifyContent:'space-between'}}>
                 Create Trip
+                <CloseIcon onClick={handleTableClose}/>
               </th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>
-                <div className="container">
+                <div className="container" style={{width:"auto"}}>
                   <SearchBar setLat={setFromLat} setLong={setFromLong} setAddress={setFromAddress} />
                 </div>
               </td>
             </tr>
             <tr>
               <td>
-                <div className="container">
+                <div className="container" style={{width:"auto"}}>
                   <SearchBar setLat={setToLat} setLong={setToLong} setAddress={setToAddress} />
                 </div>
               </td>
@@ -100,6 +109,7 @@ const CreateTripTable = ({ showToast,selectedEmId }) => {
           </tbody>
         </table>
       </div>
+     
     </div>
   );
 };

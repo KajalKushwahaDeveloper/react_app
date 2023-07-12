@@ -4,11 +4,15 @@
 body{
   @include main;
 }
+
 .gps_page {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   height: 100vh;
+  flex-wrap: nowrap;
+  padding-top: 5rem;
+ 
 }
 
 .gps_map {
@@ -24,17 +28,19 @@ body{
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-end;
-  padding: 20px;
+  padding: 10px;
   z-index: 2;
 }
 
-
-.gps_page {
-  display: flex;
-  flex-wrap: nowrap;
-  padding-top: 5rem;
+.gps_createTrip_overlay{
+  position: absolute;
+  top: 0;
+  left: 0; /* Position at the top right corner */
+  padding: 20px;
+  z-index: 2;
+  margin-top: 3rem;
+  width:50%;
 }
-
 
 .gps_tables {
   display: flex;
@@ -55,12 +61,13 @@ body{
 .create_trip_button button {
   padding: 8px 12px;
 }
+
 //table//
 table {
   font-family: Raleway, sans-serif;
   font-size: 0.875rem;
   border-collapse: collapse;
-  width: 30%;
+  width: auto;
   padding: 0.5rem;
   margin-bottom: 2rem;
   background: $light-grey;
@@ -95,12 +102,12 @@ th {
 
   .gps_tables,
   .gps_map {
-    flex-basis: 100%;
+    flex-basis: auto;
   }
 }
 
 .mapContainer {
-  height:100vh;
+  height:90vh;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -110,8 +117,9 @@ th {
   color: #fff;
 }
 
-
 .btnCont {
-  display: flex;
+  display: grid;
   justify-content: center;
+  align-items: center;
+  background: $background-color;
 }

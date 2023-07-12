@@ -22,6 +22,8 @@ const Map = ({ showToast }) => {
 
   const [pathsRoute, setPathsRoute] = useState(null);
 
+  const [isTableVisible, setIsTableVisible] = useState(false);
+
   const defaultLat = 37.7749; // Default latitude
   const defaultLng = -122.4194; // Default longitude
 
@@ -34,6 +36,8 @@ const Map = ({ showToast }) => {
 
   const handleCreateTripButton = () => {
     setCreateTrip(true);
+
+    setIsTableVisible(!isTableVisible);
   };
 
   const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
@@ -245,7 +249,7 @@ const Map = ({ showToast }) => {
       <div>
         <button
           style={{
-            zIndex: 3,
+            zIndex: 2,
             position: "absolute",
             top: 10,
             left: 170,
@@ -260,10 +264,12 @@ const Map = ({ showToast }) => {
       <div className="gps_overlay">
         <GpsTable showToast={showToast} setSelectedEmId={setSelectedEmId} />
         <CurrentLocation />
-        {createTrip && (
-          <CreateTripTable selectedEmId={selectedEmId} showToast={showToast} />
-        )}
       </div>
+        <div className="gps_createTrip_overlay">
+        {isTableVisible && (
+          <CreateTripTable selectedEmId={selectedEmId} showToast={showToast} setIsTableVisible={setIsTableVisible}/>
+        )}
+        </div>
       {/* table */}
 
       <div className="gMapCont">
