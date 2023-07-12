@@ -77,13 +77,6 @@ const Map = ({ showToast }) => {
     console.log("CHANGED pathsRoute : ", pathsRoute);
   }, [pathsRoute]);
 
-  useEffect(() => {
-    if (emulators === null) {
-      console.log("CHANGED emulators : Null emulators");
-    }
-    console.log("CHANGED emulators : ", emulators);
-  }, [emulators]);
-
   const moveObject = (pathsRoute) => {
     const distance = getDistance();
     console.log("Move Path distance : ", distance);
@@ -238,15 +231,9 @@ const Map = ({ showToast }) => {
       const lat = latLng.lat();
       const lng = latLng.lng();
       console.log(`New Latitude: ${lat}, New Longitude: ${lng}`);
+      //TODO: send lat long to backed/emulator... update the emulator on map...
     }
   };
-
-  const handleEmulatorMarkerDragStart = (emulator) => {
-    if (emulator.startLat) {
-      showToast("Emulator has a Trip, Can't drag", "error"); // Replace with your own showToast method
-    }
-  };
-  
 
   return (
     <Card variant="outlined">
@@ -280,7 +267,6 @@ const Map = ({ showToast }) => {
       {/* table */}
 
       <div className="gMapCont">
-        {console.log("center changed : ", center)}
         <GoogleMap ref={mapRef} defaultZoom={7} center={center}>
           {pathsRoute != null && (
             <Polyline
@@ -293,7 +279,6 @@ const Map = ({ showToast }) => {
               }}
             />
           )}
-          {console.log("stops : ", stops)}
           {stops != null &&
             stops.map((stop, index) => (
               <React.Fragment key={index}>
@@ -319,13 +304,12 @@ const Map = ({ showToast }) => {
                 )}
               </React.Fragment>
             ))}
-          {console.log("selectedStop : ", selectedStop)}
           {selectedStop && (
             <InfoWindow
               position={{ lat: selectedStop.lat, lng: selectedStop.lng }}
               onCloseClick={handleInfoWindowClose}
             >
-              <div style={{ width : "auto" }}>
+              <div style={{ width: "auto" }}>
                 <h3 style={{ color: "black" }}>Stop Address:</h3>
                 <p style={{ color: "black" }}>
                   {selectedStop.address.map((addressItem, index) => (
@@ -337,12 +321,14 @@ const Map = ({ showToast }) => {
                 </p>
                 <h3 style={{ color: "black" }}>Nearest Gas Station:</h3>
                 <p style={{ color: "black" }}>
-                  {selectedStop.gasStation.map((gasStationAddressItem, index) => (
-                    <React.Fragment key={index}>
-                      {index > 0 && ", "}
-                      {gasStationAddressItem.long_name}
-                    </React.Fragment>
-                  ))}
+                  {selectedStop.gasStation.map(
+                    (gasStationAddressItem, index) => (
+                      <React.Fragment key={index}>
+                        {index > 0 && ", "}
+                        {gasStationAddressItem.long_name}
+                      </React.Fragment>
+                    )
+                  )}
                 </p>
               </div>
             </InfoWindow>
@@ -355,11 +341,16 @@ const Map = ({ showToast }) => {
               <Marker icon={icon1} position={progress[progress.length - 1]} />
             </>
           )}
-
-          {emulators &&
-            emulators.map((emulator, index) => (
+          {console.log("emulators : ", emulators)}
+          {emulators != null && emulators
+            .filter(
+              (emulator) =>
+                emulator.latitude !== null && emulator.longitude !== null
+            )
+            .map((emulator, index) => (
               <React.Fragment key={index}>
                 <Marker
+                  icon={icon1} 
                   position={{
                     lat: emulator.latitude,
                     lng: emulator.longitude,
@@ -368,8 +359,9 @@ const Map = ({ showToast }) => {
                   label={`S${emulator.id}`}
                   onClick={() => handleEmulatorMarkerClick(emulator)}
                   draggable={!emulator.startLat}
-                  onDragStart={() => handleEmulatorMarkerDragStart(emulator)}
-                  onDragEnd={(event) => handleEmulatorMarkerDragEnd(emulator, event)}
+                  onDragEnd={(event) =>
+                    handleEmulatorMarkerDragEnd(emulator, event)
+                  }
                 />
               </React.Fragment>
             ))}
