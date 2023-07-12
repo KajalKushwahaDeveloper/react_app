@@ -7,6 +7,7 @@ function useFetch(url) {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        console.log("GETTING PATH with url : ", url);
         setLoading('Loading.....');
         setData(null);
         setError(null);

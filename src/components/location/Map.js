@@ -24,11 +24,12 @@ const Map = ({ showToast }) => {
 
   const [pathsRoute, setPathsRoute] = useState(null);
   const [centerPathLat, setCenterPathLat] = useState(null);
-  const [centerpathLng, setCenterpathLng] = useState(null);
+  const [centerPathLng, setCenterPathLng] = useState(null);
 
   const handleCreateTripButton = () => {
     setCreateTrip(true);
   };
+
   const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(
     "https://61a4a0604c822c0017041d33.mockapi.io/shuttle/v1/stops"
@@ -44,16 +45,15 @@ const Map = ({ showToast }) => {
   };
 
   useEffect(() => {
-    console.log("Map PATH REFRESHING........");
     if (paths === null) {
       return;
     }
-    calculatePath();
+    console.log("GOT PATH, CALCULATING ROUTE! paths : ", paths);
     const center = parseInt(paths.length / 2);
     setCenterPathLat(paths[center].lat);
-    setCenterpathLng(paths[center + 5].lng);
+    setCenterPathLng(paths[center + 5].lng);
+    calculatePath();
     return () => {
-      console.log("Map PATH REFRESHED........");
       interval && window.clearInterval(interval);
     };
   }, [paths]);
@@ -64,17 +64,28 @@ const Map = ({ showToast }) => {
     return differentInTime * velocity; // d = v*t -- thanks Newton!
   };
 
-  const moveObject = () => {
+  useEffect(() => {
+    if (pathsRoute === null) {
+      console.log("CHANGED pathsRoute : Null Route");
+    }
+    console.log("CHANGED pathsRoute : ", pathsRoute);
+  }, [pathsRoute]);
+
+
+  const moveObject = (pathsRoute) => {
     const distance = getDistance();
+    console.log("Move Path distance : ", distance);
+    console.log("Move Path pathsRoute1212 : ", pathsRoute);
     if (!distance) {
       return;
     }
 
-    let progress = paths.filter(
+    console.log("FILTERING : ", pathsRoute);
+    let progress = pathsRoute?.filter(
       (coordinates) => coordinates.distance < distance
     );
 
-    const nextLine = paths.find(
+    const nextLine = pathsRoute?.find(
       (coordinates) => coordinates.distance > distance
     );
 
@@ -111,36 +122,34 @@ const Map = ({ showToast }) => {
   };
 
   const calculatePath = () => {
-    setPathsRoute(
-      paths.map((coordinates, i, array) => {
-        if (i === 0) {
-          return { ...coordinates, distance: 0 }; // it begins here!
-        }
-        const { lat: lat1, lng: lng1 } = coordinates;
-        const latLong1 = new window.google.maps.LatLng(lat1, lng1);
+    setPathsRoute(paths.map((coordinates, i, array) => {
+      if (i === 0) {
+        return { ...coordinates, distance: 0 }; // it begins here!
+      }
+      const { lat: lat1, lng: lng1 } = coordinates;
+      const latLong1 = new window.google.maps.LatLng(lat1, lng1);
 
-        const { lat: lat2, lng: lng2 } = array[0];
-        const latLong2 = new window.google.maps.LatLng(lat2, lng2);
+      const { lat: lat2, lng: lng2 } = array[0];
+      const latLong2 = new window.google.maps.LatLng(lat2, lng2);
 
-        // in meters:
-        const distance =
-          window.google.maps.geometry.spherical.computeDistanceBetween(
-            latLong1,
-            latLong2
-          );
+      // in meters:
+      const distance =
+        window.google.maps.geometry.spherical.computeDistanceBetween(
+          latLong1,
+          latLong2
+        );
 
-        return { ...coordinates, distance };
-      })
-    );
+      return { ...coordinates, distance };
+    }));
   };
-
-  const startSimulation = useCallback(() => {
-    if (interval) {
-      window.clearInterval(interval);
-    }
-    setProgress(null);
-    initialDate = new Date();
-    interval = window.setInterval(moveObject, 1000);
+  
+  const startSimulation = useCallback((pathsRoute) => {
+      console.log("HELLO !!! PATHS : ", paths);
+      console.log("HELLO !!! pathsRoute : ", pathsRoute);
+      initialDate = new Date();
+      setProgress(null);
+      initialDate = new Date();
+      interval = window.setInterval(moveObject(pathsRoute), 1000);
   }, [interval, initialDate]);
 
   const mapUpdate = () => {
@@ -149,11 +158,11 @@ const Map = ({ showToast }) => {
       return;
     }
 
-    let progress = pathsRoute.filter(
+    let progress = pathsRoute?.filter(
       (coordinates) => coordinates.distance < distance
     );
 
-    const nextLine = pathsRoute.find(
+    const nextLine = pathsRoute?.find(
       (coordinates) => coordinates.distance > distance
     );
 
@@ -188,7 +197,8 @@ const Map = ({ showToast }) => {
   return (
     <Card variant="outlined">
       <div className="btnCont">
-        <Button variant="contained" onClick={startSimulation}>
+        
+        <Button variant="contained" onClick={()=>startSimulation(pathsRoute)}>
           Start Simulation
         </Button>
       </div>
@@ -221,7 +231,7 @@ const Map = ({ showToast }) => {
           defaultZoom={8}
           defaultCenter={{
             lat: centerPathLat || defaultLat,
-            lng: centerpathLng || defaultLng,
+            lng: centerPathLng || defaultLng,
           }}
         >
           {pathsRoute != null && (
