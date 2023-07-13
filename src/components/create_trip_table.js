@@ -3,6 +3,7 @@ import SearchBar from "./location/SearchBar.js";
 import { CREATE_TRIP_URL } from "../constants.js";
 import CloseIcon from "@mui/icons-material/Close";
 import "../scss/map.scss";
+import ApiService from "../ApiService.js";
 
 const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
   const [fromLat, setFromLat] = useState();
@@ -46,34 +47,16 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
     };
     console.log("payload create trip: ", payload);
 
-    try {
-      const response = await fetch(CREATE_TRIP_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
-          const errorMessage = errorData.message || "An error occurred";
-          console.error("API Error:", errorMessage);
-          showToast(errorMessage, "error");
-        } else {
-          const errorMessage = "Non-JSON error response";
-          console.error("API Error:", errorMessage);
-          showToast(errorMessage, "error");
-        }
-      } else {
-        showToast("Added successfully", "success");
-      }
-    } catch (error) {
-      console.log("API Error: " + error);
-      showToast("An error occurred: " + error.message, "error");
+    const { success, data, error } = await ApiService.makeApiCall(
+      CREATE_TRIP_URL,
+      "POST",
+      payload,
+      token
+    );
+    if (success) {
+      showToast("Added successfully // TODO HANDLE CHANGES TO MAP", "success");
+    } else {
+      showToast(error, "error");
     }
   };
 

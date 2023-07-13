@@ -54,7 +54,7 @@ class ApiService {
       return {
         success: false,
         data: null,
-        error: "An error occurred during the API call",
+        error: error.message,
       };
     }
   }
