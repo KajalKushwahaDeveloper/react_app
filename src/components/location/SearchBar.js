@@ -12,6 +12,7 @@ class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      inputValue:"",
       address: "",
       errorMessage: "",
       latitude: null,
@@ -31,13 +32,15 @@ class SearchBar extends React.Component {
     });
   };
 
+
   handleSelect = (selected) => {
     this.setState({ isGeocoding: true, address: selected });
     geocodeByAddress(selected)
       .then((res) => {
         console.log(res[0].address_components);
-        res[0].address_components && this.setState({ addressComponent : res[0].address_components}); // Save addressComponent in state
-        return getLatLng(res[0])
+        res[0].address_components &&
+          this.setState({ addressComponent: res[0].address_components }); // Save addressComponent in state
+        return getLatLng(res[0]);
       })
       .then(({ lat, lng }) => {
         this.setState({
@@ -67,16 +70,27 @@ class SearchBar extends React.Component {
       clearSuggestions();
     });
   };
+  handleInputChange = (event) => {
+    this.setState({ inputValue: event.target.value });
+  };
 
   render() {
-    const { address, errorMessage, latitude, longitude, addressComponent, isGeocoding } =
-      this.state;
- 
+    const {
+      inputValue,
+      address,
+      errorMessage,
+      latitude,
+      longitude,
+      addressComponent,
+      isGeocoding,
+    } = this.state;
+
     console.log("CHECK : ", latitude);
     this.props.setLat(latitude);
     this.props.setAddress(addressComponent);
     this.props.setLong(longitude);
-
+    
+    
     return (
       <div>
         <PlacesAutocomplete
@@ -90,13 +104,19 @@ class SearchBar extends React.Component {
             return (
               <div className="Demo__search-bar-container">
                 <div className="Demo__search-input-container">
-                <TextField id="filled-basic" label="Filled" variant="filled" 
+                  <TextField
+                    id="filled-basic"
+                    label="Filled"
+                    variant="filled"
+                    value={inputValue}
+                    onChange={this.handleInputChange}
                     {...getInputProps({
                       placeholder: "Search Places...",
                       className: "Demo__search-input",
                     })}
                   />
                 </div>
+               
                 {/* {this.state.address.length > 0 && (
                   <div style={{ float: "right" }}>
                     <button
@@ -115,7 +135,8 @@ class SearchBar extends React.Component {
                       flexDirection: "column",
                       overflowY: "scroll",
                       maxHeight: "100px",
-                      width:"100%",cursor:"pointer"
+                      width: "100%",
+                      cursor: "pointer",
                     }}
                   >
                     {suggestions.map((suggestion) => {
