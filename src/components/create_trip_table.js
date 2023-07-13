@@ -58,6 +58,8 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
     } else {
       showToast(error, "error");
     }
+
+    setIsTableVisible(false);
   };
 
   return (

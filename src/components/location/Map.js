@@ -48,8 +48,14 @@ const Map = ({ showToast }) => {
   const velocity = 27; // 100km per hour
   let initialDate;
   let interval = null;
-  const icon1 = {
-    url: "https://images.vexels.com/media/users/3/154573/isolated/preview/bd08e000a449288c914d851cb9dae110-hatchback-car-top-view-silhouette-by-vexels.png",
+  // const icon1 = {
+  //   url: "https://images.vexels.com/media/users/3/154573/isolated/preview/bd08e000a449288c914d851cb9dae110-hatchback-car-top-view-silhouette-by-vexels.png",
+  //   scaledSize: new window.google.maps.Size(40, 40),
+  //   anchor: new window.google.maps.Point(20, 20),
+  //   scale: 0.7,
+  // };
+  const icon = {
+    url: "images/truck.png",
     scaledSize: new window.google.maps.Size(40, 40),
     anchor: new window.google.maps.Point(20, 20),
     scale: 0.7,
@@ -60,7 +66,7 @@ const Map = ({ showToast }) => {
       return;
     }
     console.log("GOT PATH, CALCULATING ROUTE! paths : ", paths);
-    const center = parseInt(paths.length / 2);
+    const center = parseInt(paths?.length / 2);
     setCenter({ lat: paths[center].lat, lng: paths[center + 5].lng });
     calculatePath();
     return () => {
@@ -104,7 +110,7 @@ const Map = ({ showToast }) => {
       console.log("MapTrip Completed!! Thank You !!");
       return; // it's the end!
     }
-    const lastLine = progress[progress.length - 1];
+    const lastLine = progress[progress?.length - 1];
 
     const lastLineLatLng = new window.google.maps.LatLng(
       lastLine.lat,
@@ -131,7 +137,7 @@ const Map = ({ showToast }) => {
   };
 
   const calculatePath = () => {
-    if (mapRef.current === null || paths === null || paths.length === 0) {
+    if (mapRef.current === null || paths === null || paths?.length === 0) {
       return;
     }
     const bounds = new window.google.maps.LatLngBounds();
@@ -192,12 +198,12 @@ const Map = ({ showToast }) => {
     let point1, point2;
 
     if (nextLine) {
-      point1 = progress[progress.length - 1];
+      point1 = progress[progress?.length - 1];
       point2 = nextLine;
     } else {
       // it's the end, so use the latest 2
-      point1 = progress[progress.length - 2];
-      point2 = progress[progress.length - 1];
+      point1 = progress[progress?.length - 2];
+      point2 = progress[progress?.length - 1];
     }
 
     const point1LatLng = new window.google.maps.LatLng(point1.lat, point1.lng);
@@ -209,7 +215,7 @@ const Map = ({ showToast }) => {
     );
     const actualAngle = angle - 90;
 
-    const marker = document.querySelector(`[src="${icon1.url}"]`);
+    const marker = document.querySelector(`[src="${icon.url}"]`);
 
     if (marker) {
       // when it hasn't loaded, it's null
@@ -239,6 +245,11 @@ const Map = ({ showToast }) => {
     }
   };
 
+  const startLat = pathsRoute ? pathsRoute[0].lat : null;
+  const startLng = pathsRoute ? pathsRoute[0].lng : null;
+  const endLat = pathsRoute ? pathsRoute[pathsRoute?.length - 1].lat : null;
+  const endLng = pathsRoute ? pathsRoute[pathsRoute?.length - 1].lng : null;
+
   return (
     <Card variant="outlined">
       <div className="btnCont">
@@ -265,11 +276,15 @@ const Map = ({ showToast }) => {
         <GpsTable showToast={showToast} setSelectedEmId={setSelectedEmId} />
         <CurrentLocation />
       </div>
-        <div className="gps_createTrip_overlay">
+      <div className="gps_createTrip_overlay">
         {isTableVisible && (
-          <CreateTripTable selectedEmId={selectedEmId} showToast={showToast} setIsTableVisible={setIsTableVisible}/>
+          <CreateTripTable
+            selectedEmId={selectedEmId}
+            showToast={showToast}
+            setIsTableVisible={setIsTableVisible}
+          />
         )}
-        </div>
+      </div>
       {/* table */}
 
       <div className="gMapCont">
@@ -297,7 +312,7 @@ const Map = ({ showToast }) => {
                   label={`S${index + 1}`}
                   onClick={() => handleMarkerClick(stop)}
                 />
-                {stop.tripPoints && stop.tripPoints.length > 0 && (
+                {stop.tripPoints && stop.tripPoints?.length > 0 && (
                   <Polyline
                     path={stop.tripPoints}
                     options={{
@@ -344,33 +359,107 @@ const Map = ({ showToast }) => {
             <>
               <Polyline path={progress} options={{ strokeColor: "orange" }} />
 
-              <Marker icon={icon1} position={progress[progress.length - 1]} />
+              <Marker icon={icon} position={progress[progress?.length - 1]} />
             </>
           )}
           {console.log("emulators : ", emulators)}
-          {emulators != null && emulators
-            .filter(
-              (emulator) =>
-                emulator.latitude !== null && emulator.longitude !== null
-            )
-            .map((emulator, index) => (
-              <React.Fragment key={index}>
-                <Marker
-                  icon={icon1} 
-                  position={{
-                    lat: emulator.latitude,
-                    lng: emulator.longitude,
-                  }}
-                  title={`Emulator ${emulator.id}`}
-                  label={`S${emulator.id}`}
-                  onClick={() => handleEmulatorMarkerClick(emulator)}
-                  draggable={!emulator.startLat}
-                  onDragEnd={(event) =>
-                    handleEmulatorMarkerDragEnd(emulator, event)
-                  }
-                />
-              </React.Fragment>
-            ))}
+          {emulators != null &&
+            emulators
+              .filter(
+                (emulator) =>
+                  emulator.latitude !== null && emulator.longitude !== null
+              )
+              .map((emulator, index) => (
+                <React.Fragment key={index}>
+                  <Marker
+                    icon={icon}
+                    position={{
+                      lat: emulator.latitude,
+                      lng: emulator.longitude,
+                    }}
+                    title={`Emulator ${emulator.id}`}
+                    label={`S${emulator.id}`}
+                    onClick={() => handleEmulatorMarkerClick(emulator)}
+                    draggable={!emulator.startLat}
+                    onDragEnd={(event) =>
+                      handleEmulatorMarkerDragEnd(emulator, event)
+                    }
+                  />
+                </React.Fragment>
+              ))}
+          {/* if emulators inactive or active color should */}
+          {emulators != null &&
+            emulators
+              .filter(
+                (emulator) =>
+                  emulator.status !== null && emulator.user?.firstName !== null
+              )
+              .map((emulator, index) => {
+                // Check if emulator status is "inactive" and has a user assigned
+                const isActive =
+                  emulator.status === "INACTIVE" && emulator.user !== null;
+
+                // Check if emulator status is "active" and user is null
+                const isInactive =
+                  emulator.status === "ACTIVE" && emulator.user === null;
+
+                const icon = {
+                  url: isActive
+                    ? "images/blue_truck.png"
+                    : isInactive
+                    ? "images/green_truck.png"
+                    : "images/truck.png",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                  anchor: new window.google.maps.Point(20, 20),
+                  scale: 0.7,
+                };
+
+                return (
+                  <React.Fragment key={index}>
+                    <Marker
+                      icon={icon}
+                      position={{
+                        lat: emulator.latitude,
+                        lng: emulator.longitude,
+                      }}
+                      title={`Emulator ${emulator.id}`}
+                      label={`S${emulator.id}`}
+                      onClick={() => handleEmulatorMarkerClick(emulator)}
+                      draggable={!emulator.startLat}
+                      onDragEnd={(event) =>
+                        handleEmulatorMarkerDragEnd(emulator, event)
+                      }
+                    />
+                  </React.Fragment>
+                );
+              })}
+
+          {/* marker at the start of lat long */}
+          {/* {startLat !== null && startLng !== null && (
+            <Marker
+              position={{ lat: startLat, lng: startLng }}
+              // label="End"
+              icon={{
+                url: "images/truck.png",
+                scaledSize: new window.google.maps.Size(40, 40),
+                anchor: new window.google.maps.Point(20, 20),
+                scale: 0.7,
+              }}
+            />
+          )} */}
+          {/* marker at the end of lat long */}
+          {endLat !== null && endLng !== null && (
+            <Marker
+              position={{ lat: endLat, lng: endLng }}
+              // label="End"
+              icon={{
+                url: "images/location_icon.png",
+                scaledSize: new window.google.maps.Size(40, 40),
+                anchor: new window.google.maps.Point(20, 20),
+                scale: 0.7,
+              }}
+            />
+          )}
         </GoogleMap>
       </div>
     </Card>
