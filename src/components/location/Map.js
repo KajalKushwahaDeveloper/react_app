@@ -43,6 +43,7 @@ const Map = ({ showToast }) => {
     setIsTableVisible(!isTableVisible);
   };
 
+  console.log(selectedEmId);
   const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
   const { data: emulators } = useFetch(EMULATOR_URL);
@@ -114,6 +115,7 @@ const Map = ({ showToast }) => {
     }
     console.log("CHANGED pathsRoute : ", pathsRoute);
   }, [pathsRoute]);
+
 
   const moveObject = (pathsRoute) => {
     const distance = getDistance();
@@ -195,11 +197,11 @@ const Map = ({ showToast }) => {
       point2LatLng
     );
     const actualAngle = angle - 90;
-
+    const imageUrl = 'https://maps.gstatic.com/mapfiles/transparent.png'
     const rotation = getMarkerRotation(progress); // Get the rotation angle for the truck
-
     const marker = document.querySelector(`[src="${icon.url}"]`);
-
+    // const marker = document.querySelectorAll(`[src="${imageUrl}"]`)
+    console.log(marker, rotation);
     if (marker) {
       marker.style.transform = `rotate(${rotation}deg)`;
     }
@@ -317,6 +319,7 @@ const Map = ({ showToast }) => {
             selectedEmId={selectedEmId}
             showToast={showToast}
             setIsTableVisible={setIsTableVisible}
+            setSelectedEmId={setSelectedEmId}
           />
           )}
        
