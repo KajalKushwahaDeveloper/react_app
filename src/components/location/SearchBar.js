@@ -106,7 +106,7 @@ class SearchBar extends React.Component {
                 <div className="Demo__search-input-container">
                   <TextField
                     id="filled-basic"
-                    label="Filled"
+                    label="Search Location"
                     variant="filled"
                     value={inputValue}
                     onChange={this.handleInputChange}
