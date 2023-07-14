@@ -4,8 +4,11 @@ import { CREATE_TRIP_URL } from "../constants.js";
 import CloseIcon from "@mui/icons-material/Close";
 import "../scss/map.scss";
 import ApiService from "../ApiService.js";
+import { Login } from "@mui/icons-material";
+import { TRIP_URL, TRIP_STOPS_URL } from "../constants";
+import useFetch from ".././components/hooks/useFetch.js";
 
-const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
+const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdatedTripPath }) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
@@ -14,6 +17,10 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
+
+
+  const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
+  const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
 
   const handleTableClose = () => {
     setIsTableVisible(false);
@@ -24,6 +31,8 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
   };
 
   const handleAddClick = async () => {
+    
+    console.log("path1233:,",paths,selectedEmId)
     if (inputValue.trim() === "") {
       setError("Please enter a value in the text field.");
       console.log("Please enter a value in the text field.");
@@ -60,8 +69,9 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
     }
 
     setIsTableVisible(false);
+    setUpdatedTripPath(paths);
   };
-
+console.log("selectedEmId......:", selectedEmId);
   return (
     <div style={{ width: "40%" }}>
       <div style={{ width: "100%", padding: ".5rem", maxWidth: "100%" }}>
@@ -129,7 +139,6 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible }) => {
                 Add
               </th>
             </tr>
-            
           </tbody>
         </table>
       </div>

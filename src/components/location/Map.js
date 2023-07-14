@@ -13,6 +13,8 @@ import Card from "@mui/material/Card";
 import GpsTable from "../gps_page_table";
 import CurrentLocation from "../current_location";
 import CreateTripTable from "../create_trip_table";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { AccessAlarm, ThreeDRotation } from '@mui/icons-material';
 import { TRIP_STOPS_URL, TRIP_URL, EMULATOR_URL } from "../../constants";
 
 const Map = ({ showToast }) => {
@@ -23,6 +25,7 @@ const Map = ({ showToast }) => {
   const [pathsRoute, setPathsRoute] = useState(null);
 
   const [isTableVisible, setIsTableVisible] = useState(false);
+  const [startEmulation, setStartEmulation] = useState(null);
 
   const defaultLat = 37.7749; // Default latitude
   const defaultLng = -122.4194; // Default longitude
@@ -33,10 +36,10 @@ const Map = ({ showToast }) => {
   });
 
   const mapRef = useRef(null);
+  const intervalRef = useRef(null);
 
   const handleCreateTripButton = () => {
     setCreateTrip(true);
-
     setIsTableVisible(!isTableVisible);
   };
 
@@ -47,18 +50,44 @@ const Map = ({ showToast }) => {
 
   const velocity = 27; // 100km per hour
   let initialDate;
-  let interval = null;
-  // const icon = {
-  //   url: "https://images.vexels.com/media/users/3/154573/isolated/preview/bd08e000a449288c914d851cb9dae110-hatchback-car-top-view-silhouette-by-vexels.png",
-  //   scaledSize: new window.google.maps.Size(40, 40),
-  //   anchor: new window.google.maps.Point(20, 20),
-  //   scale: 0.7,
-  // };
+
   const icon = {
     url: "images/truck.png",
     scaledSize: new window.google.maps.Size(40, 40),
     anchor: new window.google.maps.Point(20, 20),
     scale: 0.7,
+  };
+
+  const calculatePath = () => {
+    if (mapRef.current === null || paths === null || paths?.length === 0) {
+      return;
+    }
+    const bounds = new window.google.maps.LatLngBounds();
+    setPathsRoute(
+      paths.map((coordinates, i, array) => {
+        bounds.extend(
+          new window.google.maps.LatLng(coordinates.lat, coordinates.lng)
+        );
+        if (i === 0 && !startEmulation) {
+          return { ...coordinates, distance: 0 }; // it begins here!
+        }
+        const { lat: lat1, lng: lng1 } = coordinates;
+        const latLong1 = new window.google.maps.LatLng(lat1, lng1);
+
+        const { lat: lat2, lng: lng2 } = array[startEmulation ? 1 : 0];
+        const latLong2 = new window.google.maps.LatLng(lat2, lng2);
+
+        const distance =
+          window.google.maps.geometry.spherical.computeDistanceBetween(
+            latLong1,
+            latLong2
+          );
+
+        return { ...coordinates, distance };
+      })
+    );
+
+    mapRef.current.fitBounds(bounds);
   };
 
   useEffect(() => {
@@ -70,12 +99,11 @@ const Map = ({ showToast }) => {
     setCenter({ lat: paths[center].lat, lng: paths[center + 5].lng });
     calculatePath();
     return () => {
-      interval && window.clearInterval(interval);
+      clearInterval(intervalRef.current);
     };
   }, [paths]);
 
   const getDistance = () => {
-    // seconds between when the component loaded and now
     const differentInTime = (new Date() - initialDate) / 1000; // pass to seconds
     return differentInTime * velocity; // d = v*t -- thanks Newton!
   };
@@ -91,7 +119,7 @@ const Map = ({ showToast }) => {
     const distance = getDistance();
     console.log("Move Path distance : ", distance);
     console.log("Move Path pathsRoute1212 : ", pathsRoute);
-    if (!distance) {
+    if (!distance || !pathsRoute) {
       return;
     }
 
@@ -106,7 +134,7 @@ const Map = ({ showToast }) => {
 
     if (!nextLine) {
       setProgress(progress);
-      window.clearInterval(interval);
+      clearInterval(intervalRef.current);
       console.log("MapTrip Completed!! Thank You !!");
       return; // it's the end!
     }
@@ -122,7 +150,6 @@ const Map = ({ showToast }) => {
       nextLine.lng
     );
 
-    // distance of this line
     const totalDistance = nextLine.distance - lastLine.distance;
     const percentage = (distance - lastLine.distance) / totalDistance;
 
@@ -136,54 +163,9 @@ const Map = ({ showToast }) => {
     setProgress(progress.concat(position));
   };
 
-  const calculatePath = () => {
-    if (mapRef.current === null || paths === null || paths?.length === 0) {
-      return;
-    }
-    const bounds = new window.google.maps.LatLngBounds();
-    setPathsRoute(
-      paths.map((coordinates, i, array) => {
-        bounds.extend(
-          new window.google.maps.LatLng(coordinates.lat, coordinates.lng)
-        );
-        if (i === 0) {
-          return { ...coordinates, distance: 0 }; // it begins here!
-        }
-        const { lat: lat1, lng: lng1 } = coordinates;
-        const latLong1 = new window.google.maps.LatLng(lat1, lng1);
-
-        const { lat: lat2, lng: lng2 } = array[0];
-        const latLong2 = new window.google.maps.LatLng(lat2, lng2);
-
-        // in meters:
-        const distance =
-          window.google.maps.geometry.spherical.computeDistanceBetween(
-            latLong1,
-            latLong2
-          );
-
-        return { ...coordinates, distance };
-      })
-    );
-
-    mapRef.current.fitBounds(bounds);
-  };
-
-  const startSimulation = useCallback(
-    (pathsRoute) => {
-      console.log("HELLO !!! PATHS : ", paths);
-      console.log("HELLO !!! pathsRoute : ", pathsRoute);
-      initialDate = new Date();
-      setProgress(null);
-      initialDate = new Date();
-      interval = window.setInterval(moveObject(pathsRoute), 1000);
-    },
-    [interval, initialDate]
-  );
-
   const mapUpdate = () => {
     const distance = getDistance();
-    if (!distance) {
+    if (!distance || !pathsRoute) {
       return;
     }
 
@@ -201,7 +183,6 @@ const Map = ({ showToast }) => {
       point1 = progress[progress?.length - 1];
       point2 = nextLine;
     } else {
-      // it's the end, so use the latest 2
       point1 = progress[progress?.length - 2];
       point2 = progress[progress?.length - 1];
     }
@@ -215,12 +196,35 @@ const Map = ({ showToast }) => {
     );
     const actualAngle = angle - 90;
 
+    const rotation = getMarkerRotation(progress); // Get the rotation angle for the truck
+
     const marker = document.querySelector(`[src="${icon.url}"]`);
 
     if (marker) {
-      // when it hasn't loaded, it's null
-      marker.style.transform = `rotate(${actualAngle}deg)`;
+      marker.style.transform = `rotate(${rotation}deg)`;
     }
+  };
+
+  const getMarkerRotation = (progress) => {
+    if (!progress || progress.length < 2) {
+      return 0; // Default rotation angle
+    }
+
+    const lastIndex = progress.length - 1;
+    const secondLastIndex = lastIndex - 1;
+
+    const lastLat = progress[lastIndex].lat;
+    const lastLng = progress[lastIndex].lng;
+
+    const secondLastLat = progress[secondLastIndex].lat;
+    const secondLastLng = progress[secondLastIndex].lng;
+
+    const angle = Math.atan2(
+      lastLng - secondLastLng,
+      lastLat - secondLastLat
+    ) * (180 / Math.PI);
+
+    return angle;
   };
 
   const handleMarkerClick = (stop) => {
@@ -231,9 +235,39 @@ const Map = ({ showToast }) => {
     setSelectedStop(null);
   };
 
+
+  const startSimulation = useCallback(() => {
+    console.log("HELLO !!! PATHS : ", paths);
+    console.log("HELLO !!! pathsRoute : ", pathsRoute);
+    initialDate = new Date();
+    setProgress(null);
+    initialDate = new Date();
+    intervalRef.current = setInterval(() => {
+      moveObject(pathsRoute);
+    }, 1000);
+  }, [intervalRef, initialDate, pathsRoute]);
+  
   const handleEmulatorMarkerClick = (emulator) => {
     setSelectedEmId(emulator.id);
+    clearInterval(intervalRef.current); // Clear any existing interval
+  
+    setStartEmulation(emulator); // Set the selected emulation as the start emulation
+  
+    // Update the start latitude and longitude based on the selected emulation
+    setPathsRoute((prevPaths) =>
+      prevPaths.map((coord) =>
+        coord.id === 0
+          ? { ...coord, lat: emulator.latitude, lng: emulator.longitude }
+          : coord
+      )
+    );
+  
+    // Start the simulation
+    intervalRef.current = setInterval(() => {
+      moveObject(pathsRoute);
+    }, 1000);
   };
+  
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
     if (emulator.startLat === null) {
@@ -275,6 +309,7 @@ const Map = ({ showToast }) => {
       <div className="gps_overlay">
         <GpsTable showToast={showToast} setSelectedEmId={setSelectedEmId} />
         <CurrentLocation />
+       
       </div>
       <div className="gps_createTrip_overlay">
         {isTableVisible && (
@@ -283,7 +318,8 @@ const Map = ({ showToast }) => {
             showToast={showToast}
             setIsTableVisible={setIsTableVisible}
           />
-        )}
+          )}
+       
       </div>
       {/* table */}
 
@@ -312,7 +348,9 @@ const Map = ({ showToast }) => {
                   label={`S${index + 1}`}
                   onClick={() => handleMarkerClick(stop)}
                 />
+                 {console.log("stop.tripPoints:", stop.tripPoints)}
                 {stop.tripPoints && stop.tripPoints?.length > 0 && (
+                
                   <Polyline
                     path={stop.tripPoints}
                     options={{
@@ -363,65 +401,58 @@ const Map = ({ showToast }) => {
             </>
           )}
           {console.log("emulators : ", emulators)}
-          {
-  emulators != null &&
-    emulators
-      .filter(
-        (emulator) =>
-          emulator.latitude !== null && emulator.longitude !== null
-      )
-      .map((emulator, index) => {
-        const isActiveUser =
-          emulator.status === "ACTIVE" && emulator.user !== null;
+          {emulators != null &&
+            emulators
+              .filter(
+                (emulator) =>
+                  emulator.latitude !== null && emulator.longitude !== null
+              )
+              .map((emulator, index) => {
+                const isActiveUser =
+                  emulator.status === "ACTIVE" && emulator.user !== null;
 
-        const isInActiveUserNull =
-          emulator.status === "INACTIVE" && emulator.user === null;
+                const isInActiveUserNull =
+                  emulator.status === "INACTIVE" && emulator.user === null;
 
-        const icon = {
-          url: isActiveUser
-            ? "images/green_truck.png"
-            : isInActiveUserNull
-            ? "images/truck.png"
-            : "images/blue_truck.png",
-          scaledSize: new window.google.maps.Size(40, 40),
-          anchor: new window.google.maps.Point(20, 20),
-          scale: 0.7,
-        };
+                const icon = {
+                  url: isActiveUser
+                    ? "images/green_truck.png"
+                    : isInActiveUserNull
+                    ? "images/truck.png"
+                    : "images/blue_truck.png",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                  anchor: new window.google.maps.Point(20, 20),
+                  scale: 0.7,
+                };
 
-        return (
-          <React.Fragment key={index}>
-            <Marker
-              icon={icon}
-              position={{
-                lat: emulator.latitude,
-                lng: emulator.longitude,
-              }}
-              title={`Emulator ${emulator.id}`}
-              label={`S${emulator.id}`}
-              onClick={() => handleEmulatorMarkerClick(emulator)}
-              draggable={!emulator.startLat}
-              onDragEnd={(event) =>
-                handleEmulatorMarkerDragEnd(emulator, event)
-              }
-            />
-          </React.Fragment>
-        );
-      })
-}
-
-
-              
-
-          {/* marker at the start of lat long */}
-          {/* {startLat !== null && startLng !== null && (
+                return (
+                  <React.Fragment key={index}>
+                    <Marker
+                      icon={icon}
+                      position={{
+                        lat: emulator.latitude,
+                        lng: emulator.longitude,
+                      }}
+                      title={`Emulator ${emulator.id}`}
+                      label={`S${emulator.id}`}
+                      onClick={() => handleEmulatorMarkerClick(emulator)}
+                      draggable={!emulator.startLat}
+                      onDragEnd={(event) =>
+                        handleEmulatorMarkerDragEnd(emulator, event)
+                      }
+                    />
+                  </React.Fragment>
+                );
+              })}
+{/* marker at the start of lat long */}
+{/* {endLat !== null && endLng !== null && (
             <Marker
               position={{ lat: startLat, lng: startLng }}
-              // label="End"
               icon={{
-                url: "images/truck.png",
-                scaledSize: new window.google.maps.Size(40, 40),
-                anchor: new window.google.maps.Point(20, 20),
-                scale: 0.7,
+                url: "images/start_location.png",
+                scaledSize: new window.google.maps.Size(15, 15),
+                anchor: new window.google.maps.Point(15, 15),
+                scale: 0.3,
               }}
             />
           )} */}
@@ -429,7 +460,6 @@ const Map = ({ showToast }) => {
           {endLat !== null && endLng !== null && (
             <Marker
               position={{ lat: endLat, lng: endLng }}
-              // label="End"
               icon={{
                 url: "images/location_icon.png",
                 scaledSize: new window.google.maps.Size(40, 40),
@@ -438,6 +468,7 @@ const Map = ({ showToast }) => {
               }}
             />
           )}
+          <AccessAlarm/>
         </GoogleMap>
       </div>
     </Card>
