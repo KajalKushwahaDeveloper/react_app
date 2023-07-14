@@ -48,7 +48,7 @@ const Map = ({ showToast }) => {
   const velocity = 27; // 100km per hour
   let initialDate;
   let interval = null;
-  // const icon1 = {
+  // const icon = {
   //   url: "https://images.vexels.com/media/users/3/154573/isolated/preview/bd08e000a449288c914d851cb9dae110-hatchback-car-top-view-silhouette-by-vexels.png",
   //   scaledSize: new window.google.maps.Size(40, 40),
   //   anchor: new window.google.maps.Point(20, 20),
@@ -363,76 +363,54 @@ const Map = ({ showToast }) => {
             </>
           )}
           {console.log("emulators : ", emulators)}
-          {emulators != null &&
-            emulators
-              .filter(
-                (emulator) =>
-                  emulator.latitude !== null && emulator.longitude !== null
-              )
-              .map((emulator, index) => (
-                <React.Fragment key={index}>
-                  <Marker
-                    icon={icon}
-                    position={{
-                      lat: emulator.latitude,
-                      lng: emulator.longitude,
-                    }}
-                    title={`Emulator ${emulator.id}`}
-                    label={`S${emulator.id}`}
-                    onClick={() => handleEmulatorMarkerClick(emulator)}
-                    draggable={!emulator.startLat}
-                    onDragEnd={(event) =>
-                      handleEmulatorMarkerDragEnd(emulator, event)
-                    }
-                  />
-                </React.Fragment>
-              ))}
-          {/* if emulators inactive or active color should */}
-          {emulators != null &&
-            emulators
-              .filter(
-                (emulator) =>
-                  emulator.status !== null && emulator.user?.firstName !== null
-              )
-              .map((emulator, index) => {
-                // Check if emulator status is "inactive" and has a user assigned
-                const isActive =
-                  emulator.status === "INACTIVE" && emulator.user !== null;
+          {
+  emulators != null &&
+    emulators
+      .filter(
+        (emulator) =>
+          emulator.latitude !== null && emulator.longitude !== null
+      )
+      .map((emulator, index) => {
+        const isActiveUser =
+          emulator.status === "ACTIVE" && emulator.user !== null;
 
-                // Check if emulator status is "active" and user is null
-                const isInactive =
-                  emulator.status === "ACTIVE" && emulator.user === null;
+        const isInActiveUserNull =
+          emulator.status === "INACTIVE" && emulator.user === null;
 
-                const icon = {
-                  url: isActive
-                    ? "images/blue_truck.png"
-                    : isInactive
-                    ? "images/green_truck.png"
-                    : "images/truck.png",
-                  scaledSize: new window.google.maps.Size(40, 40),
-                  anchor: new window.google.maps.Point(20, 20),
-                  scale: 0.7,
-                };
+        const icon = {
+          url: isActiveUser
+            ? "images/green_truck.png"
+            : isInActiveUserNull
+            ? "images/truck.png"
+            : "images/blue_truck.png",
+          scaledSize: new window.google.maps.Size(40, 40),
+          anchor: new window.google.maps.Point(20, 20),
+          scale: 0.7,
+        };
 
-                return (
-                  <React.Fragment key={index}>
-                    <Marker
-                      icon={icon}
-                      position={{
-                        lat: emulator.latitude,
-                        lng: emulator.longitude,
-                      }}
-                      title={`Emulator ${emulator.id}`}
-                      label={`S${emulator.id}`}
-                      onClick={() => handleEmulatorMarkerClick(emulator)}
-                      draggable={!emulator.startLat}
-                      onDragEnd={(event) =>
-                        handleEmulatorMarkerDragEnd(emulator, event)
-                      }
-                    />
-                  </React.Fragment>
-                );
-              })}
+        return (
+          <React.Fragment key={index}>
+            <Marker
+              icon={icon}
+              position={{
+                lat: emulator.latitude,
+                lng: emulator.longitude,
+              }}
+              title={`Emulator ${emulator.id}`}
+              label={`S${emulator.id}`}
+              onClick={() => handleEmulatorMarkerClick(emulator)}
+              draggable={!emulator.startLat}
+              onDragEnd={(event) =>
+                handleEmulatorMarkerDragEnd(emulator, event)
+              }
+            />
+          </React.Fragment>
+        );
+      })
+}
+
+
+              
 
           {/* marker at the start of lat long */}
           {/* {startLat !== null && startLng !== null && (
