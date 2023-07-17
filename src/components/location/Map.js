@@ -16,6 +16,7 @@ import CreateTripButton from "./map-components/CreateTripButton.jsx";
 import GpsOverlay from "./map-components/GpsOverlay";
 import CreateTripOverlay from "./map-components/CreateTripOverlay";
 import GoogleMapContainer from "./map-components/GoogleMapContainer";
+import ApiService from "../../ApiService";
 
 const Map = ({ showToast }) => {
   const [progress, setProgress] = useState(null);
@@ -46,11 +47,14 @@ const Map = ({ showToast }) => {
   console.log(selectedEmId);
   const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
-  const { data: emulators } = useFetch(EMULATOR_URL);
+  const { data: emulators, setEmulators } = useFetch(EMULATOR_URL);
+  const { data: emulator, setEmulator  } = useFetch(EMULATOR_URL + `/${selectedEmId}`);
   const [selectedStop, setSelectedStop] = useState(null);
 
   const velocity = 27; // 100km per hour
   let initialDate;
+
+  const emulatorIntervalRef = useRef(null);
 
   const icon = {
     url: "images/truck.png",
@@ -104,6 +108,62 @@ const Map = ({ showToast }) => {
     };
   }, [paths]);
 
+  useEffect(() => {
+    let emulatorInterval;
+  
+    const checkCurrentLocation = (newEmulatorData) => {
+      if (newEmulatorData === null) {
+        return;
+      }
+      const { latitude, longitude } = newEmulatorData;
+      const isLocationChanged =
+        emulator.latitude !== latitude || emulator.longitude !== longitude;
+      if (isLocationChanged) {
+        const updatedEmulators = emulators.map((emulator) => {
+          if (emulator.id === newEmulatorData.id) {
+            return { ...emulator, latitude, longitude };
+          }
+          console.log("Emulator || updatedEmulator : ", emulator);
+          return emulator;
+        });
+        setEmulators(updatedEmulators);
+      }
+    };
+  
+    const startEmulatorInterval = () => {
+      const token = localStorage.getItem("token");
+      emulatorInterval = setInterval(async () => {
+        // Manually trigger the fetch to get the latest emulator data
+        const { success, data, error } = await ApiService.makeApiCall(
+          EMULATOR_URL + `/${selectedEmId}`,
+          "GET",
+          null,
+          token
+        );
+        if (success) {
+          console.log("Emulator || Emulator old Emulator : ", emulator);
+          console.log("Emulator || Emulator new Emulator : ", data);
+          checkCurrentLocation(data);
+        } else {
+          console.log("old Emulator ERROR : ", error);
+        }
+      }, 5000);
+    };
+  
+    const stopEmulatorInterval = () => {
+      clearInterval(emulatorInterval);
+    };
+  
+    emulatorIntervalRef.current = { start: startEmulatorInterval, stop: stopEmulatorInterval };
+  
+    // Start the emulator interval
+    emulatorIntervalRef.current.start();
+  
+    return () => {
+      stopEmulatorInterval();
+    };
+  }, [selectedEmId, emulator, emulators, setEmulators]);
+  
   const getDistance = () => {
     const differentInTime = (new Date() - initialDate) / 1000; // pass to seconds
     return differentInTime * velocity; // d = v*t -- thanks Newton!
