@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from "./location/SearchBar.js";
-import { CREATE_TRIP_URL } from "../constants.js";
+import SearchBar from "../SearchBar.js";
+import { CREATE_TRIP_URL } from "../../../constants.js";
 import CloseIcon from "@mui/icons-material/Close";
-import "../scss/map.scss";
-import ApiService from "../ApiService.js";
+import ApiService from "../../../ApiService.js";
 import { Login } from "@mui/icons-material";
 
 

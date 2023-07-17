@@ -7,15 +7,15 @@ import {
   Polyline,
   InfoWindow,
 } from "react-google-maps";
+
 import useFetch from "../hooks/useFetch";
-import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import GpsTable from "../gps_page_table";
-import CurrentLocation from "../current_location";
-import CreateTripTable from "../create_trip_table";
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import { AccessAlarm, ThreeDRotation } from '@mui/icons-material';
 import { TRIP_STOPS_URL, TRIP_URL, EMULATOR_URL } from "../../constants";
+import CardComponent  from "./map-components/CardComponent";
+import StartSimulationButton from "./map-components/StartSimulationButton.jsx";
+import CreateTripButton from "./map-components/CreateTripButton.jsx";
+import GpsOverlay from "./map-components/GpsOverlay";
+import CreateTripOverlay from "./map-components/CreateTripOverlay";
+import GoogleMapContainer from "./map-components/GoogleMapContainer";
 
 const Map = ({ showToast }) => {
   const [progress, setProgress] = useState(null);
@@ -287,194 +287,36 @@ const Map = ({ showToast }) => {
   const endLng = pathsRoute ? pathsRoute[pathsRoute?.length - 1].lng : null;
 
   return (
-    <Card variant="outlined">
-      <div className="btnCont">
-        <Button variant="contained" onClick={() => startSimulation(pathsRoute)}>
-          Start Simulation
-        </Button>
-      </div>
-      <div>
-        <button
-          style={{
-            zIndex: 2,
-            position: "absolute",
-            top: 10,
-            left: 170,
-            padding: ".65rem",
-          }}
-          onClick={handleCreateTripButton}
-        >
-          Create Trip
-        </button>
-      </div>
-      {/* tables */}
-      <div className="gps_overlay">
-        <GpsTable showToast={showToast} setSelectedEmId={setSelectedEmId} />
-        <CurrentLocation />
-       
-      </div>
-      <div className="gps_createTrip_overlay">
-        {isTableVisible && (
-          <CreateTripTable
-            selectedEmId={selectedEmId}
-            showToast={showToast}
-            setIsTableVisible={setIsTableVisible}
-            setSelectedEmId={setSelectedEmId}
-          />
-          )}
-       
-      </div>
-      {/* table */}
-
-      <div className="gMapCont">
-        <GoogleMap ref={mapRef} defaultZoom={7} center={center}>
-          {pathsRoute != null && (
-            <Polyline
-              path={pathsRoute}
-              options={{
-                strokeColor: "#0088FF",
-                strokeWeight: 6,
-                strokeOpacity: 0.6,
-                defaultVisible: true,
-              }}
-            />
-          )}
-          {stops != null &&
-            stops.map((stop, index) => (
-              <React.Fragment key={index}>
-                <Marker
-                  position={{
-                    lat: stop.lat,
-                    lng: stop.lng,
-                  }}
-                  title={"Stop" + stop.id}
-                  label={`S${index + 1}`}
-                  onClick={() => handleMarkerClick(stop)}
-                />
-                 {console.log("stop.tripPoints:", stop.tripPoints)}
-                {stop.tripPoints && stop.tripPoints?.length > 0 && (
-                
-                  <Polyline
-                    path={stop.tripPoints}
-                    options={{
-                      strokeColor: "#FF2200",
-                      strokeWeight: 6,
-                      strokeOpacity: 0.6,
-                      defaultVisible: true,
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          {selectedStop && (
-            <InfoWindow
-              position={{ lat: selectedStop.lat, lng: selectedStop.lng }}
-              onCloseClick={handleInfoWindowClose}
-            >
-              <div style={{ width: "auto" }}>
-                <h3 style={{ color: "black" }}>Stop Address:</h3>
-                <p style={{ color: "black" }}>
-                  {selectedStop.address.map((addressItem, index) => (
-                    <React.Fragment key={index}>
-                      {index > 0 && ", "}
-                      {addressItem.long_name}
-                    </React.Fragment>
-                  ))}
-                </p>
-                <h3 style={{ color: "black" }}>Nearest Gas Station:</h3>
-                <p style={{ color: "black" }}>
-                  {selectedStop.gasStation.map(
-                    (gasStationAddressItem, index) => (
-                      <React.Fragment key={index}>
-                        {index > 0 && ", "}
-                        {gasStationAddressItem.long_name}
-                      </React.Fragment>
-                    )
-                  )}
-                </p>
-              </div>
-            </InfoWindow>
-          )}
-
-          {progress && (
-            <>
-              <Polyline path={progress} options={{ strokeColor: "orange" }} />
-
-              <Marker icon={icon} position={progress[progress?.length - 1]} />
-            </>
-          )}
-          {console.log("emulators : ", emulators)}
-          {emulators != null &&
-            emulators
-              .filter(
-                (emulator) =>
-                  emulator.latitude !== null && emulator.longitude !== null
-              )
-              .map((emulator, index) => {
-                const isActiveUser =
-                  emulator.status === "ACTIVE" && emulator.user !== null;
-
-                const isInActiveUserNull =
-                  emulator.status === "INACTIVE" && emulator.user === null;
-
-                const icon = {
-                  url: isActiveUser
-                    ? "images/green_truck.png"
-                    : isInActiveUserNull
-                    ? "images/truck.png"
-                    : "images/blue_truck.png",
-                  scaledSize: new window.google.maps.Size(40, 40),
-                  anchor: new window.google.maps.Point(20, 20),
-                  scale: 0.7,
-                };
-
-                return (
-                  <React.Fragment key={index}>
-                    <Marker
-                      icon={icon}
-                      position={{
-                        lat: emulator.latitude,
-                        lng: emulator.longitude,
-                      }}
-                      title={`Emulator ${emulator.id}`}
-                      label={`S${emulator.id}`}
-                      onClick={() => handleEmulatorMarkerClick(emulator)}
-                      draggable={!emulator.startLat}
-                      onDragEnd={(event) =>
-                        handleEmulatorMarkerDragEnd(emulator, event)
-                      }
-                    />
-                  </React.Fragment>
-                );
-              })}
-{/* marker at the start of lat long */}
-{/* {endLat !== null && endLng !== null && (
-            <Marker
-              position={{ lat: startLat, lng: startLng }}
-              icon={{
-                url: "images/start_location.png",
-                scaledSize: new window.google.maps.Size(15, 15),
-                anchor: new window.google.maps.Point(15, 15),
-                scale: 0.3,
-              }}
-            />
-          )} */}
-          {/* marker at the end of lat long */}
-          {endLat !== null && endLng !== null && (
-            <Marker
-              position={{ lat: endLat, lng: endLng }}
-              icon={{
-                url: "images/location_icon.png",
-                scaledSize: new window.google.maps.Size(40, 40),
-                anchor: new window.google.maps.Point(20, 20),
-                scale: 0.7,
-              }}
-            />
-          )}
-          <AccessAlarm/>
-        </GoogleMap>
-      </div>
-    </Card>
+    <CardComponent>
+      <StartSimulationButton onClick={() => startSimulation(pathsRoute)} />
+      <CreateTripButton onClick={handleCreateTripButton} />
+      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId} />
+      <CreateTripOverlay
+        isTableVisible={isTableVisible}
+        selectedEmId={selectedEmId}
+        showToast={showToast}
+        setIsTableVisible={setIsTableVisible}
+        setSelectedEmId={setSelectedEmId}
+      />
+      <GoogleMapContainer
+        mapRef={mapRef}
+        pathsRoute={pathsRoute}
+        center={center}
+        stops={stops}
+        selectedStop={selectedStop}
+        handleMarkerClick={handleMarkerClick}
+        handleInfoWindowClose={handleInfoWindowClose}
+        progress={progress}
+        icon={icon}
+        emulators={emulators}
+        endLat={endLat}
+        endLng={endLng}
+        startLat={startLat}
+        startLng={startLng}
+        handleEmulatorMarkerClick={handleEmulatorMarkerClick}
+        handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
+      />
+    </CardComponent>
   );
 };
 

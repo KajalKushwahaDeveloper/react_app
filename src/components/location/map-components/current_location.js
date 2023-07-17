@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { EMULATOR_URL } from "../constants";
+import { EMULATOR_URL } from "../../../constants";
 
 const CurrentLocation = () => {
 

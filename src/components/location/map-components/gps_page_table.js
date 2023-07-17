@@ -5,9 +5,9 @@ import TablePagination, {
 } from "@mui/base/TablePagination";
 import { Checkbox } from "@mui/material";
 import { styled } from "@mui/system";
-import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
-import "../scss/table.scss";
-import "../scss/button.scss";
+import { EMULATOR_URL } from "../../../constants";
+import "../../../scss/table.scss";
+import "../../../scss/button.scss";
 
 const GpsTable = ({ showToast, setSelectedEmId }) => {
   // State variables

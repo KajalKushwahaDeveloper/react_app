@@ -6,7 +6,6 @@ import PlacesAutocomplete, {
 import TextField from "@material-ui/core/TextField";
 import { classnames } from "../../helpers";
 import "../../css/auto_complete.css";
-import "../../scss/map.scss";
 
 class SearchBar extends React.Component {
   constructor(props) {
