@@ -47,8 +47,8 @@ const Map = ({ showToast }) => {
   console.log(selectedEmId);
   const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
-  const { data: emulators, setEmulators } = useFetch(EMULATOR_URL);
-  const { data: emulator, setEmulator  } = useFetch(EMULATOR_URL + `/${selectedEmId}`);
+  const { data: emulators, setData: setEmulators  } = useFetch(EMULATOR_URL);
+  const { data: emulator, setData: setEmulator  } = useFetch(EMULATOR_URL + `/${selectedEmId}`);
   const [selectedStop, setSelectedStop] = useState(null);
 
   const velocity = 27; // 100km per hour
@@ -126,6 +126,7 @@ const Map = ({ showToast }) => {
           console.log("Emulator || updatedEmulator : ", emulator);
           return emulator;
         });
+        setEmulator(newEmulatorData);
         setEmulators(updatedEmulators);
       }
     };
@@ -162,7 +163,7 @@ const Map = ({ showToast }) => {
     return () => {
       stopEmulatorInterval();
     };
-  }, [selectedEmId, emulator, emulators, setEmulators]);
+  }, [selectedEmId, emulator, emulators, setEmulator, setEmulators]);
   
   const getDistance = () => {
     const differentInTime = (new Date() - initialDate) / 1000; // pass to seconds
