@@ -4,7 +4,7 @@ export const LOCAL_API_2 = "http://192.168.1.137:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
-export const BASE_URL = LOCAL_API;
+export const BASE_URL = LOCAL_API_2;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
@@ -34,5 +34,6 @@ export const COPY_DOWNLOAD_APK_URL = DOWNLOAD_APK_URL + "/apkLink";
 
 //TRIP
 export const TRIP_URL = BASE_URL + "/trip";
+export const TRIP_POINTS_URL = TRIP_URL + "/trip-points";
 export const CREATE_TRIP_URL = TRIP_URL + "/create";
 export const TRIP_STOPS_URL = BASE_URL + "/trip/stops";

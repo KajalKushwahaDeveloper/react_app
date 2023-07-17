@@ -1,9 +1,16 @@
 import React from "react";
 
-const AddressTable = ({ createTripData }) => {
-  const fromAddress = createTripData?.fromAddress[1]?.long_name || "N/A";
-  const toAddress = createTripData?.toAddress[0]?.long_name || "N/A";
-  const speed = createTripData?.speed || "N/A";
+const AddressTable = ({ tripData }) => {
+  const fromAddress = tripData?.fromAddress[0]?.long_name + " " + 
+  tripData?.fromAddress[1]?.long_name+ " " +  
+  tripData?.fromAddress[2]?.long_name + " " + 
+  tripData?.fromAddress[3]?.long_name 
+  || "N/A";
+  const toAddress = tripData?.toAddress[0]?.long_name + " " + 
+  tripData?.toAddress[1]?.long_name+ " " +  
+  tripData?.toAddress[2]?.long_name + " " + 
+  tripData?.toAddress[3]?.long_name 
+  || "N/A";
 
   return (
     <div style={{ width: "auto", maxWidth: "100%" }}>
@@ -12,7 +19,6 @@ const AddressTable = ({ createTripData }) => {
           <tr>
             <th>From Address</th>
             <th>To Address</th>
-            <th>Speed</th>
           </tr>
         </thead>
         <tbody>
@@ -22,9 +28,6 @@ const AddressTable = ({ createTripData }) => {
             </td>
             <td style={{ width: "auto" }} align="right">
               {toAddress}
-            </td>
-            <td style={{ width: "auto" }} align="right">
-              {speed}
             </td>
           </tr>
         </tbody>

@@ -9,7 +9,7 @@ import {
 } from "react-google-maps";
 
 import useFetch from "../hooks/useFetch";
-import { TRIP_STOPS_URL, TRIP_URL, EMULATOR_URL } from "../../constants";
+import { TRIP_STOPS_URL, TRIP_POINTS_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import CardComponent  from "./map-components/CardComponent";
 import StartSimulationButton from "./map-components/StartSimulationButton.jsx";
 import CreateTripButton from "./map-components/CreateTripButton.jsx";
@@ -29,8 +29,6 @@ const Map = ({ showToast }) => {
   const [startEmulation, setStartEmulation] = useState(null);
   const [createTripInfo, setCreateTripInfo] = useState();
 
-  console.log("createTripInfo:", createTripInfo)
-
   const defaultLat = 37.7749; // Default latitude
   const defaultLng = -122.4194; // Default longitude
 
@@ -48,8 +46,9 @@ const Map = ({ showToast }) => {
   };
 
   console.log(selectedEmId);
-  const { data: paths } = useFetch(TRIP_URL + `/${selectedEmId}`);
+  const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
+  const { data: tripData } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: emulators, setData: setEmulators  } = useFetch(EMULATOR_URL);
   const { data: emulator, setData: setEmulator  } = useFetch(EMULATOR_URL + `/${selectedEmId}`);
   const [selectedStop, setSelectedStop] = useState(null);
@@ -354,7 +353,6 @@ const Map = ({ showToast }) => {
     <CardComponent>
       <StartSimulationButton onClick={() => startSimulation(pathsRoute)} />
       <CreateTripButton onClick={handleCreateTripButton} />
-      {console.log("createTripInfo ... :", createTripInfo)}
       <CreateTripOverlay
         isTableVisible={isTableVisible}
         selectedEmId={selectedEmId}
@@ -363,7 +361,7 @@ const Map = ({ showToast }) => {
         setSelectedEmId={setSelectedEmId}
         setCreateTripInfo={setCreateTripInfo}
       />
-      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId}  createTripData={createTripInfo}/>
+      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId}  tripData={tripData}/>
       <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}
