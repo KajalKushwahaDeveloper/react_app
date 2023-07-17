@@ -1,6 +1,7 @@
 // CreateTripOverlay.jsx
 import React from "react";
 import CreateTripTable from "./create_trip_table";
+import "../../../scss/map.scss";
 
 const CreateTripOverlay = ({
   isTableVisible,
