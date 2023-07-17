@@ -27,6 +27,9 @@ const Map = ({ showToast }) => {
 
   const [isTableVisible, setIsTableVisible] = useState(false);
   const [startEmulation, setStartEmulation] = useState(null);
+  const [createTripInfo, setCreateTripInfo] = useState();
+
+  console.log("createTripInfo:", createTripInfo)
 
   const defaultLat = 37.7749; // Default latitude
   const defaultLng = -122.4194; // Default longitude
@@ -351,14 +354,16 @@ const Map = ({ showToast }) => {
     <CardComponent>
       <StartSimulationButton onClick={() => startSimulation(pathsRoute)} />
       <CreateTripButton onClick={handleCreateTripButton} />
-      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId} />
+      {console.log("createTripInfo ... :", createTripInfo)}
       <CreateTripOverlay
         isTableVisible={isTableVisible}
         selectedEmId={selectedEmId}
         showToast={showToast}
         setIsTableVisible={setIsTableVisible}
         setSelectedEmId={setSelectedEmId}
+        setCreateTripInfo={setCreateTripInfo}
       />
+      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId}  createTripData={createTripInfo}/>
       <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}

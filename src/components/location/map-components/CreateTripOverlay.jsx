@@ -9,6 +9,7 @@ const CreateTripOverlay = ({
   showToast,
   setIsTableVisible,
   setSelectedEmId,
+  setCreateTripInfo,
 }) => {
   return (
     <div className="gps_createTrip_overlay">
@@ -18,6 +19,7 @@ const CreateTripOverlay = ({
           showToast={showToast}
           setIsTableVisible={setIsTableVisible}
           setSelectedEmId={setSelectedEmId}
+          setCreateTripInfo={setCreateTripInfo}
         />
       )}
     </div>

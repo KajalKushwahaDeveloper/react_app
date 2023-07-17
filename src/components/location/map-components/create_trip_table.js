@@ -6,7 +6,7 @@ import ApiService from "../../../ApiService.js";
 import { Login } from "@mui/icons-material";
 
 
-const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdatedTripPath, setSelectedEmId }) => {
+const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdatedTripPath, setSelectedEmId ,setCreateTripInfo}) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
@@ -59,6 +59,7 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
       showToast("Added successfully // TODO HANDLE CHANGES TO MAP", "success");
       setSelectedEmId(0);
       setSelectedEmId(selectedEmId);
+      setCreateTripInfo(data);
     } else {
       showToast(error, "error");
     }
