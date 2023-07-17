@@ -115,13 +115,13 @@ const Map = ({ showToast }) => {
       if (newEmulatorData === null) {
         return;
       }
-      const { latitude, longitude } = newEmulatorData;
+      const { status, latitude, longitude } = newEmulatorData;
       const isLocationChanged =
         emulator.latitude !== latitude || emulator.longitude !== longitude;
       if (isLocationChanged) {
         const updatedEmulators = emulators.map((emulator) => {
           if (emulator.id === newEmulatorData.id) {
-            return { ...emulator, latitude, longitude };
+            return { ...emulator, status, latitude, longitude };
           }
           console.log("Emulator || updatedEmulator : ", emulator);
           return emulator;
