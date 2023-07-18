@@ -119,7 +119,7 @@ const Map = ({ showToast }) => {
       }
       const { status, latitude, longitude } = newEmulatorData;
       const isLocationChanged =
-        emulator.latitude !== latitude || emulator.longitude !== longitude;
+        emulator && emulator.latitude !== latitude || emulator.longitude !== longitude;
       if (isLocationChanged) {
         const updatedEmulators = emulators.map((emulator) => {
           if (emulator.id === newEmulatorData.id) {
@@ -132,7 +132,7 @@ const Map = ({ showToast }) => {
         setEmulators(updatedEmulators);
       }
     };
-  
+    
     const startEmulatorInterval = () => {
       const token = localStorage.getItem("token");
       emulatorInterval = setInterval(async () => {
