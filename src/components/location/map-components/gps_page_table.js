@@ -88,10 +88,10 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
-      <table aria-label="custom pagination table">
+    <div sx={{ width: "auto", maxWidth: "100%" }} className="gps_table_container">
+      <table aria-label="custom pagination gps_page_table">
         <thead>
-          <tr>
+          <tr className="gps_page_tr">
             <th>Status</th>
             <th>ID</th>
             <th>Number</th>
@@ -105,7 +105,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           ).map((row) => (
-            <tr key={row.id || "N/A"}>
+            <tr key={row.id || "N/A"} className="gps_page_tr">
               <td
                 style={{
                   background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",

@@ -56,7 +56,6 @@ const Navbar = ({ isAdmin }) => {
           <div className="logo">
             <img
               className="logo_image"
-              // style={{ width: "17rem", height: "auto" }}
               src="images/logo2.png"
               alt="logo"
             />
