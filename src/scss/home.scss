@@ -10,7 +10,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding-top: 10rem;
+  padding-top: 8rem;
   flex-wrap: wrap;
 }
 
@@ -33,7 +33,7 @@ body {
 .home_div {
   display: flex;
   flex-wrap: wrap;
-  padding: 10rem 1rem;
+  padding: 8rem 1rem;
   margin-right: -1rem;
   margin-left: -1rem;
 }
@@ -74,7 +74,7 @@ body {
     justify-content: space-around;
     flex-direction: row;
     /* Set the direction to row */
-    padding-top: 10rem;
+    padding-top: 8rem;
     // margin-top:10rem;
     flex-wrap: nowrap;
     /* Prevent wrapping */

@@ -81,20 +81,12 @@ th {
   border: none;
   box-shadow: $tableShadow;
   text-align: left;
-  padding: 11px;
+  padding: 12px;
 }
 
 th {
   background-color: $background-color;
-  white-space: nowrap;
 }
-
-td {
-  max-width: 150px; 
-  word-wrap: break-word; 
-}
-
-
 
 @media screen and (max-width: 768px) {
   table {
