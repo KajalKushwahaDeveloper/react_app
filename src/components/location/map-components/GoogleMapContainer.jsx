@@ -1,7 +1,7 @@
 // GoogleMapContainer.jsx
 import React from "react";
 import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
-
+import "../../../scss/map.scss"
 const GoogleMapContainer = ({
   mapRef,
   pathsRoute,

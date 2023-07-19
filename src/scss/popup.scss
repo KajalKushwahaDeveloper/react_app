@@ -1,9 +1,38 @@
 @import "./variables";
 @import "./mixins";
 
-.assign_popup{
-    box-shadow:$shadow;
-    border:none;
-    list-style: none;
-    background: #000;
+.action_popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: $shadow;
+h1{
+    font-size: 1.5rem;
+}
+    .action_popup_div {
+        max-height: 300px;
+        overflow-y: auto;
+
+        ul {
+            @include  vertical-list ;
+            flex-direction: column;
+            width: auto;
+            padding: 10px;
+            li {
+                cursor: pointer;
+                // background: #f9f6f635;
+                box-shadow: $tableShadow;
+                padding: 0.5rem 2rem;
+                margin-bottom: 1rem;
+                border-radius: 10px;
+                list-style: none;
+            }
+        }
+
+    }
 }

@@ -160,8 +160,11 @@ const EmulatorTable = ({
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%" }}>
-      <table aria-label="custom pagination table">
+    <div sx={{ width: "100%",
+    maxWidth: "100%",
+    overflowX: "auto",
+  }}>
+      <table aria-label="custom pagination table" style={{   borderRadius:"1rem",width: "100%", minWidth: "600px" }}>
         <thead>
           <tr>
             <th>STATUS</th>
@@ -191,6 +194,7 @@ const EmulatorTable = ({
                 <button
                   style={{
                     height: "45px",
+                    width: "85px",
                     backgroundColor: row.user === null ? "green" : "red",
                     color: "white",
                   }}

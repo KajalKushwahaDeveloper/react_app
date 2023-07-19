@@ -56,8 +56,9 @@ const DownloadApk = () => {
       style={{
         backgroundColor: "#007dc6",
         color: "white",
-        marginBottom: "30px",
+        marginBottom: "1rem",
         borderRadius: "1rem",
+        width: "100%",
       }}
     >
       <CardContent>

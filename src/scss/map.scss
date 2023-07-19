@@ -1,7 +1,7 @@
 @import "./mixins.scss";
 @import "./variables.scss";
 
-body{
+body {
   @include main;
 }
 
@@ -9,10 +9,9 @@ body{
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  height: 100vh;
+  height: auto;
   flex-wrap: nowrap;
-  padding-top: 5rem;
- 
+  padding-top: 4.5rem;
 }
 
 .gps_map {
@@ -21,7 +20,7 @@ body{
 }
 
 .gps_overlay {
-  width: 40%;
+  // width: 40%;
   position: absolute;
   top: 0;
   left: 0;
@@ -34,14 +33,14 @@ body{
   z-index: 2;
 }
 
-
 .gps_createTrip_overlay {
   position: absolute;
   top: 0;
   right: 0;
   z-index: 2;
   margin-top: 3rem;
-  width: 60%;
+  width: 40%;
+  padding: 10px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
@@ -55,52 +54,37 @@ body{
 
 .gps_map {
   flex-basis: 70%;
-  height: 100vh;
+  height: 90vh;
 }
+
 .create_trip_button {
   position: absolute;
   top: 0;
   left: 50;
   padding: 10px;
 }
+
 .create_trip_button button {
   padding: 8px 12px;
 }
 
-//table//
-table {
-  font-family: Raleway, sans-serif;
-  font-size: 0.875rem;
-  border-collapse: collapse;
-  width: auto;
-  padding: 0.5rem;
-  margin-bottom: 2rem;
-  background: $light-grey;
+
+.btnCont {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background: $background-color;
 }
 
-td,
-th {
-  border: none;
-  box-shadow: $tableShadow;
-  text-align: left;
-  padding: 12px;
+.mapContainer {
+  height: 90vh;
 }
-
-th {
-  background-color: $background-color;
+@media (max-width: 1024px) {
+  .mapContainer {
+    height: auto;
 }
-
+}
 @media screen and (max-width: 768px) {
-  table {
-    font-size: 0.75rem;
-  }
-
-  td,
-  th {
-    padding: 8px;
-  }
-}
-@media screen and (max-width: 786px) {
   .gps_page {
     flex-wrap: wrap;
   }
@@ -109,22 +93,26 @@ th {
   .gps_map {
     flex-basis: auto;
   }
+
+  table {
+    font-size: 0.75rem;
+  }
+
+  td,
+  th {
+    padding: 8px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 0.5rem;
+  }
+  .mapContainer {
+    height: 100vh; 
+  }
 }
 
-.mapContainer {
-  height:90vh;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  position: static;
-  color: #fff;
-}
 
-.btnCont {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  background: $background-color;
-}
+
+
+

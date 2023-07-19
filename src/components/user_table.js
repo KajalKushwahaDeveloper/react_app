@@ -248,8 +248,8 @@ const UserTable = ({
   }
 
   return (
-    <Root sx={{ width: "auto", maxWidth: "100%" }}>
-      <table aria-label="custom pagination table">
+    <Root sx={{ width: "100%", maxWidth: "100%" }}>
+      <table aria-label="custom pagination user_table">
         <tbody>
           {(rowsPerPage > 0
             ? userData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -265,7 +265,7 @@ const UserTable = ({
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <div style={{ display: "flex", flexDirection: "column" }}>
                       <h3>{row.firstName + " " + row.lastName || "N/A"}</h3>
-                      <ul>
+                      <ul style={{ wordWrap: "breakWord",maxWidth: "250px"}}>
                         <li>Email : {row.email || "N/A"}</li>
                         <li>Tel. # : {row.telephone || "N/A"}</li>
                         <li>Registration Date : {formattedDate}</li>
@@ -367,7 +367,7 @@ const Root = styled("div")(
                 font-family: 'Raleway', sans-serif;
                 font-size: 0.875rem;
                 border-collapse: collapse;
-                width: auto;
+                width: 100%;
                 padding:0.5rem;
               }
               
@@ -377,7 +377,7 @@ const Root = styled("div")(
                   theme.palette.mode === "dark" ? grey[800] : grey[200]
                 };
                 text-align: left;
-                padding: 12px;
+                padding: 5px;
               }
               
               th {
@@ -388,60 +388,55 @@ const Root = styled("div")(
               `
 );
 
-const CustomTablePagination = styled(TablePagination)(
-  ({ theme }) => `
-                /* Remove the spacer element */
-                & .${classes.spacer} {
-                  display: none;
-                }
-                
-                /* Update the toolbar styles */
-                & .${classes.toolbar} {
-                  display: flex;
-                  flex-direction: row;
-                  align-items: center;
-                  justify-content:space-arround;
-                  gap: 10px;
-                }
-                
-                /* Update the select label styles */
-                & .${classes.selectLabel} {
-                  margin: 0;
-                }
-                
-                /* Update the select styles */
-                & .${classes.select} {
-                  padding: 2px;
-                  border: 1px solid ${
-                    theme.palette.mode === "dark" ? grey[800] : grey[200]
-                  };
-                  border-radius: 50px;
-                  background-color: transparent;
-                  
-                  &:hover {
-                    background-color: ${
-                      theme.palette.mode === "dark" ? grey[800] : grey[50]
-                    };
-                  }
-                  
-                  &:focus {
-                    outline: 1px solid ${
-                      theme.palette.mode === "dark" ? blue[400] : blue[200]
-                    };
-                  }
-                }
-                
-                /* Update the actions styles */
-                .${classes.actions} {
-                  padding: 2px;
-                  border-radius: 50px;
-                  text-align: center;
-                  display: flex;
-                }
-                
-                /* Update the displayed rows styles */
-                & .${classes.displayedRows} {
-                  margin-left: 2rem;
-                }
-                `
-);
+
+
+const CustomTablePagination = styled(TablePagination)(({ theme }) => `
+  /* Remove the spacer element */
+  .MuiTablePagination-spacer {
+    display: none;
+  }
+  
+  /* Update the toolbar styles */
+  .MuiTablePagination-toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+  }
+  
+  /* Update the select label styles */
+  .MuiTablePagination-selectLabel {
+    margin: 0;
+  }
+  
+  /* Update the select styles */
+  .MuiTablePagination-select {
+    padding: 2px;
+    border: 1px solid ${theme.palette.mode === "dark" ? grey[800] : grey[200]};
+    border-radius: 50px;
+    background-color: transparent;
+    
+    &:hover {
+      background-color: ${theme.palette.mode === "dark" ? grey[800] : grey[50]};
+    }
+    
+    &:focus {
+      outline: 1px solid ${theme.palette.mode === "dark" ? blue[400] : blue[200]};
+    }
+  }
+  
+  /* Update the actions styles */
+  .MuiTablePagination-actions {
+    padding: 2px;
+    border-radius: 50px;
+    text-align: center;
+    display: flex;
+  }
+  
+  /* Update the displayed rows styles */
+  .MuiTablePagination-displayedRows {
+    margin-left: 2rem;
+  }
+`);
+

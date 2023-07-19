@@ -19,7 +19,18 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedEmulator, setSelectedEmulator] = useState(1);
+  const [isStartedMap, setIsStartedMap] = useState({});
 
+ 
+  const handleActionButtonClick = (row) => {
+  
+    setIsStartedMap((prevIsStartedMap) => ({
+      ...prevIsStartedMap,
+      [row.id]: !prevIsStartedMap[row.id] // Toggle the status for the specific row
+    }));
+  };
+
+  
   // Fetch data from API
   const fetchData = async () => {
     const token = localStorage.getItem("token");
@@ -60,7 +71,10 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
       showToast(error, "error");
     }
   }, []);
-
+  
+  useEffect(() => {
+    setLoading(false);
+  }, [data]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -88,15 +102,17 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%" }} className="gps_table_container">
+    <div sx={{ width: "auto", maxWidth: "100%" , fontSize:"1rem"}} className="gps_table_container">
       <table aria-label="custom pagination gps_page_table">
         <thead>
           <tr className="gps_page_tr">
             <th>Status</th>
-            <th>ID</th>
+            <th >ID</th>
             <th>Number</th>
             <th>Address</th>
             <th>Select</th>
+            <th>Trip Status</th>
+            <th>Action</th>
           </tr>
         </thead>
 
@@ -107,14 +123,15 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
           ).map((row) => (
             <tr key={row.id || "N/A"} className="gps_page_tr">
               <td
-                style={{
-                  background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
-                  // : row.status === "inactive"
-                  // ? "green"
-                  // : row.status === "idle"
-                  // ? "yellow"
-                  // : "",
-                }}
+               style={{
+                background:
+                  row.status === "ACTIVE"
+                    ? "#16BA00" // Green when ACTIVE
+                    : row.status === "INACTIVE"
+                    ? "#ff4d4d" // Red when INACTIVE
+                    : "#FFFF00", // Yellow when IDLE
+              }}
+               
               >
                 {row.status || "N/A"}
               </td>
@@ -133,6 +150,23 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
                   onChange={() => handleEmulatorCheckboxChange(row.id)}
                 />
               </td>
+              <td style={{ width: "auto" }} align="right">
+                {row.tripStatus || "N/A"}
+              </td>
+              <td style={{ width: 120 }} align="right">
+                <button
+                  style={{
+                    height: "45px",
+                    width:"70px",
+                    backgroundColor: isStartedMap[row.id] ? "red" : "green",
+                    color: "white",
+                  }}
+                  onClick={() => handleActionButtonClick(row)}
+                  >
+                    {isStartedMap[row.id] ? "Stop" : "Start"}
+                  {/* {row.user === null ? "start" : "stop"} */}
+                </button>
+              </td>
             </tr>
           ))}
 
@@ -147,7 +181,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
           <tr>
             <CustomTablePagination
               rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-              colSpan={5}
+              colSpan={7}
               count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}

@@ -21,7 +21,7 @@ const AddressTable = ({ tripData }) => {
     "N/A";
 
   return (
-    <div style={{ width: "60%", minWidth:"100%" , padding:"10px"}}>
+    <div style={{ width: "60%", minWidth:"100%" }}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>

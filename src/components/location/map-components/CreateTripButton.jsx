@@ -1,5 +1,6 @@
 // CreateTripButton.jsx
 import React from "react";
+import "../../../scss/map.scss";
 
 const CreateTripButton = ({ onClick }) => {
   return (

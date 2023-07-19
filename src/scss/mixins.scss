@@ -9,6 +9,14 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Raleway', sans-serif; /* Updated font-family to Raleway */
-    overflow: hidden;
+    overflow-x: hidden;
     letter-spacing: 2px;
+  }
+  @mixin default-view {
+    padding: 0 15px;
+    width: -webkit-fill-available;
+    margin: 15px;
+    height: 35px;
+    border-radius: 20px;
+    font-weight: bold;
   }

@@ -2,21 +2,21 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../scss/login.scss";
+import "../scss/popup.scss";
 import { USER_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: "-3px -3px 7px #97949473, 2px 2px 7px rgb(137, 138, 138)",
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
+// const style = {
+//   position: "absolute",
+//   top: "50%",
+//   left: "50%",
+//   transform: "translate(-50%, -50%)",
+//   width: 400,
+//   bgcolor: "background.paper",
+//   boxShadow: "-3px -3px 7px #97949473, 2px 2px 7px rgb(137, 138, 138)",
+//   pt: 2,
+//   px: 4,
+//   pb: 3,
+// };
 
 const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAssignUser , handleAssignedUserToEmulator }) => {
   const navigate = useNavigate();
@@ -121,42 +121,37 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
 
   return (
     <div>
-      <Modal
-        open={open}
-        userToAssignToEmulator={emulatorToAssignUser}
-        onClose={handleClose}
-        users={users}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <Box sx={{ ...style, width: 400 }}>
-            <h1>Select a user:</h1>
-            <ul >
+    <Modal
+      open={open}
+      userToAssignToEmulator={emulatorToAssignUser}
+      onClose={handleClose}
+      users={users}
+      aria-labelledby="parent-modal-title"
+      aria-describedby="parent-modal-description"
+    >
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <Box className="action_popup" >
+          <h1>Select a user:</h1>
+          <div className="action_popup_div" >
+            <ul>
               {users?.map((user) => (
-                <div sx={{ marginBottom:"1rem"}}
+                <li
                   key={user.id}
                   onClick={() => handleUserSelect(user.id)}
-                  style={{
-                    cursor: 'pointer',
-                    border: '1px solid #007dc6',
-                    background: '#C7C7C735',
-                    padding: '0.5rem',
-                    marginBottom: '1rem',
-                    borderRadius: '10px' // Adjust the value as per your preference
-                  }}
                 >
                   {user.firstName} {user.lastName}
-                </div>
+                </li>
               ))}
             </ul>
-            {error && <p className="error">{error}</p>}
-          </Box>
-        )}
-      </Modal>
-    </div>
+          </div>
+          {error && <p className="error">{error}</p>}
+        </Box>
+      )}
+    </Modal>
+  </div>
+  
   );
 };
 
