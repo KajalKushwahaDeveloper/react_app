@@ -5,6 +5,7 @@ import "./scss/home.scss";
 import Dropdown from "./components/dropDown.js";
 import Form from "./components/form.js";
 import {EMULATOR_URL} from "./constants.js"
+import MultipleSelect from "./components/user_dropDown.js";
 // import Map from "./components/map.js";
 
 // const API = "http://64.226.101.239:8080/emulator"; // LIVE API server URL
@@ -60,6 +61,7 @@ const Settings = () => {
           {visibleForm && <Form fcmToken={fcmToken} />}
         </div>
       </div>
+      <MultipleSelect/>
     </>
   );
 };

@@ -1,21 +1,51 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
+import * as React from "react";
+import PropTypes from "prop-types";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@material-ui/core/TextField";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import RoomIcon from "@mui/icons-material/Room";
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  makeStyles,
+} from '@material-ui/core/styles';
+
+
+const CssTextField = withStyles({
+  root: {
+    '& label.Mui-focused': {
+      color: '#007dc6',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#007dc6',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#007dc6',
+      },
+      '&:hover fieldset': {
+        borderColor: '#007dc6',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#007dc6',
+      },
+    },
+  },
+})(TextField);
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
+  "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
-  '& .MuiDialogActions-root': {
+  "& .MuiDialogActions-root": {
     padding: theme.spacing(1),
   },
 }));
@@ -31,10 +61,10 @@ function BootstrapDialogTitle(props) {
           aria-label="close"
           onClick={onClose}
           sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
+            position: "absolute",
+            right: 0,
+            top: 0,
+            color: (theme) => theme.palette.blue,
           }}
         >
           <CloseIcon />
@@ -50,6 +80,7 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function CustomizedDialogs() {
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -59,44 +90,70 @@ export default function CustomizedDialogs() {
     setOpen(false);
   };
 
-  const handleText2Change = () => {
-
-  }
   return (
-    <div>
-    <Button variant="outlined" onClick={handleClickOpen}>
-      Open dialog
-    </Button>
-    <BootstrapDialog
-      onClose={handleClose}
-      aria-labelledby="customized-dialog-title"
-      open={open}
-    >
-      <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-        Modal title
-      </BootstrapDialogTitle>
-      <DialogContent dividers>
-        <TextField
-          label="Text 1"
-        //   value={text1}
-        //   onChange={handleText1Change}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Text 2"
-        //   value={text2}
-        //   onChange={handleText2Change}
-          fullWidth
-          margin="normal"
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button autoFocus >
-          Save changes
-        </Button>
-      </DialogActions>
-    </BootstrapDialog>
-  </div>
+    <div >
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Open dialog
+      </Button>
+      <BootstrapDialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
+        <BootstrapDialogTitle
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontWeight:"100px",
+          }}
+          id="customized-dialog-title"
+          onClose={handleClose}
+        >
+          Creat Trip
+        </BootstrapDialogTitle>
+        <DialogContent
+        
+          style={{ display: "flex", flexDirection: "column", margin: "1rem"  }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "1rem",
+              marginTop: "0.3rem",
+            }}
+          >
+            <RadioButtonCheckedIcon style={{ color: "#007dc6" }} />
+            <CssTextField
+              style={{ marginLeft: "1rem", borderColor: "#00FF00" ,width: "300px"}}
+              InputLabelProps={{
+                style: { color: "#007dc6" },
+              }}
+              id="outlined-basic-1"
+              label="Search Location"
+              variant="outlined"
+            />
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <RoomIcon style={{ color: "#007dc6" }} />
+            <CssTextField
+              InputLabelProps={{
+                style: { color: "#007dc6" },
+              }}
+              style={{ marginLeft: "1rem", borderColor: "#2196F3" ,width: "300px"}}
+              id="outlined-basic-2"
+              label="Search Location"
+              variant="outlined"
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus style={{ color: "#ffffff",background:"#007dc6",width:"100%",borderRadius:"1rem"}}>
+            Add
+          </Button>
+        </DialogActions>
+      </BootstrapDialog>
+    </div>
   );
 }
