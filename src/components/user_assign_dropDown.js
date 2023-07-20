@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useEffect, useState} from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -13,7 +13,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import TextField from "@material-ui/core/TextField";
+import { USER_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
+
 
 
   
@@ -78,19 +79,49 @@ const names = [
   "Kelly Snyder",
 ];
 
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
 
-export default function MultipleSelect() {
+
+export default function UserAssignDropDown(props) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [users, setUsers] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
+  // Fetch data from API
+  const fetchUsers = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(USER_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok || response.status !== 200) {
+        return { success: false, error: "Invalid credentials" };
+      } else {
+        const responseData = await response.text();
+       
+
+        const deserializedData = JSON.parse(responseData);
+        console.log("response:::", deserializedData);
+
+
+        setUsers(deserializedData);
+        setLoading(false);
+        return { success: true, error: null};
+      }
+    } catch (error) {
+      console.log("User Data Error: " + error);
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -104,21 +135,24 @@ export default function MultipleSelect() {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    // setPersonName(
+    //   typeof value === "string" ? value.split(",") : value
+    // );
+    setPersonName(value)
   };
-
+  useEffect(async () => {
+    // setLoading(true);
+    const userData = await fetchUsers();
+    console.log("userData111", userData)
+    
+  }, [props.open]);
   return (
     <div>
-        <Button variant="outlined" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
+    
       <BootstrapDialog 
-        onClose={handleClose}
+        onClose={props.close}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={props.open}
       >
         <BootstrapDialogTitle
           style={{
@@ -128,33 +162,36 @@ export default function MultipleSelect() {
             fontWeight:"100px",
           }}
           id="customized-dialog-title"
-          onClose={handleClose}
+          onClose={props.close}
         >
-          Creat Trip
+          Select User:
         </BootstrapDialogTitle>
         <DialogContent dividers>
 
         <FormControl sx={{ m: 1, width: 300 , margin:"2rem"}}>
-          <InputLabel id="demo-multiple-name-label" style={{borderRadius:"2rem"}}>Name</InputLabel>
+          <InputLabel id="demo-multiple-name-label" style={{borderRadius:"2rem"}}>Users</InputLabel>
           <Select
             labelId="demo-multiple-name-label"
             id="demo-multiple-name"
-            multiple
+         
             value={personName}
             onChange={handleChange}
             input={<OutlinedInput label="Name" />}
             MenuProps={MenuProps}
-          >
-            {names.map((name) => (
+          >{
+            console.log("users23:", users)
+          }
+            {users?.map((name) => (
               <MenuItem
                 key={name}
                 value={name}
-                style={getStyles(name, personName, theme)}
+               
               >
-                {name}
+                {name.lastModifiedBy}
               </MenuItem>
             ))}
           </Select>
+          <Button variant="contained">Add</Button>
         </FormControl>
         </DialogContent>
       </BootstrapDialog>

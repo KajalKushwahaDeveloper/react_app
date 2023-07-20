@@ -68,6 +68,7 @@ const EmulatorTable = ({
         showToast(`Failed to unassign user ${error}`, "error");
       }
     } else {
+      console.log("handleAssignUserButtonClick", row)
       handleAssignUserButtonClick(row);
     }
   };

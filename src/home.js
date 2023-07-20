@@ -11,6 +11,7 @@ import { Button } from "@mui/material";
 import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
+import UserAssignDropDown from "./components/user_assign_dropDown.js";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
@@ -91,10 +92,16 @@ const Home = () => {
             open={openUserPopup}
             userToEdit={userToEdit}
           />
-          <PopUpAssignUser
+          {/* <PopUpAssignUser
             showToast={showToast}
             handleClose={handleClose}
+           open={openUserAssignPopup}
+            emulatorToAssignUser={emulatorToAssignUser}
+            handleAssignedUserToEmulator={handleAssignedUserToEmulator}
+          /> */}
+          <UserAssignDropDown
             open={openUserAssignPopup}
+            close={handleClose}
             emulatorToAssignUser={emulatorToAssignUser}
             handleAssignedUserToEmulator={handleAssignedUserToEmulator}
           />

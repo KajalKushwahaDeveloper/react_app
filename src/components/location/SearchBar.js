@@ -116,16 +116,7 @@ class SearchBar extends React.Component {
                   />
                 </div>
                
-                {/* {this.state.address.length > 0 && (
-                  <div style={{ float: "right" }}>
-                    <button
-                      className="Demo__clear-button"
-                      onClick={this.handleCloseClick}
-                    >
-                      x
-                    </button>
-                  </div>
-                )} */}
+                
                 {suggestions.length > 0 && (
                   <div
                     className="Demo__autocomplete-container"

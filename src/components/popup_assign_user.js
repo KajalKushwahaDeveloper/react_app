@@ -5,18 +5,6 @@ import { useNavigate } from "react-router-dom";
 import "../scss/popup.scss";
 import { USER_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 
-// const style = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   boxShadow: "-3px -3px 7px #97949473, 2px 2px 7px rgb(137, 138, 138)",
-//   pt: 2,
-//   px: 4,
-//   pb: 3,
-// };
 
 const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAssignUser , handleAssignedUserToEmulator }) => {
   const navigate = useNavigate();
@@ -38,8 +26,7 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
         } else {
           handleAssignedUserToEmulator(success, error, null )
         }
-        showToast("User Added", "success"); // Call the showToast method with two arguments
-        // navigate("/home"); // Redirect to the home page
+        showToast("User Added", "success"); 
       } else {
         showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
         setError(error || "Failed to add user"); // Display appropriate error message
