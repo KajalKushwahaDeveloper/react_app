@@ -3,9 +3,14 @@ import { CREATE_TRIP_URL } from "../../../constants.js";
 import ApiService from "../../../ApiService.js";
 import CreateTripDialogBox from "./dialog_box.js";
 
-
-
-const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdatedTripPath, setSelectedEmId ,setCreateTripInfo}) => {
+const CreateTripTable = ({
+  showToast,
+  selectedEmId,
+  setIsTableVisible,
+  setUpdatedTripPath,
+  setSelectedEmId,
+  setCreateTripInfo,
+}) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
@@ -14,7 +19,6 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
-
 
   const handleTableClose = () => {
     setIsTableVisible(false);
@@ -25,12 +29,11 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
   };
 
   const handleAddClick = async () => {
-    
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
       setError("Please fill both locations.");
       return;
     }
-  
+
     setError("");
 
     console.log("selectedEmId:", selectedEmId);
@@ -65,23 +68,17 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
 
     setIsTableVisible(false);
   };
-console.log("selectedEmId......:", selectedEmId);
+  console.log("selectedEmId......:", selectedEmId);
   return (
-    <div >
-
-           
-                  <CreateTripDialogBox
-                    setLat={setFromLat}
-                    setLong={setFromLong}
-                    setAddress={setFromAddress}
-                    inputValue={inputValue}
-                    setInputValue={setInputValue}
-                    handleInputChange={handleInputChange}
-                  />
-             
-              
-            
-            
+    <div>
+      <CreateTripDialogBox
+        setLat={setFromLat}
+        setLong={setFromLong}
+        setAddress={setFromAddress}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        handleInputChange={handleInputChange}
+      />
     </div>
   );
 };

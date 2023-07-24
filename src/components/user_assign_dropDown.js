@@ -13,6 +13,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from '@mui/material/RadioGroup';
 import { USER_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -63,37 +66,46 @@ const MenuProps = {
   },
 };
 
-
-export default function UserAssignDropDown(showToast,handleOpen, close, emulatorToAssignUser , handleAssignedUserToEmulator ) {
+export default function UserAssignDropDown(props) {
+  const {
+    showToast,
+    open,
+    close,
+    emulatorToAssignUser,
+    handleAssignedUserToEmulator,
+  } = props;
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
   const [users, setUsers] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [selectedUserId, SetSelectedUserId] = useState();
 
   const handleUserSelect = async (userId) => {
+    console.log("selectedUser:", selectedUserId);
     try {
       console.log(emulatorToAssignUser.id);
       console.log(userId);
-      const { success,error,data } = await setUserToEmulator(emulatorToAssignUser.id, userId);
+      const { success, error, data } = await setUserToEmulator(
+        emulatorToAssignUser.id,
+        selectedUserId
+      );
 
       if (success) {
         console.log("User added successfully");
-        if(emulatorToAssignUser != null){
-          handleAssignedUserToEmulator(success, error, data )
+        if (emulatorToAssignUser != null) {
+          handleAssignedUserToEmulator(success, error, data);
         } else {
-          handleAssignedUserToEmulator(success, error, null )
+          handleAssignedUserToEmulator(success, error, null);
         }
-        showToast("User Added", "success"); 
+        showToast("User Added", "success");
       } else {
-        showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
-        setError(error || "Failed to add user"); // Display appropriate error message
+        showToast(error || "Failed to add user", "error");
+        setError(error || "Failed to add user");
       }
     } catch (error) {
       console.log("Error occurred while adding user:", error);
-      setError("An error occurred while adding user"); // Display a generic error message
+      setError("An error occurred while adding user");
     }
   };
 
@@ -127,14 +139,6 @@ export default function UserAssignDropDown(showToast,handleOpen, close, emulator
     }
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const handleChange = (event) => {
     const {
       target: { value },
@@ -144,8 +148,42 @@ export default function UserAssignDropDown(showToast,handleOpen, close, emulator
     // );
     setPersonName(value);
   };
+
+  const setUserToEmulator = async (emulatorId, UserId) => {
+    console.log(emulatorId);
+    console.log(UserId);
+
+    const toAssign = {
+      user: { id: UserId },
+      emulatorDetails: { id: emulatorId },
+    };
+
+    const token = localStorage.getItem("token");
+    console.log("token : ", token);
+    const response = await fetch(USER_ASSIGN_EMULATOR_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(toAssign),
+    });
+    console.log("response:", response);
+    if (!response.ok || response.status !== 200) {
+      return { success: false, error: "Failed to assign user", data: null };
+    }
+    const result = await response.json();
+    return { success: true, error: null, data: result };
+  };
+
+  const userHandleSelect = (e) => {
+    SetSelectedUserId(e.target.value);
+    console.log("target value", e.target.value);
+  };
+
   useEffect(async () => {
-    // setLoading(true);
+    console.log("open::12", open);
+    //  setLoading(true);
     const userData = await fetchUsers();
     console.log("userData111", userData);
   }, [open]);
@@ -185,9 +223,15 @@ export default function UserAssignDropDown(showToast,handleOpen, close, emulator
               MenuProps={MenuProps}
             >
               {console.log("users23:", users)}
-              {users?.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name.lastModifiedBy}
+              {users?.map((user) => (
+                
+                <MenuItem key={user.id} value={user.id}>
+                  <FormControlLabel
+                    value={user.id}
+                    control={<Radio />}
+                    label={user.lastModifiedBy}
+                    onChange={(e) => userHandleSelect(e)}
+                  />
                 </MenuItem>
               ))}
             </Select>
@@ -195,7 +239,7 @@ export default function UserAssignDropDown(showToast,handleOpen, close, emulator
               <Button
                 variant="contained"
                 style={{ width: "2rem", marginTop: "2em" }}
-                onClick={() => handleUserSelect(user.id)}
+                onClick={() => handleUserSelect()}
               >
                 Add
               </Button>

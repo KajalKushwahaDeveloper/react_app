@@ -5,11 +5,12 @@ import ErrorBoundary from "./ErrorBoundary";
 import { BrowserRouter } from "react-router-dom";
 import "./../node_modules/bootstrap/dist/js/bootstrap.min.js";
 
-ReactDOM.render(
+import themes from 'devextreme/ui/themes';
+themes.initialized(() => ReactDOM.render(
   <BrowserRouter>
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
   </BrowserRouter>,
   document.getElementById("root")
-);
+));
