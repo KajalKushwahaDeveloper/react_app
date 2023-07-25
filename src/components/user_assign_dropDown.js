@@ -66,7 +66,7 @@ const MenuProps = {
   },
 };
 
-export default function UserAssignDropDown(props) {
+const UserAssignDropDown = (props) => {
   const {
     showToast,
     open,
@@ -250,3 +250,4 @@ export default function UserAssignDropDown(props) {
     </div>
   );
 }
+export default UserAssignDropDown;

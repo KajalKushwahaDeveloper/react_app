@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/navbar.js";
-import axios from "axios";
 import "./scss/home.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { EMULATOR_URL } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";
 import { Button } from "@mui/material";
 import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
-import PopUpAssignUser from "./components/popup_assign_user.js";
-import UserAssignDropDown from "./components/user_assign_dropDown.js";
 import NewTable from "./components/new_table.js";
+import UserAssignDropDown from "./components/user_assign_dropDown";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
@@ -103,13 +99,7 @@ const Home = () => {
             open={openUserPopup}
             userToEdit={userToEdit}
           />
-          {/* <PopUpAssignUser
-            showToast={showToast}
-            handleClose={handleClose}
-           open={openUserAssignPopup}
-            emulatorToAssignUser={emulatorToAssignUser}
-            handleAssignedUserToEmulator={handleAssignedUserToEmulator}
-          /> */}
+     {/* user assign button popup */}
           <UserAssignDropDown
             showToast={showToast}
             open={openUserAssignPopup}

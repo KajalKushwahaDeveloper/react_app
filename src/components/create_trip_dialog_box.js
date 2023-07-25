@@ -16,26 +16,25 @@ import {
   Theme,
   withStyles,
   makeStyles,
-} from '@material-ui/core/styles';
-
+} from "@material-ui/core/styles";
 
 const CssTextField = withStyles({
   root: {
-    '& label.Mui-focused': {
-      color: '#007dc6',
+    "& label.Mui-focused": {
+      color: "#363636",
     },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#007dc6',
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "#363636",
     },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#007dc6',
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#363636",
       },
-      '&:hover fieldset': {
-        borderColor: '#007dc6',
+      "&:hover fieldset": {
+        borderColor: "#363636",
       },
-      '&.Mui-focused fieldset': {
-        borderColor: '#007dc6',
+      "&.Mui-focused fieldset": {
+        borderColor: "#363636",
       },
     },
   },
@@ -79,7 +78,8 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CreateTripDialogBox() {
+export default function CreateTripDialogBox(props) {
+  const { isTableVisible, setIsTableVisible } = props;
 
   const [open, setOpen] = React.useState(false);
 
@@ -88,15 +88,18 @@ export default function CreateTripDialogBox() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsTableVisible(false);
   };
 
+  React.useEffect(() => {
+    setOpen(isTableVisible);
+  }, [isTableVisible]);
+
+
   return (
-    <div >
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
+    <div>
       <BootstrapDialog
-        onClose={handleClose}
+        // onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
       >
@@ -105,7 +108,7 @@ export default function CreateTripDialogBox() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            fontWeight:"100px",
+            fontWeight: "100px",
           }}
           id="customized-dialog-title"
           onClose={handleClose}
@@ -113,8 +116,7 @@ export default function CreateTripDialogBox() {
           Creat Trip
         </BootstrapDialogTitle>
         <DialogContent
-        
-          style={{ display: "flex", flexDirection: "column", margin: "1rem"  }}
+          style={{ display: "flex", flexDirection: "column", margin: "1rem" }}
         >
           <div
             style={{
@@ -124,24 +126,28 @@ export default function CreateTripDialogBox() {
               marginTop: "0.3rem",
             }}
           >
-            <RadioButtonCheckedIcon style={{ color: "#007dc6" }} />
+            <RadioButtonCheckedIcon  />
             <CssTextField
-              style={{ marginLeft: "1rem", borderColor: "#00FF00" ,width: "300px"}}
-              InputLabelProps={{
-                style: { color: "#007dc6" },
+              style={{
+                marginLeft: "1rem",
+                // borderColor: "#00FF00",
+                width: "300px",
               }}
+              
               id="outlined-basic-1"
               label="Search Location"
               variant="outlined"
             />
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
-            <RoomIcon style={{ color: "#007dc6" }} />
+            <RoomIcon  />
             <CssTextField
-              InputLabelProps={{
-                style: { color: "#007dc6" },
+             
+              style={{
+                marginLeft: "1rem",
+                // borderColor: "#2196F3",
+                width: "300px",
               }}
-              style={{ marginLeft: "1rem", borderColor: "#2196F3" ,width: "300px"}}
               id="outlined-basic-2"
               label="Search Location"
               variant="outlined"
@@ -149,7 +155,15 @@ export default function CreateTripDialogBox() {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus style={{ color: "#ffffff",background:"#007dc6",width:"100%",borderRadius:"1rem"}}>
+          <Button
+            autoFocus
+            style={{
+              color: "#ffffff",
+              background: "#007dc6",
+              width: "100%",
+              borderRadius: "1rem",
+            }}
+          >
             Add
           </Button>
         </DialogActions>

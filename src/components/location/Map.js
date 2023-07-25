@@ -42,7 +42,7 @@ const Map = ({ showToast }) => {
 
   const handleCreateTripButton = () => {
     setCreateTrip(true);
-    setIsTableVisible(!isTableVisible);
+    setIsTableVisible(true);
   };
 
   console.log(selectedEmId);

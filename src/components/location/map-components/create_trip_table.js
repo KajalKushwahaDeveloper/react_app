@@ -4,7 +4,7 @@ import { CREATE_TRIP_URL } from "../../../constants.js";
 import CloseIcon from "@mui/icons-material/Close";
 import ApiService from "../../../ApiService.js";
 import { Login } from "@mui/icons-material";
-import FullScreenDialog from "../../dialog_box.js";
+import FullScreenDialog from "../../create_trip_dialog_box.js";
 
 
 const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdatedTripPath, setSelectedEmId ,setCreateTripInfo}) => {
