@@ -1,252 +1,31 @@
 @import "./variables";
 @import "./mixins";
 
-.header {
-  width: 100%;
-  height: auto;
-  background-color: $background-color;
-  color: $white-color;
-  position: fixed;
-  z-index: 3;
-
-  a {
-    text-decoration: none;
-    color: white;
-    opacity: 1;
-  }
-
-  li {
-    list-style: none;
-  }
-
-  .main-nav {
-    width: 100%;
-    height: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0rem 1rem;
-
-    .logo {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex: 1; /* Added flex property to the logo */
-
-      img {
-        width: 15rem;
-        height: auto;
-      }
-    }
-
-    .menu-link {
-      display: flex;
-      align-items: center;
-      margin-right: 2rem;
-    //   flex: 1; /* Added flex property to the menu links */
-
-      ul {
-        height: auto;
-        padding: 0;
-        display: flex;
-        justify-content: flex-end; /* Align menu links to the right */
-        align-items: center;
-
-        li {
-          font-size: 1.1rem;
-          padding: 0.8rem 0.6rem;
-
-          &:hover {
-            background: $active_color;
-            padding: 0.4rem 0.6rem;
-            border-radius: 0.1rem;
-          }
-
-          a {
-            text-transform: capitalize;
-            color: $white-color;
-            transition: 0.5s;
-            font-size: 1.1rem;
-          }
-
-          a:hover {
-            transform-origin: left;
-            opacity: 0.9;
-            transition: 0.5s;
-          }
-        }
-      }
-    }
-
-    .social-media {
-      .hamburger-menu {
-        display: none; /* Hide the hamburger icon on desktop */
-        font-size: 1.5rem;
-        padding-right: 1.5rem;
-      }
-    }
-  }
-
-  /* Mobile Responsive Styles */
-  @media (max-width: 996px) {
-    .main-nav {
-      align-items: flex-start;
-
-      .menu-link {
-        display: none;
-      }
-
-      .logo {
-        margin-bottom: 1rem;
-      }
-
-      .social-media {
-        .hamburger-menu {
-          display: block;
-          font-size: 2.5rem;
-        }
-      }
-    }
-
-    .menu-link.mobile-menu-link {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: $background-color;
-      position: absolute;
-      left: 0;
-      top: 3rem;
-      transition: all 0.5s ease-out;
-      width: 100%;
-      height: 100vh;
-      padding: 5rem 0;
-    }
-
-    .menu-link ul {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: $white-color;
-      margin: 0;
-      padding: 0;
-
-      li {
-        font-size: 2.2rem;
-        padding: 1.6rem;
-
-        &:hover {
-          background: $active_color;
-          padding: 1rem;
-          border-radius: 0.4rem;
-        }
-      }
-    }
-
-    .social-media {
-      .hamburger-menu {
-        font-size: 2.5rem;
-        margin-right: 1rem;
-      }
-    }
+body{
+  @include main;
+}
+.app_bar{
+  background-color: $background-color !important;
+  color: white !important;
+  display: flex !important;
+  justify-content: space-between!important;
+  align-items: center !important;
+.logo{
+  img{
+    width:14rem;
   }
 }
-@media (max-width: 576px) {
-    .main-nav {
-   
-      align-items: flex-start;
+.menu-link{
+  display: flex !important;
+  justify-content: space-between!important;
+  align-items: center !important;
+  color: white !important;
 
-      .menu-link {
-        display: none;
-      }
-
-      .logo {
-        margin-bottom: 1rem;
-      }
-
-      .social-media {
-        .hamburger-menu {
-          display: block;
-          font-size: 2.5rem;
-        }
-      }
-    }
-
-    .menu-link.mobile-menu-link {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background-color: $background-color;
-      position: absolute;
-      left: 0;
-      top: 7rem;
-      transition: all 0.5s ease-out;
-      width: 100%;
-      height: 100vh;
-      padding: 5rem 0;
-    }
-
-    .menu-link ul {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: $white-color;
-      margin: 0;
-      padding: 0;
-
-      li {
-        font-size: 2.2rem;
-        padding: 1.6rem;
-
-        &:hover {
-          background: $active_color;
-          padding: 1rem;
-          border-radius: 0.4rem;
-        }
-      }
-    }
-
-    .social-media {
-      .hamburger-menu {
-        font-size: 2.5rem;
-        margin-right: 1rem;
-      }
-    }
+  
+  a{
+    font-size: 1rem!important;
+    color: white !important;
+    font-weight: 100;
   }
-
-  /* iPhone SE specific styles */
-  @media (max-width: 320px) and (max-height: 568px) {
-    .main-nav {
-      padding: 0.5rem;
-    }
-
-    .menu-link.mobile-menu-link {
-      padding: 3rem 0;
-    }
-
-    .menu-link ul li {
-      padding: 0.8rem 0.6rem;
-    }
-
-    .menu-link ul li a {
-      font-size: 1.6rem;
-    }
-
-    .social-media {
-      .hamburger-menu {
-        font-size: 2rem;
-      }
-    }
-  }
-
-
-
-
-
-
-
-
-
+}
+}

@@ -14,9 +14,9 @@ import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 
 const columns = [
-  { id: 'status', label: 'Status' },
+  { id: 'status', label: 'Status', minWidth: 80 },
   { id: 'emulatorSsid', label: 'ID', minWidth: 80 },
-  { id: 'telephone', label: 'Number', minWidth: 20 },
+  { id: 'telephone', label: 'Number', minWidth: 80 },
   { id: 'address', label: 'Address', minWidth: 80 },
   { id: 'select', label: 'Select', minWidth: 40 },
   { id: 'tripStatus', label: 'Trip Status', minWidth: 60 },
@@ -153,7 +153,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
                           ) : column.id === "status" ? (
                             <div
                               style={{
-                                padding:".5rem 1rem",
+                                padding:"0.5rem",
                                 background:
                                   row.status === "ACTIVE"
                                     ? "#16BA00" // Green when ACTIVE

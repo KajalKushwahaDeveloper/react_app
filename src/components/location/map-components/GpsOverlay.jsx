@@ -4,6 +4,7 @@ import GpsTable from "./gps_page_table";
 import CurrentLocation from "./current_location";
 import AddressTable from "./address_table";
 
+
 const GpsOverlay = ({ showToast, setSelectedEmId , tripData}) => {
  
   return (
