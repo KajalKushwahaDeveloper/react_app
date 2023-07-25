@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from "react";
+import  React,{useState, useEffect} from 'react';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles'; // Import styled from @mui/material/styles
+import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from '../constants';
 
-import TablePagination, {
-  tablePaginationClasses as classes,
-} from "@mui/base/TablePagination";
-import { Button, Modal } from "@mui/material";
-import { styled } from "@mui/system";
-import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
-import "../scss/table.scss";
-import "../scss/button.scss";
+const columns = [
+  { id: 'status', label: 'STATUS' },
+  { id: 'emulatorSsid', label: 'SERIAL NO', minWidth: 120, align: 'right' },
+  { id: 'telephone', label: 'NUMBER', minWidth: 120, align: 'right' },
+  { id: 'user', label: 'ASSIGNED', minWidth: 120, align: 'right' },
+  { id: 'action', label: 'ACTION', minWidth: 120, align: 'right' },
+];
 
 const EmulatorTable = ({
   showToast,
@@ -16,13 +26,15 @@ const EmulatorTable = ({
   setUserAssingedEmulator,
 }) => {
   // State variables
-  const [data, setData] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3); // Number of items to display per page
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(3);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [itemsPerPage] = React.useState(3); // Number of items to display per page
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+
+
 
   const handleActionButtonClick = async (row) => {
     console.log("row data in emulator_page:", row)
@@ -140,12 +152,13 @@ const EmulatorTable = ({
     }
   }, [userAssingedEmulator]);
 
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
@@ -159,157 +172,77 @@ const EmulatorTable = ({
   if (error) {
     return <div>Error: {error}</div>;
   }
-
+ 
   return (
-    <div sx={{ width: "100%",
-    maxWidth: "100%",
-    overflowX: "auto",
-  }}>
-      <table aria-label="custom pagination table" style={{   borderRadius:"1rem",width: "100%", minWidth: "600px" }}>
-        <thead>
-          <tr>
-            <th>STATUS</th>
-            <th>SERIAL NO</th>
-            <th>NUMBER</th>
-            <th>ASSIGNED</th>
-            <th>ACTION</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
-          ).map((row) => (
-            <tr key={row.id || "N/A"}>
-              <td>{row.status || "N/A"}</td>
-              <td style={{ width: 120 }} align="right">
-                {row.emulatorSsid || "N/A"}
-              </td>
-              <td style={{ width: 120 }} align="right">
-                {row.telephone || "N/A"}
-              </td>
-              <td style={{ width: 120 }} align="right">
-                {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
-              </td>
-              <td style={{ width: 120 }} align="right">
-                <button
-                  style={{
-                    height: "45px",
-                    width: "85px",
-                    backgroundColor: row.user === null ? "green" : "red",
-                    color: "white",
-                  }}
-                  onClick={() => handleActionButtonClick(row)}
-                >
-                  {row.user === null ? "assign" : "unassign"}
-                </button>
-              </td>
-            </tr>
-          ))}
+    <div style={{ width: '100%', maxWidth: '100%'}}>
+      <Paper sx={{ borderRadius: '1rem', border: 'none' }}>
+        <TableContainer sx={{ maxHeight: 440 }}>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow  style={{border:"none"}}>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody style={{border:"none"}}>
+              {data
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id || 'N/A'}>
+                    <TableCell>{row.status || 'N/A'}</TableCell>
+                    <TableCell style={{ width: 120 }} align="right">
+                      {row.emulatorSsid || 'N/A'}
+                    </TableCell>
+                    <TableCell style={{ width: 120 }} align="right">
+                      {row.telephone || 'N/A'}
+                    </TableCell>
+                    <TableCell style={{ width: 120 }} align="right">
+                      {row.user?.firstName || 'N/A'} {row.user?.lastName || 'N/A'}
+                    </TableCell>
+                    <TableCell style={{ width: 120 }} align="right">
+                      <Button
+                        style={{
+                          height: '45px',
+                          width: '85px',
+                          backgroundColor: row.user === null ? 'green' : 'red',
+                          color: 'white',
+                        }}
+                        onClick={() => handleActionButtonClick(row)}
+                      >
+                        {row.user === null ? 'assign' : 'unassign'}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
 
-          {emptyRows > 0 && (
-            <tr style={{ height: 34 * emptyRows }}>
-              <td colSpan={5} />
-            </tr>
-          )}
-        </tbody>
-        <tfoot>
-          <tr>
-            <CustomTablePagination
-              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-              colSpan={5}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { "aria-label": "rows per page" },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </tr>
-        </tfoot>
-      </table>
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 34 * emptyRows }}>
+                  <TableCell colSpan={1} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+       <TablePagination
+        // rowsPerPageOptions={[3]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Paper>
     </div>
   );
 };
 
 export default EmulatorTable;
 
-const blue = {
-  200: "#A5D8FF",
-  400: "#3399FF",
-};
-
-const grey = {
-  50: "#F3F6F9",
-  100: "#E7EBF0",
-  200: "#E0E3E7",
-  300: "#CDD2D7",
-  400: "#B2BAC2",
-  500: "#A0AAB4",
-  600: "#6F7E8C",
-  700: "#3E5060",
-  800: "#2D3843",
-  900: "#1A2027",
-};
-
-
-const CustomTablePagination = styled(TablePagination)(
-  ({ theme }) => `
-      /* Remove the spacer element */
-      & .${classes.spacer} {
-        display: none;
-      }
-    
-      /* Update the toolbar styles */
-      & .${classes.toolbar} {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content:space-arround;
-        gap: 10px;
-      }
-    
-      /* Update the select label styles */
-      & .${classes.selectLabel} {
-        margin: 0;
-      }
-    
-      /* Update the select styles */
-      & .${classes.select} {
-        padding: 2px;
-        border: 1px solid ${
-          theme.palette.mode === "dark" ? grey[800] : grey[200]
-        };
-        border-radius: 50px;
-        background-color: transparent;
-    
-        &:hover {
-          background-color: ${
-            theme.palette.mode === "dark" ? grey[800] : grey[50]
-          };
-        }
-    
-        &:focus {
-          outline: 1px solid ${
-            theme.palette.mode === "dark" ? blue[400] : blue[200]
-          };
-        }
-      }
-    
-      /* Update the actions styles */
-      .${classes.actions} {
-        padding: 2px;
-        border-radius: 50px;
-        text-align: center;
-        display: flex;
-      }
-    
-      /* Update the displayed rows styles */
-      & .${classes.displayedRows} {
-        margin-left: 2rem;
-      }
-      `
-);

@@ -7,7 +7,6 @@ import UserTable from "./components/user_table.js";
 import { Button } from "@mui/material";
 import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
-import NewTable from "./components/new_table.js";
 import UserAssignDropDown from "./components/user_assign_dropDown";
 
 const Home = () => {
@@ -75,12 +74,6 @@ const Home = () => {
             userAssingedEmulator={userAssingedEmulator}
             setUserAssingedEmulator={setUserAssingedEmulator}
           />
-          {/* <NewTable
-            showToast={showToast}
-            handleAssignUserButtonClick={handleAssignUserButtonClick}
-            userAssingedEmulator={userAssingedEmulator}
-            setUserAssingedEmulator={setUserAssingedEmulator}
-          /> */}
         </div>
         <div
           className="user_table"
@@ -99,7 +92,7 @@ const Home = () => {
             open={openUserPopup}
             userToEdit={userToEdit}
           />
-     {/* user assign button popup */}
+          {/* user assign button popup */}
           <UserAssignDropDown
             showToast={showToast}
             open={openUserAssignPopup}

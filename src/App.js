@@ -6,8 +6,6 @@ import Logout from "./logout.js";
 import Settings from "./settings.js";
 import Navbar from "./components/navbar";
 import ResetPasswordPage from "./resetPassword";
-import 'devextreme/dist/css/dx.light.css';
-
 
 import {
   Routes,

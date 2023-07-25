@@ -1,129 +1,108 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import "../scss/navbar.scss";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-import { CLIENT_CURRENT } from "../constants";
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import { NavLink } from 'react-router-dom';
 
-const Navbar = ({ isAdmin }) => {
-  const [menuIcon, setMenuIcon] = useState(false);
-  const [data, setData] = useState();
-  const [error, setError] = useState();
 
-  const navigate = useNavigate();
+const drawerWidth = 240;
+const navItems = ['Home', 'GPS', 'Contact', 'Settings'];
+
+
+export default function DrawerAppBar() {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen((prevState) => !prevState);
+  };
+
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
+      <Typography variant="h6" sx={{ my: 2 }}>
+        MUI
+      </Typography>
+      <Divider />
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item} disablePadding>
+            <ListItemButton sx={{ textAlign: 'center' }}>
+              <Button
+                component={NavLink}
+                to={`/${item.toLowerCase()}`}
+                sx={{ color: '#000', textDecoration: 'none' }}
+              >
+                <ListItemText primary={item} />
+              </Button>
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
   
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
-  const fetchClientData = async () => {
-    console.log("fetchClientData isAdmin : "  + isAdmin);
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(CLIENT_CURRENT, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok || response.status !== 200) {
-        return { success: false, error: "Invalid credentials" };
-      } else {
-        const responseData = await response.text();
-        console.log("responseData navbar:", responseData);
-        const deserializedData = JSON.parse(responseData);
-        setData(deserializedData);
-        console.log("deserializedData navbar:", deserializedData);
-        return { success: true, error: null };
-      }
-    } catch (error) {
-      console.log("Data Error: " + error);
-      setError(error.message);
-    }
-  };
-
-  useEffect(() => {
-    const { success, error } = fetchClientData();
-  }, []);
 
   return (
-    <>
-      <div className="header">
-        <div className="main-nav">
-          {/* 1st logo part  */}
-          <div className="logo">
-            <img
-              className="logo_image"
-              src="images/logo2.png"
-              alt="logo"
-            />
-          </div>
-
-          {/* 2nd menu part  */}
-          <div
-            className={menuIcon ? "menu-link mobile-menu-link" : "menu-link"}
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar position="fixed">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
           >
-            <ul className="">
-              {isAdmin && (
-                <li>
-                  <NavLink
-                    to="/home"
-                    className="navbar-link"
-                    onClick={() => setMenuIcon(false)}
-                  >
-                    Licenses
-                  </NavLink>
-                </li>
-              )}
-              <li>
-                <NavLink
-                  to="/gps"
-                  className="navbar-link"
-                  onClick={() => setMenuIcon(false)}
-                >
-                  GPS
-                </NavLink>
-              </li>
-              {/* Drop down  */}
-              <li>
-                <NavLink
-                  to="/settings"
-                  className="navbar-link"
-                  onClick={() => setMenuIcon(false)}
-                >
-                  Settings
-                </NavLink>
-              </li>
-              <li>
-                {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
-                {data?.username || "N/A"})
-              </li>
-              <li>
-                <NavLink
-                  to="/"
-                  className="navbar-link-btn"
-                  onClick={() => handleLogout()}
-                >
-                  Logout
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-          {/* 3rd social media links */}
-          <div className="social-media">
-            {/* hamburger menu start  */}
-            <div className="hamburger-menu">
-              <a href="#" onClick={() => setMenuIcon(!menuIcon)}>
-                <MenuIcon style={{ width: "4rem", height: "4rem" }} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+          >
+            MUI
+          </Typography>
+          <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            {navItems.map((item) => (
+              <Button
+                key={item}
+                component={NavLink}
+                to={`/${item.toLowerCase()}`}
+                sx={{ color: '#fff', textDecoration: 'none' }}
+              >
+                {item}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Box component="nav">
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+    </Box>
   );
-};
-
-export default Navbar;
+}

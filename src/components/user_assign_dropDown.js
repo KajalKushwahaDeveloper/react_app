@@ -75,7 +75,7 @@ const UserAssignDropDown = (props) => {
     handleAssignedUserToEmulator,
   } = props;
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  const [userName, setuserName] = React.useState([]);
   const [users, setUsers] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -143,10 +143,9 @@ const UserAssignDropDown = (props) => {
     const {
       target: { value },
     } = event;
-    // setPersonName(
-    //   typeof value === "string" ? value.split(",") : value
-    // );
-    setPersonName(value);
+    
+    SetSelectedUserId(value);
+    setuserName(value);
   };
 
   const setUserToEmulator = async (emulatorId, UserId) => {
@@ -217,7 +216,7 @@ const UserAssignDropDown = (props) => {
             <Select
               labelId="demo-multiple-name-label"
               id="demo-multiple-name"
-              value={personName}
+              value={userName}
               onChange={handleChange}
               input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
@@ -226,12 +225,8 @@ const UserAssignDropDown = (props) => {
               {users?.map((user) => (
                 
                 <MenuItem key={user.id} value={user.id}>
-                  <FormControlLabel
-                    value={user.id}
-                    control={<Radio />}
-                    label={user.lastModifiedBy}
-                    onChange={(e) => userHandleSelect(e)}
-                  />
+                  {user.lastModifiedBy}
+                 
                 </MenuItem>
               ))}
             </Select>

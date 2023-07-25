@@ -1,41 +1,64 @@
 @import "./mixins.scss";
 @import "./variables.scss";
 
+body{
+  @include main;
+}
+.stacktable {
+  width: 100%;
+}
 
-.stacktable { 
-    width: 100%;
- }
 .st-head-row {
-     padding-top: 1em;
-     }
-.st-head-row.st-head-row-main { 
-    font-size: 1.5em;
-    padding-top: 0; 
-    }
-.st-key { 
-    width: 49%; 
-    text-align: right; 
-    padding-right: 1%; }
-.st-val { 
-    width: 49%; 
-    padding-left: 1%;
- }
+  padding-top: 1em;
+}
+
+.st-head-row.st-head-row-main {
+  font-size: 1.5em;
+  padding-top: 0;
+}
+
+.st-key {
+  width: 49%;
+  text-align: right;
+  padding-right: 1%;
+}
+
+.st-val {
+  width: 49%;
+  padding-left: 1%;
+}
 
 
 
 /* RESPONSIVE EXAMPLE */
 
-.stacktable.large-only { display: table; }
-.stacktable.small-only { display: none; }
+.stacktable.large-only {
+  display: table;
+}
+
+.stacktable.small-only {
+  display: none;
+}
 
 @media (max-width: 800px) {
-  .stacktable.large-only { display: none; }
-  .stacktable.small-only { display: table; }
-}
-@media (max-width: 400px) {
-    .stacktable.large-only { display: none; }
-    .stacktable.small-only { display: table; }
+  .stacktable.large-only {
+    display: none;
   }
+
+  .stacktable.small-only {
+    display: table;
+  }
+}
+
+@media (max-width: 400px) {
+  .stacktable.large-only {
+    display: none;
+  }
+
+  .stacktable.small-only {
+    display: table;
+  }
+}
 
 h2 {
   text-align: center;
@@ -43,7 +66,7 @@ h2 {
 }
 
 table caption {
-	padding: .5em 0;
+  padding: .5em 0;
 }
 
 .p {
@@ -61,30 +84,34 @@ table caption {
   border-collapse: collapse;
   width: 100%;
 }
+
 //table//
 table {
   font-family: Raleway, sans-serif;
   font-size: 0.875rem;
-  border-collapse: collapse;
+  // border-collapse: collapse;
   width: 100%;
   height: auto;
   padding: 0.5rem;
-  background: $light-grey;
+  text-align: center;
+  background: white;
+  // box-shadow: $tableShadow;
   border-radius: "1rem";
 }
 
-td{
-  border: 1px solid #ccc;
-  padding: 2px 6px;
+td {
+  // border: 1px solid #ccc;
+  padding: 6px 8px !important;
   word-wrap: break-word;
   max-width: 100px;
 }
+
 th {
   border: none;
-  box-shadow: $tableShadow;
-  text-align: left;
+  // box-shadow: $tableShadow;
+  text-align: center;
   padding: 12px;
-  background-color: $background-color;
+  background-color: white;
 }
 
 .mapContainer {
@@ -118,25 +145,25 @@ th {
 
 
 @media (max-width: 960px) {
-  
+
   .user_table {
-    font-size: 14px; 
+    font-size: 14px;
   }
-  
+
   .user_table th,
   .user_table td {
-    padding: 6px; 
+    padding: 6px;
   }
 }
 
 @media (max-width: 768px) {
-  
+
   .user_table {
-    font-size: 12px; 
+    font-size: 12px;
   }
-  
+
   .user_table th,
   .user_table td {
-    padding: 4px; 
+    padding: 4px;
   }
 }
