@@ -50,6 +50,24 @@ body {
   }
 }
 
+@media (min-width: 1024px) {
+  .home_div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+ 
+    padding-top: 5rem;
+    margin: 0 1rem;
+  
+    flex-wrap: nowrap;
+  }
+
+  .emulator_table {
+    margin: 2rem 1rem;
+  }
+}
+
 @media (max-width: 996px) {
   .column {
     width: 50%;
@@ -67,20 +85,4 @@ body {
   }
 }
 
-@media (min-width: 1024px) {
-  .home_div {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: row;
- 
-    padding-top: 5rem;
-    margin: 0 1rem;
-  
-    flex-wrap: nowrap;
-  }
 
-  .emulator_table {
-    margin: 5rem 1rem;
-  }
-}

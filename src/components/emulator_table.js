@@ -174,7 +174,7 @@ const EmulatorTable = ({
   }
  
   return (
-    <div style={{ width: '100%', maxWidth: '100%',borderRadius:"10rem"}}>
+    <div style={{ width: '100%', maxWidth: '100%'}}>
       <Paper sx={{ borderRadius: '1rem', border: 'none' }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
@@ -231,7 +231,7 @@ const EmulatorTable = ({
           </Table>
         </TableContainer>
        <TablePagination
-        // rowsPerPageOptions={[3]}
+        rowsPerPageOptions={[5,10]}
         component="div"
         count={data.length}
         rowsPerPage={rowsPerPage}

@@ -79,10 +79,18 @@ const Home = () => {
           className="user_table"
           style={{ display: "flex", flexDirection: "column" }}
         >
-          <Button
+          {/* <Button
             className="login_button"
             style={{ padding: "1rem", margin: "1rem" }}
             onClick={handleOpen}
+          >
+            Add User
+          </Button> */}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpen}
+            style={{ position:"absolute", top:"7rem", right:"1rem" }}
           >
             Add User
           </Button>
