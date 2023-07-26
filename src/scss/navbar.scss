@@ -1,31 +1,60 @@
 @import "./variables";
 @import "./mixins";
 
-body{
+body {
   @include main;
 }
-.app_bar{
+
+.app_bar {
   background-color: $background-color !important;
   color: white !important;
   display: flex !important;
-  justify-content: space-between!important;
+  justify-content: space-between !important;
   align-items: center !important;
-.logo{
-  img{
-    width:14rem;
+
+  .logo {
+    img {
+      width: 14rem;
+    }
+  }
+
+  .menu-link {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    color: white !important;
+    margin-left: .5rem ;
+
+    a {
+      font-size: 1rem !important;
+      color: white !important;
+      font-weight: 400;
+      opacity: 1 !important;
+      margin-left: .5rem ;
+
+      &:hover {
+        opacity: .7 !important;
+      }
+
+      &:active {
+        background-color: #eeaf1d !important;
+        opacity: 1 !important;
+      }
+    }
   }
 }
-.menu-link{
-  display: flex !important;
-  justify-content: space-between!important;
-  align-items: center !important;
+
+/* Styles for the active link */
+.active-link {
+  background-color: #eeaf1d !important;
   color: white !important;
 
-  
-  a{
-    font-size: 1rem!important;
-    color: white !important;
-    font-weight: 100;
+  &:hover {
+    opacity: .7 !important;
   }
-}
+
+  &:active {
+    background-color: #eeaf1d !important;
+    opacity: 1 !important;
+  }
 }

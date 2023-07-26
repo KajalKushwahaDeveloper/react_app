@@ -231,7 +231,7 @@ const EmulatorTable = ({
           </Table>
         </TableContainer>
        <TablePagination
-        // rowsPerPageOptions={[3]}
+        rowsPerPageOptions={[5,10]}
         component="div"
         count={data.length}
         rowsPerPage={rowsPerPage}

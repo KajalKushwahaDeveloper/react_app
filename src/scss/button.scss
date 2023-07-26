@@ -14,3 +14,14 @@ button {
     margin: 30px;
 
 }
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  
+    .loading-spinner {
+      margin-left: 8px; 
+      color: $background-color;
+    }
+  }
