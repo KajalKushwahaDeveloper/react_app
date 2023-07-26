@@ -225,7 +225,7 @@ const UserAssignDropDown = (props) => {
               {users?.map((user) => (
                 
                 <MenuItem key={user.id} value={user.id}>
-                  {user.lastModifiedBy}
+                {user.firstName} {user.lastName}
                  
                 </MenuItem>
               ))}
