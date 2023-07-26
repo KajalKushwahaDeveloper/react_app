@@ -174,7 +174,7 @@ const EmulatorTable = ({
   }
  
   return (
-    <div style={{ width: '100%', maxWidth: '100%'}}>
+    <div style={{ width: '100%', maxWidth: '100%',borderRadius:"10rem"}}>
       <Paper sx={{ borderRadius: '1rem', border: 'none' }}>
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">

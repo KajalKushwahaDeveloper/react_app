@@ -39,7 +39,7 @@ const AddressTable = ({ tripData }) => {
   return (
     <div sx={{ width: "auto", maxWidth: "100%", fontSize: "1rem" }}>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: "auto" ,width:"43rem"}}>
+        <TableContainer sx={{ maxHeight: "auto" ,width:"42rem"}}>
           <Table stickyHeader aria-label="sticky" sx={{width:"100%",height:"5rem"}}>
             <TableHead>
               <TableRow>

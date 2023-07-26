@@ -1,34 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../scss/navbar.scss";
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import MenuIcon from '@mui/icons-material/Menu';
-import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import { useMediaQuery } from '@mui/material';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+
 import { CLIENT_CURRENT } from "../constants";
 
-const drawerWidth = 240;
-const navItems = ['Home', 'GPS'];
-
+const navItems = ["Home", "GPS"];
 
 const Navbar = ({ isAdmin }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const [menuIcon, setMenuIcon] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -40,7 +31,7 @@ const Navbar = ({ isAdmin }) => {
   };
 
   const fetchClientData = async () => {
-    console.log("fetchClientData isAdmin : "  + isAdmin);
+    console.log("fetchClientData isAdmin : " + isAdmin);
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(CLIENT_CURRENT, {
@@ -70,63 +61,24 @@ const Navbar = ({ isAdmin }) => {
     const { success, error } = fetchClientData();
   }, []);
 
-  const drawer = (
-  
-    <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-      <div className="logo">
-            <img
-              className="logo_image"
-              src="images/logo2.png"
-              alt="logo"
-            />
-          </div>
-                </Typography>
-      <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
-              <Button
-                color="inherit"
-                component={Link}
-                to={`/${item.toLowerCase()}`}
-                sx={{ color: '#000', textDecoration: 'none' }}
-                onClick={() => setMobileOpen(false)}
-              >
-                <ListItemText primary={item} />
-              </Button>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-
-      {/* Display user information */}
-      <Typography variant="body1" color="inherit">
-        {data?.firstName || "N/A"} {data?.lastName || "N/A"} ({data?.username || "N/A"})
-      </Typography>
-    </Box>
-  );
-
-
-
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed">
+      <AppBar position="fixed" sx={{ backgroundColor: "red" }}>
         <Toolbar className="app_bar">
           {/* Logo */}
           <div className="logo">
             <img className="logo_image" src="images/logo2.png" alt="logo" />
           </div>
-          
-          {/* Menu links for large screens */}
-          <Box className="menu-link" sx={{ mr: 2, display: { xs:'none', sm: 'block',lg:'block',md:'block' } }}>
+
+          <Box className="menu-link" sx={{ mr: 2, display: { lg: "block" } }}>
             {isAdmin && (
               <Button
                 color="inherit"
                 component={Link}
                 to="/home"
                 onClick={() => setMenuIcon(false)}
+                className={location.pathname === "/home" ? "active-link" : ""}
               >
                 Licenses
               </Button>
@@ -136,49 +88,27 @@ const Navbar = ({ isAdmin }) => {
               component={Link}
               to="/gps"
               onClick={() => setMenuIcon(false)}
+              className={location.pathname === "/gps" ? "active-link" : ""}
             >
               GPS
             </Button>
-            <Typography variant="body1" color="inherit" sx={{ mr: 2 }}>
-              {data?.firstName || "N/A"} {data?.lastName || "N/A"} ({data?.username || "N/A"})
+
+            <Typography variant="body1" color="inherit" sx={{ mx: 2 }}>
+              {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
+              {data?.username || "N/A"})
             </Typography>
             <Button
-              color="inherit"
+              // color="inherit"
               component={Link}
               to="/"
               onClick={() => handleLogout()}
+              activeClassName="active-link"
             >
               Logout
             </Button>
           </Box>
-
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle} 
-            sx={{ display: { xs:'block', sm: 'none',lg:'none',md:'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
         </Toolbar>
       </AppBar>
-      <Box component="nav">
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </Box>
     </>
   );
 };

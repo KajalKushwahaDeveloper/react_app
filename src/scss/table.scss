@@ -75,6 +75,7 @@ table caption {
 
 .gps_table_container {
   overflow-x: auto;
+  margin-bottom: 1rem !important;
 }
 
 /* styles for the table */
@@ -94,7 +95,7 @@ table {
   text-align: center !important; 
   background: white;
   // box-shadow: $tableShadow;
-  border-radius: "1rem";
+  border-radius: "10rem" !important;
 }
 
 td {
