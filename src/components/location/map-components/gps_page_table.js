@@ -11,11 +11,11 @@ import "../../../scss/button.scss";
 
 import ApiService from "../../../ApiService";
 
-const GpsTable = ({ showToast, setSelectedEmId }) => {
+const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   // State variables
-  const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [emptyRows, setEmptyRows] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,6 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
         const responseData = await response.text();
         const deserializedData = JSON.parse(responseData);
         if (deserializedData != null) {
-          setData(deserializedData);
           console.log("useFetch Sending ID : ", deserializedData[0].id);
           setSelectedEmId(deserializedData[0].id);
         }
@@ -54,14 +53,15 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    const { success, error } = fetchData();
-    if (success) {
-      showToast("Fetched Emulators successfully", "success");
-    } else {
-      showToast(error, "error");
+    console.log("Data : THIS RAN");
+    if(data!=null){
+      console.log("Data : ", data);
+      setEmptyRows(rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage));
+    setLoading(false);
+    }else{
+      setLoading(true);
     }
-  }, []);
+  }, [data]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -102,8 +102,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
     }
   };
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -136,6 +135,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
             ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : data
           ).map((row) => (
+            
             <tr key={row.id || "N/A"}>
               <td
                 style={{
@@ -206,7 +206,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
             </tr>
           ))}
 
-          {emptyRows > 0 && (
+          {emptyRows!= null && emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
               <td colSpan={5} />
             </tr>

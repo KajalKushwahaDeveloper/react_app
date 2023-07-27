@@ -110,9 +110,15 @@ const Map = ({ showToast }) => {
         return;
       }
       const { status, latitude, longitude } = newEmulatorData;
+      const { tripStatus } = newEmulatorData;
       const isLocationChanged =
         emulator && emulator.latitude !== latitude || emulator.longitude !== longitude;
-      if (isLocationChanged) {
+      
+        const isEmulatorChanged =
+        emulator && emulator.tripStatus !== tripStatus || emulator.status !== status;
+      
+      
+        if (isLocationChanged || isEmulatorChanged) {
         const updatedEmulators = emulators.map((emulator) => {
           if (emulator.id === newEmulatorData.id) {
             return { ...emulator, status, latitude, longitude };
@@ -218,7 +224,8 @@ const Map = ({ showToast }) => {
         setSelectedEmId={setSelectedEmId}
         setCreateTripInfo={setCreateTripInfo}
       />
-      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId}  tripData={tripData}/>
+      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId} 
+        emulators={emulators} tripData={tripData}/>
       <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}
