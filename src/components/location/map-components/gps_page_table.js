@@ -5,9 +5,11 @@ import TablePagination, {
 } from "@mui/base/TablePagination";
 import { Checkbox } from "@mui/material";
 import { styled } from "@mui/system";
-import { EMULATOR_URL } from "../../../constants";
+import { EMULATOR_URL, TRIP_TOGGLE, USER_URL } from "../../../constants";
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
+
+import ApiService from "../../../ApiService";
 
 const GpsTable = ({ showToast, setSelectedEmId }) => {
   // State variables
@@ -61,7 +63,6 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
     }
   }, []);
 
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -74,6 +75,31 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   const handleEmulatorCheckboxChange = (id) => {
     setSelectedEmulator(id);
     setSelectedEmId(id);
+  };
+
+  const handleActionButtonClick = async (row) => {
+    if (row.tripStatus === "RESTING") {
+      showToast("Cannot resume trip of resting emulator!", "error");
+      return;
+    }
+    if (row.tripStatus === "FINISHED") {
+      showToast("Trip already Finished!", "error");
+      return;
+    }
+    console.log("row data in emulator_page:", row);
+    const token = localStorage.getItem("token");
+    console.log("token : ", token);
+    const { success, data, error } = await ApiService.makeApiCall(
+      TRIP_TOGGLE + "/" + row.id,
+      "GET",
+      null,
+      token
+    );
+    if (success) {
+      showToast("CHANGED TRIP STATUS", "success");
+    } else {
+      showToast("Error CHANGING TRIP STATUS", "error");
+    }
   };
 
   const emptyRows =
@@ -97,6 +123,11 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
             <th>Number</th>
             <th>Address</th>
             <th>Select</th>
+            <th>
+              TripStatus/
+              <br />
+              Action
+            </th>
           </tr>
         </thead>
 
@@ -124,7 +155,14 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
               <td style={{ width: "auto" }} align="right">
                 {row.telephone || "N/A"}
               </td>
-              <td style={{ width: "auto" }} align="right">
+              <td
+                style={{
+                  width: "auto",
+                  height: "3em",
+                  textOverflow: "ellipsis",
+                }}
+                align="right"
+              >
                 {row.address || "N/A"}
               </td>
               <td style={{ width: "auto" }} align="right">
@@ -132,6 +170,38 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
                   checked={selectedEmulator === row.id}
                   onChange={() => handleEmulatorCheckboxChange(row.id)}
                 />
+              </td>
+              <td style={{ width: "auto" }} align="right">
+                <p>{row.tripStatus}</p>
+                <button
+                  style={{
+                    height: "auto",
+                    backgroundColor:
+                      row.tripStatus === "RUNNING"
+                        ? "#440000"
+                        : row.tripStatus === "PAUSED"
+                        ? "#909000"
+                        : row.tripStatus === "STOP"
+                        ? "#118811"
+                        : row.tripStatus === "RESTING"
+                        ? "#444444"
+                        : "N/A",
+                    color: "white",
+                  }}
+                  onClick={() => handleActionButtonClick(row)}
+                >
+                  {row.tripStatus === "RUNNING"
+                    ? "PAUSE"
+                    : row.tripStatus === "PAUSED"
+                    ? "RESUME"
+                    : row.tripStatus === "STOP"
+                    ? "START"
+                    : row.tripStatus === "RESTING"
+                    ? "RESUME"
+                    : row.tripStatus === "FINISHED"
+                    ? ""
+                    : "N/A"}
+                </button>
               </td>
             </tr>
           ))}
@@ -197,7 +267,7 @@ const CustomTablePagination = styled(TablePagination)(
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content:space-arround;
+        justify-content:space-around;
         gap: 10px;
       }
     
