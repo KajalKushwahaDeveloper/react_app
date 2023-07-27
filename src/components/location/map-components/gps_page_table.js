@@ -128,13 +128,13 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
                 >
                   {row.status || "N/A"}
                 </td>
-                <td style={{ width: "auto" }} align="right">
+                <td style={{ width: "100px" }} align="right">
                   {row.emulatorSsid || "N/A"}
                 </td>
-                <td style={{ width: "auto" }} align="right">
+                <td style={{ width: "100px" }} align="right">
                   {row.telephone || "N/A"}
                 </td>
-                <td style={{ width: "auto" }} align="right">
+                <td style={{ width: "200px" }} align="right">
                   {row.address || "N/A"}
                 </td>
                 <td style={{ width: "auto" }} align="right">
@@ -143,7 +143,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
                     onChange={() => handleEmulatorCheckboxChange(row.id)}
                   />
                 </td>
-                <td style={{ width: "auto" }} align="right">
+                <td style={{ width: "100px" }} align="right">
                   {row.tripStatus || "N/A"}
                 </td>
                 <td style={{ width: 120 }} align="right">
