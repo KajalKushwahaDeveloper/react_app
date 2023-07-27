@@ -1,5 +1,4 @@
-// GoogleMapContainer.jsx
-import React from "react";
+import React, { useEffect, useState }  from "react";
 import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
 
 const GoogleMapContainer = ({
@@ -10,8 +9,7 @@ const GoogleMapContainer = ({
   selectedStop,
   handleMarkerClick,
   handleInfoWindowClose,
-  progress,
-  icon,
+  selectedEmulator,
   emulators,
   endLat,
   endLng,
@@ -20,12 +18,38 @@ const GoogleMapContainer = ({
   handleEmulatorMarkerClick,
   handleEmulatorMarkerDragEnd,
 }) => {
+
+  const [pathTraveled, setPathTraveled] = useState(null);
+  const [pathNotTraveled, setPathNotTraveled] = useState(null);
+
+  useEffect(() => {
+    if(selectedEmulator!=null && pathsRoute!=null){
+      setPathTraveled(pathsRoute.filter((item, index) => index <= selectedEmulator.currentTripPointIndex));
+      setPathNotTraveled(pathsRoute.filter((item, index) => index >= selectedEmulator.currentTripPointIndex));
+    } else {
+      console.log("currentTripPointIndex  : null");
+    }
+      
+  }, [selectedEmulator, pathsRoute]);
+
+
   return (
     <div className="gMapCont">
       <GoogleMap ref={mapRef} defaultZoom={7} center={center}>
-        {pathsRoute != null && (
+        {pathTraveled != null && (
           <Polyline
-            path={pathsRoute}
+            path={pathTraveled}
+            options={{
+              strokeColor: "#559900",
+              strokeWeight: 6,
+              strokeOpacity: 0.6,
+              defaultVisible: true,
+            }}
+          />
+        )}
+        {pathNotTraveled != null && (
+          <Polyline
+            path={pathNotTraveled}
             options={{
               strokeColor: "#0088FF",
               strokeWeight: 6,
@@ -87,12 +111,6 @@ const GoogleMapContainer = ({
           </InfoWindow>
         )}
 
-        {progress && (
-          <>
-            <Polyline path={progress} options={{ strokeColor: "orange" }} />
-            <Marker icon={icon} position={progress[progress?.length - 1]} />
-          </>
-        )}
 
         {emulators != null &&
           emulators
@@ -107,7 +125,7 @@ const GoogleMapContainer = ({
               const isInActiveUserNull =
                 emulator.status === "INACTIVE" && emulator.user === null;
 
-              const icon = {
+              const emulatorIcon = {
                 url: isActiveUser
                   ? "images/green_truck.png"
                   : isInActiveUserNull
@@ -121,13 +139,17 @@ const GoogleMapContainer = ({
               return (
                 <React.Fragment key={index}>
                   <Marker
-                    icon={icon}
+                    icon={emulatorIcon}
                     position={{
                       lat: emulator.latitude,
                       lng: emulator.longitude,
                     }}
-                    title={`Emulator ${emulator.id}`}
-                    label={`S${emulator.id}`}
+                    title={
+                      emulator?.id === selectedEmulator?.id
+                        ? "selectedMarker"
+                        : `S${emulator?.id}`
+                    }
+                    label={`Emulator ${emulator.id}`}
                     onClick={() => handleEmulatorMarkerClick(emulator)}
                     draggable={!emulator.startLat}
                     onDragEnd={(event) =>
