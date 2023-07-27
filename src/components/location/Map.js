@@ -125,6 +125,7 @@ const Map = ({ showToast }) => {
         return;
       }
       const { status, latitude, longitude } = newEmulatorData;
+      
       const isLocationChanged =
         (emulator && emulator.latitude !== latitude) ||
         emulator.longitude !== longitude;

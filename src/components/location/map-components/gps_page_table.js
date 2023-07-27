@@ -174,7 +174,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
             <tr>
               <CustomTablePagination
                 rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-                colSpan={5}
+                colSpan={7}
                 count={data.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
