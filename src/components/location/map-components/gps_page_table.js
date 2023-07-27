@@ -165,7 +165,7 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
 
             {emptyRows > 0 && (
               <tr style={{ height: 34 * emptyRows }}>
-                <td colSpan={5} />
+                <td colSpan={7} />
               </tr>
             )}
           </tbody>

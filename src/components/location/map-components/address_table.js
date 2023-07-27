@@ -19,7 +19,7 @@ const AddressTable = ({ tripData }) => {
       tripData?.toAddress[3]?.long_name || "N/A";
 
   return (
-    <div style={{ width: "60%", maxWidth: "100%" }}>
+    <div style={{ width: "100%", maxWidth: "100%" }}>
       <table aria-label="custom pagination table" className="table">
         <thead>
           <tr>
