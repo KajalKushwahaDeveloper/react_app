@@ -11,7 +11,6 @@ import {
 import useFetch from "../hooks/useFetch";
 import { TRIP_STOPS_URL, TRIP_POINTS_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import CardComponent  from "./map-components/CardComponent";
-import StartSimulationButton from "./map-components/StartSimulationButton.jsx";
 import CreateTripButton from "./map-components/CreateTripButton.jsx";
 import GpsOverlay from "./map-components/GpsOverlay";
 import CreateTripOverlay from "./map-components/CreateTripOverlay";
@@ -19,7 +18,6 @@ import GoogleMapContainer from "./map-components/GoogleMapContainer";
 import ApiService from "../../ApiService";
 
 const Map = ({ showToast }) => {
-  const [progress, setProgress] = useState(null);
   const [selectedEmId, setSelectedEmId] = useState(1);
   const [createTrip, setCreateTrip] = useState(false);
 
@@ -57,13 +55,6 @@ const Map = ({ showToast }) => {
   let initialDate;
 
   const emulatorIntervalRef = useRef(null);
-
-  const icon = {
-    url: "images/truck.png",
-    scaledSize: new window.google.maps.Size(40, 40),
-    anchor: new window.google.maps.Point(20, 20),
-    scale: 0.7,
-  };
 
   const calculatePath = () => {
     if (mapRef.current === null || paths === null || paths?.length === 0) {
@@ -114,6 +105,7 @@ const Map = ({ showToast }) => {
     let emulatorInterval;
   
     const checkCurrentLocation = (newEmulatorData) => {
+      console.log('checkCurrentLocation');
       if (newEmulatorData === null) {
         return;
       }
@@ -167,10 +159,6 @@ const Map = ({ showToast }) => {
     };
   }, [selectedEmId, emulator, emulators, setEmulator, setEmulators]);
   
-  const getDistance = () => {
-    const differentInTime = (new Date() - initialDate) / 1000; // pass to seconds
-    return differentInTime * velocity; // d = v*t -- thanks Newton!
-  };
 
   useEffect(() => {
     if (pathsRoute === null) {
@@ -178,119 +166,6 @@ const Map = ({ showToast }) => {
     }
     console.log("CHANGED pathsRoute : ", pathsRoute);
   }, [pathsRoute]);
-
-
-  const moveObject = (pathsRoute) => {
-    const distance = getDistance();
-    console.log("Move Path distance : ", distance);
-    console.log("Move Path pathsRoute1212 : ", pathsRoute);
-    if (!distance || !pathsRoute) {
-      return;
-    }
-
-    console.log("FILTERING : ", pathsRoute);
-    let progress = pathsRoute?.filter(
-      (coordinates) => coordinates.distance < distance
-    );
-
-    const nextLine = pathsRoute?.find(
-      (coordinates) => coordinates.distance > distance
-    );
-
-    if (!nextLine) {
-      setProgress(progress);
-      clearInterval(intervalRef.current);
-      console.log("MapTrip Completed!! Thank You !!");
-      return; // it's the end!
-    }
-    const lastLine = progress[progress?.length - 1];
-
-    const lastLineLatLng = new window.google.maps.LatLng(
-      lastLine.lat,
-      lastLine.lng
-    );
-
-    const nextLineLatLng = new window.google.maps.LatLng(
-      nextLine.lat,
-      nextLine.lng
-    );
-
-    const totalDistance = nextLine.distance - lastLine.distance;
-    const percentage = (distance - lastLine.distance) / totalDistance;
-
-    const position = window.google.maps.geometry.spherical.interpolate(
-      lastLineLatLng,
-      nextLineLatLng,
-      percentage
-    );
-
-    mapUpdate();
-    setProgress(progress.concat(position));
-  };
-
-  const mapUpdate = () => {
-    const distance = getDistance();
-    if (!distance || !pathsRoute) {
-      return;
-    }
-
-    let progress = pathsRoute?.filter(
-      (coordinates) => coordinates.distance < distance
-    );
-
-    const nextLine = pathsRoute?.find(
-      (coordinates) => coordinates.distance > distance
-    );
-
-    let point1, point2;
-
-    if (nextLine) {
-      point1 = progress[progress?.length - 1];
-      point2 = nextLine;
-    } else {
-      point1 = progress[progress?.length - 2];
-      point2 = progress[progress?.length - 1];
-    }
-
-    const point1LatLng = new window.google.maps.LatLng(point1.lat, point1.lng);
-    const point2LatLng = new window.google.maps.LatLng(point2.lat, point2.lng);
-
-    const angle = window.google.maps.geometry.spherical.computeHeading(
-      point1LatLng,
-      point2LatLng
-    );
-    const actualAngle = angle - 90;
-    const imageUrl = 'https://maps.gstatic.com/mapfiles/transparent.png'
-    const rotation = getMarkerRotation(progress); // Get the rotation angle for the truck
-    const marker = document.querySelector(`[src="${icon.url}"]`);
-    // const marker = document.querySelectorAll(`[src="${imageUrl}"]`)
-    console.log(marker, rotation);
-    if (marker) {
-      marker.style.transform = `rotate(${rotation}deg)`;
-    }
-  };
-
-  const getMarkerRotation = (progress) => {
-    if (!progress || progress.length < 2) {
-      return 0; // Default rotation angle
-    }
-
-    const lastIndex = progress.length - 1;
-    const secondLastIndex = lastIndex - 1;
-
-    const lastLat = progress[lastIndex].lat;
-    const lastLng = progress[lastIndex].lng;
-
-    const secondLastLat = progress[secondLastIndex].lat;
-    const secondLastLng = progress[secondLastIndex].lng;
-
-    const angle = Math.atan2(
-      lastLng - secondLastLng,
-      lastLat - secondLastLat
-    ) * (180 / Math.PI);
-
-    return angle;
-  };
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -300,18 +175,6 @@ const Map = ({ showToast }) => {
     setSelectedStop(null);
   };
 
-
-  const startSimulation = useCallback(() => {
-    console.log("HELLO !!! PATHS : ", paths);
-    console.log("HELLO !!! pathsRoute : ", pathsRoute);
-    initialDate = new Date();
-    setProgress(null);
-    initialDate = new Date();
-    intervalRef.current = setInterval(() => {
-      moveObject(pathsRoute);
-    }, 1000);
-  }, [intervalRef, initialDate, pathsRoute]);
-  
   const handleEmulatorMarkerClick = (emulator) => {
     setSelectedEmId(emulator.id);
     clearInterval(intervalRef.current); // Clear any existing interval
@@ -326,11 +189,6 @@ const Map = ({ showToast }) => {
           : coord
       )
     );
-  
-    // Start the simulation
-    intervalRef.current = setInterval(() => {
-      moveObject(pathsRoute);
-    }, 1000);
   };
   
 
@@ -351,7 +209,6 @@ const Map = ({ showToast }) => {
 
   return (
     <CardComponent>
-      <StartSimulationButton onClick={() => startSimulation(pathsRoute)} />
       <CreateTripButton onClick={handleCreateTripButton} />
       <CreateTripOverlay
         isTableVisible={isTableVisible}
@@ -370,8 +227,7 @@ const Map = ({ showToast }) => {
         selectedStop={selectedStop}
         handleMarkerClick={handleMarkerClick}
         handleInfoWindowClose={handleInfoWindowClose}
-        progress={progress}
-        icon={icon}
+        selectedEmulator={emulator}
         emulators={emulators}
         endLat={endLat}
         endLng={endLng}
