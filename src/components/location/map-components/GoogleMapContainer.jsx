@@ -112,7 +112,7 @@ const GoogleMapContainer = ({
         )}
 
 
-        {emulators != null &&
+        {emulators != null && pathsRoute != null &&
           emulators
             .filter(
               (emulator) =>
@@ -125,6 +125,16 @@ const GoogleMapContainer = ({
               const isInActiveUserNull =
                 emulator.status === "INACTIVE" && emulator.user === null;
 
+              var rotationAngle = 0;
+              try {
+                if(pathsRoute!=null && emulator.currentTripPointIndex > -1) {
+                rotationAngle = pathsRoute[emulator.currentTripPointIndex].bearing
+              }
+              }catch(e) {
+              console.log("rotationAngle Error : ", e);
+              }
+
+              console.log("rotationAngle  : ", rotationAngle);
               const emulatorIcon = {
                 url: isActiveUser
                   ? "images/green_truck.png"
@@ -134,6 +144,7 @@ const GoogleMapContainer = ({
                 scaledSize: new window.google.maps.Size(40, 40),
                 anchor: new window.google.maps.Point(20, 20),
                 scale: 0.7,
+                //TODO rotation now working...
               };
 
               return (

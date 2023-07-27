@@ -122,15 +122,10 @@ const Map = ({ showToast }) => {
         });
         setEmulator(newEmulatorData);
         setEmulators(updatedEmulators);
-        RotateSelectedEmulatorMarker(newEmulatorData.currentTripPointIndex);
       }
     };
     
     const startEmulatorInterval = () => {
-
-      if(emulator!=null){
-        RotateSelectedEmulatorMarker(emulator.currentTripPointIndex);
-      }
       const token = localStorage.getItem("token");
       emulatorInterval = setInterval(async () => {
         // Manually trigger the fetch to get the latest emulator data
@@ -171,31 +166,6 @@ const Map = ({ showToast }) => {
     }
     console.log("CHANGED pathsRoute : ", pathsRoute);
   }, [pathsRoute]);
-
-
-  const RotateSelectedEmulatorMarker = (currentTripPointIndex) => {
-    console.log("getMarkerRotation RAN ");
-    if (!pathsRoute || pathsRoute.length < 2) {
-      return 0; // Default rotation angle
-    }
-
-    const lastLat = pathsRoute[currentTripPointIndex].lat;
-    const lastLng = pathsRoute[currentTripPointIndex].lng;
-
-    const secondLastLat = pathsRoute[currentTripPointIndex - 1].lat;
-    const secondLastLng = pathsRoute[currentTripPointIndex - 1].lng;
-
-    const angle = Math.atan2(
-      lastLng - secondLastLng,
-      lastLat - secondLastLat
-    ) * (180 / Math.PI);
-    const marker = document.querySelector(`[title="selectedMarker"]`);
-      console.log('getMarkerRotation marker', marker);
-      console.log('getMarkerRotation angle', angle);
-      if (marker) {
-        marker.style.transform = `rotate(${angle}deg)`;
-      }
-  };
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
