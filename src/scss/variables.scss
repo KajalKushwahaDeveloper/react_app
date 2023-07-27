@@ -1,13 +1,18 @@
-$background-color: #007dc6;
+$primary: #007dc6;
+$secondary: #82CB6E;
 $active_color: #eeaf1d;
-$text-color: #ffffff;
 $btn-width: 120px;
 $btn-height: 40px;
 $block-padding: 60px;
-$white-color:#ffffff;
-$light-grey: #edebeb;
+$light:#ffffff;
+$dark: #000000;
+$grey: #c9c9c9;
+$light-grey: #dbdbdb;
 $btn-color:rgb(26, 154, 233);
-$shadow:  -3px -3px 7px #97949473, 2px 2px 7px rgb(137, 138, 138);
-$tableShadow:  -3px -3px 7px #bfbdbd73, 2px 2px 7px rgb(222, 241, 252);
+$shadow: -3px -3px 7px #97949473,
+2px 2px 7px rgb(137, 138, 138);
+$tableShadow: -3px -3px 7px #bfbdbd73,
+2px 2px 7px rgb(222, 241, 252);
 $tableBG:rgb(222, 241, 252);
+$dimBg: #F8F9FA;
 // HEX #007dc6 and #eeaf1d

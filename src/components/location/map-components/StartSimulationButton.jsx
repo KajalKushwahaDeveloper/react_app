@@ -4,10 +4,10 @@ import { Button } from "@material-ui/core";
 
 const StartSimulationButton = ({ onClick }) => {
   return (
-    <div className="btnCont">
-      <Button variant="contained" onClick={onClick}>
+    <div className="btnCont p-3">
+      <button variant="contained" onClick={onClick} className="btn btn-light">
         Start Simulation
-      </Button>
+      </button>
     </div>
   );
 };

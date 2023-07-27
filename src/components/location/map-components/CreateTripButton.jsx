@@ -1,17 +1,17 @@
 // CreateTripButton.jsx
 import React from "react";
-import "../../../scss/map.scss";
 
 const CreateTripButton = ({ onClick }) => {
   return (
     <div>
       <button
+        className="btn btn-light ms-4"
         style={{
           zIndex: 2,
           position: "absolute",
           top: 10,
-          left: 170,
-          padding: ".65rem",
+          left: 155,
+          padding: ".4rem .65rem",
         }}
         onClick={onClick}
       >

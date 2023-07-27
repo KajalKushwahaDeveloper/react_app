@@ -116,7 +116,16 @@ class SearchBar extends React.Component {
                   />
                 </div>
                
-                
+                {/* {this.state.address.length > 0 && (
+                  <div style={{ float: "right" }}>
+                    <button
+                      className="Demo__clear-button"
+                      onClick={this.handleCloseClick}
+                    >
+                      x
+                    </button>
+                  </div>
+                )} */}
                 {suggestions.length > 0 && (
                   <div
                     className="Demo__autocomplete-container"
@@ -167,7 +176,27 @@ class SearchBar extends React.Component {
           <div className="Demo__error-message">{this.state.errorMessage}</div>
         )}
 
-    
+        {/* {((latitude && longitude) || isGeocoding) && (
+          <div>
+            <h3 className="Demo__geocode-result-header">Geocode result</h3>
+            {isGeocoding ? (
+              <div>
+                <i className="fa fa-spinner fa-pulse fa-3x fa-fw Demo__spinner" />
+              </div>
+            ) : (
+              <div>
+                <div className="Demo__geocode-result-item--lat">
+                  <label>Latitude:</label>
+                  <span>{latitude}</span>
+                </div>
+                <div className="Demo__geocode-result-item--lng">
+                  <label>Longitude:</label>
+                  <span>{longitude}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        )} */}
       </div>
     );
   }

@@ -1,27 +1,35 @@
-@import "./variables";
-@import "./mixins";
-button {
-    border: none;
-    background: $background-color;
-    color: white;
-    font-size: 1rem;
-    padding: .6rem .6rem;
-    margin: 0 .6rem;
-    border-radius: 0.2rem;
+@import './style.scss';
+
+.btn {
+    padding: 5px 30px;
+
+    &:focus {
+        box-shadow: none;
+    }
+
+    &:hover {
+        opacity: 0.9;
+    }
+}
+
+.btn-main {
+    background-color: $primary;
+    color: $light;
+
+    &:hover {
+        color: $light;
+    }
+}
+
+.btn-green {
+    background-color: $secondary;
+    color: $light;
+
+    &:hover {
+        color: $light;
+    }
 }
 
 .loader {
     margin: 30px;
-
 }
-.button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-  
-    .loading-spinner {
-      margin-left: 8px; 
-      color: $background-color;
-    }
-  }

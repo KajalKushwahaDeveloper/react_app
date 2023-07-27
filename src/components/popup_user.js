@@ -136,15 +136,16 @@ const PopUpUser = ({
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <Box sx={{ ...style, width: 400 }}>
+        <Box sx={{ ...style, maxWidth: 400, borderRadius: "15px", padding: "15px" }}>
           <form onSubmit={handleSubmit}>
-            <h1>{userToEdit === null ? "Add User" : "Edit User"}</h1>
+            <h3>{userToEdit === null ? "Add User" : "Edit User"}</h3>
             <input
               type="text"
               id="content_input"
               placeholder="Enter your first name"
               value={firstName}
               onChange={handleFirstNameChange}
+              className="form-control mt-3"
             />
             <input
               type="text"
@@ -152,6 +153,8 @@ const PopUpUser = ({
               placeholder="Enter your last name"
               value={lastName}
               onChange={handleLastNameChange}
+              className="form-control mt-3"
+
             />
             <input
               type="text"
@@ -159,6 +162,8 @@ const PopUpUser = ({
               placeholder="Enter your email"
               value={email}
               onChange={handleEmailChange}
+              className="form-control mt-3"
+
             />
             <input
               type="number"
@@ -166,8 +171,10 @@ const PopUpUser = ({
               placeholder="Enter your telephone number"
               value={telephone}
               onChange={handleTelephoneChange}
+              className="form-control mt-3"
+
             />
-            <button className="login_button" type="submit">
+            <button className="login_button btn btn-main mt-3" type="submit">
               {userToEdit === null ? "Add User" : "Edit User"}
             </button>
             {error && <p className="error">{error}</p>}

@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import "./mixins.scss";
+@import "./variables.scss";
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Raleway", sans-serif !important;
+  overflow: auto;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $secondary;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $secondary;
+}
+
+// Common Classes
+
+.centerMid {
+  @include itemPosition(center, center);
+}
+
+.spcBetween {
+  @include itemPosition(flex-start, space-between);
+  gap: 10px;
+}
+.flex-column {
+  flex-direction: column;
+}
+
+.btn {
+  &:focus {
+    box-shadow: none;
+  }
+}
+.btn-main {
+  background-color: $primary;
+  border-radius: 12px;
+  color: $light;
+}
+.btn-green {
+  background-color: $secondary;
+  border-radius: 12px;
+  color: $light;
+}
+
+.dashboard {
+  margin-top: 120px;
+}
+
+input {
+  &:focus {
+    box-shadow: none !important;
+  }
+}

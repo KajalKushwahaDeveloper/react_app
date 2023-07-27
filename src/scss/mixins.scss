@@ -1,22 +1,12 @@
-
-@mixin vertical-list {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@mixin itemPosition($align, $justify) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
 }
-@mixin main{
-    margin:0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;/* Updated font-family to Raleway */
-    overflow-x: hidden;
-    letter-spacing: 2px;
-  }
-  @mixin default-view {
-    padding: 0 15px;
-    width: -webkit-fill-available;
-    margin: 15px;
-    height: 35px;
-    border-radius: 20px;
-    font-weight: bold;
-  }
+
+@mixin main {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Raleway", sans-serif;
+}

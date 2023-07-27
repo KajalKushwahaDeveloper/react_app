@@ -1,62 +1,37 @@
-@import "./mixins.scss";
-@import "./variables.scss";
-
-body {
-  @include main;
-}
-.stacktable {
-  width: 100%;
-}
-
+.stacktable { 
+    width: 100%;
+ }
 .st-head-row {
-  padding-top: 1em;
-}
+     padding-top: 1em;
+     }
+.st-head-row.st-head-row-main { 
+    font-size: 1.5em;
+    padding-top: 0; 
+    }
+.st-key { 
+    width: 49%; 
+    text-align: right; 
+    padding-right: 1%; }
+.st-val { 
+    width: 49%; 
+    padding-left: 1%;
+ }
 
-.st-head-row.st-head-row-main {
-  font-size: 1.5em;
-  padding-top: 0;
-}
 
-.st-key {
-  width: 49%;
-  text-align: right;
-  padding-right: 1%;
-}
-
-.st-val {
-  width: 49%;
-  padding-left: 1%;
-}
 
 /* RESPONSIVE EXAMPLE */
 
-.stacktable.large-only {
-  display: table;
-}
-
-.stacktable.small-only {
-  display: none;
-}
+.stacktable.large-only { display: table; }
+.stacktable.small-only { display: none; }
 
 @media (max-width: 800px) {
-  .stacktable.large-only {
-    display: none;
-  }
-
-  .stacktable.small-only {
-    display: table;
-  }
+  .stacktable.large-only { display: none; }
+  .stacktable.small-only { display: table; }
 }
-
 @media (max-width: 400px) {
-  .stacktable.large-only {
-    display: none;
+    .stacktable.large-only { display: none; }
+    .stacktable.small-only { display: table; }
   }
-
-  .stacktable.small-only {
-    display: table;
-  }
-}
 
 h2 {
   text-align: center;
@@ -64,7 +39,7 @@ h2 {
 }
 
 table caption {
-  padding: 0.5em 0;
+	padding: .5em 0;
 }
 
 .p {
@@ -72,88 +47,7 @@ table caption {
   padding-top: 140px;
   font-size: 14px;
 }
-
 .gps_table_container {
-  overflow-x: auto;
-  margin-bottom: 1rem !important;
-}
-
-/* styles for the table */
-.user_table {
-display: flex;
-
- 
-}
-
-//table//
-table {
-  font-family: Raleway, sans-serif;
-  font-size: 0.875rem;
-  // border-collapse: collapse;
-  width: 100%;
-  height: auto;
-  padding: 0.5rem;
-  text-align: center !important; 
-  background: white;
-  // box-shadow: $shadow;
-  border-radius: "10rem" !important;
-}
-
-td {
-  // border: 1px solid #ccc;
-  padding: 6px 8px !important;
-  text-align: center !important; 
-  word-wrap: break-word;
-  max-width: 100px;
-}
-
-th {
-  border: none;
-  font-size: 0.9rem !important;
-  font-weight: 700 !important;
-  // box-shadow: $tableShadow;
-  text-align: center !important;
-  padding: 12px;
-  background-color: white;
-}
-
-
-
-@media (max-width: 320px) and (max-height: 568px) {
-  .gps_table_container {
-    width: 100%;
-    overflow-x: scroll;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .gps_page_table {
-    min-width: 100%;
-  }
-
-  .gps_page_tr {
-    white-space: nowrap;
-    min-width: 100px;
-  }
-}
-
-@media (max-width: 960px) {
-  .user_table {
-    font-size: 14px;
-  }
-
-  .user_table th,
-  .user_table td {
-    padding: 6px;
-  }
-}
-
-@media (max-width: 768px) {
-  .user_table {
-    font-size: 12px;
-  }
-
-  .user_table th,
-  .user_table td {
-    padding: 4px;
-  }
+  height: 100vh;
+  overflow-y: auto;
 }

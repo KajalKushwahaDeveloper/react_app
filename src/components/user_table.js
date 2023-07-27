@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 
 import TablePagination, {
@@ -32,7 +31,7 @@ const UserTable = ({
 
   useEffect(() => {
     if (editedId != null) {
-      if(editedId == 0){
+      if (editedId == 0) {
         fetchUsers();
       } else {
         refreshUserEdit(editedId);
@@ -85,9 +84,11 @@ const UserTable = ({
     setUserData(updatedData);
   };
 
-
   const handleDeleteButtonClick = async (user) => {
-    const confirmed = window.confirm('Delete this user : ' + user.firstName + ' ' + user.lastName + '?');
+    const confirmed = window.confirm(
+      "Delete this user: " + user.firstName + " " + user.lastName + "?"
+    );
+  
     if (confirmed) {
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
@@ -97,18 +98,20 @@ const UserTable = ({
         token,
         user.id
       );
-
+  
       if (success) {
-        const updatedData = data.filter((item) => item.id !== user.id);
-        console.log("Data Updated : " + data);
+        console.log("API Response Data: ", data);
+
+        const updatedData = userData.filter((item) => item.id !== user.id);
+        console.log("Data Updated: ", updatedData);
         setUserData(updatedData);
-        showToast("User deleted", "success")
+        showToast("User deleted", "success");
       } else {
-        showToast("User not deleted", "error")
+        showToast("User not deleted", "error");
       }
     }
   };
-
+  
   // Fetch data from API
   const refreshUserEdit = async (userId) => {
     const token = localStorage.getItem("token");
@@ -126,10 +129,11 @@ const UserTable = ({
       }
       const responseData = await response.text();
       const result = JSON.parse(responseData);
+      console.log("result data= "+responseData);
       const updatedData = userData.map((item) => {
         if (item.id === result.id) {
           return result;
-        };
+        }
         return item;
       });
       showToast(`Updated user table!`, "success");
@@ -178,7 +182,7 @@ const UserTable = ({
               ...item.emulatorCount,
               allEmulatorsCount: result.emulatorCount?.allEmulatorsCount,
               activeEmulatorsCount: result.emulatorCount?.activeEmulatorsCount,
-            },  
+            },
           };
         }
         return item;
@@ -249,11 +253,14 @@ const UserTable = ({
   }
 
   return (
-    <Root sx={{ width: "100%", maxWidth: "100%" }}>
-      <table aria-label="custom pagination user_table">
+    <Root sx={{ width: "auto", maxWidth: "100%" }}>
+      <table aria-label = "custom pagination table" className="w-100 shadow">
         <tbody>
           {(rowsPerPage > 0
-            ? userData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            ? userData.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
             : userData
           ).map((row) => {
             const createdAtDate = new Date(row.createdAt);
@@ -263,10 +270,10 @@ const UserTable = ({
               <tr key={row.id}>
                 <div></div>
                 <td align="right">
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                  <div className="spcBetween">
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      <h3>{row.firstName + " " + row.lastName || "N/A"}</h3>
-                      <ul style={{ wordWrap: "breakWord",maxWidth: "250px"}}>
+                      <h5>{row.firstName + " " + row.lastName || "N/A"}</h5>
+                      <ul>
                         <li>Email : {row.email || "N/A"}</li>
                         <li>Tel. # : {row.telephone || "N/A"}</li>
                         <li>Registration Date : {formattedDate}</li>
@@ -282,31 +289,51 @@ const UserTable = ({
                         </li>
                       </ul>
                     </div>
-                    <IconButton
-                      style={{ height: "auto", width: "40px", margin: "2px" }}
-                      aria-label="edit"
-                    >
-                      <EditIcon onClick={() => handleEditButtonClick(row)} />
-                    </IconButton>
-                    <IconButton
-                      style={{ height: "auto", width: "40px", margin: "2px" }}
-                      aria-label="delete"
-                    >
-                      <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
-                    </IconButton>
-                    <button
-                      style={{
-                        height: "45px",
-                        backgroundColor:
-                          row.status === "ENABLED" ? "green" : "red",
-                        color: "white",
-                      }}
-                      onClick={() =>
-                        handleActionButtonClick(row.id, row.status)
-                      }
-                    >
-                      {row.status}
-                    </button>
+                    <div>
+                      <IconButton
+                        className="roundIncon"
+                        style={{
+                          height: "40px",
+                          width: "40px",
+                          marginRight: "10px",
+                          borderRadius: "50%",
+                          backgroundColor: "#007dc6",
+                          color: "#fff",
+                        }}
+                        aria-label="edit"
+                      >
+                        <EditIcon onClick={() => handleEditButtonClick(row)} />
+                      </IconButton>
+                      <IconButton
+                        style={{
+                          height: "40px",
+                          width: "40px",
+                          marginRight: "10px",
+                          borderRadius: "50%",
+                          backgroundColor: "red",
+                          color: "#fff",
+                        }}
+                        aria-label="delete"
+                      >
+                        <DeleteIcon
+                          onClick={() => handleDeleteButtonClick(row)}
+                        />
+                      </IconButton>
+                      <button
+                        className="btn"
+                        style={{
+                          backgroundColor:
+                            row.status === "ENABLED" ? "green" : "red",
+                          color: "white",
+                          padding: "5px 10px",
+                        }}
+                        onClick={() =>
+                          handleActionButtonClick(row.id, row.status)
+                        }
+                      >
+                        {row.status}
+                      </button>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -368,7 +395,7 @@ const Root = styled("div")(
                 font-family: 'Raleway', sans-serif;
                 font-size: 0.875rem;
                 border-collapse: collapse;
-                width: 100%;
+                width: auto;
                 padding:0.5rem;
               }
               
@@ -378,7 +405,7 @@ const Root = styled("div")(
                   theme.palette.mode === "dark" ? grey[800] : grey[200]
                 };
                 text-align: left;
-                padding: 5px;
+                padding: 12px;
               }
               
               th {
@@ -389,55 +416,60 @@ const Root = styled("div")(
               `
 );
 
-
-
-const CustomTablePagination = styled(TablePagination)(({ theme }) => `
-  /* Remove the spacer element */
-  .MuiTablePagination-spacer {
-    display: none;
-  }
-  
-  /* Update the toolbar styles */
-  .MuiTablePagination-toolbar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    gap: 10px;
-  }
-  
-  /* Update the select label styles */
-  .MuiTablePagination-selectLabel {
-    margin: 0;
-  }
-  
-  /* Update the select styles */
-  .MuiTablePagination-select {
-    padding: 2px;
-    border: 1px solid ${theme.palette.mode === "dark" ? grey[800] : grey[200]};
-    border-radius: 50px;
-    background-color: transparent;
-    
-    &:hover {
-      background-color: ${theme.palette.mode === "dark" ? grey[800] : grey[50]};
-    }
-    
-    &:focus {
-      outline: 1px solid ${theme.palette.mode === "dark" ? blue[400] : blue[200]};
-    }
-  }
-  
-  /* Update the actions styles */
-  .MuiTablePagination-actions {
-    padding: 2px;
-    border-radius: 50px;
-    text-align: center;
-    display: flex;
-  }
-  
-  /* Update the displayed rows styles */
-  .MuiTablePagination-displayedRows {
-    margin-left: 2rem;
-  }
-`);
-
+const CustomTablePagination = styled(TablePagination)(
+  ({ theme }) => `
+                /* Remove the spacer element */
+                & .${classes.spacer} {
+                  display: none;
+                }
+                
+                /* Update the toolbar styles */
+                & .${classes.toolbar} {
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  justify-content:space-arround;
+                  gap: 10px;
+                }
+                
+                /* Update the select label styles */
+                & .${classes.selectLabel} {
+                  margin: 0;
+                }
+                
+                /* Update the select styles */
+                & .${classes.select} {
+                  padding: 2px;
+                  border: 1px solid ${
+                    theme.palette.mode === "dark" ? grey[800] : grey[200]
+                  };
+                  border-radius: 50px;
+                  background-color: transparent;
+                  
+                  &:hover {
+                    background-color: ${
+                      theme.palette.mode === "dark" ? grey[800] : grey[50]
+                    };
+                  }
+                  
+                  &:focus {
+                    outline: 1px solid ${
+                      theme.palette.mode === "dark" ? blue[400] : blue[200]
+                    };
+                  }
+                }
+                
+                /* Update the actions styles */
+                .${classes.actions} {
+                  padding: 2px;
+                  border-radius: 50px;
+                  text-align: center;
+                  display: flex;
+                }
+                
+                /* Update the displayed rows styles */
+                & .${classes.displayedRows} {
+                  margin-left: 2rem;
+                }
+                `
+);

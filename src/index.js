@@ -5,7 +5,7 @@ import ErrorBoundary from "./ErrorBoundary";
 import { BrowserRouter } from "react-router-dom";
 import "./../node_modules/bootstrap/dist/js/bootstrap.min.js";
 
- ReactDOM.render(
+ReactDOM.render(
   <BrowserRouter>
     <ErrorBoundary>
       <App />

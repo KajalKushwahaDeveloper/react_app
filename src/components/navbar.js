@@ -1,29 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../scss/navbar.scss";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 import { CLIENT_CURRENT } from "../constants";
 
-const navItems = ["Home", "GPS"];
-
 const Navbar = ({ isAdmin }) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [menuIcon, setMenuIcon] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState();
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleDrawerToggle = () => {
-    setMobileOpen((prevState) => !prevState);
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -63,52 +50,87 @@ const Navbar = ({ isAdmin }) => {
 
   return (
     <>
-      <CssBaseline />
-      <AppBar position="fixed" sx={{ backgroundColor: "red" }}>
-        <Toolbar className="app_bar">
-          {/* Logo */}
-          <div className="logo">
-            <img className="logo_image" src="images/logo2.png" alt="logo" />
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-12">
+            <div className="header">
+              <div className="main-nav">
+                {/* 1st logo part  */}
+                <div className="logo">
+                  <img
+                    className="logo_image"
+                    // style={{ width: "17rem", height: "auto" }}
+                    src="images/logo2.png"
+                    alt="logo"
+                  />
+                </div>
+
+                {/* 2nd menu part  */}
+                <div
+                  className={
+                    menuIcon ? "menu-link mobile-menu-link" : "menu-link"
+                  }
+                >
+                  <ul className="">
+                    {isAdmin && (
+                      <li>
+                        <NavLink
+                          to="/home"
+                          className="navbar-link"
+                          onClick={() => setMenuIcon(false)}
+                        >
+                          Licenses
+                        </NavLink>
+                      </li>
+                    )}
+                    <li>
+                      <NavLink
+                        to="/gps"
+                        className="navbar-link"
+                        onClick={() => setMenuIcon(false)}
+                      >
+                        GPS
+                      </NavLink>
+                    </li>
+                    {/* Drop down  */}
+                    <li>
+                      <NavLink
+                        to="/settings"
+                        className="navbar-link"
+                        onClick={() => setMenuIcon(false)}
+                      >
+                        Settings
+                      </NavLink>
+                    </li>
+                    <li>
+                      {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
+                      {data?.username || "N/A"})
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/"
+                        className="navbar-link-btn"
+                        onClick={() => handleLogout()}
+                      >
+                        Logout
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
+                {/* 3rd social media links */}
+                <div className="social-media">
+                  {/* hamburger menu start  */}
+                  <div className="hamburger-menu">
+                    <a href="#" onClick={() => setMenuIcon(!menuIcon)}>
+                      <MenuIcon style={{ width: "3rem", height: "3rem" }} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <Box className="menu-link" sx={{ mr: 2, display: { lg: "block" } }}>
-            {isAdmin && (
-              <Button
-                color="inherit"
-                component={Link}
-                to="/home"
-                onClick={() => setMenuIcon(false)}
-                className={location.pathname === "/home" ? "active-link" : ""}
-              >
-                Licenses
-              </Button>
-            )}
-            <Button
-              color="inherit"
-              component={Link}
-              to="/gps"
-              onClick={() => setMenuIcon(false)}
-              className={location.pathname === "/gps" ? "active-link" : ""}
-            >
-              GPS
-            </Button>
-
-            <Typography variant="body1" color="inherit" sx={{ mx: 2 }}>
-              {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
-              {data?.username || "N/A"})
-            </Typography>
-            <Button
-              // color="inherit"
-              component={Link}
-              to="/"
-              onClick={() => handleLogout()}
-              activeClassName="active-link"
-            >
-              Logout
-            </Button>
-          </Box>
-        </Toolbar>
-      </AppBar>
+        </div>
+      </div>
     </>
   );
 };

@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React,{useState} from "react";
 import { Typography, Button, Card, CardContent } from "@mui/material";
 import { DOWNLOAD_APK_URL, COPY_DOWNLOAD_APK_URL } from "../constants";
 import CircularProgress from "@mui/material/CircularProgress";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../scss/button.scss";
 
 const DownloadApk = () => {
+
   const [loading, setLoading] = useState(false);
+  const [loadingCopyLink, setLoadingCopyLink] = useState(false);
 
   const handleDownloadFile = async () => {
+    
     setLoading(true);
+
     const token = localStorage.getItem("token");
     console.log("token : ", token);
 
@@ -45,73 +48,62 @@ const DownloadApk = () => {
   };
 
   const handleCopyUrl = async () => {
+    setLoadingCopyLink(true);
+  
     if (!navigator.clipboard || !navigator.clipboard.writeText) {
       toast.error("Clipboard access not supported, use https");
+      setLoadingCopyLink(false); // Make sure to set loading state to false when clipboard access is not supported
       return;
     }
-
+  
     // Copy the download URL to clipboard
-    navigator.clipboard
-      .writeText(COPY_DOWNLOAD_APK_URL)
-      .then(() => {
-        toast.success("Download URL copied");
-      })
-      .catch((error) => {
-        toast.success("Could Not Copy Link");
-      });
+    try {
+      await navigator.clipboard.writeText(COPY_DOWNLOAD_APK_URL);
+      toast.success("Download URL copied");
+    } catch (error) {
+      toast.error("Could Not Copy Link");
+    } finally {
+      setLoadingCopyLink(false);
+    }
   };
+  
   return (
-    <Card
-      style={{
-        boxShadow: "-3px -3px 7px #DFDCDC73, 2px 2px 7px rgb(137, 138, 138)",
-        // backgroundColor: "#007dc6",
-        color: "black",
-        marginBottom: "2rem",
-        borderRadius: ".5rem",
-        width: "100%",
-      }}
-    >
-      <CardContent>
-        <Typography variant="h5" component="h2">
-          Mock Application Version
-        </Typography>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems:"center",
-            margin: "1rem 0rem",
-          }}
+    <div className="p-3 rounded">
+      <h2 className="mb-4">Mock Application Version</h2>
+      <div className="btnBox text-center mb-4">
+        <button
+          className="btn btn-main me-3 mt-3 position-relative"
+          onClick={handleDownloadFile}
+          disabled={loading}
         >
-          <Button
-            className="button dark-single"
-            variant="contained"
-            color="success"
-            onClick={handleDownloadFile}
-            style={{ marginTop: "2rem" ,width:"auto"}}
-            disabled={loading}
-          >
-            Download File
-            {loading && (
-              <CircularProgress size={24} className="loading-spinner" />
-            )}
-          </Button>
+          <span className="me-2"><i class="fa-solid fa-download"></i> Download File</span>
+          {/* Conditional rendering of CircularProgress inside the button */}
+          {loading && (
+            <CircularProgress
+              size={24}
+              color="inherit"
+              style={{ position: "absolute", top: "50%", right: "8px", marginTop: -12 }}
+            />
+          )}
+        </button>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCopyUrl}
-            style={{ marginTop: "2rem" ,width:"auto"}}
-          >
-            COPY DOWNLOAD LINK
-          </Button>
-        </div>
-        {/* <button className="login_button" onClick={handleCopyUrl}>
-          COPY DOWNLOAD LINK
-        </button> */}
-      </CardContent>
-    </Card>
+        <button
+          className="btn btn-green mt-3 position-relative"
+          onClick={handleCopyUrl}
+          disabled={loadingCopyLink}
+        >
+          <span className="me-2"><i class="fa-solid fa-copy"></i> COPY DOWNLOAD LINK</span>
+          {/* Conditional rendering of CircularProgress inside the button */}
+          {loadingCopyLink && (
+            <CircularProgress
+              size={24}
+              color="inherit"
+              style={{ position: "absolute", top: "50%", right: "8px", marginTop: -12 }}
+            />
+          )}
+        </button>
+      </div>
+    </div>
   );
 };
 

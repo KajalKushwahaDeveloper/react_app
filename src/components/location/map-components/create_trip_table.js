@@ -4,7 +4,6 @@ import { CREATE_TRIP_URL } from "../../../constants.js";
 import CloseIcon from "@mui/icons-material/Close";
 import ApiService from "../../../ApiService.js";
 import { Login } from "@mui/icons-material";
-import FullScreenDialog from "../../create_trip_dialog_box.js";
 
 
 const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdatedTripPath, setSelectedEmId ,setCreateTripInfo}) => {
@@ -70,7 +69,6 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
 console.log("selectedEmId......:", selectedEmId);
   return (
     <div style={{ width: "50%" }}>
-       <FullScreenDialog/>
       <div style={{ width: "100%", padding: ".5rem", maxWidth: "100%" }}>
         <table aria-label="custom pagination table">
           <thead>

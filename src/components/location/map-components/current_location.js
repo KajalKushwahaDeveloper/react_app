@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import { EMULATOR_URL } from "../../../constants";
 
 const CurrentLocation = () => {
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
 
   const fetchData = async () => {
     const token = localStorage.getItem("token");
@@ -18,7 +16,7 @@ const CurrentLocation = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (!response.ok || response.status !== 200) {
         return { success: false, error: "Invalid credentials" };
       } else {
@@ -35,13 +33,13 @@ const CurrentLocation = () => {
       setLoading(false);
     }
   };
- useEffect(() => {
+  useEffect(() => {
     const { success, error } = fetchData();
   }, []);
   return (
     <div>
-      <div style={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>
-        <table aria-label="custom pagination table">
+      <div className="table-responsive">
+        <table aria-label="custom pagination table" className="table">
           <thead>
             <tr>
               <th>Current Location</th>

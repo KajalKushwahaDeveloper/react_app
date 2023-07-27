@@ -9,8 +9,13 @@ import {
 } from "react-google-maps";
 
 import useFetch from "../hooks/useFetch";
-import { TRIP_STOPS_URL, TRIP_POINTS_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
-import CardComponent  from "./map-components/CardComponent";
+import {
+  TRIP_STOPS_URL,
+  TRIP_POINTS_URL,
+  EMULATOR_URL,
+  TRIP_URL,
+} from "../../constants";
+import CardComponent from "./map-components/CardComponent";
 import StartSimulationButton from "./map-components/StartSimulationButton.jsx";
 import CreateTripButton from "./map-components/CreateTripButton.jsx";
 import GpsOverlay from "./map-components/GpsOverlay";
@@ -42,15 +47,17 @@ const Map = ({ showToast }) => {
 
   const handleCreateTripButton = () => {
     setCreateTrip(true);
-    setIsTableVisible(true);
+    setIsTableVisible(!isTableVisible);
   };
 
   console.log(selectedEmId);
   const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
   const { data: tripData } = useFetch(TRIP_URL + `/${selectedEmId}`);
-  const { data: emulators, setData: setEmulators  } = useFetch(EMULATOR_URL);
-  const { data: emulator, setData: setEmulator  } = useFetch(EMULATOR_URL + `/${selectedEmId}`);
+  const { data: emulators, setData: setEmulators } = useFetch(EMULATOR_URL);
+  const { data: emulator, setData: setEmulator } = useFetch(
+    EMULATOR_URL + `/${selectedEmId}`
+  );
   const [selectedStop, setSelectedStop] = useState(null);
 
   const velocity = 27; // 100km per hour
@@ -112,14 +119,15 @@ const Map = ({ showToast }) => {
 
   useEffect(() => {
     let emulatorInterval;
-  
+
     const checkCurrentLocation = (newEmulatorData) => {
       if (newEmulatorData === null) {
         return;
       }
       const { status, latitude, longitude } = newEmulatorData;
       const isLocationChanged =
-        emulator && emulator.latitude !== latitude || emulator.longitude !== longitude;
+        (emulator && emulator.latitude !== latitude) ||
+        emulator.longitude !== longitude;
       if (isLocationChanged) {
         const updatedEmulators = emulators.map((emulator) => {
           if (emulator.id === newEmulatorData.id) {
@@ -132,7 +140,7 @@ const Map = ({ showToast }) => {
         setEmulators(updatedEmulators);
       }
     };
-    
+
     const startEmulatorInterval = () => {
       const token = localStorage.getItem("token");
       emulatorInterval = setInterval(async () => {
@@ -152,21 +160,24 @@ const Map = ({ showToast }) => {
         }
       }, 5000);
     };
-  
+
     const stopEmulatorInterval = () => {
       clearInterval(emulatorInterval);
     };
-  
-    emulatorIntervalRef.current = { start: startEmulatorInterval, stop: stopEmulatorInterval };
-  
+
+    emulatorIntervalRef.current = {
+      start: startEmulatorInterval,
+      stop: stopEmulatorInterval,
+    };
+
     // Start the emulator interval
     emulatorIntervalRef.current.start();
-  
+
     return () => {
       stopEmulatorInterval();
     };
   }, [selectedEmId, emulator, emulators, setEmulator, setEmulators]);
-  
+
   const getDistance = () => {
     const differentInTime = (new Date() - initialDate) / 1000; // pass to seconds
     return differentInTime * velocity; // d = v*t -- thanks Newton!
@@ -178,7 +189,6 @@ const Map = ({ showToast }) => {
     }
     console.log("CHANGED pathsRoute : ", pathsRoute);
   }, [pathsRoute]);
-
 
   const moveObject = (pathsRoute) => {
     const distance = getDistance();
@@ -260,7 +270,7 @@ const Map = ({ showToast }) => {
       point2LatLng
     );
     const actualAngle = angle - 90;
-    const imageUrl = 'https://maps.gstatic.com/mapfiles/transparent.png'
+    const imageUrl = "https://maps.gstatic.com/mapfiles/transparent.png";
     const rotation = getMarkerRotation(progress); // Get the rotation angle for the truck
     const marker = document.querySelector(`[src="${icon.url}"]`);
     // const marker = document.querySelectorAll(`[src="${imageUrl}"]`)
@@ -284,10 +294,9 @@ const Map = ({ showToast }) => {
     const secondLastLat = progress[secondLastIndex].lat;
     const secondLastLng = progress[secondLastIndex].lng;
 
-    const angle = Math.atan2(
-      lastLng - secondLastLng,
-      lastLat - secondLastLat
-    ) * (180 / Math.PI);
+    const angle =
+      Math.atan2(lastLng - secondLastLng, lastLat - secondLastLat) *
+      (180 / Math.PI);
 
     return angle;
   };
@@ -300,7 +309,6 @@ const Map = ({ showToast }) => {
     setSelectedStop(null);
   };
 
-
   const startSimulation = useCallback(() => {
     console.log("HELLO !!! PATHS : ", paths);
     console.log("HELLO !!! pathsRoute : ", pathsRoute);
@@ -311,13 +319,13 @@ const Map = ({ showToast }) => {
       moveObject(pathsRoute);
     }, 1000);
   }, [intervalRef, initialDate, pathsRoute]);
-  
+
   const handleEmulatorMarkerClick = (emulator) => {
     setSelectedEmId(emulator.id);
     clearInterval(intervalRef.current); // Clear any existing interval
-  
+
     setStartEmulation(emulator); // Set the selected emulation as the start emulation
-  
+
     // Update the start latitude and longitude based on the selected emulation
     setPathsRoute((prevPaths) =>
       prevPaths.map((coord) =>
@@ -326,13 +334,12 @@ const Map = ({ showToast }) => {
           : coord
       )
     );
-  
+
     // Start the simulation
     intervalRef.current = setInterval(() => {
       moveObject(pathsRoute);
     }, 1000);
   };
-  
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
     if (emulator.startLat === null) {
@@ -361,7 +368,11 @@ const Map = ({ showToast }) => {
         setSelectedEmId={setSelectedEmId}
         setCreateTripInfo={setCreateTripInfo}
       />
-      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId}  tripData={tripData}/>
+      <GpsOverlay
+        showToast={showToast}
+        setSelectedEmId={setSelectedEmId}
+        tripData={tripData}
+      />
       <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}

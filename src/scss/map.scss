@@ -9,9 +9,9 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  height: auto;
+  height: 100vh;
   flex-wrap: nowrap;
-  padding-top: 4rem;
+  padding-top: 63px;
 }
 
 .gps_map {
@@ -20,7 +20,6 @@ body {
 }
 
 .gps_overlay {
-  // width: 40%;
   position: absolute;
   top: 0;
   left: 0;
@@ -28,7 +27,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 10px;
+  padding: 0 10px;
   margin-top: 3rem;
   z-index: 2;
 }
@@ -40,11 +39,9 @@ body {
   z-index: 2;
   margin-top: 3rem;
   width: 40%;
-  padding: 10px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  order: 2; 
 }
 
 .gps_tables {
@@ -55,7 +52,7 @@ body {
 
 .gps_map {
   flex-basis: 70%;
-  height: 90vh;
+  height: 100vh;
 }
 
 .create_trip_button {
@@ -69,41 +66,34 @@ body {
   padding: 8px 12px;
 }
 
-
-
-.btnCont {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  background: $background-color;
-  order: 3; /* Add this line to set the order to 3 */
+//table//
+.tableBox {
+  padding: 10px;
+  // background-color: rgba($color: $secondary, $alpha: 0.2);
 }
 
-.mapContainer {
-  height: 92vh;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  position: static;
-  color: #fff;
+table {
+  font-size: 16px;
+  width: auto;
+  padding: 0.5rem;
+  background: $light;
+  overflow: hidden;
 }
-@media (max-width: 1024px) {
-  .mapContainer {
-    height: 100vh;
+
+td,
+th {
+  border: 1px solid $light-grey;
+  text-align: left;
+  padding: 12px;
+  vertical-align: middle;
 }
+
+th {
+  background-color: $primary;
+  color: $primary;
 }
+
 @media screen and (max-width: 768px) {
-  .gps_page {
-    flex-wrap: wrap;
-  }
-
-  .gps_tables,
-  .gps_map {
-    flex-basis: auto;
-  }
-
   table {
     font-size: 0.75rem;
   }
@@ -112,18 +102,39 @@ body {
   th {
     padding: 8px;
   }
-
-  button {
-    font-size: 14px;
-    padding: 0.5rem;
-  }
-  .mapContainer {
-    height: 100vh; 
-  }
-
 }
 
+@media screen and (max-width: 786px) {
+  .gps_page {
+    flex-wrap: wrap;
+  }
 
+  .gps_tables,
+  .gps_map {
+    flex-basis: auto;
+  }
+}
 
+.mapContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: static;
+  color: #fff;
+}
 
+.btnCont {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background: $primary;
+}
 
+@media only screen and (max-width: 552px) {
+  .gps_page {
+    padding-top: 107px;
+  }
+}

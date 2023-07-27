@@ -1,27 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
+
+import TablePagination, {
+  tablePaginationClasses as classes,
+} from "@mui/base/TablePagination";
 import { Checkbox } from "@mui/material";
 import { styled } from "@mui/system";
 import { EMULATOR_URL } from "../../../constants";
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
-
-const columns = [
-  { id: 'status', label: 'Status', minWidth: 80 },
-  { id: 'emulatorSsid', label: 'ID', minWidth: 80 },
-  { id: 'telephone', label: 'Number', minWidth: 80 },
-  { id: 'address', label: 'Address', minWidth: 80 },
-  { id: 'select', label: 'Select', minWidth: 40 },
-  { id: 'tripStatus', label: 'Trip Status', minWidth: 60 },
-  { id: 'action', label: 'Action', minWidth: 60 },
-];
 
 const GpsTable = ({ showToast, setSelectedEmId }) => {
   // State variables
@@ -35,16 +21,13 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   const [selectedEmulator, setSelectedEmulator] = useState(1);
   const [isStartedMap, setIsStartedMap] = useState({});
 
- 
   const handleActionButtonClick = (row) => {
-  
     setIsStartedMap((prevIsStartedMap) => ({
       ...prevIsStartedMap,
-      [row.id]: !prevIsStartedMap[row.id] // Toggle the status for the specific row
+      [row.id]: !prevIsStartedMap[row.id], // Toggle the status for the specific row
     }));
   };
 
-  
   // Fetch data from API
   const fetchData = async () => {
     const token = localStorage.getItem("token");
@@ -85,10 +68,6 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
       showToast(error, "error");
     }
   }, []);
-  
-  useEffect(() => {
-    setLoading(false);
-  }, [data]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -116,95 +95,178 @@ const GpsTable = ({ showToast, setSelectedEmId }) => {
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%", fontSize: "1rem" }} className="gps_table_container">
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : data
-              ).map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === "number"
-                          ? column.format(value)
-                          : column.id === "select" ? (
-                            <Checkbox
-                              checked={selectedEmulator === row.id}
-                              onChange={() => handleEmulatorCheckboxChange(row.id)}
-                            />
-                          ) : column.id === "status" ? (
-                            <div
-                              style={{
-                                padding:"0.5rem",
-                                background:
-                                  row.status === "ACTIVE"
-                                    ? "#16BA00" // Green when ACTIVE
-                                    : row.status === "INACTIVE"
-                                      ? "#ff4d4d" // Red when INACTIVE
-                                      : "#FFFF00", // Yellow when IDLE
-                              }}
-                            >
-                              {row.status || "N/A"}
-                            </div>
-                          ) : column.id === "action" ? (
-                            <button
-                              style={{
-                                height: "35px",
-                                width: "70px",
-                                backgroundColor: isStartedMap[row.id] ? "red" : "green",
-                                color: "white",
-                              }}
-                              onClick={() => handleActionButtonClick(row)}
-                            >
-                              {isStartedMap[row.id] ? "Stop" : "Start"}
-                            </button>
-                          ) : (
-                            value
-                          )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
+    <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
+      <div className="table-responsive">
+        <table aria-label="custom pagination table" className="table mt-4">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>ID</th>
+              <th>Number</th>
+              <th>Address</th>
+              <th>Select</th>
+              <th>Trip Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
 
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 34 * emptyRows }}>
-                  <TableCell colSpan={7} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-        rowsPerPageOptions={[3]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+          <tbody>
+            {(rowsPerPage > 0
+              ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : data
+            ).map((row) => (
+              <tr key={row.id || "N/A"}>
+                <td
+                  style={{
+                    background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
+                    // : row.status === "inactive"
+                    // ? "green"
+                    // : row.status === "idle"
+                    // ? "yellow"
+                    // : "",
+                  }}
+                >
+                  {row.status || "N/A"}
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  {row.emulatorSsid || "N/A"}
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  {row.telephone || "N/A"}
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  {row.address || "N/A"}
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  <Checkbox
+                    checked={selectedEmulator === row.id}
+                    onChange={() => handleEmulatorCheckboxChange(row.id)}
+                  />
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  {row.tripStatus || "N/A"}
+                </td>
+                <td style={{ width: 120 }} align="right">
+                  <button
+                    style={{
+                      height: "40px",
+                      width: "60px",
+                      border:"none",
+                      backgroundColor: isStartedMap[row.id] ? "red" : "green",
+                      color: "white",
+                    }}
+                    onClick={() => handleActionButtonClick(row)}
+                  >
+                    {isStartedMap[row.id] ? "Stop" : "Start"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+
+            {emptyRows > 0 && (
+              <tr style={{ height: 34 * emptyRows }}>
+                <td colSpan={5} />
+              </tr>
+            )}
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <CustomTablePagination
+                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                colSpan={5}
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: { "aria-label": "rows per page" },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   );
-}
+};
 
 export default GpsTable;
+
+const blue = {
+  200: "#A5D8FF",
+  400: "#3399FF",
+};
+
+const grey = {
+  50: "#F3F6F9",
+  100: "#E7EBF0",
+  200: "#E0E3E7",
+  300: "#CDD2D7",
+  400: "#B2BAC2",
+  500: "#A0AAB4",
+  600: "#6F7E8C",
+  700: "#3E5060",
+  800: "#2D3843",
+  900: "#1A2027",
+};
+
+const CustomTablePagination = styled(TablePagination)(
+  ({ theme }) => `
+      /* Remove the spacer element */
+      & .${classes.spacer} {
+        display: none;
+      }
+    
+      /* Update the toolbar styles */
+      & .${classes.toolbar} {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content:space-arround;
+        gap: 10px;
+      }
+    
+      /* Update the select label styles */
+      & .${classes.selectLabel} {
+        margin: 0;
+      }
+    
+      /* Update the select styles */
+      & .${classes.select} {
+        padding: 2px;
+        border: 1px solid ${
+          theme.palette.mode === "dark" ? grey[800] : grey[200]
+        };
+        border-radius: 50px;
+        background-color: transparent;
+    
+        &:hover {
+          background-color: ${
+            theme.palette.mode === "dark" ? grey[800] : grey[50]
+          };
+        }
+    
+        &:focus {
+          outline: 1px solid ${
+            theme.palette.mode === "dark" ? blue[400] : blue[200]
+          };
+        }
+      }
+    
+      /* Update the actions styles */
+      .${classes.actions} {
+        padding: 2px;
+        border-radius: 50px;
+        text-align: center;
+        display: flex;
+      }
+    
+      /* Update the displayed rows styles */
+      & .${classes.displayedRows} {
+        margin-left: 2rem;
+      }
+      `
+);
