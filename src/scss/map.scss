@@ -11,7 +11,7 @@ body {
   justify-content: flex-start;
   height: 100vh;
   flex-wrap: nowrap;
-  padding-top: 63px;
+  padding-top: 3.6rem;
 }
 
 .gps_map {
@@ -74,10 +74,10 @@ body {
 }
 
 table {
-  font-size: 16px;
+  font-size: 13px;
   width: auto;
   padding: 0.5rem;
-  background: $light;
+  background: $light-trans;
   overflow: hidden;
 }
 
@@ -90,8 +90,8 @@ th {
 }
 
 th {
-  background-color: $primary;
-  color: $primary;
+  background-color: $primary !important;
+  color: $white;
 }
 
 @media screen and (max-width: 768px) {

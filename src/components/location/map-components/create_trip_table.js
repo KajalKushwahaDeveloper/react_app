@@ -68,7 +68,7 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
   };
 console.log("selectedEmId......:", selectedEmId);
   return (
-    <div style={{ width: "50%" }}>
+    <div style={{ width: "100%" }}>
       <div style={{ width: "100%", padding: ".5rem", maxWidth: "100%" }}>
         <table aria-label="custom pagination table">
           <thead>
