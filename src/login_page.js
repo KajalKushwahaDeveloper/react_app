@@ -123,8 +123,8 @@ const LoginPage = () => {
                 </form>
               </div>
             </div>
-            <img src="./images/map-location.svg" alt="" className="gps" />
-            <img src="./images/middleImg.svg" alt="" className="middle" />
+            <img src="images/map-location.svg" alt="" className="gps" />
+            <img src="images/middleImg.svg" alt="" className="middle" />
           </div>
         </div>
       </div>
