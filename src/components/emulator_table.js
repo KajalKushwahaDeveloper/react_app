@@ -8,6 +8,11 @@ import { styled } from "@mui/system";
 import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 import "../scss/table.scss";
 import "../scss/button.scss";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ApiService from "../ApiService";
+import { USER_URL } from "../constants";
 
 const EmulatorTable = ({
   showToast,
@@ -148,6 +153,32 @@ const EmulatorTable = ({
     setPage(0);
   };
 
+
+
+  const handleDeleteButtonClick = async (emulator) => {
+    const confirmed = window.confirm('Delete this emulator : ' + emulator.emulatorSsid + '?');
+    if (confirmed) {
+      const token = localStorage.getItem("token");
+      const { success, data, error } = await ApiService.makeApiCall(
+        EMULATOR_URL,
+        "DELETE",
+        null,
+        token,
+        emulator.id
+      );
+
+      if (success) {
+        const updatedData = data.filter((item) => item.id !== emulator.id);
+        console.log("Data Updated : " + data);
+        setData(updatedData);
+        showToast("emulator deleted", "success")
+      } else {
+        showToast("emulator not deleted", "error")
+      }
+    }
+  };
+
+
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
@@ -187,10 +218,17 @@ const EmulatorTable = ({
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td style={{ width: 120 }} align="right">
+              <td style={{ width: "auto" ,display:"flex"}} align="right">
+                <IconButton
+                      style={{ height: "auto", width: "40px", margin: "2px" ,backgroundColor:"lightgrey"}}
+                      aria-label="delete"
+                    >
+                  <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
+                </IconButton>
                 <button
                   style={{
                     height: "45px",
+                    width:"100px",
                     backgroundColor: row.user === null ? "green" : "red",
                     color: "white",
                   }}
