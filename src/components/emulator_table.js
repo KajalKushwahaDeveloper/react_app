@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
-import { USER_URL } from "../constants";
+import { EMULATOR_DELETE_URL } from "../constants";
 
 const EmulatorTable = ({
   showToast,
@@ -29,6 +29,8 @@ const EmulatorTable = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+  //assign/unassign button
   const handleActionButtonClick = async (row) => {
     console.log("row data in emulator_page:", row)
     if (row.user != null) {
@@ -77,7 +79,7 @@ const EmulatorTable = ({
     }
   };
 
-  // Fetch data from API
+  // Fetch data from API // GET  API
   const fetchData = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -153,14 +155,13 @@ const EmulatorTable = ({
     setPage(0);
   };
 
-
-
+//delete button 
   const handleDeleteButtonClick = async (emulator) => {
     const confirmed = window.confirm('Delete this emulator : ' + emulator.emulatorSsid + '?');
     if (confirmed) {
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
-        EMULATOR_URL,
+        EMULATOR_DELETE_URL,
         "DELETE",
         null,
         token,
@@ -168,10 +169,10 @@ const EmulatorTable = ({
       );
 
       if (success) {
-        const updatedData = data.filter((item) => item.id !== emulator.id);
+        console.log("data45:", data)
         console.log("Data Updated : " + data);
-        setData(updatedData);
-        showToast("emulator deleted", "success")
+        showToast("emulator deleted", "success");
+        fetchData();
       } else {
         showToast("emulator not deleted", "error")
       }
@@ -220,7 +221,7 @@ const EmulatorTable = ({
               </td>
               <td style={{ width: "auto" ,display:"flex"}} align="right">
                 <IconButton
-                      style={{ height: "auto", width: "40px", margin: "2px" ,backgroundColor:"lightgrey"}}
+                      style={{ height: "auto", width: "40px", margin: "2px" ,backgroundColor:"#f2f2f2"}}
                       aria-label="delete"
                     >
                   <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />

@@ -4,7 +4,7 @@ export const LOCAL_API_2 = "http://192.168.1.137:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
-export const BASE_URL = LIVE_API_CLIENT;
+export const BASE_URL = LOCAL_API;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
@@ -18,6 +18,7 @@ export const ADMIN_CURRENT = ADMIN_URL + "/current";
 
 //EMULATOR
 export const EMULATOR_URL = BASE_URL + "/emulator";
+export const EMULATOR_DELETE_URL = EMULATOR_URL;
 
 //USER
 export const USER_URL = BASE_URL + "/user";
