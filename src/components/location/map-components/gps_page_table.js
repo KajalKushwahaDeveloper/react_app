@@ -5,13 +5,14 @@ import TablePagination, {
 } from "@mui/base/TablePagination";
 import { Checkbox } from "@mui/material";
 import { styled } from "@mui/system";
-import { EMULATOR_URL, TRIP_TOGGLE, USER_URL } from "../../../constants";
+import { EMULATOR_URL, TRIP_HISTORY, TRIP_TOGGLE, USER_URL } from "../../../constants";
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 import IconButton from "@mui/material/IconButton";
 import HistoryIcon from "@mui/icons-material/History";
 
 import ApiService from "../../../ApiService";
+import PopUpEmulatorHistory from "./popup_emulator_history";
 
 const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   // State variables
@@ -23,38 +24,15 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedEmulator, setSelectedEmulator] = useState(1);
+  
+  const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] = useState(false);
+  const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] = useState(null);
 
-  // Fetch data from API
-  const fetchData = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(EMULATOR_URL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok || response.status !== 200) {
-        return { success: false, error: "Invalid credentials" };
-      } else {
-        const responseData = await response.text();
-        const deserializedData = JSON.parse(responseData);
-        if (deserializedData != null) {
-          console.log("useFetch Sending ID : ", deserializedData[0].id);
-          setSelectedEmId(deserializedData[0].id);
-        }
-        setLoading(false);
-        return { success: true, error: null };
-      }
-    } catch (error) {
-      console.log("Data Error: " + error);
-      setError(error.message);
-      setLoading(false);
-    }
+  const handleClose = (id) => {
+    setOpenEmulatorHistoryPopUp(false);
+    setSelectedEmulatorForHistoryData(null);
   };
 
-  
   useEffect(() => {
     console.log("Data : THIS RAN");
     if(data!=null){
@@ -81,7 +59,21 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   };
 
   const handleHistoryButtonClick = async (emulatorForHistory) => {
-    console.log("Data Updated : ",emulatorForHistory);
+    console.log("selected Emulator to Show It's history :", emulatorForHistory);
+    const token = localStorage.getItem("token");
+    console.log("token : ", token);
+    const { success, data, error } = await ApiService.makeApiCall(
+      TRIP_HISTORY + "/" + emulatorForHistory.id,
+      "GET",
+      null,
+      token
+    );
+    if (success) {
+      setSelectedEmulatorForHistoryData(data);
+      setOpenEmulatorHistoryPopUp(true);
+    } else {
+      showToast("Error Fetching History", "error");
+    }
   };
 
   const handleActionButtonClick = async (row) => {
@@ -243,6 +235,12 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
           </tr>
         </tfoot>
       </table>
+      <PopUpEmulatorHistory
+          showToast={showToast}
+          handleClose={handleClose}
+          open={openEmulatorHistoryPopUp}
+          emulatorHistory={selectedEmulatorForHistoryData}
+      />
     </div>
   );
 };
