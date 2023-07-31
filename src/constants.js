@@ -39,3 +39,4 @@ export const TRIP_POINTS_URL = TRIP_URL + "/trip-points";
 export const CREATE_TRIP_URL = TRIP_URL + "/create";
 export const TRIP_STOPS_URL = TRIP_URL + "/stops";
 export const TRIP_TOGGLE = TRIP_URL + "/toggle";
+export const TRIP_HISTORY = TRIP_URL + "/history";

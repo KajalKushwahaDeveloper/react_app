@@ -13,7 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
 import { EMULATOR_DELETE_URL } from "../constants";
-import { GetEmulatorApi, deleteEmulatorApi, updateUserAssignmentApi} from "../components/api/emulator"; 
+import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator"; 
 
 const EmulatorTable = ({
   showToast,
@@ -33,38 +33,45 @@ const EmulatorTable = ({
 
   //assign/unassign button
   const handleActionButtonClick = async (row) => {
-    console.log("row data in emulator_page:", row);
+    console.log("row data in emulator_page:", row)
     if (row.user != null) {
       const token = localStorage.getItem("token");
       console.log("token : ", token);
       try {
-        const response = await updateUserAssignmentApi(row); // Add 'await' here
-  
+        const response = await fetch(USER_ASSIGN_EMULATOR_URL + "/" + row.id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("response:", response);
+
         if (!response.ok || response.status !== 200) {
           showToast("Failed to unassign user", "error");
-          
-        } else {
-          // Send the removed user ID to refresh in the user table
-          const userAssignedEmulator = {
-            user: {
-              id: row.user?.id,
-            },
-          };
-          setUserAssingedEmulator(userAssignedEmulator);
-  
-          console.log("Data Previous : ", data);
-  
-          const updatedData = data.map((item) => {
-            if (item.id === row.id) {
-              console.log("Data Found");
-              return { ...item, user: null };
-            }
-            return item;
-          });
-          showToast(`User Un-Assigned`, "success");
-          console.log("Data Updated : ", updatedData);
-          setData(updatedData);
+          return { success: false, error: "Failed to unassign user" };
         }
+        // Send the removed user ID to refresh in user table
+        const userAssignedEmulator = { 
+          user: {
+            id: row.user?.id, 
+          },
+        };
+        setUserAssingedEmulator(userAssignedEmulator);
+
+        console.log("Data Previous : " + data);
+        const result = await response.text();
+        console.log("result:", result);
+        const updatedData = data.map((item) => {
+          if (item.id === row.id) {
+            console.log("Data Found");
+            return { ...item, user: null };
+          }
+          return item;
+        });
+        showToast(`User Un-Assigned`, "success");
+        console.log("Data Updated : " + data);
+        setData(updatedData);
       } catch (error) {
         showToast(`Failed to unassign user ${error}`, "error");
       }
@@ -72,7 +79,6 @@ const EmulatorTable = ({
       handleAssignUserButtonClick(row);
     }
   };
-  
 
   // Fetch data from API // GET  API
   const fetchData = async () => {
@@ -90,15 +96,27 @@ const EmulatorTable = ({
 
 //delete button 
 const handleDeleteButtonClick = async (emulator) => {
-  const success = deleteEmulatorApi(emulator);
+  const confirmed = window.confirm('Delete this emulator : ' + emulator.emulatorSsid + '?');
+  if (confirmed) {
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_DELETE_URL,
+      "DELETE",
+      null,
+      token,
+      emulator.id
+    );
+
     if (success) {
+      console.log("data45:", data)
+      console.log("Data Updated : " + data);
       showToast("emulator deleted", "success");
       fetchData();
     } else {
       showToast("emulator not deleted", "error")
     }
   }
-
+};
 
   useEffect(() => {
     setLoading(true);
