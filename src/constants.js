@@ -1,5 +1,5 @@
 export const MY_CONSTANT_STRING = "Hello, World!";
-export const LOCAL_API = "http://192.168.1.121:8080";
+export const LOCAL_API = "http://192.168.1.125:8080";
 export const LOCAL_API_2 = "http://192.168.1.137:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";

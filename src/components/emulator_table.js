@@ -95,18 +95,28 @@ const EmulatorTable = ({
   };
 
 //delete button 
-const handleDeleteButtonClick = async () => {
-  const { success, data, error } = await deleteEmulatorApi();
-  if (success) {
-    console.log("data45:", data)
-    console.log("Data Updated : " + data);
-    showToast("emulator deleted", "success");
-    fetchData();
-  } else {
-    showToast("emulator not deleted", "error")
-  }
-}
+const handleDeleteButtonClick = async (emulator) => {
+  const confirmed = window.confirm('Delete this emulator : ' + emulator.emulatorSsid + '?');
+  if (confirmed) {
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_DELETE_URL,
+      "DELETE",
+      null,
+      token,
+      emulator.id
+    );
 
+    if (success) {
+      console.log("data45:", data)
+      console.log("Data Updated : " + data);
+      showToast("emulator deleted", "success");
+      fetchData();
+    } else {
+      showToast("emulator not deleted", "error")
+    }
+  }
+};
 
   useEffect(() => {
     setLoading(true);
