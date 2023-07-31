@@ -9,8 +9,13 @@ import {
 } from "react-google-maps";
 
 import useFetch from "../hooks/useFetch";
-import { TRIP_STOPS_URL, TRIP_POINTS_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
-import CardComponent  from "./map-components/CardComponent";
+import {
+  TRIP_STOPS_URL,
+  TRIP_POINTS_URL,
+  EMULATOR_URL,
+  TRIP_URL,
+} from "../../constants";
+import CardComponent from "./map-components/CardComponent";
 import CreateTripButton from "./map-components/CreateTripButton.jsx";
 import GpsOverlay from "./map-components/GpsOverlay";
 import CreateTripOverlay from "./map-components/CreateTripOverlay";
@@ -18,7 +23,7 @@ import GoogleMapContainer from "./map-components/GoogleMapContainer";
 import ApiService from "../../ApiService";
 
 const Map = ({ showToast }) => {
-  const [selectedEmId, setSelectedEmId] = useState(1);
+  const [selectedEmId, setSelectedEmId] = useState(null);
   const [createTrip, setCreateTrip] = useState(false);
 
   const [pathsRoute, setPathsRoute] = useState(null);
@@ -47,8 +52,10 @@ const Map = ({ showToast }) => {
   const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
   const { data: tripData } = useFetch(TRIP_URL + `/${selectedEmId}`);
-  const { data: emulators, setData: setEmulators  } = useFetch(EMULATOR_URL);
-  const { data: emulator, setData: setEmulator  } = useFetch(EMULATOR_URL + `/${selectedEmId}`);
+  const { data: emulators, setData: setEmulators } = useFetch(EMULATOR_URL);
+  const { data: emulator, setData: setEmulator } = useFetch(
+    EMULATOR_URL + `/${selectedEmId}`
+  );
   const [selectedStop, setSelectedStop] = useState(null);
 
   const velocity = 27; // 100km per hour
@@ -101,36 +108,43 @@ const Map = ({ showToast }) => {
     };
   }, [paths]);
 
+  const checkCurrentLocation = (newEmulatorData) => {
+    console.log("checkCurrentLocation");
+    if (newEmulatorData === null) {
+      return;
+    }
+    const { latitude, longitude, status, tripStatus, address } =
+      newEmulatorData;
+    const isEmulatorChanged =
+      (emulator && emulator.latitude !== latitude) ||
+      emulator.longitude !== longitude ||
+      (emulator && emulator.tripStatus !== tripStatus) ||
+      emulator.status !== status;
+
+    if (isEmulatorChanged) {
+      const updatedEmulators = emulators.map((emulator) => {
+        console.log("updatedEmulator : ", emulator);
+        if (emulator.id === newEmulatorData.id) {
+          return {
+            ...emulator,
+            status,
+            latitude,
+            longitude,
+            tripStatus,
+            address,
+          };
+        }
+        console.log("Emulator || updatedEmulator : ", emulator);
+        return emulator;
+      });
+      setEmulator(newEmulatorData);
+      setEmulators(updatedEmulators);
+    }
+  };
+
   useEffect(() => {
     let emulatorInterval;
-  
-    const checkCurrentLocation = (newEmulatorData) => {
-      console.log('checkCurrentLocation');
-      if (newEmulatorData === null) {
-        return;
-      }
-      const { status, latitude, longitude } = newEmulatorData;
-      const { tripStatus } = newEmulatorData;
-      const isLocationChanged =
-        emulator && emulator.latitude !== latitude || emulator.longitude !== longitude;
-      
-        const isEmulatorChanged =
-        emulator && emulator.tripStatus !== tripStatus || emulator.status !== status;
-      
-      
-        if (isLocationChanged || isEmulatorChanged) {
-        const updatedEmulators = emulators.map((emulator) => {
-          if (emulator.id === newEmulatorData.id) {
-            return { ...emulator, status, latitude, longitude };
-          }
-          console.log("Emulator || updatedEmulator : ", emulator);
-          return emulator;
-        });
-        setEmulator(newEmulatorData);
-        setEmulators(updatedEmulators);
-      }
-    };
-    
+
     const startEmulatorInterval = () => {
       const token = localStorage.getItem("token");
       emulatorInterval = setInterval(async () => {
@@ -150,21 +164,24 @@ const Map = ({ showToast }) => {
         }
       }, 5000);
     };
-  
+
     const stopEmulatorInterval = () => {
       clearInterval(emulatorInterval);
     };
-  
-    emulatorIntervalRef.current = { start: startEmulatorInterval, stop: stopEmulatorInterval };
-  
+
+    emulatorIntervalRef.current = {
+      start: startEmulatorInterval,
+      stop: stopEmulatorInterval,
+    };
+
     // Start the emulator interval
     emulatorIntervalRef.current.start();
-  
+
     return () => {
       stopEmulatorInterval();
     };
   }, [selectedEmId, emulator, emulators, setEmulator, setEmulators]);
-  
+
 
   useEffect(() => {
     if (pathsRoute === null) {
@@ -184,9 +201,9 @@ const Map = ({ showToast }) => {
   const handleEmulatorMarkerClick = (emulator) => {
     setSelectedEmId(emulator.id);
     clearInterval(intervalRef.current); // Clear any existing interval
-  
+
     setStartEmulation(emulator); // Set the selected emulation as the start emulation
-  
+
     // Update the start latitude and longitude based on the selected emulation
     setPathsRoute((prevPaths) =>
       prevPaths.map((coord) =>
@@ -196,7 +213,7 @@ const Map = ({ showToast }) => {
       )
     );
   };
-  
+
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
     if (emulator.startLat === null) {
@@ -224,8 +241,12 @@ const Map = ({ showToast }) => {
         setSelectedEmId={setSelectedEmId}
         setCreateTripInfo={setCreateTripInfo}
       />
-      <GpsOverlay showToast={showToast} setSelectedEmId={setSelectedEmId} 
-        emulators={emulators} tripData={tripData}/>
+      <GpsOverlay
+        showToast={showToast}
+        setSelectedEmId={setSelectedEmId}
+        emulators={emulators}
+        tripData={tripData}
+      />
       <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}
