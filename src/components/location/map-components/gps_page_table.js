@@ -8,6 +8,8 @@ import { styled } from "@mui/system";
 import { EMULATOR_URL, TRIP_TOGGLE, USER_URL } from "../../../constants";
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
+import IconButton from "@mui/material/IconButton";
+import HistoryIcon from "@mui/icons-material/History";
 
 import ApiService from "../../../ApiService";
 
@@ -52,6 +54,7 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
     }
   };
 
+  
   useEffect(() => {
     console.log("Data : THIS RAN");
     if(data!=null){
@@ -75,6 +78,10 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   const handleEmulatorCheckboxChange = (id) => {
     setSelectedEmulator(id);
     setSelectedEmId(id);
+  };
+
+  const handleHistoryButtonClick = async (emulatorForHistory) => {
+    console.log("Data Updated : ",emulatorForHistory);
   };
 
   const handleActionButtonClick = async (row) => {
@@ -101,7 +108,6 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
       showToast("Error CHANGING TRIP STATUS", "error");
     }
   };
-
 
 
   if (loading) {
@@ -173,6 +179,12 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
               </td>
               <td style={{ width: "auto" }} align="right">
                 <p>{row.tripStatus}</p>
+                <IconButton
+                      style={{ height: "auto", width: "40px", margin: "2px" }}
+                      aria-label="delete"
+                    >
+                      <HistoryIcon onClick={() => handleHistoryButtonClick(row)} />
+                  </IconButton>
                 <button
                   style={{
                     height: "auto",
