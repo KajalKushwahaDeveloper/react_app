@@ -18,7 +18,7 @@ import GoogleMapContainer from "./map-components/GoogleMapContainer";
 import ApiService from "../../ApiService";
 
 const Map = ({ showToast }) => {
-  const [selectedEmId, setSelectedEmId] = useState(1);
+  const [selectedEmId, setSelectedEmId] = useState(null);
   const [createTrip, setCreateTrip] = useState(false);
 
   const [pathsRoute, setPathsRoute] = useState(null);

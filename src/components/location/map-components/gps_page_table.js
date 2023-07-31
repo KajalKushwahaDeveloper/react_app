@@ -23,7 +23,7 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedEmulator, setSelectedEmulator] = useState(1);
+  const [selectedEmulator, setSelectedEmulator] = useState(null);
   
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] = useState(false);
   const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] = useState(null);
@@ -38,6 +38,10 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
     if(data!=null){
       console.log("Data : ", data);
       setEmptyRows(rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage));
+    if(selectedEmulator == null){
+      setSelectedEmulator(data[0].id)
+      setSelectedEmId(data[0].id);
+    }
     setLoading(false);
     }else{
       setLoading(true);
