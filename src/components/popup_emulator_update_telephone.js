@@ -63,9 +63,9 @@ const PopUpEmulatorTelephone = ({
         if (success) {
           console.log("Telephone Number added successfully");
           if (userToEdit != null) {
-            handleClose(userToEdit?.id);
+            handleClose(null, userToEdit?.id);
           } else {
-            handleClose(0);
+            handleClose(null, 0);
           }
           showToast("Telephone Number Added", "success"); 
           

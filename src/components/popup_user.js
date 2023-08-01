@@ -79,9 +79,9 @@ const PopUpUser = ({
         if (success) {
           console.log("User added successfully");
           if (userToEdit != null) {
-            handleClose(userToEdit?.id);
+            handleClose(userToEdit?.id, null);
           } else {
-            handleClose(0);
+            handleClose(0, null);
           }
           showToast("User Added", "success"); // Call the showToast method with two arguments
           // navigate("/home"); // Redirect to the home page

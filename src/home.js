@@ -20,7 +20,8 @@ const Home = () => {
   const [userToEdit, setUserToEdit] = useState(null);
   const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
   const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
-  const [editedId, setEditedId] = useState(null);
+  const [userEditedId, setUserEditedId] = useState(null);
+  const [emulatorEditedId, setEmulatorEditedId] = useState(null);
 
   const showToast = (message, type) => {
     console.log("Showing toast...");
@@ -32,13 +33,14 @@ const Home = () => {
     setUserToEdit(null);
   };
 
-  const handleClose = (id) => {
+  const handleClose = (userEditedId, emulatorEditedId) => {
     setOpenUserPopup(false);
     setUserToEdit(null);
     setOpenUserAssignPopup(false);
     setEmulatorToAssignUser(null);
     setOpenEmulatorPopup(false)
-    if (id != null && !isNaN(+id)) setEditedId(id);
+    if (userEditedId != null && !isNaN(+userEditedId)) setUserEditedId(userEditedId);
+    if (emulatorEditedId != null && !isNaN(+emulatorEditedId)) setEmulatorEditedId(emulatorEditedId);
   };
 
   const handleEditButtonClick = (data) => {
@@ -84,6 +86,7 @@ const Home = () => {
             userAssingedEmulator={userAssingedEmulator}
             setUserAssingedEmulator={setUserAssingedEmulator}
             handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
+            emulatorEditedId = {emulatorEditedId}
           />
         </div>
         <div className="user_table" style={{ display: "flex", flexDirection: "column" }}>
@@ -116,7 +119,7 @@ const Home = () => {
           <UserTable
             showToast={showToast}
             handleEditButtonClick={handleEditButtonClick}
-            editedId={editedId}
+            userEditedId={userEditedId}
             userAssingedEmulator={userAssingedEmulator}
           />
         </div>

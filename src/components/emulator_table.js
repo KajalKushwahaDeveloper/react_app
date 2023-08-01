@@ -20,16 +20,52 @@ const EmulatorTable = ({
   handleAssignUserButtonClick,
   userAssingedEmulator,
   setUserAssingedEmulator,
-  handleEmulatorTelephonePopup
+  handleEmulatorTelephonePopup,
+  emulatorEditedId,
 }) => {
   // State variables
-  const [data, setData] = useState([]);
+  const [emulators, setEmulators] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (emulatorEditedId != null) {
+      if (emulatorEditedId == 0) {
+        fetchData();
+      } else {
+        refreshEditedEmulator(emulatorEditedId);
+      }
+    }
+  }, [emulatorEditedId]);
+
+  // Fetch data from API
+  const refreshEditedEmulator = async (emulatorEditedId) => {
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_URL,
+      "GET",
+      null,
+      token,
+      emulatorEditedId
+    );
+    if (success) {
+      const updatedData = emulators.map((item) => {
+        if (item.id === data.id) {
+          return data;
+        }
+        return item;
+      });
+      showToast(`Updated user table!`, "success");
+      setEmulators(updatedData);
+    } else {
+      showToast("Failed to update user table" + error, "error");
+      return { success: false, error: "Failed to unassign user" };
+    }
+  };
 
   //assign/unassign button
   const handleActionButtonClick = async (row) => {
@@ -59,10 +95,10 @@ const EmulatorTable = ({
         };
         setUserAssingedEmulator(userAssignedEmulator);
 
-        console.log("Data Previous : " + data);
+        console.log("Data Previous : " + emulators);
         const result = await response.text();
         console.log("result:", result);
-        const updatedData = data.map((item) => {
+        const updatedData = emulators.map((item) => {
           if (item.id === row.id) {
             console.log("Data Found");
             return { ...item, user: null };
@@ -70,8 +106,8 @@ const EmulatorTable = ({
           return item;
         });
         showToast(`User Un-Assigned`, "success");
-        console.log("Data Updated : " + data);
-        setData(updatedData);
+        console.log("Data Updated : " + emulators);
+        setEmulators(updatedData);
       } catch (error) {
         showToast(`Failed to unassign user ${error}`, "error");
       }
@@ -86,7 +122,7 @@ const EmulatorTable = ({
     const { success, data, error } = await GetEmulatorApi();
 
     if (success) {
-      setData(data);
+      setEmulators(data);
       setLoading(false);
     } else {
       setError(error);
@@ -149,13 +185,13 @@ const EmulatorTable = ({
 
   useEffect(() => {
     if (userAssingedEmulator != null) {
-      const updatedData = data.map((item) => {
+      const updatedData = emulators.map((item) => {
         if (item.id === userAssingedEmulator.id) {
           return { ...item, user: userAssingedEmulator.user };
         }
         return item;
       });
-      setData(updatedData);
+      setEmulators(updatedData);
     }
   }, [userAssingedEmulator]);
 
@@ -169,7 +205,7 @@ const EmulatorTable = ({
   };
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, emulators.length - page * rowsPerPage);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -193,8 +229,8 @@ const EmulatorTable = ({
         </thead>
         <tbody>
           {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
+            ? emulators.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : emulators
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
@@ -256,7 +292,7 @@ const EmulatorTable = ({
             <CustomTablePagination
               rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
               colSpan={5}
-              count={data.length}
+              count={emulators.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
