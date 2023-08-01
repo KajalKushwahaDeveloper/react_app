@@ -174,7 +174,8 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
                 />
               </td>
               <td style={{ width: "auto" }} align="right">
-                <p>{row.tripStatus}</p>
+                <p style={{textAlign:"center"}}>{row.tripStatus}</p>
+                <div style={{display:"flex"}}>
                 <IconButton
                       style={{ height: "auto", width: "40px", margin: "2px" }}
                       aria-label="delete"
@@ -210,6 +211,7 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
                     ? ""
                     : "N/A"}
                 </button>
+                </div>
               </td>
             </tr>
           ))}

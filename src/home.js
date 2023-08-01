@@ -11,9 +11,11 @@ import { Button } from "@mui/material";
 import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
+import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
+  const [openEmulatorPopup, setOpenEmulatorPopup] = useState(false);
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
@@ -35,6 +37,7 @@ const Home = () => {
     setUserToEdit(null);
     setOpenUserAssignPopup(false);
     setEmulatorToAssignUser(null);
+    setOpenEmulatorPopup(false)
     if (id != null && !isNaN(+id)) setEditedId(id);
   };
 
@@ -42,6 +45,11 @@ const Home = () => {
     console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setOpenUserPopup(true);
+  };
+  const handleEmulatorTelephonePopup = (data) => {
+    console.log("IconButton clicked with data:", data);
+    setUserToEdit(data);
+    setOpenEmulatorPopup(true);
   };
 
   const handleAssignUserButtonClick = (data) => {
@@ -75,6 +83,7 @@ const Home = () => {
             handleAssignUserButtonClick={handleAssignUserButtonClick}
             userAssingedEmulator={userAssingedEmulator}
             setUserAssingedEmulator={setUserAssingedEmulator}
+            handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
           />
         </div>
         <div className="user_table" style={{ display: "flex", flexDirection: "column" }}>
@@ -91,9 +100,15 @@ const Home = () => {
             open={openUserPopup}
             userToEdit={userToEdit}
           />
-          <PopUpAssignUser
+            <PopUpEmulatorTelephone
             showToast={showToast}
             handleClose={handleClose}
+            open={openEmulatorPopup}
+            userToEdit={userToEdit}
+          />
+          <PopUpAssignUser
+            showToast={showToast}
+            close={handleClose}
             open={openUserAssignPopup}
             emulatorToAssignUser={emulatorToAssignUser}
             handleAssignedUserToEmulator={handleAssignedUserToEmulator}
