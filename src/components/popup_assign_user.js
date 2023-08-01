@@ -1,55 +1,111 @@
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "../scss/login.scss";
+import React, { useEffect, useState } from "react";
+import { useTheme } from "@mui/material/styles";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Dialog from "@mui/material/Dialog";
+import Button from "@mui/material/Button";
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import { USER_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: "-3px -3px 7px #97949473, 2px 2px 7px rgb(137, 138, 138)",
-  pt: 2,
-  px: 4,
-  pb: 3,
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 0,
+            top: 0,
+            color: (theme) => theme.palette.blue,
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
 };
 
-const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAssignUser , handleAssignedUserToEmulator }) => {
-  const navigate = useNavigate();
+const UserAssignDropDown = (props) => {
+  const {
+    showToast,
+    open,
+    close,
+    emulatorToAssignUser,
+    handleAssignedUserToEmulator,
+  } = props;
+  const theme = useTheme();
+  
+  const [userName, setuserName] = React.useState([]);
   const [users, setUsers] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [selectedUserId, SetSelectedUserId] = useState();
 
   const handleUserSelect = async (userId) => {
+    console.log("selectedUser:", selectedUserId);
     try {
       console.log(emulatorToAssignUser.id);
       console.log(userId);
-      const { success,error,data } = await setUserToEmulator(emulatorToAssignUser.id, userId);
+      const { success, error, data } = await setUserToEmulator(
+        emulatorToAssignUser.id,
+        selectedUserId
+      );
 
       if (success) {
         console.log("User added successfully");
-        if(emulatorToAssignUser != null){
-          handleAssignedUserToEmulator(success, error, data )
+        if (emulatorToAssignUser != null) {
+          handleAssignedUserToEmulator(success, error, data);
         } else {
-          handleAssignedUserToEmulator(success, error, null )
+          handleAssignedUserToEmulator(success, error, null);
         }
-        showToast("User Added", "success"); // Call the showToast method with two arguments
-        // navigate("/home"); // Redirect to the home page
+        showToast("User Added", "success");
       } else {
-        showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
-        setError(error || "Failed to add user"); // Display appropriate error message
+        showToast(error || "Failed to add user", "error");
+        setError(error || "Failed to add user");
       }
     } catch (error) {
       console.log("Error occurred while adding user:", error);
-      setError("An error occurred while adding user"); // Display a generic error message
+      setError("An error occurred while adding user");
     }
   };
-
 
   // Fetch data from API
   const fetchUsers = async () => {
@@ -66,10 +122,13 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
         return { success: false, error: "Invalid credentials" };
       } else {
         const responseData = await response.text();
+
         const deserializedData = JSON.parse(responseData);
+        console.log("response:::", deserializedData);
+
         setUsers(deserializedData);
         setLoading(false);
-        return { success: true, error: null};
+        return { success: true, error: null };
       }
     } catch (error) {
       console.log("User Data Error: " + error);
@@ -78,6 +137,14 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
     }
   };
 
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    
+    SetSelectedUserId(value);
+    setuserName(value);
+  };
 
   const setUserToEmulator = async (emulatorId, UserId) => {
     console.log(emulatorId);
@@ -100,64 +167,81 @@ const PopUpAssignUser = ({ showToast,handleOpen, handleClose, open, emulatorToAs
     });
     console.log("response:", response);
     if (!response.ok || response.status !== 200) {
-      return { success: false, error: "Failed to assign user", data: null};
+      return { success: false, error: "Failed to assign user", data: null };
     }
     const result = await response.json();
-    return { success: true, error : null, data: result};
+    return { success: true, error: null, data: result };
   };
 
-  useEffect(() => {
-    setLoading(true);
-    const userData = fetchUsers();
-  }, []);
+  const userHandleSelect = (e) => {
+    SetSelectedUserId(e.target.value);
+    console.log("target value", e.target.value);
+  };
 
-  useEffect(() => {
-    setLoading(true);
-    if (open) {
-      const userData = fetchUsers();
-      // Additional logic for handling the fetched data
-    }
+  useEffect(async () => {
+    console.log("open::12", open);
+    //  setLoading(true);
+    const userData = await fetchUsers();
+    console.log("userData111", userData);
   }, [open]);
 
   return (
     <div>
-      <Modal
+      <BootstrapDialog
+        onClose={close}
+        aria-labelledby="customized-dialog-title"
         open={open}
-        userToAssignToEmulator={emulatorToAssignUser}
-        onClose={handleClose}
-        users={users}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
       >
-        {loading ? (
-          <div>Loading...</div>
-        ) : (
-          <Box sx={{ ...style, width: 400 }}>
-            <h1>Select a user:</h1>
-            <ul >
+        <BootstrapDialogTitle
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontWeight: "100px",
+          }}
+          id="customized-dialog-title"
+          onClose={close}
+        >
+          Select User:
+        </BootstrapDialogTitle>
+        <DialogContent dividers>
+          <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
+            <InputLabel
+              id="demo-multiple-name-label"
+              style={{ borderRadius: "2rem" }}
+            >
+              Users
+            </InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              value={userName}
+              onChange={handleChange}
+              input={<OutlinedInput label="Name" />}
+              MenuProps={MenuProps}
+            >
+              {console.log("users23:", users)}
               {users?.map((user) => (
-                <div sx={{ marginBottom:"1rem"}}
-                  key={user.id}
-                  onClick={() => handleUserSelect(user.id)}
-                  style={{
-                    cursor: 'pointer',
-                    border: '1px solid #007dc6',
-                    background: '#C7C7C735',
-                    padding: '0.5rem',
-                    marginBottom: '1rem',
-                    borderRadius: '10px' // Adjust the value as per your preference
-                  }}
-                >
-                  {user.firstName} {user.lastName}
-                </div>
+                
+                <MenuItem key={user.id} value={user.id}>
+                {user.firstName} {user.lastName}
+                 
+                </MenuItem>
               ))}
-            </ul>
-            {error && <p className="error">{error}</p>}
-          </Box>
-        )}
-      </Modal>
+            </Select>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="contained"
+                style={{ width: "2rem", marginTop: "2em" }}
+                onClick={() => handleUserSelect()}
+              >
+                Add
+              </Button>
+            </div>
+          </FormControl>
+        </DialogContent>
+      </BootstrapDialog>
     </div>
   );
-};
-
-export default PopUpAssignUser;
+}
+export default UserAssignDropDown;
