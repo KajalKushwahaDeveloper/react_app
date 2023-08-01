@@ -98,7 +98,7 @@ const UserTable = ({
       );
 
       if (success) {
-        const updatedData = data.filter((item) => item.id !== user.id);
+        const updatedData = userData.filter((item) => item.id !== user.id);
         console.log("Data Updated : " + data);
         setUserData(updatedData);
         showToast("User deleted", "success")
