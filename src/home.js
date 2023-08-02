@@ -43,23 +43,26 @@ const Home = () => {
     if (emulatorEditedId != null && !isNaN(+emulatorEditedId)) setEmulatorEditedId(emulatorEditedId);
   };
 
+  //Edit button click
   const handleEditButtonClick = (data) => {
     console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setOpenUserPopup(true);
   };
+
+  //telephone update
   const handleEmulatorTelephonePopup = (data) => {
     console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setOpenEmulatorPopup(true);
   };
-
+//assign user button
   const handleAssignUserButtonClick = (data) => {
     console.log("Assign Button clicked with data:", data);
     setEmulatorToAssignUser(data);
     setOpenUserAssignPopup(true);
   };
-
+//assign user to an emulator
   const handleAssignedUserToEmulator = (success, error, data) => {
     console.log("assignedUserToEmulator with data:", data);
     setUserAssingedEmulator(data);
