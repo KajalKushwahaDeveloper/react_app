@@ -81,7 +81,6 @@ const LoginPage = () => {
                     value={email}
                     onChange={handleEmailChange}
                   />
-                  {emailError && <p className="error">{emailError}</p>}
                   <input
                     type="password"
                     id="content_input"
@@ -90,12 +89,12 @@ const LoginPage = () => {
                     value={password}
                     onChange={handlePasswordChange}
                   />
-                  {passwordError && <p className="error">{passwordError}</p>}
                   <button className="login_button" type="submit">
                     Login
                   </button>
-                  {responseError && <p className="error">{responseError}</p>}
-                  <a href="#">Sign In?</a>
+                  {passwordError && <p className="error" style={{margin:"0"}}>{passwordError}</p>}
+                  {emailError && <p className="error"style={{margin:"0"}}>{emailError}</p>}
+                  {responseError && <p className="error"style={{margin:"0"}}>{responseError}</p>}
                 </form>
               </div>
             </div>
