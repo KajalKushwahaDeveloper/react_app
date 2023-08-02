@@ -13,6 +13,7 @@ import HistoryIcon from "@mui/icons-material/History";
 
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
+import { Border } from "devextreme-react/bar-gauge";
 
 const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   // State variables
@@ -159,11 +160,12 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
                 {row.telephone || "N/A"}
               </td>
               <td>
-                <div 
+                <div className="custom-scrollbar"
                 style={{
                   maxwidth:"15%",
                   maxHeight:"5rem",
-                 overflowY:'auto',
+                  overflowY:'auto' ,
+                 overflowX:"hidden",
                 }}
                 align="left">
                 {row.address || "N/A"}

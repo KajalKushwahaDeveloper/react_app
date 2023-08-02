@@ -246,10 +246,10 @@ const EmulatorTable = ({
               <td style={{ width: "auto", display: "flex" }} align="right">
                 <IconButton
                   style={{
-                    height: "auto",
-                    width: "40px",
-                    margin: "2px",
-                    backgroundColor: "#f2f2f2",
+                    //height: "auto",
+                    //width: "40px",
+                    //margin: "2px",
+                    //backgroundColor: "#f2f2f2",
                   }}
                   aria-label="delete"
                 >
@@ -257,21 +257,16 @@ const EmulatorTable = ({
                 </IconButton>
                 <IconButton
                   style={{
-                    height: "auto",
-                    width: "40px",
                     margin: "2px",
-                    backgroundColor: "#f2f2f2",
                   }}
                   aria-label="delete"
                 >
                   <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
                 </IconButton>
-                <button
+                <button 
                   style={{
-                    height: "45px",
-                    width: "100px",
                     backgroundColor: row.user === null ? "green" : "red",
-                    color: "white",
+                    width: row.user === null ? "90px" : "",
                   }}
                   onClick={() => handleActionButtonClick(row)}
                 >

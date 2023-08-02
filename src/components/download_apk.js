@@ -69,7 +69,7 @@ const DownloadApk = () => {
           variant="contained"
           color="success"
           onClick={handleDownloadFile}
-          style={{ marginTop: "2rem" }}
+          style={{ marginTop: "2rem" , marginLeft: "1.2rem" }}
         >
           Download File
         </Button>

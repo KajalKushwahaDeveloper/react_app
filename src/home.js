@@ -12,6 +12,7 @@ import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
+import { ForkLeft } from "@mui/icons-material";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
@@ -92,10 +93,10 @@ const Home = () => {
             emulatorEditedId = {emulatorEditedId}
           />
         </div>
-        <div className="user_table" style={{ display: "flex", flexDirection: "column" }}>
+        <div className="user_table" style={{ display: "flex", flexDirection: "column",marginBottom:"235px" }}>
           <Button
             className="login_button"
-            style={{ padding:"1rem",  margin: "1rem" }}
+            style={{ padding:"1rem",  margin: "1rem" , marginLeft:"0px",marginRight:"0px",height:"45px"}}
             onClick={handleOpen}
           >
             Add User
