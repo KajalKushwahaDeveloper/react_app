@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
 
 const GoogleMapContainer = ({
@@ -17,19 +17,36 @@ const GoogleMapContainer = ({
   startLng,
   handleEmulatorMarkerClick,
   handleEmulatorMarkerDragEnd,
+  tripData,
 }) => {
-
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
 
+  const convertTimeToReadableFormat = (timeInHours) => {
+    const hours = Math.floor(timeInHours);
+    const remainingMinutes = (timeInHours - hours) * 60;
+    const minutes = Math.floor(remainingMinutes);
+    const remainingSeconds = (remainingMinutes - minutes) * 60;
+    const seconds = Math.floor(remainingSeconds);
+
+    return `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+  };
+
   useEffect(() => {
-    if(selectedEmulator!=null && pathsRoute!=null){
-      setPathTraveled(pathsRoute.filter((item, index) => index <= selectedEmulator.currentTripPointIndex));
-      setPathNotTraveled(pathsRoute.filter((item, index) => index >= selectedEmulator.currentTripPointIndex));
+    if (selectedEmulator != null && pathsRoute != null) {
+      setPathTraveled(
+        pathsRoute.filter(
+          (item, index) => index <= selectedEmulator.currentTripPointIndex
+        )
+      );
+      setPathNotTraveled(
+        pathsRoute.filter(
+          (item, index) => index >= selectedEmulator.currentTripPointIndex
+        )
+      );
     } else {
       console.log("currentTripPointIndex  : null");
     }
-      
   }, [selectedEmulator, pathsRoute]);
 
 
@@ -107,12 +124,17 @@ const GoogleMapContainer = ({
                   </React.Fragment>
                 ))}
               </p>
+
+              <h3 style={{ color: "black" }}>Time: </h3>
+              <p style={{ color: "black" }}>
+              {convertTimeToReadableFormat(selectedStop.distance / tripData?.velocity)}
+              </p>
             </div>
           </InfoWindow>
         )}
 
-
-        {emulators != null && pathsRoute != null &&
+        {emulators != null &&
+          pathsRoute != null &&
           emulators
             .filter(
               (emulator) =>
@@ -127,11 +149,12 @@ const GoogleMapContainer = ({
 
               var rotationAngle = 0;
               try {
-                if(pathsRoute!=null && emulator.currentTripPointIndex > -1) {
-                rotationAngle = pathsRoute[emulator.currentTripPointIndex].bearing
-              }
-              }catch(e) {
-              console.log("rotationAngle Error : ", e);
+                if (pathsRoute != null && emulator.currentTripPointIndex > -1) {
+                  rotationAngle =
+                    pathsRoute[emulator.currentTripPointIndex].bearing;
+                }
+              } catch (e) {
+                console.log("rotationAngle Error : ", e);
               }
 
               console.log("rotationAngle  : ", rotationAngle);

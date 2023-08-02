@@ -58,6 +58,10 @@ const Map = ({ showToast }) => {
   );
   const [selectedStop, setSelectedStop] = useState(null);
 
+  console.log("tripData11:", tripData);
+
+
+
   const velocity = 27; // 100km per hour
   let initialDate;
 
@@ -263,6 +267,7 @@ const Map = ({ showToast }) => {
         startLng={startLng}
         handleEmulatorMarkerClick={handleEmulatorMarkerClick}
         handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
+        tripData={tripData}
       />
     </CardComponent>
   );
