@@ -19,6 +19,7 @@ export const ADMIN_CURRENT = ADMIN_URL + "/current";
 //EMULATOR
 export const EMULATOR_URL = BASE_URL + "/emulator";
 export const EMULATOR_DELETE_URL = EMULATOR_URL;
+export const EMULATOR_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updatePhoneNumber";
 
 //USER
 export const USER_URL = BASE_URL + "/user";
@@ -39,3 +40,4 @@ export const TRIP_POINTS_URL = TRIP_URL + "/trip-points";
 export const CREATE_TRIP_URL = TRIP_URL + "/create";
 export const TRIP_STOPS_URL = TRIP_URL + "/stops";
 export const TRIP_TOGGLE = TRIP_URL + "/toggle";
+export const TRIP_HISTORY = TRIP_URL + "/history";
