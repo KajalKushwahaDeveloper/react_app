@@ -17,7 +17,7 @@ import ApiService from "../ApiService";
 const UserTable = ({
   showToast,
   handleEditButtonClick,
-  editedId,
+  userEditedId,
   userAssingedEmulator,
 }) => {
   // State variables
@@ -30,14 +30,14 @@ const UserTable = ({
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (editedId != null) {
-      if(editedId == 0){
+    if (userEditedId != null) {
+      if(userEditedId == 0){
         fetchUsers();
       } else {
-        refreshUserEdit(editedId);
+        refreshEditedUser(userEditedId);
       }
     }
-  }, [editedId]);
+  }, [userEditedId]);
 
   useEffect(() => {
     if (userAssingedEmulator != null) {
@@ -98,7 +98,7 @@ const UserTable = ({
       );
 
       if (success) {
-        const updatedData = data.filter((item) => item.id !== user.id);
+        const updatedData = userData.filter((item) => item.id !== user.id);
         console.log("Data Updated : " + data);
         setUserData(updatedData);
         showToast("User deleted", "success")
@@ -108,34 +108,27 @@ const UserTable = ({
     }
   };
 
-  // Fetch data from API
-  const refreshUserEdit = async (userId) => {
+  const refreshEditedUser = async (userId) => {
     const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(USER_URL + "/" + userId, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok || response.status !== 200) {
-        showToast("Failed to update user table", "error");
-        return { success: false, error: "Failed to unassign user" };
-      }
-      const responseData = await response.text();
-      const result = JSON.parse(responseData);
+    const { success, data, error } = await ApiService.makeApiCall(
+      USER_URL,
+      "GET",
+      null,
+      token,
+      userId
+    );
+    if (success) {
       const updatedData = userData.map((item) => {
-        if (item.id === result.id) {
-          return result;
-        };
+        if (item.id === data.id) {
+          return data;
+        }
         return item;
       });
       showToast(`Updated user table!`, "success");
       setUserData(updatedData);
-    } catch (error) {
-      console.log("refreshUser error : " + error);
-      showToast(`Failed to update user table ${error}`, "error");
+    } else {
+      showToast("Failed to update user table", "error");
+      return { success: false, error: "Failed to unassign user" };
     }
   };
 

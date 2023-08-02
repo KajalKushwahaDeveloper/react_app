@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
-import { Button, Modal } from "@mui/material";
+
 import { styled } from "@mui/system";
 import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
 import "../scss/table.scss";
@@ -13,16 +13,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
 import { EMULATOR_DELETE_URL } from "../constants";
-import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator"; 
+import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator";
 
 const EmulatorTable = ({
   showToast,
   handleAssignUserButtonClick,
   userAssingedEmulator,
   setUserAssingedEmulator,
+  handleEmulatorTelephonePopup,
+  emulatorEditedId,
 }) => {
   // State variables
-  const [data, setData] = useState([]);
+  const [emulators, setEmulators] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,10 +32,44 @@ const EmulatorTable = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    if (emulatorEditedId != null) {
+      if (emulatorEditedId == 0) {
+        fetchData();
+      } else {
+        refreshEditedEmulator(emulatorEditedId);
+      }
+    }
+  }, [emulatorEditedId]);
+
+  // Fetch data from API
+  const refreshEditedEmulator = async (emulatorEditedId) => {
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_URL,
+      "GET",
+      null,
+      token,
+      emulatorEditedId
+    );
+    if (success) {
+      const updatedData = emulators.map((item) => {
+        if (item.id === data.id) {
+          return data;
+        }
+        return item;
+      });
+      showToast(`Updated user table!`, "success");
+      setEmulators(updatedData);
+    } else {
+      showToast("Failed to update user table" + error, "error");
+      return { success: false, error: "Failed to unassign user" };
+    }
+  };
 
   //assign/unassign button
   const handleActionButtonClick = async (row) => {
-    console.log("row data in emulator_page:", row)
+    console.log("row data in emulator_page:", row);
     if (row.user != null) {
       const token = localStorage.getItem("token");
       console.log("token : ", token);
@@ -52,17 +88,17 @@ const EmulatorTable = ({
           return { success: false, error: "Failed to unassign user" };
         }
         // Send the removed user ID to refresh in user table
-        const userAssignedEmulator = { 
+        const userAssignedEmulator = {
           user: {
-            id: row.user?.id, 
+            id: row.user?.id,
           },
         };
         setUserAssingedEmulator(userAssignedEmulator);
 
-        console.log("Data Previous : " + data);
+        console.log("Data Previous : " + emulators);
         const result = await response.text();
         console.log("result:", result);
-        const updatedData = data.map((item) => {
+        const updatedData = emulators.map((item) => {
           if (item.id === row.id) {
             console.log("Data Found");
             return { ...item, user: null };
@@ -70,8 +106,8 @@ const EmulatorTable = ({
           return item;
         });
         showToast(`User Un-Assigned`, "success");
-        console.log("Data Updated : " + data);
-        setData(updatedData);
+        console.log("Data Updated : " + emulators);
+        setEmulators(updatedData);
       } catch (error) {
         showToast(`Failed to unassign user ${error}`, "error");
       }
@@ -84,9 +120,9 @@ const EmulatorTable = ({
   const fetchData = async () => {
     setLoading(true);
     const { success, data, error } = await GetEmulatorApi();
-  
+
     if (success) {
-      setData(data);
+      setEmulators(data);
       setLoading(false);
     } else {
       setError(error);
@@ -94,29 +130,31 @@ const EmulatorTable = ({
     }
   };
 
-//delete button 
-const handleDeleteButtonClick = async (emulator) => {
-  const confirmed = window.confirm('Delete this emulator : ' + emulator.emulatorSsid + '?');
-  if (confirmed) {
-    const token = localStorage.getItem("token");
-    const { success, data, error } = await ApiService.makeApiCall(
-      EMULATOR_DELETE_URL,
-      "DELETE",
-      null,
-      token,
-      emulator.id
+  //delete button
+  const handleDeleteButtonClick = async (emulator) => {
+    const confirmed = window.confirm(
+      "Delete this emulator : " + emulator.emulatorSsid + "?"
     );
+    if (confirmed) {
+      const token = localStorage.getItem("token");
+      const { success, data, error } = await ApiService.makeApiCall(
+        EMULATOR_DELETE_URL,
+        "DELETE",
+        null,
+        token,
+        emulator.id
+      );
 
-    if (success) {
-      console.log("data45:", data)
-      console.log("Data Updated : " + data);
-      showToast("emulator deleted", "success");
-      fetchData();
-    } else {
-      showToast("emulator not deleted", "error")
+      if (success) {
+        console.log("data45:", data);
+        console.log("Data Updated : " + data);
+        showToast("emulator deleted", "success");
+        fetchData();
+      } else {
+        showToast("emulator not deleted", "error");
+      }
     }
-  }
-};
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -147,13 +185,13 @@ const handleDeleteButtonClick = async (emulator) => {
 
   useEffect(() => {
     if (userAssingedEmulator != null) {
-      const updatedData = data.map((item) => {
+      const updatedData = emulators.map((item) => {
         if (item.id === userAssingedEmulator.id) {
           return { ...item, user: userAssingedEmulator.user };
         }
         return item;
       });
-      setData(updatedData);
+      setEmulators(updatedData);
     }
   }, [userAssingedEmulator]);
 
@@ -166,9 +204,8 @@ const handleDeleteButtonClick = async (emulator) => {
     setPage(0);
   };
 
-
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, emulators.length - page * rowsPerPage);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -192,8 +229,8 @@ const handleDeleteButtonClick = async (emulator) => {
         </thead>
         <tbody>
           {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
+            ? emulators.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : emulators
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
@@ -206,17 +243,33 @@ const handleDeleteButtonClick = async (emulator) => {
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td style={{ width: "auto" ,display:"flex"}} align="right">
+              <td style={{ width: "auto", display: "flex" }} align="right">
                 <IconButton
-                      style={{ height: "auto", width: "40px", margin: "2px" ,backgroundColor:"#f2f2f2"}}
-                      aria-label="delete"
-                    >
+                  style={{
+                    height: "auto",
+                    width: "40px",
+                    margin: "2px",
+                    backgroundColor: "#f2f2f2",
+                  }}
+                  aria-label="delete"
+                >
+                  <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
+                </IconButton>
+                <IconButton
+                  style={{
+                    height: "auto",
+                    width: "40px",
+                    margin: "2px",
+                    backgroundColor: "#f2f2f2",
+                  }}
+                  aria-label="delete"
+                >
                   <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
                 </IconButton>
                 <button
                   style={{
                     height: "45px",
-                    width:"100px",
+                    width: "100px",
                     backgroundColor: row.user === null ? "green" : "red",
                     color: "white",
                   }}
@@ -239,7 +292,7 @@ const handleDeleteButtonClick = async (emulator) => {
             <CustomTablePagination
               rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
               colSpan={5}
-              count={data.length}
+              count={emulators.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
@@ -275,7 +328,6 @@ const grey = {
   800: "#2D3843",
   900: "#1A2027",
 };
-
 
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
