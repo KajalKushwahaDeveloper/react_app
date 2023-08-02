@@ -40,7 +40,7 @@ const CurrentLocation = () => {
   }, []);
   return (
     <div>
-      <div style={{ width: "auto", padding: ".5rem", maxWidth: "100%" }}>
+      <div style={{ width: "auto", padding: ".5rem", maxWidth: "100%", position:"fixed",bottom:"140px",left:"3px"}}>
         <table aria-label="custom pagination table">
           <thead>
             <tr>

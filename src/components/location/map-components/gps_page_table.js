@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
-import { Checkbox } from "@mui/material";
+import { Checkbox, Hidden } from "@mui/material";
 import { styled } from "@mui/system";
 import { EMULATOR_URL, TRIP_HISTORY, TRIP_TOGGLE, USER_URL } from "../../../constants";
 import "../../../scss/table.scss";
@@ -116,13 +116,14 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
 
   return (
     <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
+      <div style = {{height:'90%',width:"100%"}}> 
       <table aria-label="custom pagination table">
         <thead>
           <tr>
             <th>Status</th>
             <th>ID</th>
             <th>Number</th>
-            <th>Address</th>
+            <th style={{maxWidth:'300px'}}>Address</th>
             <th>Select</th>
             <th>
               TripStatus/
@@ -157,16 +158,18 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
               <td style={{ width: "auto" }} align="right">
                 {row.telephone || "N/A"}
               </td>
-              <td
+              <td>
+                <div 
                 style={{
-                  width: "auto",
-                  height: "3em",
-                  textOverflow: "ellipsis",
+                  maxwidth:"15%",
+                  maxHeight:"5rem",
+                 overflowY:'auto',
                 }}
-                align="right"
-              >
+                align="left">
                 {row.address || "N/A"}
-              </td>
+              
+                </div>
+                </td>
               <td style={{ width: "auto" }} align="right">
                 <Checkbox
                   checked={selectedEmulator === row.id}
@@ -217,7 +220,7 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
           ))}
 
           {emptyRows!= null && emptyRows > 0 && (
-            <tr style={{ height: 34 * emptyRows }}>
+            <tr style={{ height: 35 * emptyRows }}>
               <td colSpan={5} />
             </tr>
           )}
@@ -247,6 +250,7 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
           open={openEmulatorHistoryPopUp}
           emulatorHistory={selectedEmulatorForHistoryData}
       />
+    </div>
     </div>
   );
 };

@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
+import { bottomNavigationActionClasses } from "@mui/material";
 
 const UserTable = ({
   showToast,
@@ -253,12 +254,11 @@ const UserTable = ({
 
             return (
               <tr key={row.id}>
-                <div></div>
-                <td align="right">
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <h3>{row.firstName + " " + row.lastName || "N/A"}</h3>
-                      <ul>
+                <td align="right"  display="flex" paddingRight="12px" style={{display:"flex"}}>
+                  <div style={{ display: "flex", alignItems: "center", width:"25rem" }}>
+                    <div style={{ display: "flex", flexDirection: "column"}}>
+                      <h3 style={{paddingLeft: "38px",marginBottom:"0px",marginTop:"0px"}}>{row.firstName + " " + row.lastName || "N/A"}</h3>
+                      <ul style={{listStyleType:"none"}}>
                         <li>Email : {row.email || "N/A"}</li>
                         <li>Tel. # : {row.telephone || "N/A"}</li>
                         <li>Registration Date : {formattedDate}</li>
@@ -273,7 +273,10 @@ const UserTable = ({
                             : "Err"}
                         </li>
                       </ul>
+                      </div>
                     </div>
+                    <div style={{paddingLeft:"60px",paddingTop:"9px"}}>
+                    <div style={{paddingBottom:"10px",paddingLeft:"2px"}}>
                     <IconButton
                       style={{ height: "auto", width: "40px", margin: "2px" }}
                       aria-label="edit"
@@ -286,6 +289,7 @@ const UserTable = ({
                     >
                       <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
                     </IconButton>
+                    </div>
                     <button
                       style={{
                         height: "45px",

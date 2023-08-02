@@ -61,21 +61,21 @@
         &:hover {
             background: $active_color;
             padding: 0.4rem .6rem;
-            border-radius: 0.1rem;
+            border-radius:0.2rem;
         }
     }
 
     .active {
         background: $active_color;
         padding: 0.4rem .5rem;
-        border-radius: 0.1rem;
+        border-radius: 0.2rem;
         color: white;
     }
 
     .menu-link ul li a {
         text-transform: capitalize;
         color: $white-color;
-        transition: 0.5s;
+        transition: 0.23s;
         font-size: 1.1rem;
     }
 
