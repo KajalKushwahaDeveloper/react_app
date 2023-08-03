@@ -1,5 +1,6 @@
 import React, { useEffect, useState }  from "react";
 import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
+import {Dialog , DialogActions, DialogContent, DialogContentText, DialogTitle, Button} from '@mui/material';
 
 const GoogleMapContainer = ({
   mapRef,
@@ -17,10 +18,16 @@ const GoogleMapContainer = ({
   startLng,
   handleEmulatorMarkerClick,
   handleEmulatorMarkerDragEnd,
+  openDialog,
+  onClose,
+  DialogText,
+  confirmNewLocation
 }) => {
 
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
+
+  console.log(selectedEmulator);
 
   useEffect(() => {
     if(selectedEmulator!=null && pathsRoute!=null){
@@ -36,7 +43,7 @@ const GoogleMapContainer = ({
   return (
     <div className="gMapCont">
       <GoogleMap ref={mapRef} defaultZoom={7} center={center}>
-        {pathTraveled != null && (
+        {pathTraveled !== null && (
           <Polyline
             path={pathTraveled}
             options={{
@@ -112,7 +119,7 @@ const GoogleMapContainer = ({
         )}
 
 
-        {emulators != null && pathsRoute != null &&
+        {emulators !== null && pathsRoute !== null &&
           emulators
             .filter(
               (emulator) =>
@@ -155,6 +162,7 @@ const GoogleMapContainer = ({
                       lat: emulator.latitude,
                       lng: emulator.longitude,
                     }}
+                    animation={2}
                     title={
                       emulator?.id === selectedEmulator?.id
                         ? "selectedMarker"
@@ -162,7 +170,7 @@ const GoogleMapContainer = ({
                     }
                     label={`Emulator ${emulator.id}`}
                     onClick={() => handleEmulatorMarkerClick(emulator)}
-                    draggable={!emulator.startLat}
+                    draggable={emulator?.id === selectedEmulator?.id ? true : false}
                     onDragEnd={(event) =>
                       handleEmulatorMarkerDragEnd(emulator, event)
                     }
@@ -194,6 +202,23 @@ const GoogleMapContainer = ({
             }}
           />
         )}
+         <Dialog 
+          open={openDialog}
+          onClose={onClose}
+          >
+            <DialogTitle id="alert-dialog-title">
+            {"logbook gps"} 
+            </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {DialogText}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={confirmNewLocation} autoFocus>Confim</Button>
+            <Button onClick={onClose} autoFocus>Cancel</Button>              
+          </DialogActions>
+          </Dialog>
       </GoogleMap>
     </div>
   );

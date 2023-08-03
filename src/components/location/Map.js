@@ -14,6 +14,7 @@ import {
   TRIP_POINTS_URL,
   EMULATOR_URL,
   TRIP_URL,
+  EMULATOR_DRAG_URL,
 } from "../../constants";
 import CardComponent from "./map-components/CardComponent";
 import CreateTripButton from "./map-components/CreateTripButton.jsx";
@@ -31,6 +32,12 @@ const Map = ({ showToast }) => {
   const [isTableVisible, setIsTableVisible] = useState(false);
   const [startEmulation, setStartEmulation] = useState(null);
   const [createTripInfo, setCreateTripInfo] = useState();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [DialogText, setDialogText] = useState('');
+  const [dragId, setDragId] = useState();
+  const [nearestTripPoint, setNearestTripPoint] = useState();
+  const [draggOutRange, setDragOutRange] = useState();
+  const [draggWithoutTrip, setDragWithoutTrip] = useState();
 
   const defaultLat = 37.7749; // Default latitude
   const defaultLng = -122.4194; // Default longitude
@@ -156,8 +163,8 @@ const Map = ({ showToast }) => {
           token
         );
         if (success) {
-          console.log("Emulator || Emulator old Emulator : ", emulator);
-          console.log("Emulator || Emulator new Emulator : ", data);
+          // console.log("Emulator || Emulator old Emulator : ", emulator);
+          // console.log("Emulator || Emulator new Emulator : ", data);
           checkCurrentLocation(data);
         } else {
           console.log("old Emulator ERROR : ", error);
@@ -214,16 +221,112 @@ const Map = ({ showToast }) => {
     );
   };
 
+  const handleDialog = (text) => {
+    setOpenDialog(true);
+    setDialogText(text);
+  };
+
+  const closeDialog = () => {
+    setOpenDialog(false);
+    setDialogText('');
+  };
+
+  function haversine(lat1, lon1, lat2, lon2) {
+    // Convert latitude and longitude from degrees to radians
+    lat1 = lat1 * Math.PI / 180;
+    lon1 = lon1 * Math.PI / 180;
+    lat2 = lat2 * Math.PI / 180;
+    lon2 = lon2 * Math.PI / 180;
+  
+    // Haversine formula
+    const dlat = lat2 - lat1;
+    const dlon = lon2 - lon1;
+    const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = 3959 * c; // Earth's radius in kilometers
+    return distance;
+  }
+  
+  function findNearestMarker(pathsRoute, targetLat, targetLng) {
+    let nearestDistance = Infinity;
+    let nearestTripPoint = null;
+  
+    for (const point of pathsRoute) {
+      const { lat, lng } = point;
+      const distance = haversine(lat, lng, targetLat, targetLng);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestTripPoint = point;
+      }
+    }
+
+    return {
+      'nearestDistance': nearestDistance,
+      'nearestTripPoint': nearestTripPoint
+    };
+  }
+
+  
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
-    if (emulator.startLat === null) {
-      const { latLng } = event;
-      const lat = latLng.lat();
-      const lng = latLng.lng();
+    const { id } = emulator;
+    const { latLng } = event;
+    const lat = latLng.lat();
+    const lng = latLng.lng();
+    setDragId(id);
+    if (emulator.startLat !== null) {
       console.log(`New Latitude: ${lat}, New Longitude: ${lng}`);
-      //TODO: send lat long to backed/emulator... update the emulator on map...
+      //TODO: send lat long to backend/emulator... update the emulator on map...
+      const { nearestDistance, nearestTripPoint} = findNearestMarker(pathsRoute, lat, lng);
+      if(nearestDistance <= 10) {
+        handleDialog('The emulator will be snapped to nearest route under 10 miles range.\n Do you want to set new Location of this emulator?');
+        setDragOutRange();
+        setNearestTripPoint(nearestTripPoint);
+      } else {
+        handleDialog('This is too far from its current route, setting this as emulators new location will cancel the trip.');
+        setNearestTripPoint();
+        setDragOutRange({ lat, lng});
+      }
+    } else {
+      setDragOutRange();
+      setNearestTripPoint();
+      setDragWithoutTrip({lat, lng});
     }
   };
+
+  const confirmNewLocation = async () => {
+    var payload 
+    if(dragId && nearestTripPoint) {
+      const { lat, lng } = nearestTripPoint;
+      payload = { emulatorId : dragId, latitude : lat, longitude : lng, cancelTrip : false, newTripIndex: nearestTripPoint.tripPointIndex};
+      console.log('near', payload);
+    }
+    else if(dragId && draggOutRange) {
+      const {lat, lng} = draggOutRange
+      payload = { emulatorId : dragId, latitude : lat, longitude : lng, cancelTrip : true, newTripIndex: null };
+      console.log('out', payload);
+    } else if (draggWithoutTrip) {
+      const {lat, lng} = draggWithoutTrip;
+      payload = { emulatorId : dragId, latitude : lat, longitude: lng, cancelTrip : false, newTripIndex: null };
+    }
+     const token = localStorage.getItem("token");
+     const { success, data, error } = await ApiService.makeApiCall(
+       EMULATOR_DRAG_URL,
+       "POST",
+       payload,
+       token,
+       null
+     );
+     if (success) {
+        console.log("DATA : ", data);
+        checkCurrentLocation(data);
+        setOpenDialog(false);
+     } else if(error) {
+        setOpenDialog(false);
+     }
+     setDragId();
+  }
+
 
   const startLat = pathsRoute ? pathsRoute[0].lat : null;
   const startLng = pathsRoute ? pathsRoute[0].lng : null;
@@ -263,6 +366,10 @@ const Map = ({ showToast }) => {
         startLng={startLng}
         handleEmulatorMarkerClick={handleEmulatorMarkerClick}
         handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
+        openDialog={openDialog}
+        onClose={closeDialog}
+        DialogText={DialogText}
+        confirmNewLocation={confirmNewLocation}
       />
     </CardComponent>
   );
