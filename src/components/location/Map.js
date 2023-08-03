@@ -140,7 +140,8 @@ const Map = ({ showToast }) => {
       const updatedEmulators = emulators.map((emulator) => {
         if (emulator.id === newEmulatorData.id) {
           return {
-            newEmulatorData
+            ...emulator, // Copy all properties from the current emulator
+            ...newEmulatorData, // Copy all changed properties from newEmulatorData
           };
         }
         return emulator;
