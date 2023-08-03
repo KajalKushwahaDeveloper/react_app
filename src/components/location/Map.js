@@ -56,9 +56,9 @@ const Map = ({ showToast }) => {
   };
 
   console.log(selectedEmId);
-  const { data: paths, error: pathsError} = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
-  const { data: stops, error: stopsError } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
-  const { data: tripData, error: tripDataError  } = useFetch(TRIP_URL + `/${selectedEmId}`);
+  const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
+  const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
+  const { data: tripData } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: emulators, setData: setEmulators } = useFetch(EMULATOR_URL);
   const { data: emulator, setData: setEmulator } = useFetch(
     EMULATOR_URL + `/${selectedEmId}`
@@ -70,7 +70,7 @@ const Map = ({ showToast }) => {
   useEffect(() => {
 
     const calculatePath = () => {
-      if (mapRef.current === null || paths === null || paths?.length === 0) {
+      if (mapRef.current === null ) {
         return;
       }
       const bounds = new window.google.maps.LatLngBounds();
@@ -102,6 +102,7 @@ const Map = ({ showToast }) => {
     };
 
     if (paths === null) {
+      setPathsRoute(null);
       return;
     }
     console.log("GOT PATH, CALCULATING ROUTE! paths : ", paths);
@@ -114,15 +115,6 @@ const Map = ({ showToast }) => {
 
 
   }, [paths, startEmulation]);
-
-  useEffect(() => {
-    console.log("pathsError : ", pathsError);
-    console.log("stopsError : ", stopsError);
-    console.log("tripDataError : ", tripDataError);
-    if (pathsError === null || stopsError === null || tripDataError === null) {
-      return;
-    }
-  }, [stopsError, pathsError, tripDataError]);
 
   const validateEmulatorData = (newEmulatorData) => {
     if (newEmulatorData === null) {
@@ -305,7 +297,6 @@ const Map = ({ showToast }) => {
      }
      setDragId();
   }
-
 
   const startLat = pathsRoute ? pathsRoute[0].lat : null;
   const startLng = pathsRoute ? pathsRoute[0].lng : null;
