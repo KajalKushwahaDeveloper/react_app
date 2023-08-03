@@ -260,18 +260,19 @@ const Map = ({ showToast }) => {
     if (emulator.startLat !== null) {
       const { nearestDistance, nearestTripPoint} = findNearestMarker(pathsRoute, lat, lng);
       if(nearestDistance <= 10) {
-        handleDialog('The emulator will be snapped to nearest route under 10 miles range.\n Do you want to set new Location of this emulator?');
         setDragOutRange();
         setNearestTripPoint(nearestTripPoint);
+        handleDialog('The emulator will be snapped to nearest route under 10 miles range.\n Do you want to set new Location of this emulator?');
       } else {
-        handleDialog('This is too far from its current route, setting this as emulators new location will cancel the trip.');
         setNearestTripPoint();
         setDragOutRange({ lat, lng});
+        handleDialog('This is too far from its current route, setting this as emulators new location will cancel the trip.');
       }
     } else {
       setDragOutRange();
       setNearestTripPoint();
       setDragWithoutTrip({lat, lng});
+      handleDialog('Do you want to change the location of this emulator?');
     }
   };
 
