@@ -51,7 +51,7 @@ const Navbar = ({ isAdmin }) => {
   return (
     <>
       <div className="header">
-        <div className="main-nav" style={{height:"60px"}}>
+        <div className="main-nav" style={{height:"47px"}}>
           {/* 1st logo part  */}
           <div className="logo" style={{marginBottom:"10px",}}>
             <img

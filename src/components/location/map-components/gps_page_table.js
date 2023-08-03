@@ -14,6 +14,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Border } from "devextreme-react/bar-gauge";
+import { Tooltip } from "@mui/material";
+
 
 const GpsTable = ({ showToast, setSelectedEmId, data }) => {
   // State variables
@@ -159,18 +161,19 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
               <td style={{ width: "auto" }} align="right">
                 {row.telephone || "N/A"}
               </td>
-              <td>
-                <div className="custom-scrollbar"
+              <td style={{maxWidth:"150px"}}>
+              <Tooltip title={row.address || "N/A"} placement="top">
+                <div 
                 style={{
-                  maxwidth:"15%",
-                  maxHeight:"5rem",
-                  overflowY:'auto' ,
-                 overflowX:"hidden",
+                textOverflow:"ellipsis",
+                overflow:"hidden",
+                whiteSpace:"nowrap"
                 }}
-                align="left">
+                align="right">
                 {row.address || "N/A"}
               
                 </div>
+                </Tooltip>
                 </td>
               <td style={{ width: "auto" }} align="right">
                 <Checkbox
