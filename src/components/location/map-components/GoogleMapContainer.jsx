@@ -119,7 +119,7 @@ const GoogleMapContainer = ({
         )}
 
 
-        {emulators !== null && pathsRoute !== null &&
+        {emulators !== null &&
           emulators
             .filter(
               (emulator) =>
