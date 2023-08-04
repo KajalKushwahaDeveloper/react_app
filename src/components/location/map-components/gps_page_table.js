@@ -5,15 +5,23 @@ import TablePagination, {
 } from "@mui/base/TablePagination";
 import { Checkbox, Hidden } from "@mui/material";
 import { styled } from "@mui/system";
-import { EMULATOR_URL, TRIP_HISTORY, TRIP_TOGGLE, USER_URL } from "../../../constants";
+import {
+  EMULATOR_URL,
+  TRIP_HISTORY,
+  TRIP_TOGGLE,
+  USER_URL,
+} from "../../../constants";
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 import IconButton from "@mui/material/IconButton";
 import HistoryIcon from "@mui/icons-material/History";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
-import { Border } from "devextreme-react/bar-gauge";
+import { Tooltip } from "@mui/material";
 
 const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   // State variables
@@ -25,9 +33,11 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedEmulator, setSelectedEmulator] = useState(null);
-  
-  const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] = useState(false);
-  const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] = useState(null);
+
+  const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
+    useState(false);
+  const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] =
+    useState(null);
 
   const handleClose = (id) => {
     setOpenEmulatorHistoryPopUp(false);
@@ -35,13 +45,15 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   };
   useEffect(() => {
     console.log("Data : THIS RAN");
-    if(data != null) {
-      setEmptyRows(rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage));
-    if(selectedEmulator == null){
-      setSelectedEmulator(data[0].id)
-      setSelectedEmId(data[0].id);
-    }
-    setLoading(false);
+    if (data != null) {
+      setEmptyRows(
+        rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
+      );
+      if (selectedEmulator == null) {
+        setSelectedEmulator(data[0].id);
+        setSelectedEmId(data[0].id);
+      }
+      setLoading(false);
     } else {
       setLoading(true);
     }
@@ -113,7 +125,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     }
   };
 
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -124,142 +135,133 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
 
   return (
     <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
-      <div style = {{height:'90%',width:"100%"}}> 
-      <table aria-label="custom pagination table">
-        <thead>
-          <tr>
-            <th>Status</th>
-            <th>ID</th>
-            <th>Number</th>
-            <th style={{maxWidth:'300px'}}>Address</th>
-            <th>Select</th>
-            <th>
-              TripStatus/
-              <br />
-              Action
-            </th>
-          </tr>
-        </thead>
+      <div style={{ height: "90%", width: "100%" }}>
+        <table aria-label="custom pagination table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>ID / History</th>
+              <th>Number</th>
+              <th style={{ maxWidth: "300px" }}>Address</th>
+              <th>Select</th>
+              <th>
+                Trip/Action
+              </th>
+            </tr>
+          </thead>
 
-        <tbody>
-          {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
-          ).map((row) => (
-            
-            <tr key={row.id || "N/A"}>
-              <td
-                style={{
-                  background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
-                  // : row.status === "inactive"
-                  // ? "green"
-                  // : row.status === "idle"
-                  // ? "yellow"
-                  // : "",
-                }}
-              >
-                {row.status || "N/A"}
-              </td>
-              <td style={{ width: "auto" }} align="right">
-                {row.emulatorSsid || "N/A"}
-              </td>
-              <td style={{ width: "auto" }} align="right">
-                {row.telephone || "N/A"}
-              </td>
-              <td>
-                <div className="custom-scrollbar"
-                style={{
-                  maxwidth:"15%",
-                  maxHeight:"5rem",
-                  overflowY:'auto' ,
-                 overflowX:"hidden",
-                }}
-                align="left">
-                {row.address || "N/A"}
-              
-                </div>
-                </td>
-              <td style={{ width: "auto" }} align="right">
-                <Checkbox
-                  checked={selectedEmulator === row.id}
-                  onChange={() => handleEmulatorCheckboxChange(row.id)}
-                />
-              </td>
-              <td style={{ width: "auto" }} align="right">
-                <p style={{textAlign:"center"}}>{row.tripStatus}</p>
-                <div style={{display:"flex"}}>
-                <IconButton
-                      style={{ height: "auto", width: "40px", margin: "2px" }}
-                      aria-label="delete"
-                    >
-                      <HistoryIcon onClick={() => handleHistoryButtonClick(row)} />
-                  </IconButton>
-                <button
+          <tbody>
+            {(rowsPerPage > 0
+              ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : data
+            ).map((row) => (
+              <tr key={row.id || "N/A"}>
+                <td
                   style={{
-                    height: "auto",
-                    backgroundColor:
-                      row.tripStatus === "RUNNING"
-                        ? "#440000"
-                        : row.tripStatus === "PAUSED"
-                        ? "#909000"
-                        : row.tripStatus === "STOP"
-                        ? "#118811"
-                        : row.tripStatus === "RESTING"
-                        ? "#444444"
-                        : "N/A",
-                    color: "white",
+                    background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
                   }}
-                  onClick={() => handleActionButtonClick(row)}
                 >
-                  {row.tripStatus === "RUNNING"
-                    ? "PAUSE"
-                    : row.tripStatus === "PAUSED"
-                    ? "RESUME"
-                    : row.tripStatus === "STOP"
-                    ? "START"
-                    : row.tripStatus === "RESTING"
-                    ? "RESUME"
-                    : row.tripStatus === "FINISHED"
-                    ? ""
-                    : "N/A"}
-                </button>
-                </div>
-              </td>
-            </tr>
-          ))}
+                  {row.status || "N/A"}
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  <div style={{ display: "flex" }}>
+                    {/* Show History */}
+                    <p style={{ textAlign: "center" }}>
+                      {row.emulatorSsid || "N/A"}
+                    </p>
+                    <IconButton>
+                      <HistoryIcon
+                        onClick={() => handleHistoryButtonClick(row)}
+                      />
+                    </IconButton>
+                  </div>
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  {row.telephone || "N/A"}
+                </td>
+                <td style={{ maxWidth: "150px" }}>
+                  <Tooltip title={row.address || "N/A"} placement="top">
+                    <div
+                      style={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                      }}
+                      align="right"
+                    >
+                      {row.address || "N/A"}
+                    </div>
+                  </Tooltip>
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  <Checkbox
+                    checked={selectedEmulator === row.id}
+                    onChange={() => handleEmulatorCheckboxChange(row.id)}
+                  />
+                </td>
+                <td style={{ width: "auto" }} align="right">
+                  <div style={{ display: "flex" }}>
+                    {/* Trip Status */}
+                    <p style={{ textAlign: "center" }}>{row.tripStatus}</p>
+                    {/* Trip Status Action */}
+                    <IconButton>
+                      {row.tripStatus === "RUNNING" && (
+                        <PauseCircleOutlineIcon
+                          onClick={() => handleActionButtonClick(row)}
+                        />
+                      )}
+                      {row.tripStatus === "PAUSED" && (
+                        <PlayCircleOutlineIcon
+                          onClick={() => handleActionButtonClick(row)}
+                        />
+                      )}
+                      {row.tripStatus === "STOP" && <PlayCircleOutlineIcon />}
+                      {row.tripStatus === "RESTING" && (
+                        <PlayCircleOutlineIcon
+                          onClick={() => handleActionButtonClick(row)}
+                        />
+                      )}
+                      {row.tripStatus === "FINISHED" && (
+                        <CheckCircleOutlineIcon />
+                      )}
+                    </IconButton>
+                  </div>
+                </td>
+              </tr>
+            ))}
 
-          {emptyRows!= null && emptyRows > 0 && (
-            <tr style={{ height: 35 * emptyRows }}>
-              <td colSpan={5} />
-            </tr>
-          )}
-        </tbody>
+            {emptyRows != null && emptyRows > 0 && (
+              <tr style={{ height: 35 * emptyRows }}>
+                <td colSpan={5} />
+              </tr>
+            )}
+          </tbody>
 
-        <tfoot>
-          <tr>
-            <CustomTablePagination
-              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-              colSpan={5}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { "aria-label": "rows per page" },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </tr>
-        </tfoot>
-      </table>
-      <PopUpEmulatorHistory
+          <tfoot>
+            <tr>
+              <CustomTablePagination
+                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                colSpan={5}
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: { "aria-label": "rows per page" },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </tr>
+          </tfoot>
+        </table>
+        <PopUpEmulatorHistory
           showToast={showToast}
           handleClose={handleClose}
           open={openEmulatorHistoryPopUp}
           emulatorHistory={selectedEmulatorForHistoryData}
-      />
-    </div>
+        />
+      </div>
     </div>
   );
 };

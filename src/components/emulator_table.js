@@ -216,7 +216,7 @@ const EmulatorTable = ({
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%" }}>
+    <div sx={{ width: "auto", maxWidth: "100%", fontSize:"9px" }}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>
