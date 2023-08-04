@@ -15,7 +15,7 @@ import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Border } from "devextreme-react/bar-gauge";
 
-const GpsTable = ({ showToast, setSelectedEmId, data }) => {
+const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   // State variables
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
@@ -33,21 +33,28 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
     setOpenEmulatorHistoryPopUp(false);
     setSelectedEmulatorForHistoryData(null);
   };
-
   useEffect(() => {
     console.log("Data : THIS RAN");
-    if(data!=null){
-      console.log("Data : ", data);
+    if(data != null) {
       setEmptyRows(rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage));
     if(selectedEmulator == null){
       setSelectedEmulator(data[0].id)
       setSelectedEmId(data[0].id);
     }
     setLoading(false);
-    }else{
+    } else {
       setLoading(true);
     }
-  }, [data]);
+    if (selectedEmId != selectedEmulator) {
+      setSelectedEmulator(selectedEmId);
+      const selectedEmIndex = data.findIndex((item) => item.id === selectedEmId);
+      // Calculate the new active page based on the selected checkbox index and rowsPerPage
+      if (selectedEmIndex !== -1) {
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
+        setPage(newActivePage);
+      }
+    }
+  }, [data, selectedEmId]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
