@@ -182,6 +182,14 @@ const Map = ({ showToast }) => {
     };
   }, [selectedEmId, emulator, emulators, setEmulator, setEmulators]);
 
+  useEffect(() => {
+    if (selectedEmId != null && emulators != null) {
+      const findEmulator = emulators.filter(e => e.id === selectedEmId);
+      if (findEmulator[0].startlat == null) {
+        setCenter({ lat: findEmulator[0].latitude, lng: findEmulator[0].longitude });
+      }
+    }
+  },[selectedEmId]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -341,6 +349,7 @@ const Map = ({ showToast }) => {
       <GpsOverlay
         showToast={showToast}
         setSelectedEmId={setSelectedEmId}
+        selectedEmId={selectedEmId}
         emulators={emulators}
         tripData={tripData}
       />
