@@ -176,18 +176,20 @@ const Map = ({ showToast }) => {
 
     // Start the emulator interval
     emulatorIntervalRef.current.start();
-    if (selectedEmId != null && emulators != null) {
-      const findEmulator = emulators.filter(e => e.id === selectedEmId);
-      if (findEmulator[0].startlat == null) {
-        setCenter({ lat: findEmulator[0].latitude, lng: findEmulator[0].longitude });
-      }
-    }
 
     return () => {
       stopEmulatorInterval();
     };
   }, [selectedEmId, emulator, emulators, setEmulator, setEmulators]);
 
+  useEffect(() => {
+    if (selectedEmId != null && emulators != null) {
+      const findEmulator = emulators.filter(e => e.id === selectedEmId);
+      if (findEmulator[0].startlat == null) {
+        setCenter({ lat: findEmulator[0].latitude, lng: findEmulator[0].longitude });
+      }
+    }
+  },[selectedEmId]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
