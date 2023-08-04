@@ -23,7 +23,7 @@ const AddressTable = ({ tripData }) => {
     const time = tripData?.distance / tripData?.velocity;
     const totalTime = time.toFixed(2)+ " hours";;
   return (
-    <div style={{ width: "20%", maxWidth: "70%",position:"fixed",bottom:"0"}}>
+    <div style={{ position:"relative",bottom:"0"}}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>
@@ -32,9 +32,9 @@ const AddressTable = ({ tripData }) => {
             <th>Total Time</th>
           </tr>
         </thead>
-        <tbody style={{ width: "auto" }}>
+        <tbody style={{ width: "100vh"}}>
           <tr>
-            <td align="right" style={{ wordWrap: "break-word" }}>
+            <td align="right" style={{ wordWrap: "break-word" ,}}>
               {fromAddress}
             </td>
             <td align="right" style={{ wordWrap: "break-word" }}>
