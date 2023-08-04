@@ -1,0 +1,30 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Slab&display=swap');
+*{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    }
+th{
+  color:white;
+  font-weight: bolder;
+  text-align: center;
+}
+.custom-scrollbar {
+  scrollbar-width: thin; 
+  scrollbar-color: transparent transparent; 
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: lightgray; 
+}
+td{
+ font-size: 10px;
+}

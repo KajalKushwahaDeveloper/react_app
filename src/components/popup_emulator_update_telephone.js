@@ -2,10 +2,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../scss/login.scss";
 import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
-import { USER_URL } from "../constants";
+import "../scss/login.scss";
+import { EMULATOR_TELEPHONE_UPDATE_URL } from "../constants";
+import { GetEmulatorApi } from "../components/api/emulator";
 
 const style = {
   position: "absolute",
@@ -20,7 +21,7 @@ const style = {
   pb: 3,
 };
 
-const PopUpUser = ({
+const PopUpEmulatorTelephone = ({
   showToast,
   handleClose,
   handleOpen,
@@ -29,86 +30,67 @@ const PopUpUser = ({
 }) => {
   const navigate = useNavigate();
   const [id, setId] = useState("");
-  const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (userToEdit) {
       setId(userToEdit.id);
-      setEmail(userToEdit.email);
+      console.log("userToEdit::", userToEdit)
       setTelephone(userToEdit.telephone);
-      setFirstName(userToEdit.firstName);
-      setLastName(userToEdit.lastName);
     }
   }, [userToEdit]);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleTelephoneChange = (e) => {
-    setTelephone(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
+  const handlePhoneChange = (event) => {
+    // setTelephone(event.target.value)
+    const inputNumber = event.target.value;
+    if (inputNumber.length <= 10) {
+      setTelephone(inputNumber);
+      setError(""); 
+    } else {
+      setError("Telephone number cannot be more than 10 digits.");
+    }
+    
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email) {
-      setError("Please enter your email");
-    } else if (!telephone) {
-      setError("Please enter your telephone number");
-    } else if (!lastName) {
-      setError("Please enter your lastName");
-    } else if (!firstName) {
-      setError("Please enter your firstName");
-    } else {
       try {
         const { success, error } = await addUser();
 
         if (success) {
-          console.log("User added successfully");
+          console.log("Telephone Number added successfully");
           if (userToEdit != null) {
-            handleClose(userToEdit?.id, null);
+            handleClose(null, userToEdit?.id);
           } else {
-            handleClose(0, null);
+            handleClose(null, 0);
           }
-          showToast("User Added", "success"); // Call the showToast method with two arguments
-          // navigate("/home"); // Redirect to the home page
+          showToast("Telephone Number Added", "success"); 
+          
+        
         } else {
-          showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
-          setError(error || "Failed to add user"); // Display appropriate error message
+          showToast(error || "Failed to add Telephone Number", "error"); 
+          setError(error || "Failed to add Telephone Number"); 
         }
       } catch (error) {
-        console.log("Error occurred while adding user:", error);
-        setError("An error occurred while adding user"); // Display a generic error message
+        console.log("Error occurred while adding Telephone Number:", error);
+        setError("An error occurred while adding Telephone Number");
       }
     }
-  };
+  
 
   const addUser = async () => {
     const user = {
       id,
-      firstName,
-      lastName,
-      email,
       telephone,
     };
 
     const token = localStorage.getItem("token");
     console.log("token : ", token);
     try {
-      const response = await fetch(USER_URL, {
+      const response = await fetch(EMULATOR_TELEPHONE_UPDATE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,6 +110,7 @@ const PopUpUser = ({
       return { success: false, error: e};
     }
   };
+
 
   return (
     <div>
@@ -151,37 +134,19 @@ const PopUpUser = ({
             <ClearIcon />
           </IconButton>
           <form onSubmit={handleSubmit}>
-            <h1>{userToEdit === null ? "Add User" : "Edit User"}</h1>
-            <input
-              type="text"
-              id="content_input"
-              placeholder="Enter your first name"
-              value={firstName}
-              onChange={handleFirstNameChange}
-            />
-            <input
-              type="text"
-              id="content_input"
-              placeholder="Enter your last name"
-              value={lastName}
-              onChange={handleLastNameChange}
-            />
-            <input
-              type="text"
-              id="content_input"
-              placeholder="Enter your email"
-              value={email}
-              onChange={handleEmailChange}
-            />
+            <h1 style={{marginBottom:"4rem"}}> Edit Phone Number</h1>
+
+            <label htmlFor="telephone_input">Phone Number:</label>
             <input
               type="number"
-              id="content_input"
-              placeholder="Enter your telephone number"
+              id="telephone_input"
+              placeholder="Enter your phone number"
               value={telephone}
-              onChange={handleTelephoneChange}
+              onChange={handlePhoneChange}
             />
-            <button className="login_button" type="submit">
-              {userToEdit === null ? "Add User" : "Edit User"}
+
+            <button className="login_button" type="submit" >
+              Add
             </button>
             {error && <p className="error">{error}</p>}
           </form>
@@ -191,4 +156,4 @@ const PopUpUser = ({
   );
 };
 
-export default PopUpUser;
+export default PopUpEmulatorTelephone;

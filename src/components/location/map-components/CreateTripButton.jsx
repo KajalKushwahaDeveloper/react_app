@@ -6,6 +6,7 @@ const CreateTripButton = ({ onClick }) => {
     <div>
       <button
         style={{
+          height:"40.5px",
           zIndex: 2,
           position: "absolute",
           top: 10,

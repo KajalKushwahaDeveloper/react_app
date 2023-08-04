@@ -1,6 +1,7 @@
 import React from "react";
 
 const AddressTable = ({ tripData }) => {
+ 
   const fromAddress =
     tripData?.fromAddress[0]?.long_name +
     ", " +
@@ -19,14 +20,16 @@ const AddressTable = ({ tripData }) => {
     " ," +
     tripData?.toAddress[3]?.long_name ||
     "N/A";
-
+    const time = tripData?.distance / tripData?.velocity;
+    const totalTime = time.toFixed(2)+ " hours";;
   return (
-    <div style={{ width: "60%", maxWidth: "100%" }}>
+    <div style={{ width: "20%", maxWidth: "70%",position:"fixed",bottom:"0"}}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>
             <th>From Address</th>
             <th>To Address</th>
+            <th>Total Time</th>
           </tr>
         </thead>
         <tbody style={{ width: "auto" }}>
@@ -36,6 +39,10 @@ const AddressTable = ({ tripData }) => {
             </td>
             <td align="right" style={{ wordWrap: "break-word" }}>
               {toAddress}
+            </td>
+            <td align="right" style={{ wordWrap: "break-word" }}>
+             {totalTime}
+    
             </td>
           </tr>
         </tbody>

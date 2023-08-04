@@ -19,6 +19,8 @@ export const ADMIN_CURRENT = ADMIN_URL + "/current";
 //EMULATOR
 export const EMULATOR_URL = BASE_URL + "/emulator";
 export const EMULATOR_DELETE_URL = EMULATOR_URL;
+export const EMULATOR_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updatePhoneNumber";
+export const EMULATOR_DRAG_URL = EMULATOR_URL + "/dragEmulator";
 
 //USER
 export const USER_URL = BASE_URL + "/user";

@@ -11,14 +11,18 @@ import { Button } from "@mui/material";
 import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
+import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
+import { ForkLeft } from "@mui/icons-material";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
+  const [openEmulatorPopup, setOpenEmulatorPopup] = useState(false);
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
   const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
-  const [editedId, setEditedId] = useState(null);
+  const [userEditedId, setUserEditedId] = useState(null);
+  const [emulatorEditedId, setEmulatorEditedId] = useState(null);
 
   const showToast = (message, type) => {
     console.log("Showing toast...");
@@ -30,26 +34,36 @@ const Home = () => {
     setUserToEdit(null);
   };
 
-  const handleClose = (id) => {
+  const handleClose = (userEditedId, emulatorEditedId) => {
     setOpenUserPopup(false);
     setUserToEdit(null);
     setOpenUserAssignPopup(false);
     setEmulatorToAssignUser(null);
-    if (id != null && !isNaN(+id)) setEditedId(id);
+    setOpenEmulatorPopup(false)
+    if (userEditedId != null && !isNaN(+userEditedId)) setUserEditedId(userEditedId);
+    if (emulatorEditedId != null && !isNaN(+emulatorEditedId)) setEmulatorEditedId(emulatorEditedId);
   };
 
+  //Edit button click
   const handleEditButtonClick = (data) => {
     console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setOpenUserPopup(true);
   };
 
+  //telephone update
+  const handleEmulatorTelephonePopup = (data) => {
+    console.log("IconButton clicked with data:", data);
+    setUserToEdit(data);
+    setOpenEmulatorPopup(true);
+  };
+//assign user button
   const handleAssignUserButtonClick = (data) => {
     console.log("Assign Button clicked with data:", data);
     setEmulatorToAssignUser(data);
     setOpenUserAssignPopup(true);
   };
-
+//assign user to an emulator
   const handleAssignedUserToEmulator = (success, error, data) => {
     console.log("assignedUserToEmulator with data:", data);
     setUserAssingedEmulator(data);
@@ -75,12 +89,14 @@ const Home = () => {
             handleAssignUserButtonClick={handleAssignUserButtonClick}
             userAssingedEmulator={userAssingedEmulator}
             setUserAssingedEmulator={setUserAssingedEmulator}
+            handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
+            emulatorEditedId = {emulatorEditedId}
           />
         </div>
-        <div className="user_table" style={{ display: "flex", flexDirection: "column" }}>
+        <div className="user_table" style={{ display: "flex", flexDirection: "column",marginBottom:"245px" }}>
           <Button
             className="login_button"
-            style={{ padding:"1rem",  margin: "1rem" }}
+            style={{ padding:"1rem",  margin: ".5rem" , marginLeft:"0px",marginRight:"0px",height:"45px"}}
             onClick={handleOpen}
           >
             Add User
@@ -91,9 +107,15 @@ const Home = () => {
             open={openUserPopup}
             userToEdit={userToEdit}
           />
-          <PopUpAssignUser
+            <PopUpEmulatorTelephone
             showToast={showToast}
             handleClose={handleClose}
+            open={openEmulatorPopup}
+            userToEdit={userToEdit}
+          />
+          <PopUpAssignUser
+            showToast={showToast}
+            close={handleClose}
             open={openUserAssignPopup}
             emulatorToAssignUser={emulatorToAssignUser}
             handleAssignedUserToEmulator={handleAssignedUserToEmulator}
@@ -101,7 +123,7 @@ const Home = () => {
           <UserTable
             showToast={showToast}
             handleEditButtonClick={handleEditButtonClick}
-            editedId={editedId}
+            userEditedId={userEditedId}
             userAssingedEmulator={userAssingedEmulator}
           />
         </div>

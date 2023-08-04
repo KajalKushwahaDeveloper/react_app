@@ -1,11 +1,16 @@
-import React from "react";
-import { Typography, Button, Card, CardContent } from "@mui/material";
-import { DOWNLOAD_APK_URL , COPY_DOWNLOAD_APK_URL} from "../constants";
+import React, { useState } from "react";
+import { Typography, Button, Card, CardContent, CircularProgress } from "@mui/material";
+import { DOWNLOAD_APK_URL, COPY_DOWNLOAD_APK_URL } from "../constants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import GetAppIcon from '@mui/icons-material/GetApp';
 
 const DownloadApk = () => {
+  const [loading, setLoading] = useState(false);
+
   const handleDownloadFile = async () => {
+    setLoading(true); // Set loading to true before starting the fetch
+
     const token = localStorage.getItem("token");
     console.log("token : ", token);
 
@@ -28,29 +33,38 @@ const DownloadApk = () => {
         a.click();
         URL.revokeObjectURL(url);
       })
-
       .catch((error) => {
         window.alert(error);
         console.error("Download error:", error);
+      })
+      .finally(() => {
+        setLoading(false); // Set loading back to false after downloading is complete or an error occurs
       });
   };
 
   const handleCopyUrl = async () => {
-      if (!navigator.clipboard || !navigator.clipboard.writeText) {
-        toast.error("Clipboard access not supported, use https");
-        return;
-      }
+    setLoading(true); // Set loading to true before starting the copy operation
 
-      // Copy the download URL to clipboard
-      navigator.clipboard
-        .writeText(COPY_DOWNLOAD_APK_URL)
-        .then(() => {
-          toast.success("Download URL copied");
-        })
-        .catch((error) => {
-          toast.success("Could Not Copy Link");
-        });
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      toast.error("Clipboard access not supported, use https");
+      setLoading(false); // Set loading back to false if clipboard access is not supported
+      return;
+    }
+
+    // Copy the download URL to clipboard
+    navigator.clipboard
+      .writeText(COPY_DOWNLOAD_APK_URL)
+      .then(() => {
+        toast.success("Download URL copied");
+      })
+      .catch((error) => {
+        toast.success("Could Not Copy Link");
+      })
+      .finally(() => {
+        setLoading(false); // Set loading back to false after copying is complete or an error occurs
+      });
   };
+
   return (
     <Card
       style={{
@@ -68,8 +82,11 @@ const DownloadApk = () => {
         <Button
           variant="contained"
           color="success"
+          startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
           onClick={handleDownloadFile}
-          style={{ marginTop: "2rem" }}
+          style={{ marginTop: "2rem", marginLeft: "1.2rem" }}
+          endIcon={loading && <CircularProgress color="inherit" size={20} />} // Show the circular progress only when loading is true
+          disabled={loading} // Disable the button while loading is true
         >
           Download File
         </Button>

@@ -13,11 +13,12 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
+import { bottomNavigationActionClasses } from "@mui/material";
 
 const UserTable = ({
   showToast,
   handleEditButtonClick,
-  editedId,
+  userEditedId,
   userAssingedEmulator,
 }) => {
   // State variables
@@ -30,14 +31,14 @@ const UserTable = ({
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (editedId != null) {
-      if(editedId == 0){
+    if (userEditedId != null) {
+      if(userEditedId == 0){
         fetchUsers();
       } else {
-        refreshUserEdit(editedId);
+        refreshEditedUser(userEditedId);
       }
     }
-  }, [editedId]);
+  }, [userEditedId]);
 
   useEffect(() => {
     if (userAssingedEmulator != null) {
@@ -98,7 +99,7 @@ const UserTable = ({
       );
 
       if (success) {
-        const updatedData = data.filter((item) => item.id !== user.id);
+        const updatedData = userData.filter((item) => item.id !== user.id);
         console.log("Data Updated : " + data);
         setUserData(updatedData);
         showToast("User deleted", "success")
@@ -108,34 +109,27 @@ const UserTable = ({
     }
   };
 
-  // Fetch data from API
-  const refreshUserEdit = async (userId) => {
+  const refreshEditedUser = async (userId) => {
     const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(USER_URL + "/" + userId, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok || response.status !== 200) {
-        showToast("Failed to update user table", "error");
-        return { success: false, error: "Failed to unassign user" };
-      }
-      const responseData = await response.text();
-      const result = JSON.parse(responseData);
+    const { success, data, error } = await ApiService.makeApiCall(
+      USER_URL,
+      "GET",
+      null,
+      token,
+      userId
+    );
+    if (success) {
       const updatedData = userData.map((item) => {
-        if (item.id === result.id) {
-          return result;
-        };
+        if (item.id === data.id) {
+          return data;
+        }
         return item;
       });
       showToast(`Updated user table!`, "success");
       setUserData(updatedData);
-    } catch (error) {
-      console.log("refreshUser error : " + error);
-      showToast(`Failed to update user table ${error}`, "error");
+    } else {
+      showToast("Failed to update user table", "error");
+      return { success: false, error: "Failed to unassign user" };
     }
   };
 
@@ -260,12 +254,11 @@ const UserTable = ({
 
             return (
               <tr key={row.id}>
-                <div></div>
-                <td align="right">
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <h3>{row.firstName + " " + row.lastName || "N/A"}</h3>
-                      <ul>
+                <td align="right"  display="flex" paddingRight="12px" style={{display:"flex"}}>
+                  <div style={{ display: "flex", alignItems: "center", width:"25rem" }}>
+                    <div style={{ display: "flex", flexDirection: "column"}}>
+                      <h3 style={{paddingLeft: "38px",marginBottom:"0px",marginTop:"0px"}}>{row.firstName + " " + row.lastName || "N/A"}</h3>
+                      <ul style={{listStyleType:"none"}}>
                         <li>Email : {row.email || "N/A"}</li>
                         <li>Tel. # : {row.telephone || "N/A"}</li>
                         <li>Registration Date : {formattedDate}</li>
@@ -280,7 +273,10 @@ const UserTable = ({
                             : "Err"}
                         </li>
                       </ul>
+                      </div>
                     </div>
+                    <div style={{paddingLeft:"60px",paddingTop:"9px"}}>
+                    <div style={{paddingBottom:"10px",paddingLeft:"2px"}}>
                     <IconButton
                       style={{ height: "auto", width: "40px", margin: "2px" }}
                       aria-label="edit"
@@ -293,6 +289,7 @@ const UserTable = ({
                     >
                       <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
                     </IconButton>
+                    </div>
                     <button
                       style={{
                         height: "45px",
