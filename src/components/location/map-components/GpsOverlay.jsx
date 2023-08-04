@@ -9,7 +9,6 @@ const GpsOverlay = ({ showToast, emulators, setSelectedEmId , tripData}) => {
     <div className="gps_overlay">
       <GpsTable showToast={showToast} setSelectedEmId={setSelectedEmId} data = {emulators}/>
       <AddressTable tripData={tripData}/>
-      
     </div>
   );
 };
