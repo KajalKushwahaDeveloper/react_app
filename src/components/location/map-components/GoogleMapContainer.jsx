@@ -22,23 +22,20 @@ const GoogleMapContainer = ({
   onClose,
   DialogText,
   confirmNewLocation,
-  tripData
+  calculateTimeFromTripPointIndexToStopPoint
 }) => {
-
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
+  const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] = useState("N/A");
 
+  useEffect(() => {
+    if (selectedEmulator != null && stops != null) {
+      let selectedEmulatorNearestStopPoint = stops.find((stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex);
+      const selectedEmulatorTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(selectedEmulator.currentTripPointIndex, selectedEmulatorNearestStopPoint, selectedEmulator.speed)
+      setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
+    }
+  }, [selectedEmulator, stops, calculateTimeFromTripPointIndexToStopPoint]);
   
-  const convertTimeToReadableFormat = (timeInHours) => {
-    const hours = Math.floor(timeInHours);
-    const remainingMinutes = (timeInHours - hours) * 60;
-    const minutes = Math.floor(remainingMinutes);
-    const remainingSeconds = (remainingMinutes - minutes) * 60;
-    const seconds = Math.floor(remainingSeconds);
-
-    return `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-  };
-
   useEffect(() => {
     if (selectedEmulator !== null) {
       if (pathsRoute !== null) {
@@ -126,10 +123,11 @@ const GoogleMapContainer = ({
                 ))}
               </p>
 
-              <h3 style={{ color: "black" }}>Time: </h3>
+              <h3 style={{ color: "black" }}>Time To Reach: </h3>
               <p style={{ color: "black" }}>
-              {convertTimeToReadableFormat(selectedStop.distance / tripData?.velocity)}
+                {emulatorTimeLeftToReachNextStop}
               </p>
+
             </div>
           </InfoWindow>
         )}

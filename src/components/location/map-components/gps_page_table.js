@@ -23,7 +23,7 @@ import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Tooltip } from "@mui/material";
 
-const GpsTable = ({ showToast, setSelectedEmId, data }) => {
+const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   // State variables
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
@@ -43,11 +43,9 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
     setOpenEmulatorHistoryPopUp(false);
     setSelectedEmulatorForHistoryData(null);
   };
-
   useEffect(() => {
     console.log("Data : THIS RAN");
     if (data != null) {
-      console.log("Data : ", data);
       setEmptyRows(
         rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
       );
@@ -59,7 +57,16 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
     } else {
       setLoading(true);
     }
-  }, [data]);
+    if (selectedEmId != selectedEmulator) {
+      setSelectedEmulator(selectedEmId);
+      const selectedEmIndex = data.findIndex((item) => item.id === selectedEmId);
+      // Calculate the new active page based on the selected checkbox index and rowsPerPage
+      if (selectedEmIndex !== -1) {
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
+        setPage(newActivePage);
+      }
+    }
+  }, [data, selectedEmId]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

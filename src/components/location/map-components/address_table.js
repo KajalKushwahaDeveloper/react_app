@@ -20,8 +20,11 @@ const AddressTable = ({ tripData }) => {
     " ," +
     tripData?.toAddress[3]?.long_name ||
     "N/A";
-    const time = tripData?.distance / tripData?.velocity;
-    const totalTime = time.toFixed(2)+ " hours";;
+    const timeInHours = tripData?.distance / tripData?.velocity;
+    const hours = Math.floor(timeInHours);
+    const minutes = Math.round((timeInHours - hours) * 60);
+    const totalTime = `~${hours} hours and ${minutes} minutes`;
+    
   return (
     <div style={{ position:"relative",bottom:"0"}}>
       <table aria-label="custom pagination table">
