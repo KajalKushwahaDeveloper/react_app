@@ -1,6 +1,6 @@
-import React, { useEffect, useState }  from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
-import {Dialog , DialogActions, DialogContent, DialogContentText, DialogTitle, Button} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 const GoogleMapContainer = ({
   mapRef,
@@ -27,23 +27,22 @@ const GoogleMapContainer = ({
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
 
-  console.log(selectedEmulator);
-
   useEffect(() => {
-    if(selectedEmulator!=null && pathsRoute!=null){
-      setPathTraveled(pathsRoute.filter((item, index) => index <= selectedEmulator.currentTripPointIndex));
-      setPathNotTraveled(pathsRoute.filter((item, index) => index >= selectedEmulator.currentTripPointIndex));
-    } else {
-      console.log("currentTripPointIndex  : null");
+    if (selectedEmulator !== null) {
+      if (pathsRoute !== null) {
+        setPathTraveled(pathsRoute.filter((item, index) => index <= selectedEmulator.currentTripPointIndex));
+        setPathNotTraveled(pathsRoute.filter((item, index) => index >= selectedEmulator.currentTripPointIndex));
+      } else {
+        setPathTraveled();
+        setPathNotTraveled();
+      }
     }
-      
   }, [selectedEmulator, pathsRoute]);
-
 
   return (
     <div className="gMapCont">
       <GoogleMap ref={mapRef} defaultZoom={7} center={center}>
-        {pathTraveled !== null && (
+        {pathTraveled != null && (
           <Polyline
             path={pathTraveled}
             options={{
@@ -134,11 +133,11 @@ const GoogleMapContainer = ({
 
               var rotationAngle = 0;
               try {
-                if(pathsRoute!=null && emulator.currentTripPointIndex > -1) {
-                rotationAngle = pathsRoute[emulator.currentTripPointIndex].bearing
-              }
-              }catch(e) {
-              console.log("rotationAngle Error : ", e);
+                if (pathsRoute != null && emulator.currentTripPointIndex > -1) {
+                  rotationAngle = pathsRoute[emulator.currentTripPointIndex].bearing
+                }
+              } catch (e) {
+                console.log("rotationAngle Error : ", e);
               }
 
               console.log("rotationAngle  : ", rotationAngle);
@@ -146,8 +145,8 @@ const GoogleMapContainer = ({
                 url: isActiveUser
                   ? "images/green_truck.png"
                   : isInActiveUserNull
-                  ? "images/truck.png"
-                  : "images/blue_truck.png",
+                    ? "images/truck.png"
+                    : "images/blue_truck.png",
                 scaledSize: new window.google.maps.Size(40, 40),
                 anchor: new window.google.maps.Point(20, 20),
                 scale: 0.7,
@@ -202,13 +201,13 @@ const GoogleMapContainer = ({
             }}
           />
         )}
-         <Dialog 
+        <Dialog
           open={openDialog}
           onClose={onClose}
-          >
-            <DialogTitle id="alert-dialog-title">
-            {"logbook gps"} 
-            </DialogTitle>
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"logbook gps"}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               {DialogText}
@@ -216,9 +215,9 @@ const GoogleMapContainer = ({
           </DialogContent>
           <DialogActions>
             <Button onClick={confirmNewLocation} autoFocus>Confim</Button>
-            <Button onClick={onClose} autoFocus>Cancel</Button>              
+            <Button onClick={onClose} autoFocus>Cancel</Button>
           </DialogActions>
-          </Dialog>
+        </Dialog>
       </GoogleMap>
     </div>
   );

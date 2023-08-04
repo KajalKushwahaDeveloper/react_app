@@ -56,9 +56,9 @@ const Map = ({ showToast }) => {
   };
 
   console.log(selectedEmId);
-  const { data: paths, error: pathsError} = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
-  const { data: stops, error: stopsError } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
-  const { data: tripData, error: tripDataError  } = useFetch(TRIP_URL + `/${selectedEmId}`);
+  const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
+  const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
+  const { data: tripData } = useFetch(TRIP_URL + `/${selectedEmId}`);
   const { data: emulators, setData: setEmulators } = useFetch(EMULATOR_URL);
   const { data: emulator, setData: setEmulator } = useFetch(
     EMULATOR_URL + `/${selectedEmId}`
@@ -70,7 +70,7 @@ const Map = ({ showToast }) => {
   useEffect(() => {
 
     const calculatePath = () => {
-      if (mapRef.current === null || paths === null || paths?.length === 0) {
+      if (mapRef.current === null ) {
         return;
       }
       const bounds = new window.google.maps.LatLngBounds();
@@ -102,9 +102,9 @@ const Map = ({ showToast }) => {
     };
 
     if (paths === null) {
+      setPathsRoute(null);
       return;
     }
-    console.log("GOT PATH, CALCULATING ROUTE! paths : ", paths);
     const center = parseInt(paths?.length / 2);
     setCenter({ lat: paths[center].lat, lng: paths[center + 5].lng });
     calculatePath();
@@ -114,15 +114,6 @@ const Map = ({ showToast }) => {
 
 
   }, [paths, startEmulation]);
-
-  useEffect(() => {
-    console.log("pathsError : ", pathsError);
-    console.log("stopsError : ", stopsError);
-    console.log("tripDataError : ", tripDataError);
-    if (pathsError === null || stopsError === null || tripDataError === null) {
-      return;
-    }
-  }, [stopsError, pathsError, tripDataError]);
 
   const validateEmulatorData = (newEmulatorData) => {
     if (newEmulatorData === null) {
@@ -251,18 +242,41 @@ const Map = ({ showToast }) => {
     };
   }
 
+    function calculateNextStopPointIndex(currentIndex){
+      let nextStopPoint = stops.find((stop) => currentIndex < stop.tripPointIndex);
+      return nextStopPoint;
+    }  
+
+    function calculateTimeFromTripPointIndexToStopPoint(startIndex, stop, velocity){
+      let distance = 0;
+      paths.map((path) => {
+        if (path.tripPointIndex >= startIndex && path.tripPointIndex <= stop.tripPointIndex) {
+          distance += path.distance;
+        }
+      });
+      const timeInHours = distance / velocity;
+      const hours = Math.floor(timeInHours);
+      const minutes = Math.round((timeInHours - hours) * 60);
+      return `${hours} hours and ${minutes} minutes`;
+    }  
+
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
     const { id } = emulator;
     const { latLng } = event;
     const lat = latLng.lat();
     const lng = latLng.lng();
     setDragId(id);
+
     if (emulator.startLat !== null) {
       const { nearestDistance, nearestTripPoint} = findNearestMarker(pathsRoute, lat, lng);
       if(nearestDistance <= 10) {
         setDragOutRange();
         setNearestTripPoint(nearestTripPoint);
-        handleDialog('The emulator will be snapped to nearest route under 10 miles range.\n Do you want to set new Location of this emulator?');
+        const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(emulator.currentTripPointIndex)
+        const nearestTripPointStopPoint = calculateNextStopPointIndex(nearestTripPoint.tripPointIndex)
+        const previousTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(emulator.currentTripPointIndex, emulatorCurrentTripPointStopPoint, emulator.speed)
+        const newTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(nearestTripPoint.tripPointIndex, nearestTripPointStopPoint, emulator.speed)
+        handleDialog(`${'The emulator will be snapped to nearest route under 10 miles range. The Previous time to reach next Stop Point was ' + previousTimeToReachStop + '. The new location will take ' + newTimeToReachStop + ' to reach the same next station. Do you want to set new Location of this emulator?'}`);
       } else {
         setNearestTripPoint();
         setDragOutRange({ lat, lng});
@@ -305,7 +319,6 @@ const Map = ({ showToast }) => {
      }
      setDragId();
   }
-
 
   const startLat = pathsRoute ? pathsRoute[0].lat : null;
   const startLng = pathsRoute ? pathsRoute[0].lng : null;
