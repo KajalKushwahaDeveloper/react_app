@@ -33,7 +33,7 @@ const Map = ({ showToast }) => {
   const [startEmulation, setStartEmulation] = useState(null);
   const [createTripInfo, setCreateTripInfo] = useState();
   const [openDialog, setOpenDialog] = useState(false);
-  const [DialogText, setDialogText] = useState('');
+  const [DialogText, setDialogText] = useState("");
   const [dragId, setDragId] = useState();
   const [nearestTripPoint, setNearestTripPoint] = useState();
   const [draggOutRange, setDragOutRange] = useState();
@@ -67,9 +67,8 @@ const Map = ({ showToast }) => {
   const emulatorIntervalRef = useRef(null);
 
   useEffect(() => {
-
     const calculatePath = () => {
-      if (mapRef.current === null ) {
+      if (mapRef.current === null) {
         return;
       }
       const bounds = new window.google.maps.LatLngBounds();
@@ -110,8 +109,6 @@ const Map = ({ showToast }) => {
     return () => {
       clearInterval(intervalRef.current);
     };
-
-
   }, [paths, startEmulation]);
 
   const validateEmulatorData = (newEmulatorData) => {
@@ -136,7 +133,9 @@ const Map = ({ showToast }) => {
         }
         return emulator;
       });
-      setEmulator(newEmulatorData);
+      if (newEmulatorData.id === selectedEmId) {
+        setEmulator(newEmulatorData);
+      }
       setEmulators(updatedEmulators);
     }
   };
@@ -183,12 +182,15 @@ const Map = ({ showToast }) => {
 
   useEffect(() => {
     if (selectedEmId != null && emulators != null) {
-      const findEmulator = emulators.filter(e => e.id === selectedEmId);
+      const findEmulator = emulators.filter((e) => e.id === selectedEmId);
       if (findEmulator.length > 0 && findEmulator[0].startlat == null) {
-        setCenter({ lat: findEmulator[0].latitude, lng: findEmulator[0].longitude });
+        setCenter({
+          lat: findEmulator[0].latitude,
+          lng: findEmulator[0].longitude,
+        });
       }
     }
-  },[selectedEmId]);
+  }, [selectedEmId]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -203,7 +205,6 @@ const Map = ({ showToast }) => {
     clearInterval(intervalRef.current); // Clear any existing interval
 
     setStartEmulation(emulator); // Set the selected emulation as the start emulation
-
   };
 
   const handleDialog = (text) => {
@@ -213,29 +214,31 @@ const Map = ({ showToast }) => {
 
   const closeDialog = () => {
     setOpenDialog(false);
-    setDialogText('');
+    setDialogText("");
   };
 
   function haversine(lat1, lon1, lat2, lon2) {
     // Convert latitude and longitude from degrees to radians
-    lat1 = lat1 * Math.PI / 180;
-    lon1 = lon1 * Math.PI / 180;
-    lat2 = lat2 * Math.PI / 180;
-    lon2 = lon2 * Math.PI / 180;
-  
+    lat1 = (lat1 * Math.PI) / 180;
+    lon1 = (lon1 * Math.PI) / 180;
+    lat2 = (lat2 * Math.PI) / 180;
+    lon2 = (lon2 * Math.PI) / 180;
+
     // Haversine formula
     const dlat = lat2 - lat1;
     const dlon = lon2 - lon1;
-    const a = Math.sin(dlat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
+    const a =
+      Math.sin(dlat / 2) ** 2 +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = 3959 * c; // Earth's radius in kilometers
     return distance;
   }
-  
+
   function findNearestMarker(pathsRoute, targetLat, targetLng) {
     let nearestDistance = Infinity;
     let nearestTripPoint = null;
-  
+
     for (const point of pathsRoute) {
       const { lat, lng } = point;
       const distance = haversine(lat, lng, targetLat, targetLng);
@@ -246,35 +249,48 @@ const Map = ({ showToast }) => {
     }
 
     return {
-      'nearestDistance': nearestDistance,
-      'nearestTripPoint': nearestTripPoint
+      nearestDistance: nearestDistance,
+      nearestTripPoint: nearestTripPoint,
     };
   }
 
-    function calculateNextStopPointIndex(currentIndex){
-      let nextStopPoint = stops.find((stop) => currentIndex < stop.tripPointIndex);
-      return nextStopPoint;
-    }  
+  function calculateNextStopPointIndex(currentIndex) {
+    let nextStopPoint = stops.find(
+      (stop) => currentIndex < stop.tripPointIndex
+    );
+    return nextStopPoint;
+  }
 
-    function calculateTimeFromTripPointIndexToStopPoint(startIndex, stop, velocity){
-
-      if(startIndex == null || stop == null || velocity == null || paths == null) {
-        return `N/A`
+  function calculateTimeFromTripPointIndexToStopPoint(
+    startIndex,
+    stop,
+    velocity
+  ) {
+    if (
+      startIndex == null ||
+      stop == null ||
+      velocity == null ||
+      paths == null
+    ) {
+      return `N/A`;
+    }
+    let distance = 0;
+    paths.forEach((path) => {
+      if (
+        path.tripPointIndex >= startIndex &&
+        path.tripPointIndex <= stop.tripPointIndex
+      ) {
+        distance += path.distance;
       }
-      let distance = 0;
-      paths.forEach((path) => {
-        if (path.tripPointIndex >= startIndex && path.tripPointIndex <= stop.tripPointIndex) {
-          distance += path.distance;
-        }
-      });
-      const timeInHours = distance / velocity;
-      if(timeInHours === Infinity) {
-        return `Refreshing...`;
-      }
-      const hours = Math.floor(timeInHours);
-      const minutes = Math.round((timeInHours - hours) * 60);
-      return `~${hours} hours and ${minutes} minutes`;
-    }  
+    });
+    const timeInHours = distance / velocity;
+    if (timeInHours === Infinity) {
+      return `Refreshing...`;
+    }
+    const hours = Math.floor(timeInHours);
+    const minutes = Math.round((timeInHours - hours) * 60);
+    return `~${hours} hours and ${minutes} minutes`;
+  }
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
     const { id } = emulator;
@@ -284,57 +300,101 @@ const Map = ({ showToast }) => {
     setDragId(id);
 
     if (emulator.startLat !== null) {
-      const { nearestDistance, nearestTripPoint} = findNearestMarker(pathsRoute, lat, lng);
-      if(nearestDistance <= 10) {
+      const { nearestDistance, nearestTripPoint } = findNearestMarker(
+        pathsRoute,
+        lat,
+        lng
+      );
+      if (nearestDistance <= 10) {
         setDragOutRange();
         setNearestTripPoint(nearestTripPoint);
-        const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(emulator.currentTripPointIndex)
-        const nearestTripPointStopPoint = calculateNextStopPointIndex(nearestTripPoint.tripPointIndex)
-        const previousTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(emulator.currentTripPointIndex, emulatorCurrentTripPointStopPoint, emulator.speed)
-        const newTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(nearestTripPoint.tripPointIndex, nearestTripPointStopPoint, emulator.speed)
-        handleDialog(`${'The emulator will be snapped to nearest route under 10 miles range. The Previous time to reach next Stop Point was ' + previousTimeToReachStop + '. The new location will take ' + newTimeToReachStop + ' to reach the same next station. Do you want to set new Location of this emulator?'}`);
+        const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(
+          emulator.currentTripPointIndex
+        );
+        const nearestTripPointStopPoint = calculateNextStopPointIndex(
+          nearestTripPoint.tripPointIndex
+        );
+        const previousTimeToReachStop =
+          calculateTimeFromTripPointIndexToStopPoint(
+            emulator.currentTripPointIndex,
+            emulatorCurrentTripPointStopPoint,
+            emulator.speed
+          );
+        const newTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(
+          nearestTripPoint.tripPointIndex,
+          nearestTripPointStopPoint,
+          emulator.speed
+        );
+        handleDialog(
+          `${
+            "The emulator will be snapped to nearest route under 10 miles range. The Previous time to reach next Stop Point was " +
+            previousTimeToReachStop +
+            ". The new location will take " +
+            newTimeToReachStop +
+            " to reach the same next station. Do you want to set new Location of this emulator?"
+          }`
+        );
       } else {
         setNearestTripPoint();
-        setDragOutRange({ lat, lng});
-        handleDialog('This is too far from its current route, setting this as emulators new location will cancel the trip.');
+        setDragOutRange({ lat, lng });
+        handleDialog(
+          "This is too far from its current route, setting this as emulators new location will cancel the trip."
+        );
       }
     } else {
       setDragOutRange();
       setNearestTripPoint();
-      setDragWithoutTrip({lat, lng});
-      handleDialog('Do you want to change the location of this emulator?');
+      setDragWithoutTrip({ lat, lng });
+      handleDialog("Do you want to change the location of this emulator?");
     }
   };
 
   const confirmNewLocation = async () => {
-    var payload 
-    if(dragId && nearestTripPoint) {
+    var payload;
+    if (dragId && nearestTripPoint) {
       const { lat, lng } = nearestTripPoint;
-      payload = { emulatorId : dragId, latitude : lat, longitude : lng, cancelTrip : false, newTripIndex: nearestTripPoint.tripPointIndex};
-    }
-    else if(dragId && draggOutRange) {
-      const {lat, lng} = draggOutRange
-      payload = { emulatorId : dragId, latitude : lat, longitude : lng, cancelTrip : true, newTripIndex: null };
+      payload = {
+        emulatorId: dragId,
+        latitude: lat,
+        longitude: lng,
+        cancelTrip: false,
+        newTripIndex: nearestTripPoint.tripPointIndex,
+      };
+    } else if (dragId && draggOutRange) {
+      const { lat, lng } = draggOutRange;
+      payload = {
+        emulatorId: dragId,
+        latitude: lat,
+        longitude: lng,
+        cancelTrip: true,
+        newTripIndex: null,
+      };
     } else if (draggWithoutTrip) {
-      const {lat, lng} = draggWithoutTrip;
-      payload = { emulatorId : dragId, latitude : lat, longitude: lng, cancelTrip : false, newTripIndex: null };
+      const { lat, lng } = draggWithoutTrip;
+      payload = {
+        emulatorId: dragId,
+        latitude: lat,
+        longitude: lng,
+        cancelTrip: false,
+        newTripIndex: null,
+      };
     }
-     const token = localStorage.getItem("token");
-     const { success, data, error } = await ApiService.makeApiCall(
-       EMULATOR_DRAG_URL,
-       "POST",
-       payload,
-       token,
-       null
-     );
-     if (success) {
-        validateEmulatorData(data);
-        setOpenDialog(false);
-     } else if(error) {
-        setOpenDialog(false);
-     }
-     setDragId();
-  }
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_DRAG_URL,
+      "POST",
+      payload,
+      token,
+      null
+    );
+    if (success) {
+      validateEmulatorData(data);
+      setOpenDialog(false);
+    } else if (error) {
+      setOpenDialog(false);
+    }
+    setDragId();
+  };
 
   const startLat = pathsRoute ? pathsRoute[0].lat : null;
   const startLng = pathsRoute ? pathsRoute[0].lng : null;
@@ -379,7 +439,9 @@ const Map = ({ showToast }) => {
         onClose={closeDialog}
         DialogText={DialogText}
         confirmNewLocation={confirmNewLocation}
-        calculateTimeFromTripPointIndexToStopPoint = {calculateTimeFromTripPointIndexToStopPoint}
+        calculateTimeFromTripPointIndexToStopPoint={
+          calculateTimeFromTripPointIndexToStopPoint
+        }
       />
     </CardComponent>
   );
