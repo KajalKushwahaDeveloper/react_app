@@ -21,12 +21,21 @@ const GoogleMapContainer = ({
   openDialog,
   onClose,
   DialogText,
-  confirmNewLocation
+  confirmNewLocation,
+  calculateTimeFromTripPointIndexToStopPoint
 }) => {
-
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
+  const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] = useState("N/A");
 
+  useEffect(() => {
+    if (selectedEmulator != null && stops != null) {
+      let selectedEmulatorNearestStopPoint = stops.find((stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex);
+      const selectedEmulatorTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(selectedEmulator.currentTripPointIndex, selectedEmulatorNearestStopPoint, selectedEmulator.speed)
+      setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
+    }
+  }, [selectedEmulator, stops, calculateTimeFromTripPointIndexToStopPoint]);
+  
   useEffect(() => {
     if (selectedEmulator !== null) {
       if (pathsRoute !== null) {
@@ -113,6 +122,12 @@ const GoogleMapContainer = ({
                   </React.Fragment>
                 ))}
               </p>
+
+              <h3 style={{ color: "black" }}>Time To Reach: </h3>
+              <p style={{ color: "black" }}>
+                {emulatorTimeLeftToReachNextStop}
+              </p>
+
             </div>
           </InfoWindow>
         )}
