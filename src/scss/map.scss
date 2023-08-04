@@ -11,7 +11,7 @@ body{
   justify-content: flex-start;
   height: 100vh;
   flex-wrap: nowrap;
-  padding-top: 5rem;
+  // padding-top: 2rem;
  
 }
 
@@ -73,22 +73,30 @@ table {
   border-collapse: collapse;
   width: auto;
   padding: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   background: $light-grey;
 }
 
-td,
+td {
+  border: none;
+  box-shadow: $tableShadow;
+  text-align: left;
+  padding:  .4rem;
+  text-align: center;
+}
+
 th {
   border: none;
   box-shadow: $tableShadow;
   text-align: left;
-  padding: 11px 6px;
-}
-
-th {
+  padding:  .6rem;
+  text-align: center;
   background-color: $background-color;
 }
 
+.table_footer{
+  height:10px;
+}
 @media screen and (max-width: 768px) {
   table {
     font-size: 0.75rem;

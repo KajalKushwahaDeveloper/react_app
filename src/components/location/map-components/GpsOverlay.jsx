@@ -5,7 +5,6 @@ import AddressTable from "./address_table";
 
 const GpsOverlay = ({ showToast, emulators, setSelectedEmId, selectedEmId, tripData}) => {
   return (
-
     <div className="gps_overlay" style={{marginTop:"5rem"}}>
       <GpsTable showToast={showToast} setSelectedEmId={setSelectedEmId} 
         selectedEmId={selectedEmId} data = {emulators}/>
