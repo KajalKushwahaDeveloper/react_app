@@ -364,6 +364,7 @@ const Map = ({ showToast }) => {
         onClose={closeDialog}
         DialogText={DialogText}
         confirmNewLocation={confirmNewLocation}
+        tripData={tripData}
       />
     </CardComponent>
   );

@@ -21,11 +21,23 @@ const GoogleMapContainer = ({
   openDialog,
   onClose,
   DialogText,
-  confirmNewLocation
+  confirmNewLocation,
+  tripData
 }) => {
 
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
+
+  
+  const convertTimeToReadableFormat = (timeInHours) => {
+    const hours = Math.floor(timeInHours);
+    const remainingMinutes = (timeInHours - hours) * 60;
+    const minutes = Math.floor(remainingMinutes);
+    const remainingSeconds = (remainingMinutes - minutes) * 60;
+    const seconds = Math.floor(remainingSeconds);
+
+    return `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+  };
 
   useEffect(() => {
     if (selectedEmulator !== null) {
@@ -112,6 +124,11 @@ const GoogleMapContainer = ({
                     {gasStationAddressItem.long_name}
                   </React.Fragment>
                 ))}
+              </p>
+
+              <h3 style={{ color: "black" }}>Time: </h3>
+              <p style={{ color: "black" }}>
+              {convertTimeToReadableFormat(selectedStop.distance / tripData?.velocity)}
               </p>
             </div>
           </InfoWindow>
