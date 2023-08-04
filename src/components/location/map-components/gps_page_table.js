@@ -230,11 +230,11 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
             )}
           </tbody>
 
-          <tfoot>
+          <tfoot className="table_footer">
             <tr>
               <CustomTablePagination
                 rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-                colSpan={5}
+                colSpan={6}
                 count={data.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

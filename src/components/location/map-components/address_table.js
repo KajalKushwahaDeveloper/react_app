@@ -34,7 +34,7 @@ const AddressTable = ({ tripData }) => {
         </thead>
         <tbody style={{ width: "100vh"}}>
           <tr>
-            <td align="right" style={{ wordWrap: "break-word" ,}}>
+            <td align="right" style={{ wordWrap: "break-word" }}>
               {fromAddress}
             </td>
             <td align="right" style={{ wordWrap: "break-word" }}>

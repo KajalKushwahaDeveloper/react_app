@@ -77,19 +77,26 @@ table {
   background: $light-grey;
 }
 
-td,
+td {
+  border: none;
+  box-shadow: $tableShadow;
+  text-align: left;
+  padding:  .4rem;
+  text-align: center;
+}
+
 th {
   border: none;
   box-shadow: $tableShadow;
   text-align: left;
   padding:  .6rem;
   text-align: center;
-}
-
-th {
   background-color: $background-color;
 }
 
+.table_footer{
+  height:10px;
+}
 @media screen and (max-width: 768px) {
   table {
     font-size: 0.75rem;
