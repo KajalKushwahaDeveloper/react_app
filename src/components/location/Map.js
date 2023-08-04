@@ -55,7 +55,6 @@ const Map = ({ showToast }) => {
     setIsTableVisible(!isTableVisible);
   };
 
-  console.log(selectedEmId);
   const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
   const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
   const { data: tripData } = useFetch(TRIP_URL + `/${selectedEmId}`);
@@ -185,7 +184,7 @@ const Map = ({ showToast }) => {
   useEffect(() => {
     if (selectedEmId != null && emulators != null) {
       const findEmulator = emulators.filter(e => e.id === selectedEmId);
-      if (findEmulator[0].startlat == null) {
+      if (findEmulator.length > 0 && findEmulator[0].startlat == null) {
         setCenter({ lat: findEmulator[0].latitude, lng: findEmulator[0].longitude });
       }
     }
@@ -258,16 +257,23 @@ const Map = ({ showToast }) => {
     }  
 
     function calculateTimeFromTripPointIndexToStopPoint(startIndex, stop, velocity){
+
+      if(startIndex == null || stop == null || velocity == null || paths == null) {
+        return `N/A`
+      }
       let distance = 0;
-      paths.map((path) => {
+      paths.forEach((path) => {
         if (path.tripPointIndex >= startIndex && path.tripPointIndex <= stop.tripPointIndex) {
           distance += path.distance;
         }
       });
       const timeInHours = distance / velocity;
+      if(timeInHours === Infinity) {
+        return `Refreshing...`;
+      }
       const hours = Math.floor(timeInHours);
       const minutes = Math.round((timeInHours - hours) * 60);
-      return `${hours} hours and ${minutes} minutes`;
+      return `~${hours} hours and ${minutes} minutes`;
     }  
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
@@ -373,7 +379,7 @@ const Map = ({ showToast }) => {
         onClose={closeDialog}
         DialogText={DialogText}
         confirmNewLocation={confirmNewLocation}
-        tripData={tripData}
+        calculateTimeFromTripPointIndexToStopPoint = {calculateTimeFromTripPointIndexToStopPoint}
       />
     </CardComponent>
   );
