@@ -150,13 +150,15 @@ const Map = ({ showToast }) => {
       emulatorInterval = setInterval(async () => {
         // Manually trigger the fetch to get the latest emulator data
         const { success, data, error } = await ApiService.makeApiCall(
-          EMULATOR_URL + `/${selectedEmId}`,
+          EMULATOR_URL,
           "GET",
           null,
           token
         );
         if (success) {
-          validateEmulatorData(data);
+          data.forEach((emulator) => {
+            validateEmulatorData(emulator);
+          });
         } else {
           console.log("old Emulator ERROR : ", error);
         }
