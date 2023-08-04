@@ -13,7 +13,6 @@ import HistoryIcon from "@mui/icons-material/History";
 
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
-import { Border } from "devextreme-react/bar-gauge";
 import { Tooltip } from "@mui/material";
 
 
