@@ -126,7 +126,7 @@ const GpsTable = ({ showToast, setSelectedEmId, data }) => {
             <th>Status</th>
             <th>ID</th>
             <th>Number</th>
-            <th style={{maxWidth:'300px'}}>Address</th>
+            <th style={{maxWidth:'300px'}}>Address</th>     
             <th>Select</th>
             <th>
               TripStatus/

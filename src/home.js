@@ -93,10 +93,10 @@ const Home = () => {
             emulatorEditedId = {emulatorEditedId}
           />
         </div>
-        <div className="user_table" style={{ display: "flex", flexDirection: "column",marginBottom:"235px" }}>
+        <div className="user_table" style={{ display: "flex", flexDirection: "column",marginBottom:"245px" }}>
           <Button
             className="login_button"
-            style={{ padding:"1rem",  margin: "1rem" , marginLeft:"0px",marginRight:"0px",height:"45px"}}
+            style={{ padding:"1rem",  margin: ".5rem" , marginLeft:"0px",marginRight:"0px",height:"45px"}}
             onClick={handleOpen}
           >
             Add User
