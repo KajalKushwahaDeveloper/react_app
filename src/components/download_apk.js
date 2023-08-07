@@ -68,10 +68,11 @@ const DownloadApk = () => {
   return (
     <Card
       style={{
-        backgroundColor: "#007dc6",
-        color: "white",
-        marginBottom: "30px",
+        backgroundColor: "white",
+        color: "#007dc6",
+        marginBottom: "3rem",
         borderRadius: "1rem",
+        boxShadow: "-3px -3px 7px #bfbdbd73, 2px 2px 7px rgb(222, 241, 252)"
       }}
     >
       <CardContent>
@@ -84,7 +85,7 @@ const DownloadApk = () => {
           color="success"
           startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
           onClick={handleDownloadFile}
-          style={{ marginTop: "2rem", marginLeft: "1.2rem" }}
+          style={{ marginTop: "2rem", marginLeft: "1.2rem",width:"12rem !important" }}
           endIcon={loading && <CircularProgress color="inherit" size={20} />} // Show the circular progress only when loading is true
           disabled={loading} // Disable the button while loading is true
         >
