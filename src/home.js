@@ -12,7 +12,7 @@ import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
-import { ForkLeft } from "@mui/icons-material";
+import { ForkLeft, ForkRight } from "@mui/icons-material";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
@@ -39,9 +39,11 @@ const Home = () => {
     setUserToEdit(null);
     setOpenUserAssignPopup(false);
     setEmulatorToAssignUser(null);
-    setOpenEmulatorPopup(false)
-    if (userEditedId != null && !isNaN(+userEditedId)) setUserEditedId(userEditedId);
-    if (emulatorEditedId != null && !isNaN(+emulatorEditedId)) setEmulatorEditedId(emulatorEditedId);
+    setOpenEmulatorPopup(false);
+    if (userEditedId != null && !isNaN(+userEditedId))
+      setUserEditedId(userEditedId);
+    if (emulatorEditedId != null && !isNaN(+emulatorEditedId))
+      setEmulatorEditedId(emulatorEditedId);
   };
 
   //Edit button click
@@ -57,13 +59,13 @@ const Home = () => {
     setUserToEdit(data);
     setOpenEmulatorPopup(true);
   };
-//assign user button
+  //assign user button
   const handleAssignUserButtonClick = (data) => {
     console.log("Assign Button clicked with data:", data);
     setEmulatorToAssignUser(data);
     setOpenUserAssignPopup(true);
   };
-//assign user to an emulator
+  //assign user to an emulator
   const handleAssignedUserToEmulator = (success, error, data) => {
     console.log("assignedUserToEmulator with data:", data);
     setUserAssingedEmulator(data);
@@ -76,11 +78,13 @@ const Home = () => {
       <ToastContainer style={{ zIndex: 3 }} />
 
       <div className="home_div">
-        <div className="emulator_table"
+        <div
+          className="emulator_table"
           style={{
             display: "flex",
             flexDirection: "column",
             padding: "0rem 1rem",
+            marginBottom: "0.5rem",
           }}
         >
           <DownloadApk />
@@ -90,13 +94,24 @@ const Home = () => {
             userAssingedEmulator={userAssingedEmulator}
             setUserAssingedEmulator={setUserAssingedEmulator}
             handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
-            emulatorEditedId = {emulatorEditedId}
+            emulatorEditedId={emulatorEditedId}
           />
         </div>
-        <div className="user_table" style={{ display: "flex", flexDirection: "column",marginBottom:"245px" }}>
+        <div
+          className="user_table"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "245px",
+          }}
+        >
           <Button
-            className="login_button"
-            style={{ padding:"1rem",  margin: ".5rem" , marginLeft:"0px",marginRight:"0px",height:"45px"}}
+            style={{
+              width: "9rem",
+              background: "#007dc6",
+              color: "white",
+              marginBottom: "1rem",
+            }}
             onClick={handleOpen}
           >
             Add User
@@ -107,7 +122,7 @@ const Home = () => {
             open={openUserPopup}
             userToEdit={userToEdit}
           />
-            <PopUpEmulatorTelephone
+          <PopUpEmulatorTelephone
             showToast={showToast}
             handleClose={handleClose}
             open={openEmulatorPopup}

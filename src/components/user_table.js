@@ -293,6 +293,7 @@ const UserTable = ({
                     <button
                       style={{
                         height: "45px",
+                        width:"7rem",
                         backgroundColor:
                           row.status === "ENABLED" ? "green" : "red",
                         color: "white",

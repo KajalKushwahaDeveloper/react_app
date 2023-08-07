@@ -44,7 +44,7 @@ const LoginPage = () => {
           console.log("Login successful");
            navigate("/home"); // Redirect to the home page
         } else {
-          setResponseError(error || "Invalid credentials"); // Display appropriate error message
+          setResponseError( "Invalid credentials"); // Display appropriate error message
         }
       } catch (error) {
         console.log("Error occurred during login:", error);
