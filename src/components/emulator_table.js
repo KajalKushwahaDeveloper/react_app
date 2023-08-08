@@ -280,7 +280,7 @@ const EmulatorTable = ({
 
            {emptyRows > 0 && (
             <tr style={{ width:"auto" }}>
-              <td colSpan={5} style={{ color:"black", fontSize:".95rem" ,textAlign:"right"}}>
+              <td colSpan={5} style={{ color:"black", fontSize:".9rem" ,textAlign:"right"}}>
               Emulator Table
               </td>
             </tr>
