@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
 import { EMULATOR_DELETE_URL } from "../constants";
 import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator";
+import { display } from "@material-ui/system";
 
 const EmulatorTable = ({
   showToast,
@@ -277,11 +278,13 @@ const EmulatorTable = ({
             </tr>
           ))}
 
-          {/* {emptyRows > 0 && (
-            <tr style={{ height: 34 * emptyRows }}>
-              <td colSpan={5} />
+           {emptyRows > 0 && (
+            <tr style={{ width:"auto" }}>
+              <td colSpan={5} style={{ color:"black", fontSize:".95rem" ,textAlign:"right"}}>
+              Emulator Table
+              </td>
             </tr>
-          )} */}
+          )} 
         </tbody>
         <tfoot>
           <tr>

@@ -312,7 +312,9 @@ const UserTable = ({
 
           {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
-              <td colSpan={3} />
+              <td colSpan={3} style={{ color:"black", fontSize:"1rem" ,textAlign:"right"}}>
+              User Table
+              </td>
             </tr>
           )}
         </tbody>
