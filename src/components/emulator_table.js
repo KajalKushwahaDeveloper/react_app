@@ -217,7 +217,7 @@ const EmulatorTable = ({
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%", fontSize:"9px" }}>
+    <div sx={{ width: "auto", maxWidth: "100%", fontSize: "9px" }}>
       <table aria-label="custom pagination table">
         <thead>
           <tr>
@@ -230,7 +230,10 @@ const EmulatorTable = ({
         </thead>
         <tbody>
           {(rowsPerPage > 0
-            ? emulators.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            ? emulators.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
             : emulators
           ).map((row) => (
             <tr key={row.id || "N/A"}>
@@ -246,12 +249,14 @@ const EmulatorTable = ({
               </td>
               <td style={{ width: "auto", display: "flex" }} align="right">
                 <IconButton
-                  style={{
-                    //height: "auto",
-                    //width: "40px",
-                    //margin: "2px",
-                    //backgroundColor: "#f2f2f2",
-                  }}
+                  style={
+                    {
+                      //height: "auto",
+                      //width: "40px",
+                      //margin: "2px",
+                      //backgroundColor: "#f2f2f2",
+                    }
+                  }
                   aria-label="delete"
                 >
                   <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
@@ -264,11 +269,11 @@ const EmulatorTable = ({
                 >
                   <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
                 </IconButton>
-                <button 
+                <button
                   style={{
                     backgroundColor: row.user === null ? "green" : "red",
-                   // width: row.user === null ? "95px" : "",
-                   width:"7.5rem",
+                    // width: row.user === null ? "95px" : "",
+                    width: "7.5rem",
                   }}
                   onClick={() => handleActionButtonClick(row)}
                 >
@@ -277,30 +282,28 @@ const EmulatorTable = ({
               </td>
             </tr>
           ))}
-
-           {emptyRows > 0 && (
-            <tr style={{ width:"auto" }}>
-              <td colSpan={5} style={{ color:"black", fontSize:".9rem" ,textAlign:"right"}}>
-              Emulator Table
-              </td>
-            </tr>
-          )} 
         </tbody>
-        <tfoot>
-          <tr>
-            <CustomTablePagination
-              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-              colSpan={5}
-              count={emulators.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { "aria-label": "rows per page" },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+
+        <tfoot style={{ border:"none"}}>
+          <tr style={{ textAlign: "center" }}>
+            <td colSpan={5} style={{ textAlign: "right" }}>
+              <CustomTablePagination
+                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                colSpan={5}
+                count={emulators.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: { "aria-label": "rows per page" },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+              <span style={{ color: "#bbbaba", fontSize: ".9rem" }}>
+                Emulator Table
+              </span>
+            </td>
           </tr>
         </tfoot>
       </table>

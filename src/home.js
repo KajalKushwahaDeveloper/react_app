@@ -102,7 +102,7 @@ const Home = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            marginBottom: "5rem",
+            marginBottom: "9rem",
           }}
         >
           <Button
