@@ -84,7 +84,7 @@ const Home = () => {
             display: "flex",
             flexDirection: "column",
             padding: "0rem 1rem",
-            marginBottom: "0.5rem",
+            marginTop: "0.5rem",
           }}
         >
           <DownloadApk />
@@ -102,7 +102,7 @@ const Home = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            marginBottom: "245px",
+            marginBottom: "14rem",
           }}
         >
           <Button

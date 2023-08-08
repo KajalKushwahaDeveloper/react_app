@@ -72,7 +72,7 @@ const Navbar = ({ isAdmin }) => {
                   <NavLink
                     to="/home"
                     className="navbar-link"
-                    onClick={() => setMenuIcon(false)}
+                    onClick={() => setMenuIcon(false)} 
                   >
                     Licenses
                   </NavLink>

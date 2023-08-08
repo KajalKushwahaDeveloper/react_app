@@ -230,11 +230,11 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
               </tr>
             ))}
 
-            {emptyRows != null && emptyRows > 0 && (
+            {/* {emptyRows != null && emptyRows > 0 && (
               <tr style={{ height: 35 * emptyRows }}>
                 <td colSpan={5} />
               </tr>
-            )}
+            )} */}
           </tbody>
 
           <tfoot className="table_footer">

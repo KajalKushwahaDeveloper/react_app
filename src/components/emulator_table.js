@@ -277,11 +277,11 @@ const EmulatorTable = ({
             </tr>
           ))}
 
-          {emptyRows > 0 && (
+          {/* {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
               <td colSpan={5} />
             </tr>
-          )}
+          )} */}
         </tbody>
         <tfoot>
           <tr>
