@@ -32,7 +32,7 @@ const UserTable = ({
 
   useEffect(() => {
     if (userEditedId != null) {
-      if(userEditedId == 0){
+      if (userEditedId == 0) {
         fetchUsers();
       } else {
         refreshEditedUser(userEditedId);
@@ -85,9 +85,10 @@ const UserTable = ({
     setUserData(updatedData);
   };
 
-
   const handleDeleteButtonClick = async (user) => {
-    const confirmed = window.confirm('Delete this user : ' + user.firstName + ' ' + user.lastName + '?');
+    const confirmed = window.confirm(
+      "Delete this user : " + user.firstName + " " + user.lastName + "?"
+    );
     if (confirmed) {
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
@@ -102,9 +103,9 @@ const UserTable = ({
         const updatedData = userData.filter((item) => item.id !== user.id);
         console.log("Data Updated : " + data);
         setUserData(updatedData);
-        showToast("User deleted", "success")
+        showToast("User deleted", "success");
       } else {
-        showToast("User not deleted", "error")
+        showToast("User not deleted", "error");
       }
     }
   };
@@ -171,7 +172,7 @@ const UserTable = ({
               ...item.emulatorCount,
               allEmulatorsCount: result.emulatorCount?.allEmulatorsCount,
               activeEmulatorsCount: result.emulatorCount?.activeEmulatorsCount,
-            },  
+            },
           };
         }
         return item;
@@ -246,7 +247,10 @@ const UserTable = ({
       <table aria-label="custom pagination table">
         <tbody>
           {(rowsPerPage > 0
-            ? userData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            ? userData.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
             : userData
           ).map((row) => {
             const createdAtDate = new Date(row.createdAt);
@@ -254,11 +258,30 @@ const UserTable = ({
 
             return (
               <tr key={row.id}>
-                <td align="right"  display="flex" paddingRight="12px" style={{display:"flex"}}>
-                  <div style={{ display: "flex", alignItems: "center", width:"25rem" }}>
-                    <div style={{ display: "flex", flexDirection: "column"}}>
-                      <h3 style={{paddingLeft: "38px",marginBottom:"0px",marginTop:"0px"}}>{row.firstName + " " + row.lastName || "N/A"}</h3>
-                      <ul style={{listStyleType:"none"}}>
+                <td
+                  align="right"
+                  display="flex"
+                  padding="0px 12px"
+                  style={{ display: "flex" }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      width: "25rem",
+                    }}
+                  >
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <h3
+                        style={{
+                          paddingLeft: "38px",
+                          marginBottom: "0px",
+                          marginTop: "0px",
+                        }}
+                      >
+                        {row.firstName + " " + row.lastName || "N/A"}
+                      </h3>
+                      <ul style={{ listStyleType: "none" }}>
                         <li>Email : {row.email || "N/A"}</li>
                         <li>Tel. # : {row.telephone || "N/A"}</li>
                         <li>Registration Date : {formattedDate}</li>
@@ -273,27 +296,36 @@ const UserTable = ({
                             : "Err"}
                         </li>
                       </ul>
-                      </div>
                     </div>
-                    <div style={{paddingLeft:"60px",paddingTop:"9px"}}>
-                    <div style={{paddingBottom:"10px",paddingLeft:"2px"}}>
-                    <IconButton
-                      style={{ height: "auto", width: "40px", margin: "2px" }}
-                      aria-label="edit"
+                  </div>
+                  <div style={{ paddingLeft: "60px", paddingTop: "9px" }}>
+                    <div
+                      style={{
+                        paddingBottom: "10px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                     >
-                      <EditIcon onClick={() => handleEditButtonClick(row)} />
-                    </IconButton>
-                    <IconButton
-                      style={{ height: "auto", width: "40px", margin: "2px" }}
-                      aria-label="delete"
-                    >
-                      <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
-                    </IconButton>
+                      <IconButton
+                        style={{ height: "auto", width: "40px", margin: "2px" }}
+                        aria-label="edit"
+                      >
+                        <EditIcon onClick={() => handleEditButtonClick(row)} />
+                      </IconButton>
+                      <IconButton
+                        style={{ height: "auto", width: "40px", margin: "2px" }}
+                        aria-label="delete"
+                      >
+                        <DeleteIcon
+                          onClick={() => handleDeleteButtonClick(row)}
+                        />
+                      </IconButton>
                     </div>
                     <button
                       style={{
                         height: "45px",
-                        width:"7rem",
+                        width: "7rem",
                         backgroundColor:
                           row.status === "ENABLED" ? "green" : "red",
                         color: "white",
@@ -309,29 +341,35 @@ const UserTable = ({
               </tr>
             );
           })}
-
-          {emptyRows > 0 && (
-            <tr style={{ height: 34 * emptyRows }}>
-              <td colSpan={3} />
-            </tr>
-          )}
         </tbody>
 
         <tfoot>
           <tr>
-            <CustomTablePagination
-              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+            <td
               colSpan={3}
-              count={userData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { "aria-label": "rows per page" },
-                native: true,
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
               }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            >
+              <CustomTablePagination
+                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                colSpan={3}
+                count={userData.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: { "aria-label": "rows per page" },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+              <span style={{ color: "#bbbaba", fontSize: ".9rem" }}>
+                User Table
+              </span>
+            </td>
           </tr>
         </tfoot>
       </table>
@@ -369,15 +407,7 @@ const Root = styled("div")(
                 padding:0.5rem;
               }
               
-              td,
-              th {
-                border: 1px solid ${
-                  theme.palette.mode === "dark" ? grey[800] : grey[200]
-                };
-                text-align: left;
-                padding: 12px;
-              }
-              
+
               th {
                 background-color: ${
                   theme.palette.mode === "dark" ? grey[900] : grey[100]
