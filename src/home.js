@@ -13,11 +13,13 @@ import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
 import { ForkLeft, ForkRight } from "@mui/icons-material";
+import GeneratedIdPopup from "./components/generated_id_popup.js";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
   const [openEmulatorPopup, setOpenEmulatorPopup] = useState(false);
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
+  const [openGeneratedIdPopup, setOpenGeneratedIdPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
   const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
@@ -40,6 +42,7 @@ const Home = () => {
     setOpenUserAssignPopup(false);
     setEmulatorToAssignUser(null);
     setOpenEmulatorPopup(false);
+    setOpenGeneratedIdPopup(false);
     if (userEditedId != null && !isNaN(+userEditedId))
       setUserEditedId(userEditedId);
     if (emulatorEditedId != null && !isNaN(+emulatorEditedId))
@@ -127,6 +130,10 @@ const Home = () => {
             handleClose={handleClose}
             open={openEmulatorPopup}
             userToEdit={userToEdit}
+          />
+          <GeneratedIdPopup
+           showToast={showToast}
+           open={openGeneratedIdPopup}
           />
           <PopUpAssignUser
             showToast={showToast}

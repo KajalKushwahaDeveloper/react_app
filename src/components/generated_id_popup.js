@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Dialog from "@mui/material/Dialog";
-import Button from "@mui/material/Button";
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -63,7 +68,7 @@ const MenuProps = {
   },
 };
 
-const UserAssignDropDown = (props) => {
+const GeneratedIdPopup = (props) => {
   const {
     showToast,
     open,
@@ -72,13 +77,17 @@ const UserAssignDropDown = (props) => {
     handleAssignedUserToEmulator,
   } = props;
   const theme = useTheme();
-  
+
   const [userName, setuserName] = React.useState([]);
   const [users, setUsers] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedUserId, SetSelectedUserId] = useState();
+  const [selectedUserId, setSelectedUserId] = useState();
+  const [useRadioButtons, setUseRadioButtons] = useState(true); // Toggle between radio buttons and dropdown
 
+  const handleRadioChange = (event) => {
+    setSelectedUserId(event.target.value);
+  };
   const handleUserSelect = async (userId) => {
     console.log("selectedUser:", selectedUserId);
     try {
@@ -141,8 +150,8 @@ const UserAssignDropDown = (props) => {
     const {
       target: { value },
     } = event;
-    
-    SetSelectedUserId(value);
+
+    setSelectedUserId(value);
     setuserName(value);
   };
 
@@ -174,7 +183,7 @@ const UserAssignDropDown = (props) => {
   };
 
   const userHandleSelect = (e) => {
-    SetSelectedUserId(e.target.value);
+    setSelectedUserId(e.target.value);
     console.log("target value", e.target.value);
   };
 
@@ -202,7 +211,7 @@ const UserAssignDropDown = (props) => {
           id="customized-dialog-title"
           onClose={close}
         >
-          Select User:
+          Select Id:
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
@@ -210,25 +219,42 @@ const UserAssignDropDown = (props) => {
               id="demo-multiple-name-label"
               style={{ borderRadius: "2rem" }}
             >
-              Users
+              Id's
             </InputLabel>
-            <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              value={userName}
-              onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-            >
-              {console.log("users23:", users)}
-              {users?.map((user) => (
-                
-                <MenuItem key={user.id} value={user.id}>
-                {user.firstName} {user.lastName}
-                 
-                </MenuItem>
-              ))}
-            </Select>
+
+            {useRadioButtons ? ( // A condition to decide whether to show radio buttons or a dropdown
+              <RadioGroup
+                aria-label="userIds"
+                name="userIds"
+                value={selectedUserId}
+                onChange={handleRadioChange}
+              >
+                {users?.map((user) => (
+                  <FormControlLabel
+                    key={user.id}
+                    value={user.id}
+                    control={<Radio />}
+                    label={`${user.id} ${user.id}`}
+                  />
+                ))}
+              </RadioGroup>
+            ) : (
+              <Select
+                labelId="demo-multiple-name-label"
+                id="demo-multiple-name"
+                value={userName}
+                onChange={handleChange}
+                input={<OutlinedInput label="Name" />}
+                MenuProps={MenuProps}
+              >
+                {users?.map((user) => (
+                  <MenuItem key={user.id} value={user.id}>
+                    {user.id} {user.id}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 variant="contained"
@@ -243,5 +269,5 @@ const UserAssignDropDown = (props) => {
       </BootstrapDialog>
     </div>
   );
-}
-export default UserAssignDropDown;
+};
+export default GeneratedIdPopup;

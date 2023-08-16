@@ -202,7 +202,7 @@ const UserAssignDropDown = (props) => {
           id="customized-dialog-title"
           onClose={close}
         >
-          Select Id:
+          Select User:
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
@@ -210,7 +210,7 @@ const UserAssignDropDown = (props) => {
               id="demo-multiple-name-label"
               style={{ borderRadius: "2rem" }}
             >
-              Id
+              Users
             </InputLabel>
             <Select
               labelId="demo-multiple-name-label"
@@ -224,7 +224,7 @@ const UserAssignDropDown = (props) => {
               {users?.map((user) => (
                 
                 <MenuItem key={user.id} value={user.id}>
-               {user.id} {user.id}
+                {user.firstName} {user.lastName}
                  
                 </MenuItem>
               ))}
