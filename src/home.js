@@ -12,7 +12,6 @@ import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
-import { ForkLeft, ForkRight } from "@mui/icons-material";
 import GeneratedIdPopup from "./components/generated_id_popup.js";
 
 const Home = () => {
@@ -49,11 +48,18 @@ const Home = () => {
       setEmulatorEditedId(emulatorEditedId);
   };
 
-  //Edit button click
+  //Edit PHONE NUMBER button click
   const handleEditButtonClick = (data) => {
     console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setOpenUserPopup(true);
+  };
+
+  //emulator generated id button click
+  const handleGeneratedIdButtonClick = (data) => {
+    console.log("IconButton clicked with data:", data);
+    setUserToEdit(data);
+    setOpenGeneratedIdPopup(true);
   };
 
   //telephone update
@@ -90,6 +96,7 @@ const Home = () => {
             marginTop: "0.5rem",
           }}
         >
+          <GeneratedIdPopup />
           <DownloadApk />
           <EmulatorTable
             showToast={showToast}
@@ -98,6 +105,7 @@ const Home = () => {
             setUserAssingedEmulator={setUserAssingedEmulator}
             handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
             emulatorEditedId={emulatorEditedId}
+            handleGeneratedIdButtonClick={handleGeneratedIdButtonClick}
           />
         </div>
         <div
@@ -119,22 +127,31 @@ const Home = () => {
           >
             Add User
           </Button>
+
+          {/* emulator user popup */}
           <PopUpUser
             showToast={showToast}
             handleClose={handleClose}
             open={openUserPopup}
             userToEdit={userToEdit}
           />
+
+          {/* emulator telephone number edit popup */}
           <PopUpEmulatorTelephone
             showToast={showToast}
             handleClose={handleClose}
             open={openEmulatorPopup}
             userToEdit={userToEdit}
           />
+
+          {/*  emulator generated id */}
           <GeneratedIdPopup
            showToast={showToast}
            open={openGeneratedIdPopup}
+           close={handleClose}
           />
+
+          {/* assign user popup */}
           <PopUpAssignUser
             showToast={showToast}
             close={handleClose}
@@ -142,6 +159,8 @@ const Home = () => {
             emulatorToAssignUser={emulatorToAssignUser}
             handleAssignedUserToEmulator={handleAssignedUserToEmulator}
           />
+
+          {/* user table */}
           <UserTable
             showToast={showToast}
             handleEditButtonClick={handleEditButtonClick}

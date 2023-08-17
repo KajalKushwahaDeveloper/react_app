@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Dialog from "@mui/material/Dialog";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
+import Button from "@mui/material/Button";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -19,6 +14,9 @@ import DialogContent from "@mui/material/DialogContent";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { USER_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
+import Radio from "@mui/material/Radio";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Checkbox } from "@mui/material";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -83,12 +81,17 @@ const GeneratedIdPopup = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState();
-  const [useRadioButtons, setUseRadioButtons] = useState(true); // Toggle between radio buttons and dropdown
+  const [generateIdChecked, setGenerateIdChecked] = React.useState(false);
 
-  const handleRadioChange = (event) => {
+  const handleChangeRadio = (event) => {
     setSelectedUserId(event.target.value);
   };
-  const handleUserSelect = async (userId) => {
+
+  const handleGenerateIdChange = (event) => {
+    setGenerateIdChecked(event.target.checked);
+  };
+
+  const handleGeneratedIdSelect = async (userId) => {
     console.log("selectedUser:", selectedUserId);
     try {
       console.log(emulatorToAssignUser.id);
@@ -213,59 +216,64 @@ const GeneratedIdPopup = (props) => {
         >
           Select Id:
         </BootstrapDialogTitle>
-        <DialogContent dividers>
+
+      <div>
+      <DialogContent dividers sx={{display:"flex", flexDirection:"column"}}>
+          <FormControl sx={{ marginTop: "2rem" }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={generateIdChecked}
+                  onChange={handleGenerateIdChange}
+                />
+              }
+              label="Generate ID"
+            />
+          </FormControl>
           <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
-            <InputLabel
-              id="demo-multiple-name-label"
-              style={{ borderRadius: "2rem" }}
-            >
-              Id's
-            </InputLabel>
-
-            {useRadioButtons ? ( // A condition to decide whether to show radio buttons or a dropdown
-              <RadioGroup
-                aria-label="userIds"
-                name="userIds"
-                value={selectedUserId}
-                onChange={handleRadioChange}
-              >
-                {users?.map((user) => (
-                  <FormControlLabel
-                    key={user.id}
-                    value={user.id}
-                    control={<Radio />}
-                    label={`${user.id} ${user.id}`}
-                  />
-                ))}
-              </RadioGroup>
-            ) : (
-              <Select
-                labelId="demo-multiple-name-label"
-                id="demo-multiple-name"
-                value={userName}
-                onChange={handleChange}
-                input={<OutlinedInput label="Name" />}
-                MenuProps={MenuProps}
-              >
-                {users?.map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.id} {user.id}
-                  </MenuItem>
-                ))}
-              </Select>
+            {!generateIdChecked && (
+              <>
+                <InputLabel
+                  id="demo-multiple-name-label"
+                  style={{ borderRadius: "2rem" }}
+                >
+                  Id
+                </InputLabel>
+                <Select
+                  labelId="demo-multiple-name-label"
+                  id="demo-multiple-name"
+                  value={userName}
+                  onChange={handleChange}
+                  input={<OutlinedInput label="Name" />}
+                  MenuProps={MenuProps}
+                >
+                  {console.log("users23:", users)}
+                  {users?.map((user) => (
+                    <MenuItem key={user.id} value={user.id}>
+                      <FormControlLabel
+                        value={user.id}
+                        control={<Radio />}
+                        // label={user.id}
+                        onChange={(e) => handleChangeRadio(e)}
+                      />
+                      {user.id}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
             )}
-
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 variant="contained"
                 style={{ width: "2rem", marginTop: "2em" }}
-                onClick={() => handleUserSelect()}
+                onClick={() => handleGeneratedIdSelect()}
               >
                 Add
               </Button>
             </div>
           </FormControl>
         </DialogContent>
+      </div>
       </BootstrapDialog>
     </div>
   );

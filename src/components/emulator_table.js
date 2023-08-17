@@ -22,6 +22,7 @@ const EmulatorTable = ({
   userAssingedEmulator,
   setUserAssingedEmulator,
   handleEmulatorTelephonePopup,
+  handleGeneratedIdButtonClick,
   emulatorEditedId,
 }) => {
   // State variables
@@ -244,7 +245,7 @@ const EmulatorTable = ({
                   style={{ height: "auto", width: "35px", margin: "2px" }}
                   aria-label="edit"
                 >
-                  <EditIcon onClick={() => handleActionButtonClick(row)} />
+                  <EditIcon onClick={() => handleGeneratedIdButtonClick(row)} />
                 </IconButton>
               </td>
               <td style={{ width: 120 }} align="right">
