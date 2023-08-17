@@ -76,7 +76,7 @@ const LoginPage = () => {
                   </p>
                 </div>
                 <form onSubmit={handleSubmit}>
-                  <h1>Log in to your account</h1>
+                  <h1>Log in </h1>
                   <div className="row">
                     <div className="col-12">
                       <div className="inputField">
@@ -92,7 +92,7 @@ const LoginPage = () => {
                         {emailError && <p className="error">{emailError}</p>}
                       </div>
                     </div>
-                    <div className="col-12">
+                    <div className="col-12" style={{marginBottom:"2rem"}}>
                       <div className="inputField">
                         <input
                           type="password"
@@ -108,7 +108,7 @@ const LoginPage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="col-12 mt-3 btns">
+                    <div className="col-12 mt-3 btns" style={{margin:"2rem"}}>
                       <button className="btn btn-main" type="submit">
                         Login
                       </button>
@@ -117,7 +117,7 @@ const LoginPage = () => {
                       {responseError && (
                         <p className="error">{responseError}</p>
                       )}
-                      <a href="#">Sign In?</a>
+                    
                     </div>
                   </div>
                 </form>
