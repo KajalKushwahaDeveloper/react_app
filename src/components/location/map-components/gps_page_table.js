@@ -11,13 +11,21 @@ import {
   TRIP_TOGGLE,
   USER_URL,
 } from "../../../constants";
+//scss 
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
+
+//icons
 import IconButton from "@mui/material/IconButton";
 import HistoryIcon from "@mui/icons-material/History";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import CallRoundedIcon from '@mui/icons-material/CallRounded';
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+
+//components
+import ContactDialogComponent from "./ContactDialogComponent";
 
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
@@ -33,6 +41,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedEmulator, setSelectedEmulator] = useState(null);
+  const [ContactDialog, setContactDialog] = useState(null);
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false);
@@ -132,6 +141,14 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   if (error) {
     return <div>Error: {error}</div>;
   }
+  
+  const handleCallDetails = () => {
+    setContactDialog('call');
+  }
+
+  const handleMessagesDetails = () => {
+    setContactDialog('messages');
+  }
 
   return (
     <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
@@ -176,8 +193,16 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                     </IconButton>
                   </div>
                 </td>
-                <td style={{ width: "auto" }} align="right">
+                <td style={{ display: "flex", width: "auto", alignItems: "center" }} align="right">
                   {row.telephone || "N/A"}
+                  <IconButton>
+                   { ContactDialog !== null && ContactDialog === "call" && <ContactDialogComponent handleCall={"cell"}/>}
+                    <CallRoundedIcon onClick={() => handleCallDetails()}/>
+                  </IconButton>
+                  <IconButton>
+                   { ContactDialog !== null && ContactDialog === "messages" && <ContactDialogComponent handleMessage={"massage"}/>}
+                    <MessageRoundedIcon onClick={() => handleMessagesDetails()}/>
+                  </IconButton>
                 </td>
                 <td style={{ maxWidth: "150px" }}>
                   <Tooltip title={row.address || "N/A"} placement="top">
