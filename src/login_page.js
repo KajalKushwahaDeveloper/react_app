@@ -26,7 +26,7 @@ const LoginPage = () => {
     setEmailError("");
     setPasswordError("");
     if (!email) {
-      setEmailError("Please enter a email");
+      setEmailError("Please enter an email");
     } else if (!password) {
       setPasswordError("Please enter a password");
     } else {
@@ -56,7 +56,7 @@ const LoginPage = () => {
   return (
     <>
       <div className="authScreen">
-        <div className="container-fluid h-100">
+        <div className="container-fluid h-100" style={{paddingRight:"0"}}>
           <div class="row h-100">
             <div class="col-md-6 centerMid d-none d-md-flex" style={{  
             display: "flex",
