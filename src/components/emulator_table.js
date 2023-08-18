@@ -254,7 +254,7 @@ const EmulatorTable = ({
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td style={{ width: "auto", display: "flex" }} align="right">
+              <td style={{ width: "auto", display: "flex", padding:"1rem 0" }} align="right">
                 <IconButton aria-label="delete">
                   <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
                 </IconButton>
