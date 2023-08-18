@@ -150,12 +150,12 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
             </tr>
           </thead>
 
-          <tbody>
+          <tbody >
             {(rowsPerPage > 0
               ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : data
             ).map((row) => (
-              <tr key={row.id || "N/A"}>
+              <tr key={row.id || "N/A"} >
                 <td
                   style={{
                     background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
@@ -164,7 +164,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                   {row.status || "N/A"}
                 </td>
                 <td style={{ width: "auto" }} align="right">
-                  <div style={{ display: "flex" }}>
+                  <div style={{display:"flex"}}>
                     {/* Show History */}
                     <p style={{ textAlign: "center" }}>
                       {row.emulatorSsid || "N/A"}

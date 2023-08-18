@@ -273,9 +273,10 @@ const UserTable = ({
                   >
                     <div style={{ display: "flex", flexDirection: "column" }}>
                       <h3
-                       style={{
-                        fontSize: "1rem", fontWeight:"600"
-                      }}
+                        style={{
+                          fontSize: "1rem",
+                          fontWeight: "600",
+                        }}
                       >
                         {row.firstName + " " + row.lastName || "N/A"}
                       </h3>
@@ -296,7 +297,7 @@ const UserTable = ({
                       </ul>
                     </div>
                   </div>
-                  <div style={{ paddingLeft: "60px", paddingTop: "9px" }}>
+                  <div style={{ display :"flex", flexDirection :"row", alignItems:"center"}}>
                     <div
                       style={{
                         paddingBottom: "10px",
@@ -306,13 +307,28 @@ const UserTable = ({
                       }}
                     >
                       <IconButton
-                        style={{ height: "auto", width: "40px", margin: "2px" }}
+                        style={{
+                          height: "40px",
+                          width: "40px",
+                          marginRight: "10px",
+                          borderRadius: "50%",
+                          backgroundColor: "#007dc6",
+                          color: "#fff",
+                        }}
                         aria-label="edit"
                       >
                         <EditIcon onClick={() => handleEditButtonClick(row)} />
                       </IconButton>
+
                       <IconButton
-                        style={{ height: "auto", width: "40px", margin: "2px" }}
+                        style={{
+                          height: "40px",
+                          width: "40px",
+                          marginRight: "10px",
+                          borderRadius: "50%",
+                          backgroundColor: "red",
+                          color: "#fff",
+                        }}
                         aria-label="delete"
                       >
                         <DeleteIcon
