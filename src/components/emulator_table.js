@@ -237,12 +237,10 @@ const EmulatorTable = ({
               )
             : emulators
           ).map((row) => (
-            <tr key={row.id || "N/A"}>
+            <tr key={row.id || "N/A"} style={{width:"100%"}}>
               <td>{row.status || "N/A"}</td>
               <td
-                style={{
-                  width: "100%",
-                }}
+                
                 align="right"
               >
                 {row.emulatorSsid || "N/A"}
@@ -316,7 +314,8 @@ const EmulatorTable = ({
           <tr style={{ textAlign: "center" }}>
             <td colSpan={5} style={{ textAlign: "right" }}>
               <CustomTablePagination
-                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                // rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[3, 5]}
                 colSpan={5}
                 count={emulators.length}
                 rowsPerPage={rowsPerPage}

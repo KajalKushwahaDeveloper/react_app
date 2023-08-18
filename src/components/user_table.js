@@ -368,7 +368,7 @@ const UserTable = ({
               }}
             >
               <CustomTablePagination
-                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[3, 5]}
                 colSpan={3}
                 count={userData.length}
                 rowsPerPage={rowsPerPage}
