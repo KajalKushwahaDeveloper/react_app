@@ -9,6 +9,145 @@ body {
   @include main;
 }
 
+.authScreen {
+  width: 100%;
+  height: 100vh;
+  background-color: $background-color;
+  position: relative;
+  .row{
+    text-align: center;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-left: 0.2rem;
+  }
+  .Left_content {
+    hr {
+      color: white;
+      height: 2px;
+    }
+
+    p {
+      color: white;
+      text-align: center;
+    }
+  }
+  .authCard {
+    max-width: 350px;
+    margin: auto;
+    border: 1px dotted grey;
+    border-radius: 15px;
+
+    form {
+      
+    margin: 15px;
+     height: auto;
+     display: flex;
+     flex-direction: column;
+     text-align: center;
+
+      h1 {
+        font-size: 30px;
+        font-weight: 700;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+      }
+
+      .inputField {
+        margin: 18px 0;
+
+        input {
+          width: 100%;
+          background-color: rgba($color: $background-color, $alpha: 0.1);
+
+          &:focus {
+            box-shadow: none;
+          }
+        }
+      }
+
+      a {
+        text-decoration: none;
+        color: $background-color;
+      }
+    }
+
+    .Left_content {
+      background-color: $background-color;
+      border-radius: 15px 15px 0 0;
+
+      img {
+        width: 200px;
+        display: block;
+        margin: auto;
+        padding-top: 15px;
+      }
+
+      p {
+        padding: 15px;
+      }
+    }
+  }
+
+  img.gps {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    width: 200px;
+    transform: translate(-50%);
+    z-index: 1;
+  }
+
+  img.middle {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: auto;
+    transform: translatex(-50%);
+    height: 100%;
+    z-index: 0;
+  }
+}
+
+@media only screen and (max-width: 1370px) {
+  .authScreen {
+    img.gps {
+      display: none;
+    }
+
+    img.middle {
+      display: none;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .authScreen {
+
+    .authCard {
+      form {
+
+        h1 {
+          text-align: center;
+          font-size: 25px;
+        }
+
+        .btns {
+          text-align: center;
+        }
+
+
+      }
+
+    }
+    .Left_content {
+      p {
+        max-width: 250px;
+        margin: auto;
+      }
+    }
+  }
+}
 .main_div {
   display: flex;
   height: 100vh; 
