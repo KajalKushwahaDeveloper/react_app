@@ -4,7 +4,7 @@ import axios from "axios";
 import "./scss/home.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { EMULATOR_URL } from "./constants.js";
+import { CLIENT_CURRENT, EMULATOR_CREATE_RANDOM_URL, EMULATOR_URL } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";
 import { Button } from "@mui/material";
@@ -13,6 +13,7 @@ import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
 import GeneratedIdPopup from "./components/generated_id_popup.js";
+import ApiService from "./ApiService.js";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
@@ -33,6 +34,21 @@ const Home = () => {
   const handleOpen = () => {
     setOpenUserPopup(true);
     setUserToEdit(null);
+  };
+
+  const handleCreateEmulator =  async() => {
+    showToast("Creating Emulator","info")
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_CREATE_RANDOM_URL,
+      "POST",
+      null,
+      null
+    );
+    if (success) {
+      showToast(" Emulator Created ","success")
+    } else {
+      showToast(" Failed to create Emulator ","error")
+    }
   };
 
   const handleClose = (userEditedId, emulatorEditedId) => {
@@ -98,6 +114,19 @@ const Home = () => {
         >
           <GeneratedIdPopup />
           <DownloadApk />
+
+          <Button
+            style={{
+              width: "15rem",
+              background: "#007dc6",
+              color: "white",
+              marginBottom: "1rem",
+            }}
+            onClick={handleCreateEmulator}
+          >
+            Create Emulator
+          </Button>
+
           <EmulatorTable
             showToast={showToast}
             handleAssignUserButtonClick={handleAssignUserButtonClick}

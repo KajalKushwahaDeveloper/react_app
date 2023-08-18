@@ -1,10 +1,10 @@
 export const MY_CONSTANT_STRING = "Hello, World!";
-export const LOCAL_API = "http://192.168.1.132:8080";
-export const LOCAL_API_2 = "http://192.168.1.137:8080";
+export const LOCAL_API = "http://192.168.1.110:8080";
+export const LOCAL_API_2 = "http://192.168.1.121:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
-export const BASE_URL = LOCAL_API;
+export const BASE_URL = LOCAL_API_2;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
@@ -18,6 +18,7 @@ export const ADMIN_CURRENT = ADMIN_URL + "/current";
 
 //EMULATOR
 export const EMULATOR_URL = BASE_URL + "/emulator";
+export const EMULATOR_CREATE_RANDOM_URL = EMULATOR_URL + "/createRandom";
 export const EMULATOR_DELETE_URL = EMULATOR_URL;
 export const EMULATOR_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updatePhoneNumber";
 export const EMULATOR_DRAG_URL = EMULATOR_URL + "/dragEmulator";
