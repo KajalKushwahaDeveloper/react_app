@@ -45,7 +45,7 @@ const PopUpEmulatorTelephone = ({
   const handlePhoneChange = (event) => {
     // setTelephone(event.target.value)
     const inputNumber = event.target.value;
-    if (inputNumber.length <= 10) {
+    if (inputNumber.length <= 13) {
       setTelephone(inputNumber);
       setError(""); 
     } else {

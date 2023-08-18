@@ -46,8 +46,11 @@ export const TRIP_STOPS_URL = TRIP_URL + "/stops";
 export const TRIP_TOGGLE = TRIP_URL + "/toggle";
 export const TRIP_HISTORY = TRIP_URL + "/history";
 
-//Contact
-export const CONTACT_SEND_MESSAGE = BASE_URL + "/send-message";
-export const CONTACT_GET_ALL_MESSAGES_FOR_ALL_EMULATOR = BASE_URL + "/getAllMessagesForAllEmulators";
-export const CONTACT_GET_ALL_MESSAGES_FOR_SINGLE_EMULATOR = BASE_URL + "/getMessagesByEmulatorId";
-export const CONTACT_GET_ALL_CALL_FOR_SINGLE_EMULATOR = BASE_URL + "/getAllCallsByEmulatorId";
+//Message
+
+export const MESSAGE_URL = BASE_URL + "/message";
+export const MESSAGE_SEND_MSG = MESSAGE_URL + "/send-message";
+
+//Call
+export const CALL_URL = BASE_URL + "/call";
+export const CALL_MAKE_CALL = BASE_URL + "/make-call";

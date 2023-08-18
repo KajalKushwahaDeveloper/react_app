@@ -13,10 +13,10 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import ApiService from "../../../ApiService";
-import { CONTACT_SEND_MESSAGE,
-   CONTACT_GET_ALL_MESSAGES_FOR_ALL_EMULATOR,
-   CONTACT_GET_ALL_MESSAGES_FOR_SINGLE_EMULATOR,
-   CONTACT_GET_ALL_CALL_FOR_SINGLE_EMULATOR
+import { CALL_URL,
+  MESSAGE_URL,
+  MESSAGE_SEND_MSG,
+  CALL_MAKE_CALL
 } from "../../../constants";
 
 function a11yProps(index) {
@@ -84,7 +84,7 @@ function ContactForm({dialogType, emulatorId}) {
 
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
-        dialogType === 'messages' ? 'CONTACT_SEND_MESSAGE': '',
+        dialogType === 'messages' ? 'MESSAGE_SEND_MSG': 'CALL_MAKE_CALL',
         'POST',
         payload,
         token,
@@ -153,7 +153,7 @@ function ContactDialogComponent({ handleContactDialog, dialogType, open, emulato
         SetData([]);
         const token = localStorage.getItem("token");
         const { success, data, error } = await ApiService.makeApiCall(
-          dialogType === 'messages' ? CONTACT_GET_ALL_MESSAGES_FOR_SINGLE_EMULATOR : CONTACT_GET_ALL_CALL_FOR_SINGLE_EMULATOR,
+          dialogType === 'messages' ? MESSAGE_URL : CALL_URL,
           "GET",
           null,
           token,
@@ -182,7 +182,7 @@ function ContactDialogComponent({ handleContactDialog, dialogType, open, emulato
       {handleContactDialog && (
         <div>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label={handleContactDialog && dialogType === 'call' ? 'Call Details' : 'Meassage Details'} {...a11yProps(0)} />
+          <Tab label={handleContactDialog && dialogType === 'call' ? 'Call' : 'Message'} {...a11yProps(0)} />
           <Tab label={handleContactDialog && dialogType === 'call' ? 'Call History': 'Message History'} {...a11yProps(1)} />
           </Tabs>
           <TabPanel value={value} index={0} style={{height: "20rem"}}>
