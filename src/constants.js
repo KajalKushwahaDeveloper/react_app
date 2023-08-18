@@ -20,6 +20,7 @@ export const ADMIN_CURRENT = ADMIN_URL + "/current";
 //EMULATOR
 export const EMULATOR_URL = BASE_URL + "/emulator";
 export const EMULATOR_CREATE_RANDOM_URL = EMULATOR_URL + "/createRandom";
+export const EMULATOR_CHANGE_SSID_URL = EMULATOR_URL + "/changeSsid";
 export const EMULATOR_DELETE_URL = EMULATOR_URL;
 export const EMULATOR_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updatePhoneNumber";
 export const EMULATOR_DRAG_URL = EMULATOR_URL + "/dragEmulator";
