@@ -53,4 +53,4 @@ export const MESSAGE_SEND_MSG = MESSAGE_URL + "/send-message";
 
 //Call
 export const CALL_URL = BASE_URL + "/call";
-export const CALL_MAKE_CALL = BASE_URL + "/make-call";
+export const CALL_MAKE_CALL = CALL_URL + "/make-call";

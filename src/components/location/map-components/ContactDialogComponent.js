@@ -59,13 +59,13 @@ function ContactForm({dialogType, emulatorId}) {
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [messageError, setMessageError] = useState('');
 
-  const validatePhoneNumber = (number) => {
-    if (!number) {
-      setPhoneNumberError('Phone number is required.');
-      return false;
-    }
-    return true;
-  };
+  // const validatePhoneNumber = (number) => {
+  //   if (!number) {
+  //     setPhoneNumberError('Phone number is required.');
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const validateMessage = (text) => {
     if (!text) {
@@ -77,36 +77,37 @@ function ContactForm({dialogType, emulatorId}) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
-      console.log('Phone Number:', phoneNumber);
+    // if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
+    if (validateMessage(message)) {
+      console.log('emulatorId:', emulatorId);
       console.log('Message:', message);
-      const payload = { "phoneNumber": phoneNumber, "message": message}
+      const payload = { "emulatorId": emulatorId, "message": message}
 
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
-        dialogType === 'messages' ? 'MESSAGE_SEND_MSG': 'CALL_MAKE_CALL',
+        dialogType === 'messages' ? MESSAGE_SEND_MSG : CALL_MAKE_CALL ,
         'POST',
         payload,
         token,
         null,
       );
       if (success) {
+        // Reset form fields and errors
+        setPhoneNumber('');
+        setMessage('');
+        setPhoneNumberError('');
+        setMessageError('');
         console.log('Data submit Successfully', success);
       } else if (error) {
         console.log("Error submit data", "error");
       }
 
-      // Reset form fields and errors
-      setPhoneNumber('');
-      setMessage('');
-      setPhoneNumberError('');
-      setMessageError('');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField
+      {/* <TextField
         label="Phone Number"
         variant="outlined"
         fullWidth
@@ -119,7 +120,7 @@ function ContactForm({dialogType, emulatorId}) {
         }}
         error={!!phoneNumberError}
         helperText={phoneNumberError}
-      />
+      /> */}
       <TextField
         id="outlined-multiline-static"
         label="Message"
