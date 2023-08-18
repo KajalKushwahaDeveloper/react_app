@@ -41,7 +41,10 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedEmulator, setSelectedEmulator] = useState(null);
-  const [ContactDialog, setContactDialog] = useState(null);
+  const [contactDialog, setContactDialog] = useState({
+    open: false,
+    dialogType: ''
+  });
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false);
@@ -52,6 +55,15 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     setOpenEmulatorHistoryPopUp(false);
     setSelectedEmulatorForHistoryData(null);
   };
+
+  const handleContactDetails = (dialogType, emulatorId) => {
+    setContactDialog((state) => ({
+      dialogType,
+      emulatorId,
+      open: !state.open
+    }));
+  }
+
   useEffect(() => {
     console.log("Data : THIS RAN");
     if (data != null) {
@@ -142,13 +154,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     return <div>Error: {error}</div>;
   }
   
-  const handleCallDetails = () => {
-    setContactDialog('call');
-  }
-
-  const handleMessagesDetails = () => {
-    setContactDialog('messages');
-  }
 
   return (
     <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
@@ -195,13 +200,12 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                 </td>
                 <td style={{ display: "flex", width: "auto", alignItems: "center" }} align="right">
                   {row.telephone || "N/A"}
-                  <IconButton>
-                   { ContactDialog !== null && ContactDialog === "call" && <ContactDialogComponent handleCall={"cell"}/>}
-                    <CallRoundedIcon onClick={() => handleCallDetails()}/>
+                  <IconButton onClick={() => handleContactDetails('call', row.id)}>
+                    <CallRoundedIcon />
                   </IconButton>
-                  <IconButton>
-                   { ContactDialog !== null && ContactDialog === "messages" && <ContactDialogComponent handleMessage={"massage"}/>}
-                    <MessageRoundedIcon onClick={() => handleMessagesDetails()}/>
+
+                  <IconButton onClick={() => handleContactDetails('messages', row.id)}>
+                    <MessageRoundedIcon />
                   </IconButton>
                 </td>
                 <td style={{ maxWidth: "150px" }}>
@@ -286,6 +290,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
           open={openEmulatorHistoryPopUp}
           emulatorHistory={selectedEmulatorForHistoryData}
         />
+        <ContactDialogComponent dialogType={contactDialog.dialogType} open={contactDialog.open} emulatorId={contactDialog.emulatorId} handleContactDialog={handleContactDetails} />
       </div>
     </div>
   );

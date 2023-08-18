@@ -1,5 +1,5 @@
 export const MY_CONSTANT_STRING = "Hello, World!";
-export const LOCAL_API = "http://192.168.1.125:8080";
+export const LOCAL_API = "http://192.168.1.110:8080";
 export const LOCAL_API_2 = "http://192.168.1.137:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
@@ -42,3 +42,9 @@ export const CREATE_TRIP_URL = TRIP_URL + "/create";
 export const TRIP_STOPS_URL = TRIP_URL + "/stops";
 export const TRIP_TOGGLE = TRIP_URL + "/toggle";
 export const TRIP_HISTORY = TRIP_URL + "/history";
+
+//Contact
+export const CONTACT_SEND_MESSAGE = BASE_URL + "/send-message";
+export const CONTACT_GET_ALL_MESSAGES_FOR_ALL_EMULATOR = BASE_URL + "/getAllMessagesForAllEmulators";
+export const CONTACT_GET_ALL_MESSAGES_FOR_SINGLE_EMULATOR = BASE_URL + "/getMessagesByEmulatorId";
+export const CONTACT_GET_ALL_CALL_FOR_SINGLE_EMULATOR = BASE_URL + "/getAllCallsByEmulatorId";

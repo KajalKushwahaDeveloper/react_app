@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   Tabs,
@@ -7,8 +7,17 @@ import {
   Box,
   TextField,
   Button,
+  List,
+  Grid,
+  Card
 } from '@mui/material';
 import PropTypes from 'prop-types';
+import ApiService from "../../../ApiService";
+import { CONTACT_SEND_MESSAGE,
+   CONTACT_GET_ALL_MESSAGES_FOR_ALL_EMULATOR,
+   CONTACT_GET_ALL_MESSAGES_FOR_SINGLE_EMULATOR,
+   CONTACT_GET_ALL_CALL_FOR_SINGLE_EMULATOR
+} from "../../../constants";
 
 function a11yProps(index) {
   return {
@@ -44,10 +53,57 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function ContactForm() {
-  const handleSubmit = () => {
+function ContactForm({dialogType, emulatorId}) {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [message, setMessage] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
+  const [messageError, setMessageError] = useState('');
 
+  const validatePhoneNumber = (number) => {
+    if (!number) {
+      setPhoneNumberError('Phone number is required.');
+      return false;
+    }
+    return true;
   };
+
+  const validateMessage = (text) => {
+    if (!text) {
+      setMessageError('Message is required.');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
+      console.log('Phone Number:', phoneNumber);
+      console.log('Message:', message);
+      const payload = { "phoneNumber": phoneNumber, "message": message}
+
+      const token = localStorage.getItem("token");
+      const { success, data, error } = await ApiService.makeApiCall(
+        dialogType === 'messages' ? 'CONTACT_SEND_MESSAGE': '',
+        'POST',
+        payload,
+        token,
+        null,
+      );
+      if (success) {
+        console.log('Data submit Successfully', success);
+      } else if (error) {
+        console.log("Error submit data", "error");
+      }
+
+      // Reset form fields and errors
+      setPhoneNumber('');
+      setMessage('');
+      setPhoneNumberError('');
+      setMessageError('');
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <TextField
@@ -56,6 +112,13 @@ function ContactForm() {
         fullWidth
         margin="normal"
         type='number'
+        value={phoneNumber}
+        onChange={(event) => {
+          setPhoneNumber(event.target.value);
+          setPhoneNumberError('');
+        }}
+        error={!!phoneNumberError}
+        helperText={phoneNumberError}
       />
       <TextField
         id="outlined-multiline-static"
@@ -63,6 +126,13 @@ function ContactForm() {
         multiline
         rows={4}
         fullWidth
+        value={message}
+        onChange={(event) => {
+          setMessage(event.target.value);
+          setMessageError('');
+        }}
+        error={!!messageError}
+        helperText={messageError}
       />
       <div style={{ marginTop: '1rem' }}>
         <Button type="Submit" variant="contained" fullWidth>Submit</Button>
@@ -71,37 +141,90 @@ function ContactForm() {
   );
 }
 
-function ContactDialogComponent({handleCall, handleMessage}) {
-    const [open, setOpen] = useState(true); 
-    const [value, setValue] = React.useState(0);
+function ContactDialogComponent({ handleContactDialog, dialogType, open, emulatorId }) {
+    const [value, setValue] = useState(0);
+    const [data, SetData] = useState([]);
    
-
-    const handleClose = () => {
-        setOpen(false);
-    }
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const handleContactData = async (id) => {
+        SetData([]);
+        const token = localStorage.getItem("token");
+        const { success, data, error } = await ApiService.makeApiCall(
+          dialogType === 'messages' ? CONTACT_GET_ALL_MESSAGES_FOR_SINGLE_EMULATOR : CONTACT_GET_ALL_CALL_FOR_SINGLE_EMULATOR,
+          "GET",
+          null,
+          token,
+          id
+        );
+        if (success) {
+          console.log("Data get successfully", data);
+          SetData(data);
+        } else {
+          console.log("Error In getting data", "error");
+        }
+    }
+
+    useEffect(() => {
+      emulatorId !== undefined && handleContactData(emulatorId)
+    },[emulatorId]);
+
 
   return(
     <div className='ContactDialogContainer'>
     <Dialog 
       open={open}
-      onClose={handleClose}
+      onClose={() => handleContactDialog(dialogType)}
       fullWidth
     >
-      {(handleCall || handleMessage) && (
+      {handleContactDialog && (
         <div>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label={handleCall && !handleMessage ? 'Call Details' : 'Meassage Details'} {...a11yProps(0)} />
-            <Tab label={handleCall && !handleMessage ? 'Call History': 'Message History'} {...a11yProps(1)} />
+          <Tab label={handleContactDialog && dialogType === 'call' ? 'Call Details' : 'Meassage Details'} {...a11yProps(0)} />
+          <Tab label={handleContactDialog && dialogType === 'call' ? 'Call History': 'Message History'} {...a11yProps(1)} />
           </Tabs>
-          <TabPanel value={value} index={0}>
-            <ContactForm />
+          <TabPanel value={value} index={0} style={{height: "20rem"}}>
+            <ContactForm dialogType={dialogType} emulatorId={emulatorId}/>
           </TabPanel>
-          <TabPanel value={value} index={1}>
-            Item Two
+          <TabPanel value={value} index={1} style={{height: "20rem", overflow: "auto"}}>
+            {data.length ? data.map((e) => {
+              return (
+              <List style={{paddingTop: "5px", paddingBottom: "5px"}}>
+                <Card style={{padding: "0.5rem", boxShadow: "0px 0px 8px -4px"}}>
+                <Grid container>
+                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                    <Typography fontWeight={800}>From:</Typography>
+                    <Typography fontWeight={400}>{e.from}</Typography>
+                  </Grid>
+                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                  <Typography fontWeight={800}>To:</Typography>
+                  <Typography fontWeight={400}>{e.to}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                    <Typography fontWeight={800}>Time:</Typography>
+                    <Typography fontWeight={400}>{new Date(e.dateTime).toLocaleTimeString()}</Typography>
+                  </Grid>
+                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                  <Typography fontWeight={800}>Date:</Typography>
+                  <Typography fontWeight={400}>{new Date(e.dateTime).toLocaleDateString()}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item xs={12} display={'flex'} gap={1}>
+                  <Typography fontWeight={800}>Message:</Typography>
+                  <Typography fontWeight={400}>{e.body}</Typography>
+                  </Grid>
+                </Grid>
+                </Card>
+              </List>
+              )
+            })
+            : <Typography fontSize={20} display={'flex'} justifyContent={'center'}>No history found at present.</Typography> 
+          }
           </TabPanel>
         </div>
       )}
