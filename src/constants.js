@@ -20,6 +20,7 @@ export const ADMIN_CURRENT = ADMIN_URL + "/current";
 //EMULATOR
 export const EMULATOR_URL = BASE_URL + "/emulator";
 export const EMULATOR_CREATE_RANDOM_URL = EMULATOR_URL + "/createRandom";
+export const EMULATOR_CHANGE_SSID_URL = EMULATOR_URL + "/changeSsid";
 export const EMULATOR_DELETE_URL = EMULATOR_URL;
 export const EMULATOR_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updatePhoneNumber";
 export const EMULATOR_DRAG_URL = EMULATOR_URL + "/dragEmulator";
@@ -44,3 +45,12 @@ export const CREATE_TRIP_URL = TRIP_URL + "/create";
 export const TRIP_STOPS_URL = TRIP_URL + "/stops";
 export const TRIP_TOGGLE = TRIP_URL + "/toggle";
 export const TRIP_HISTORY = TRIP_URL + "/history";
+
+//Message
+
+export const MESSAGE_URL = BASE_URL + "/message";
+export const MESSAGE_SEND_MSG = MESSAGE_URL + "/send-message";
+
+//Call
+export const CALL_URL = BASE_URL + "/call";
+export const CALL_MAKE_CALL = BASE_URL + "/make-call";

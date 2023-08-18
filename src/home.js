@@ -12,19 +12,21 @@ import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
 import PopUpAssignUser from "./components/popup_assign_user.js";
 import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
-import GeneratedIdPopup from "./components/generated_id_popup.js";
+import ChangeEmulatorSsidPopup from "./components/generated_id_popup.js";
 import ApiService from "./ApiService.js";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
   const [openEmulatorPopup, setOpenEmulatorPopup] = useState(false);
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
-  const [openGeneratedIdPopup, setOpenGeneratedIdPopup] = useState(false);
   const [userToEdit, setUserToEdit] = useState(null);
   const [emulatorToAssignUser, setEmulatorToAssignUser] = useState(null);
   const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
   const [userEditedId, setUserEditedId] = useState(null);
   const [emulatorEditedId, setEmulatorEditedId] = useState(null);
+
+  const [openChangeSsidPopup, setOpenChangeSsidPopup] = useState(false);
+  const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
 
   const showToast = (message, type) => {
     console.log("Showing toast...");
@@ -52,12 +54,20 @@ const Home = () => {
   };
 
   const handleClose = (userEditedId, emulatorEditedId) => {
+    // handle User edit
     setOpenUserPopup(false);
     setUserToEdit(null);
+
+    // handle user assign
     setOpenUserAssignPopup(false);
     setEmulatorToAssignUser(null);
+
+    // handle Ssid changes
+    setOpenChangeSsidPopup(false);
+    setEmulatorToChangeSsid(false);
+
+    // handle Emulator Edit Changes
     setOpenEmulatorPopup(false);
-    setOpenGeneratedIdPopup(false);
     if (userEditedId != null && !isNaN(+userEditedId))
       setUserEditedId(userEditedId);
     if (emulatorEditedId != null && !isNaN(+emulatorEditedId))
@@ -75,7 +85,8 @@ const Home = () => {
   const handleGeneratedIdButtonClick = (data) => {
     console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
-    setOpenGeneratedIdPopup(true);
+    setEmulatorToChangeSsid(data);
+    setOpenChangeSsidPopup(true);
   };
 
   //telephone update
@@ -98,6 +109,10 @@ const Home = () => {
     setOpenUserAssignPopup(false);
   };
 
+  const handleEmulatorSsidChanged = (success, error, data) => {
+    console.log("handleEmulatorSsidChanged with data:", data);
+  };
+
   return (
     <>
       <ToastContainer style={{ zIndex: 3 }} />
@@ -112,7 +127,6 @@ const Home = () => {
             marginTop: "0.5rem",
           }}
         >
-          <GeneratedIdPopup />
           <DownloadApk />
 
           <Button
@@ -173,11 +187,13 @@ const Home = () => {
             userToEdit={userToEdit}
           />
 
-          {/*  emulator generated id */}
-          <GeneratedIdPopup
+          <ChangeEmulatorSsidPopup
            showToast={showToast}
-           open={openGeneratedIdPopup}
-           close={handleClose}
+           open={openChangeSsidPopup}
+           handleClose={handleClose}
+           emulatorToChangeSsid={emulatorToChangeSsid}
+           handleEmulatorSsidChanged={handleEmulatorSsidChanged}
+           handleAssignedUserToEmulator={handleAssignedUserToEmulator}
           />
 
           {/* assign user popup */}
