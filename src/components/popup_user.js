@@ -34,7 +34,8 @@ const PopUpUser = ({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
-
+  
+ console.log("userToEdit1234:", userToEdit);
   useEffect(() => {
     if (userToEdit) {
       setId(userToEdit.id);

@@ -273,11 +273,9 @@ const UserTable = ({
                   >
                     <div style={{ display: "flex", flexDirection: "column" }}>
                       <h3
-                        style={{
-                          paddingLeft: "38px",
-                          marginBottom: "0px",
-                          marginTop: "0px",
-                        }}
+                       style={{
+                        fontSize: "1rem", fontWeight:"600"
+                      }}
                       >
                         {row.firstName + " " + row.lastName || "N/A"}
                       </h3>
