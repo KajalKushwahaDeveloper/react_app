@@ -239,10 +239,21 @@ const EmulatorTable = ({
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
-              <td style={{ width:"100%" }} align="right">
+              <td
+                style={{
+                  width: "100%",
+                }}
+                align="right"
+              >
                 {row.emulatorSsid || "N/A"}
                 <IconButton
-                  style={{ height: "auto", width: "35px", margin: "2px" }}
+                  style={{
+                    height: "40px",
+                    width: "40px",
+                    marginRight: "10px",
+                    marginLeft: "10px",
+                   
+                  }}
                   aria-label="edit"
                 >
                   <EditIcon onClick={() => handleGeneratedIdButtonClick(row)} />
@@ -254,13 +265,33 @@ const EmulatorTable = ({
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td style={{ width: "auto", display: "flex", padding:"1rem 0" }} align="right">
-                <IconButton aria-label="delete">
-                  <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
-                </IconButton>
+              <td
+                style={{ width: "auto", display: "flex", padding: "1rem 0" }}
+                align="right"
+              >
                 <IconButton
                   style={{
-                    margin: "2px",
+                    height: "40px",
+                    width: "40px",
+                    marginRight: "10px",
+                    marginLeft: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: "#007dc6",
+                    color: "#fff",
+                  }}
+                  aria-label="edit"
+                >
+                  <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
+                </IconButton>
+
+                <IconButton
+                  style={{
+                    height: "40px",
+                    width: "40px",
+                    marginRight: "10px",
+                    borderRadius: "50%",
+                    backgroundColor: "red",
+                    color: "#fff",
                   }}
                   aria-label="delete"
                 >
