@@ -110,6 +110,10 @@ body {
 }
 
 @media only screen and (max-width: 1370px) {
+  
+}
+
+@media only screen and (max-width: 768px) {
   .authScreen {
     img.gps {
       display: none;
@@ -119,9 +123,6 @@ body {
       display: none;
     }
   }
-}
-
-@media only screen and (max-width: 768px) {
   .authScreen {
 
     .authCard {

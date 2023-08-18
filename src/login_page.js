@@ -86,9 +86,10 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                   <h1>Log in </h1>
                   <div className="row">
-                    <div className="col-12">
+                    <div className="col-12" >
                       <div className="inputField">
                         <input
+                        style={{margin:"0px"}}
                           type="email"
                           id="content_input"
                           name="email"
@@ -100,9 +101,10 @@ const LoginPage = () => {
                         
                       </div>
                     </div>
-                    <div className="col-12" style={{marginBottom:"1rem"}}>
+                    <div className="col-12" >
                       <div className="inputField">
                         <input
+                          style={{margin:"0px"}}
                           type="password"
                           id="content_input"
                           name="password"
