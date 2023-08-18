@@ -22,6 +22,7 @@ const EmulatorTable = ({
   userAssingedEmulator,
   setUserAssingedEmulator,
   handleEmulatorTelephonePopup,
+  handleGeneratedIdButtonClick,
   emulatorEditedId,
 }) => {
   // State variables
@@ -238,8 +239,14 @@ const EmulatorTable = ({
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
-              <td style={{ width: 120 }} align="right">
+              <td style={{ width:"100%" }} align="right">
                 {row.emulatorSsid || "N/A"}
+                <IconButton
+                  style={{ height: "auto", width: "35px", margin: "2px" }}
+                  aria-label="edit"
+                >
+                  <EditIcon onClick={() => handleGeneratedIdButtonClick(row)} />
+                </IconButton>
               </td>
               <td style={{ width: 120 }} align="right">
                 {row.telephone || "N/A"}
@@ -247,18 +254,8 @@ const EmulatorTable = ({
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td style={{ width: "auto", display: "flex" }} align="right">
-                <IconButton
-                  style={
-                    {
-                      //height: "auto",
-                      //width: "40px",
-                      //margin: "2px",
-                      //backgroundColor: "#f2f2f2",
-                    }
-                  }
-                  aria-label="delete"
-                >
+              <td style={{ width: "auto", display: "flex", padding:"1rem 0" }} align="right">
+                <IconButton aria-label="delete">
                   <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
                 </IconButton>
                 <IconButton
@@ -284,7 +281,7 @@ const EmulatorTable = ({
           ))}
         </tbody>
 
-        <tfoot style={{ border:"none"}}>
+        <tfoot style={{ border: "none" }}>
           <tr style={{ textAlign: "center" }}>
             <td colSpan={5} style={{ textAlign: "right" }}>
               <CustomTablePagination
