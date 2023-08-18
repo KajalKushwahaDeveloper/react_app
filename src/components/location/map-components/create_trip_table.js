@@ -56,7 +56,7 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
       token
     );
     if (success) {
-      showToast("Added successfully // TODO HANDLE CHANGES TO MAP", "success");
+      showToast("Added successfully", "success");
       setSelectedEmId(0);
       setSelectedEmId(selectedEmId);
       setCreateTripInfo(data);
