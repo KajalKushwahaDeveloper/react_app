@@ -11,7 +11,7 @@ import {
   TRIP_TOGGLE,
   USER_URL,
 } from "../../../constants";
-//scss 
+//scss
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 
@@ -21,8 +21,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CallRoundedIcon from '@mui/icons-material/CallRounded';
-import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import CallRoundedIcon from "@mui/icons-material/CallRounded";
+import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 
 //components
 import ContactDialogComponent from "./ContactDialogComponent";
@@ -43,7 +43,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   const [selectedEmulator, setSelectedEmulator] = useState(null);
   const [contactDialog, setContactDialog] = useState({
     open: false,
-    dialogType: ''
+    dialogType: "",
   });
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
@@ -60,9 +60,9 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     setContactDialog((state) => ({
       dialogType,
       emulatorId,
-      open: !state.open
+      open: !state.open,
     }));
-  }
+  };
 
   useEffect(() => {
     console.log("Data : THIS RAN");
@@ -80,7 +80,9 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     }
     if (selectedEmId != selectedEmulator) {
       setSelectedEmulator(selectedEmId);
-      const selectedEmIndex = data.findIndex((item) => item.id === selectedEmId);
+      const selectedEmIndex = data.findIndex(
+        (item) => item.id === selectedEmId
+      );
       // Calculate the new active page based on the selected checkbox index and rowsPerPage
       if (selectedEmIndex !== -1) {
         const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
@@ -153,7 +155,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   if (error) {
     return <div>Error: {error}</div>;
   }
-  
 
   return (
     <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
@@ -166,9 +167,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
               <th>Number</th>
               <th style={{ maxWidth: "300px" }}>Address</th>
               <th>Select</th>
-              <th>
-                Trip/Action
-              </th>
+              <th>Trip/Action</th>
             </tr>
           </thead>
 
@@ -185,12 +184,24 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                 >
                   {row.status || "N/A"}
                 </td>
-                <td style={{ width: "auto" }} align="right">
+                <td style={{ width: "auto", alignItems: "center" }} align="right">
                   <div style={{ display: "flex" }}>
+                    <Tooltip title={row.emulatorSsid || "N/A"} placement="top" alignItems="center"
+                      display= "flex">
+                      <div
+                        style={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          maxWidth:"150px",
+                          textAlign: "center"
+                        }}
+                        align="right"
+                      >
+                        {row.emulatorSsid || "N/A"}
+                      </div>
+                    </Tooltip>
                     {/* Show History */}
-                    <p style={{ textAlign: "center" }}>
-                      {row.emulatorSsid || "N/A"}
-                    </p>
                     <IconButton>
                       <HistoryIcon
                         onClick={() => handleHistoryButtonClick(row)}
@@ -198,13 +209,24 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                     </IconButton>
                   </div>
                 </td>
-                <td style={{ display: "flex", width: "auto", alignItems: "center" }} align="right">
+                <td
+                  style={{
+                    display: "flex",
+                    width: "auto",
+                    alignItems: "center",
+                  }}
+                  align="right"
+                >
                   {row.telephone || "N/A"}
-                  <IconButton onClick={() => handleContactDetails('call', row.id)}>
+                  <IconButton
+                    onClick={() => handleContactDetails("call", row.id)}
+                  >
                     <CallRoundedIcon />
                   </IconButton>
 
-                  <IconButton onClick={() => handleContactDetails('messages', row.id)}>
+                  <IconButton
+                    onClick={() => handleContactDetails("messages", row.id)}
+                  >
                     <MessageRoundedIcon />
                   </IconButton>
                 </td>
@@ -290,7 +312,12 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
           open={openEmulatorHistoryPopUp}
           emulatorHistory={selectedEmulatorForHistoryData}
         />
-        <ContactDialogComponent dialogType={contactDialog.dialogType} open={contactDialog.open} emulatorId={contactDialog.emulatorId} handleContactDialog={handleContactDetails} />
+        <ContactDialogComponent
+          dialogType={contactDialog.dialogType}
+          open={contactDialog.open}
+          emulatorId={contactDialog.emulatorId}
+          handleContactDialog={handleContactDetails}
+        />
       </div>
     </div>
   );
