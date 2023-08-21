@@ -9,7 +9,9 @@ import {
   Button,
   List,
   Grid,
-  Card
+  Card,
+  Backdrop,
+  CircularProgress
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import ApiService from "../../../ApiService";
@@ -53,19 +55,19 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function ContactForm({dialogType, emulatorId}) {
+function ContactForm({dialogType, emulatorId, showToast}) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [message, setMessage] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [messageError, setMessageError] = useState('');
 
-  // const validatePhoneNumber = (number) => {
-  //   if (!number) {
-  //     setPhoneNumberError('Phone number is required.');
-  //     return false;
-  //   }
-  //   return true;
-  // };
+  const validatePhoneNumber = (number) => {
+    if (!number) {
+      setPhoneNumberError('Phone number is required.');
+      return false;
+    }
+    return true;
+  };
 
   const validateMessage = (text) => {
     if (!text) {
@@ -77,11 +79,10 @@ function ContactForm({dialogType, emulatorId}) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
-    if (validateMessage(message)) {
+    if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
       console.log('emulatorId:', emulatorId);
       console.log('Message:', message);
-      const payload = { "emulatorId": emulatorId, "message": message}
+      const payload = { "emulatorId": emulatorId, "message": message, 'phoneNumber': phoneNumber };
 
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
@@ -97,9 +98,9 @@ function ContactForm({dialogType, emulatorId}) {
         setMessage('');
         setPhoneNumberError('');
         setMessageError('');
-        console.log('Data submit Successfully', success);
+        showToast('Data submit Successfully', 'success');
       } else if (error) {
-        console.log("Error submit data", "error");
+        showToast(`error: ${error.message}`, 'error');
       }
 
     }
@@ -107,7 +108,7 @@ function ContactForm({dialogType, emulatorId}) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* <TextField
+      <TextField
         label="Phone Number"
         variant="outlined"
         fullWidth
@@ -120,7 +121,7 @@ function ContactForm({dialogType, emulatorId}) {
         }}
         error={!!phoneNumberError}
         helperText={phoneNumberError}
-      /> */}
+      />
       <TextField
         id="outlined-multiline-static"
         label="Message"
@@ -142,15 +143,17 @@ function ContactForm({dialogType, emulatorId}) {
   );
 }
 
-function ContactDialogComponent({ handleContactDialog, dialogType, open, emulatorId }) {
+function ContactDialogComponent({ handleContactDialog, dialogType, open, emulatorId, showToast }) {
     const [value, setValue] = useState(0);
     const [data, SetData] = useState([]);
+    const [loader, setLoading] = useState(false);
    
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
     const handleContactData = async (id) => {
+        setLoading(true);
         SetData([]);
         const token = localStorage.getItem("token");
         const { success, data, error } = await ApiService.makeApiCall(
@@ -162,8 +165,10 @@ function ContactDialogComponent({ handleContactDialog, dialogType, open, emulato
         );
         if (success) {
           console.log("Data get successfully", data);
+          setLoading(false);
           SetData(data);
         } else {
+          setLoading(false)
           console.log("Error In getting data", "error");
         }
     }
@@ -187,7 +192,7 @@ function ContactDialogComponent({ handleContactDialog, dialogType, open, emulato
           <Tab label={handleContactDialog && dialogType === 'call' ? 'Call History': 'Message History'} {...a11yProps(1)} />
           </Tabs>
           <TabPanel value={value} index={0} style={{height: "20rem"}}>
-            <ContactForm dialogType={dialogType} emulatorId={emulatorId}/>
+            <ContactForm dialogType={dialogType} emulatorId={emulatorId} showToast={showToast}/>
           </TabPanel>
           <TabPanel value={value} index={1} style={{height: "20rem", overflow: "auto"}}>
             {data.length ? data.map((e) => {
@@ -226,6 +231,12 @@ function ContactDialogComponent({ handleContactDialog, dialogType, open, emulato
             })
             : <Typography fontSize={20} display={'flex'} justifyContent={'center'}>No history found at present.</Typography> 
           }
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={loader}
+          >
+            <CircularProgress color="inherit" />
+        </Backdrop>
           </TabPanel>
         </div>
       )}

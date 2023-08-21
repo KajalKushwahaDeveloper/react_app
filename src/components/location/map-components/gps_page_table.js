@@ -320,6 +320,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
           open={contactDialog.open}
           emulatorId={contactDialog.emulatorId}
           handleContactDialog={handleContactDetails}
+          showToast={showToast}
         />
       </div>
     </div>
