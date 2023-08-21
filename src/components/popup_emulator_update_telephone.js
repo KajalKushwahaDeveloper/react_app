@@ -2,11 +2,11 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from "@mui/material/IconButton";
+import ClearIcon from "@mui/icons-material/Clear";
 import "../scss/login.scss";
 import { EMULATOR_TELEPHONE_UPDATE_URL } from "../constants";
-import { GetEmulatorApi } from "../components/api/emulator";
+import DropDown from "./dropDown";
 
 const style = {
   position: "absolute",
@@ -31,60 +31,47 @@ const PopUpEmulatorTelephone = ({
   const navigate = useNavigate();
   const [id, setId] = useState("");
   const [telephone, setTelephone] = useState("");
-
+  const [twilioUpdatedPhone, setTwilioUpdatedPhone] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (userToEdit) {
       setId(userToEdit.id);
-      console.log("userToEdit::", userToEdit)
+      console.log("userToEdit::", userToEdit);
       setTelephone(userToEdit.telephone);
     }
   }, [userToEdit]);
+  console.log("twilioUpdatedPhone", twilioUpdatedPhone);
 
-  const handlePhoneChange = (event) => {
-    // setTelephone(event.target.value)
-    const inputNumber = event.target.value;
-    if (inputNumber.length <= 13) {
-      setTelephone(inputNumber);
-      setError(""); 
-    } else {
-      setError("Telephone number cannot be more than 10 digits.");
-    }
-    
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-      try {
-        const { success, error } = await addUser();
+    try {
+      const { success, error } = await addUser();
 
-        if (success) {
-          console.log("Telephone Number added successfully");
-          if (userToEdit != null) {
-            handleClose(null, userToEdit?.id);
-          } else {
-            handleClose(null, 0);
-          }
-          showToast("Telephone Number Added", "success"); 
-          
-        
+      if (success) {
+        console.log("Telephone Number added successfully");
+        if (userToEdit != null) {
+          handleClose(null, userToEdit?.id);
         } else {
-          showToast(error || "Failed to add Telephone Number", "error"); 
-          setError(error || "Failed to add Telephone Number"); 
+          handleClose(null, 0);
         }
-      } catch (error) {
-        console.log("Error occurred while adding Telephone Number:", error);
-        setError("An error occurred while adding Telephone Number");
+        showToast("Telephone Number Added", "success");
+      } else {
+        showToast(error || "Failed to add Telephone Number", "error");
+        setError(error || "Failed to add Telephone Number");
       }
+    } catch (error) {
+      console.log("Error occurred while adding Telephone Number:", error);
+      setError("An error occurred while adding Telephone Number");
     }
-  
+  };
 
   const addUser = async () => {
     const user = {
-      id,
-      telephone,
+      id:id,
+      telephone:twilioUpdatedPhone,
     };
 
     const token = localStorage.getItem("token");
@@ -107,10 +94,9 @@ const PopUpEmulatorTelephone = ({
       return { success: true };
     } catch (e) {
       showToast(`Failed to unassign user ${e}`, "error");
-      return { success: false, error: e};
+      return { success: false, error: e };
     }
   };
-
 
   return (
     <div>
@@ -122,9 +108,9 @@ const PopUpEmulatorTelephone = ({
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
-        <IconButton
+          <IconButton
             sx={{
-              position: 'absolute',
+              position: "absolute",
               top: 8,
               right: 8,
               zIndex: 1,
@@ -134,18 +120,11 @@ const PopUpEmulatorTelephone = ({
             <ClearIcon />
           </IconButton>
           <form onSubmit={handleSubmit}>
-            <h1 style={{marginBottom:"4rem"}}> Edit Phone Number</h1>
+            <h1 style={{ marginBottom: "2rem" ,fontSize:"1.5rem", fontWeight:"600"}}> Assign Phone Number</h1>
 
-            <label htmlFor="telephone_input">Phone Number:</label>
-            <input
-              type="number"
-              id="telephone_input"
-              placeholder="Enter your phone number"
-              value={telephone}
-              onChange={handlePhoneChange}
-            />
+            <DropDown setTwilioUpdatedPhone = {setTwilioUpdatedPhone}/>
 
-            <button className="login_button" type="submit" >
+            <button className="login_button" type="submit">
               Add
             </button>
             {error && <p className="error">{error}</p>}

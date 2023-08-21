@@ -4,7 +4,7 @@ export const LOCAL_API_2 = "http://192.168.1.121:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
-export const BASE_URL = LIVE_API_CLIENT;
+export const BASE_URL = LOCAL_API;
 
 
 //BASE
@@ -54,3 +54,7 @@ export const MESSAGE_SEND_MSG = MESSAGE_URL + "/send-message";
 //Call
 export const CALL_URL = BASE_URL + "/call";
 export const CALL_MAKE_CALL = CALL_URL + "/make-call";
+
+
+//twilio
+export const TWILIO_PHONE_URL = BASE_URL + "/phone-numbers";

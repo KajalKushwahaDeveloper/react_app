@@ -152,7 +152,9 @@ const PopUpUser = ({
             <ClearIcon />
           </IconButton>
           <form onSubmit={handleSubmit}>
-            <h1>{userToEdit === null ? "Add User" : "Edit User"}</h1>
+            
+            <h1 style={{marginBottom:"3rem",fontSize:"1.5rem", fontWeight:"600"}}>{userToEdit === null ? "Add User" : "Edit User"}</h1>
+
             <input
               type="text"
               id="content_input"
