@@ -66,6 +66,13 @@ function ContactForm({dialogType, emulatorId, showToast}) {
       setPhoneNumberError('Phone number is required.');
       return false;
     }
+
+    if (number.replace(/\D/g, '').length > 13) {
+      setPhoneNumberError('Phone number is too long.');
+      return false;
+    }
+
+    setPhoneNumberError('');
     return true;
   };
 
@@ -139,6 +146,125 @@ function ContactForm({dialogType, emulatorId, showToast}) {
   );
 }
 
+function ShowHistory(dialogType, data) {
+  return (
+    <div>
+      { dialogType === 'call' && data.length ? data.map((callData) => {
+        return (
+          <List style={{paddingTop: "5px", paddingBottom: "5px"}}>
+            <Card style={{padding: "0.5rem", boxShadow: "0px 0px 8px -4px"}}>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>From:</Typography>
+                <Typography fontWeight={400}>{callData.from}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+              <Typography fontWeight={800}>To:</Typography>
+              <Typography fontWeight={400}>{callData.to}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Start Time:</Typography>
+                <Typography fontWeight={400}>{new Date(callData.startTime).toLocaleTimeString()}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+              <Typography fontWeight={800}>End Time:</Typography>
+              <Typography fontWeight={400}>{new Date(callData.endTime).toLocaleTimeString()}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Duration:</Typography>
+                <Typography fontWeight={400}>{callData.durations}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+              <Typography fontWeight={800}>Status:</Typography>
+              <Typography fontWeight={400}>{callData.status}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>AnsweredBy:</Typography>
+                <Typography fontWeight={400}>{callData.answeredBy === null ? 'N/A' : callData.answeredBy}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Price:</Typography>
+                <Typography fontWeight={400}>{callData.price + ''+ callData.priceUnit}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Direction:</Typography>
+                <Typography fontWeight={400}>{callData.direction}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Caller Name:</Typography>
+                <Typography fontWeight={400}>{callData.callerName}</Typography>
+              </Grid>
+            </Grid>
+            </Card>
+          </List>
+        )
+      }) 
+      : <Typography fontSize={20} display={'flex'} justifyContent={'center'}>No history found at present.</Typography> 
+      }
+      { dialogType === 'messages' && data.length ? data.map((msgData) => {
+        return(
+          <List style={{paddingTop: "5px", paddingBottom: "5px"}}>
+            <Card style={{padding: "0.5rem", boxShadow: "0px 0px 8px -4px"}}>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>From:</Typography>
+                <Typography fontWeight={400}>{msgData.from}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+              <Typography fontWeight={800}>To:</Typography>
+              <Typography fontWeight={400}>{msgData.to}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Sent Date:</Typography>
+                <Typography fontWeight={400}>{new Date(msgData.dateSent).toLocaleTimeString()}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+              <Typography fontWeight={800}>Sent Time:</Typography>
+              <Typography fontWeight={400}>{new Date(msgData.dateSent).toLocaleDateString()}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Status:</Typography>
+                <Typography fontWeight={400}>{msgData.status}</Typography>
+              </Grid>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+              <Typography fontWeight={800}>Durations:</Typography>
+              <Typography fontWeight={400}>{msgData.direction}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
+                <Typography fontWeight={800}>Price:</Typography>
+                <Typography fontWeight={400}>{msgData.price +''+ msgData.priceUnit}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container>
+              <Grid item xs={12} display={'flex'} gap={1}>
+              <Typography fontWeight={800}>Message:</Typography>
+              <Typography fontWeight={400}>{msgData.body}</Typography>
+              </Grid>
+            </Grid>
+            </Card>
+          </List>
+        )
+      }) 
+      : <Typography fontSize={20} display={'flex'} justifyContent={'center'}>No history found at present.</Typography> 
+      }
+    </div>
+  )
+}
+
 function ContactDialogComponent({ handleContactDialog, dialogType, open, emulatorId, showToast }) {
     const [value, setValue] = useState(0);
     const [data, SetData] = useState([]);
@@ -191,48 +317,13 @@ function ContactDialogComponent({ handleContactDialog, dialogType, open, emulato
             <ContactForm dialogType={dialogType} emulatorId={emulatorId} showToast={showToast}/>
           </TabPanel>
           <TabPanel value={value} index={1} style={{height: "20rem", overflow: "auto"}}>
-            {data.length ? data.map((e) => {
-              return (
-              <List style={{paddingTop: "5px", paddingBottom: "5px"}}>
-                <Card style={{padding: "0.5rem", boxShadow: "0px 0px 8px -4px"}}>
-                <Grid container>
-                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
-                    <Typography fontWeight={800}>From:</Typography>
-                    <Typography fontWeight={400}>{e.from}</Typography>
-                  </Grid>
-                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
-                  <Typography fontWeight={800}>To:</Typography>
-                  <Typography fontWeight={400}>{e.to}</Typography>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
-                    <Typography fontWeight={800}>Time:</Typography>
-                    <Typography fontWeight={400}>{new Date(e.dateTime).toLocaleTimeString()}</Typography>
-                  </Grid>
-                  <Grid item xs={6} display={'flex'} direction={'row'} gap={1}>
-                  <Typography fontWeight={800}>Date:</Typography>
-                  <Typography fontWeight={400}>{new Date(e.dateTime).toLocaleDateString()}</Typography>
-                  </Grid>
-                </Grid>
-                <Grid container>
-                  <Grid item xs={12} display={'flex'} gap={1}>
-                  <Typography fontWeight={800}>Message:</Typography>
-                  <Typography fontWeight={400}>{e.body}</Typography>
-                  </Grid>
-                </Grid>
-                </Card>
-              </List>
-              )
-            })
-            : <Typography fontSize={20} display={'flex'} justifyContent={'center'}>No history found at present.</Typography> 
-          }
-          <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loader}
-          >
-            <CircularProgress color="inherit" />
-        </Backdrop>
+            <ShowHistory dialogType={dialogType} data={data} />
+            <Backdrop
+              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={loader}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
           </TabPanel>
         </div>
       )}
