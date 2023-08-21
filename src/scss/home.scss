@@ -3,9 +3,13 @@
 
 
 body {
-  @include main;
+  @include main; 
 }
-
+@media (max-width: 1200px) {
+  body {
+   overflow-y: auto !important;  
+  }
+}
 .home_div {
   margin:0 1rem;
   display: flex;
@@ -68,7 +72,6 @@ body {
     padding: 0 10px;
   }
 }
-
 @media (min-width: 1024px) {
   .home_div {
     display: flex;

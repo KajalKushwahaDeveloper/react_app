@@ -15,7 +15,7 @@ import ApiService from "../ApiService";
 import { EMULATOR_DELETE_URL } from "../constants";
 import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator";
 import { display } from "@material-ui/system";
-
+import { Tooltip } from "@mui/material";
 const EmulatorTable = ({
   showToast,
   handleAssignUserButtonClick,
@@ -169,21 +169,21 @@ const EmulatorTable = ({
   }, []);
 
   //Refresh component after 30000 ms/ 30 seconds
-  useEffect(() => {
-    const fetchDataInterval = setInterval(() => {
-      setLoading(true);
-      const { success, error } = fetchData();
-      if (success) {
-        showToast("Fetched Emulators successfully", "success");
-      } else {
-        showToast(error, "error");
-      }
-    }, 30000);
+  // useEffect(() => {
+  //   const fetchDataInterval = setInterval(() => {
+  //     setLoading(true);
+  //     const { success, error } = fetchData();
+  //     if (success) {
+  //       showToast("Fetched Emulators successfully", "success");
+  //     } else {
+  //       showToast(error, "error");
+  //     }
+  //   }, 30000);
 
-    return () => {
-      clearInterval(fetchDataInterval);
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(fetchDataInterval);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (userAssingedEmulator != null) {
@@ -237,21 +237,27 @@ const EmulatorTable = ({
               )
             : emulators
           ).map((row) => (
-            <tr key={row.id || "N/A"} style={{width:"100%"}}>
+            <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
-              <td
-                
-                align="right"
-              >
-                {row.emulatorSsid || "N/A"}
+              <td style={{ width:"100%"}}>
+              <Tooltip title={row.emulatorSsid || "N/A"} placement="top" alignItems="center"
+                      display= "flex">
+                      <div
+                        style={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          maxWidth:"150px",
+                          textAlign: "center"
+                        }}
+                        align="right"
+                      >
+                        {row.emulatorSsid || "N/A"}
+                      </div>
+                    </Tooltip>
+
                 <IconButton
-                  style={{
-                    height: "40px",
-                    width: "40px",
-                    marginRight: "10px",
-                    marginLeft: "10px",
-                   
-                  }}
+                  style={{ height: "auto", width: "35px", margin: "2px" }}
                   aria-label="edit"
                 >
                   <EditIcon onClick={() => handleGeneratedIdButtonClick(row)} />
@@ -263,33 +269,13 @@ const EmulatorTable = ({
               <td style={{ width: 120 }} align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td
-                style={{ width: "auto", display: "flex", padding: "1rem 0" }}
-                align="right"
-              >
-                <IconButton
-                  style={{
-                    height: "40px",
-                    width: "40px",
-                    marginRight: "10px",
-                    marginLeft: "10px",
-                    borderRadius: "50%",
-                    backgroundColor: "#007dc6",
-                    color: "#fff",
-                  }}
-                  aria-label="edit"
-                >
+              <td style={{ width: "auto", display: "flex", padding:"1.5rem" }} align="right">
+                <IconButton aria-label="delete">
                   <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
                 </IconButton>
-
                 <IconButton
                   style={{
-                    height: "40px",
-                    width: "40px",
-                    marginRight: "10px",
-                    borderRadius: "50%",
-                    backgroundColor: "red",
-                    color: "#fff",
+                    margin: "2px",
                   }}
                   aria-label="delete"
                 >
@@ -314,8 +300,7 @@ const EmulatorTable = ({
           <tr style={{ textAlign: "center" }}>
             <td colSpan={5} style={{ textAlign: "right" }}>
               <CustomTablePagination
-                // rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-                rowsPerPageOptions={[3, 5]}
+                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
                 colSpan={5}
                 count={emulators.length}
                 rowsPerPage={rowsPerPage}
