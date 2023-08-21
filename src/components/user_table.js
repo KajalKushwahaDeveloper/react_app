@@ -244,7 +244,7 @@ const UserTable = ({
 
   return (
     <Root sx={{ width: "auto", maxWidth: "100%" }}>
-      <table aria-label="custom pagination table">
+          <table aria-label="custom pagination table">
         <tbody>
           {(rowsPerPage > 0
             ? userData.slice(
@@ -273,10 +273,9 @@ const UserTable = ({
                   >
                     <div style={{ display: "flex", flexDirection: "column" }}>
                       <h3
-                        style={{
-                          fontSize: "1rem",
-                          fontWeight: "600",
-                        }}
+                       style={{
+                        fontSize: "1rem", fontWeight:"600"
+                      }}
                       >
                         {row.firstName + " " + row.lastName || "N/A"}
                       </h3>
@@ -297,7 +296,9 @@ const UserTable = ({
                       </ul>
                     </div>
                   </div>
-                  <div style={{ display :"flex", flexDirection :"row", alignItems:"center"}}>
+                  <div style={{  display:"flex",
+                         flexDirection:"row",
+                         alignItems:"center" }}>
                     <div
                       style={{
                         paddingBottom: "10px",
@@ -306,27 +307,24 @@ const UserTable = ({
                         justifyContent: "center",
                       }}
                     >
-                      <IconButton
-                        style={{
-                          height: "40px",
-                          width: "40px",
-                          marginRight: "10px",
-                          borderRadius: "50%",
-                          backgroundColor: "#007dc6",
-                          color: "#fff",
+                      <IconButton 
+                        style={{  height: "40px",
+                        width: "40px",
+                        marginRight: "10px",
+                        borderRadius: "50%",
+                        backgroundColor: "#007dc6",
+                        color: "#fff",
                         }}
                         aria-label="edit"
                       >
                         <EditIcon onClick={() => handleEditButtonClick(row)} />
                       </IconButton>
-
-                      <IconButton
-                        style={{
-                          height: "40px",
+                      <IconButton 
+                        style={{ height: "40px",
                           width: "40px",
                           marginRight: "10px",
                           borderRadius: "50%",
-                          backgroundColor: "red",
+                          backgroundColor: "red", 
                           color: "#fff",
                         }}
                         aria-label="delete"
@@ -368,7 +366,7 @@ const UserTable = ({
               }}
             >
               <CustomTablePagination
-                rowsPerPageOptions={[3, 5]}
+                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
                 colSpan={3}
                 count={userData.length}
                 rowsPerPage={rowsPerPage}
