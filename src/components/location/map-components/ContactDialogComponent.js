@@ -80,10 +80,7 @@ function ContactForm({dialogType, emulatorId, showToast}) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
-      console.log('emulatorId:', emulatorId);
-      console.log('Message:', message);
-      const payload = { "emulatorId": emulatorId, "message": message, 'phoneNumber': phoneNumber };
-
+      const payload = { "emulatorId": emulatorId, "message": message, 'number': phoneNumber };
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
         dialogType === 'messages' ? MESSAGE_SEND_MSG : CALL_MAKE_CALL ,
@@ -93,7 +90,6 @@ function ContactForm({dialogType, emulatorId, showToast}) {
         null,
       );
       if (success) {
-        // Reset form fields and errors
         setPhoneNumber('');
         setMessage('');
         setPhoneNumberError('');
