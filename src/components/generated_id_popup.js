@@ -204,6 +204,7 @@ const ChangeEmulatorSsidPopup = (props) => {
       >
         <BootstrapDialogTitle
           style={{
+            marginTop:"1rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",

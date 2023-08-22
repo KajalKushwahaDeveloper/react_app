@@ -239,37 +239,58 @@ const EmulatorTable = ({
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
-              <td style={{ width:"100%"}}>
-              <Tooltip title={row.emulatorSsid || "N/A"} placement="top" alignItems="center"
-                      display= "flex">
-                      <div
-                        style={{
-                          textOverflow: "ellipsis",
-                          overflow: "hidden",
-                          whiteSpace: "nowrap",
-                          maxWidth:"150px",
-                          textAlign: "center"
-                        }}
-                        align="right"
-                      >
-                        {row.emulatorSsid || "N/A"}
-                      </div>
-                    </Tooltip>
+              <td>
+                <div
+                  style={{
+                    display: "inline-block",
+                    maxWidth: "60px",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    marginTop:".8rem"
+                  }}
+                >
+                  <Tooltip
+                    title={row.emulatorSsid || "N/A"}
+                    placement="top"
+                    alignItems="center"
+                    display="flex"
+                  >
+                    <div
+                      style={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        maxWidth: "150px",
+                        textAlign: "center",
+                      }}
+                      align="right"
+                    >
+                      {row.emulatorSsid || "N/A"}
+                    </div>
+                  </Tooltip>
+                </div>
 
                 <IconButton
-                  style={{ height: "auto", width: "35px", margin: "2px" }}
+                  style={{
+                    height: "auto",
+                    width: "35px",
+                    float: "right",
+                  }}
                   aria-label="edit"
                 >
                   <EditIcon onClick={() => handleGeneratedIdButtonClick(row)} />
                 </IconButton>
               </td>
-              <td style={{ width: 120 }} align="right">
+              <td  align="right">
                 {row.telephone || "N/A"}
               </td>
-              <td style={{ width: 120 }} align="right">
+              <td align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td style={{ width: "auto", display: "flex", padding:"1.5rem" }} align="right">
+              <td
+                style={{ width: "auto", display: "flex" , padding:".5rem 0"}}
+                align="right"
+              >
                 <IconButton aria-label="delete">
                   <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
                 </IconButton>
@@ -296,9 +317,9 @@ const EmulatorTable = ({
           ))}
         </tbody>
 
-        <tfoot style={{ border: "none" }}>
+        <tfoot className="table_footer" style={{ border: "none" }}>
           <tr style={{ textAlign: "center" }}>
-            <td colSpan={5} style={{ textAlign: "right" }}>
+            <td colSpan={5} style={{ textAlign: "right", paddingTop:".5rem"}}>
               <CustomTablePagination
                 rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
                 colSpan={5}

@@ -274,7 +274,7 @@ const UserTable = ({
                     <div style={{ display: "flex", flexDirection: "column" }}>
                       <h3
                        style={{
-                        fontSize: "1rem", fontWeight:"600"
+                        fontSize: "1rem", fontWeight:"600", marginTop:".5rem"
                       }}
                       >
                         {row.firstName + " " + row.lastName || "N/A"}
@@ -308,7 +308,8 @@ const UserTable = ({
                       }}
                     >
                       <IconButton 
-                        style={{  height: "40px",
+                        style={{  
+                        height: "40px",
                         width: "40px",
                         marginRight: "10px",
                         borderRadius: "50%",
@@ -363,6 +364,7 @@ const UserTable = ({
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
+                padding:".5rem 0",
               }}
             >
               <CustomTablePagination

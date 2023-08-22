@@ -87,20 +87,11 @@ const Navbar = ({ isAdmin }) => {
                   GPS
                 </NavLink>
               </li>
-              {/* Drop down  */}
-              <li>
-                <NavLink
-                  to="/settings"
-                  className="navbar-link"
-                  onClick={() => setMenuIcon(false)}
-                >
-                  Settings
-                </NavLink>
-              </li>
-              <li>
+        
+              <p style={{marginBottom:".8rem"}}>
                 {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
                 {data?.username || "N/A"})
-              </li>
+              </p>
               <li>
                 <NavLink
                   to="/"

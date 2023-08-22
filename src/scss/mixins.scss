@@ -9,6 +9,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Raleway', sans-serif; /* Updated font-family to Raleway */
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     letter-spacing: 2px;
   }

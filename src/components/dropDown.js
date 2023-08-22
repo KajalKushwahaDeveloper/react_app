@@ -11,7 +11,7 @@ import { styled } from "@mui/material/styles";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { TWILIO_PHONE_URL } from "../constants";
+import { PHONE_GET_AVAILABLE_NUMBERS_URL } from "../constants";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -77,12 +77,11 @@ const DropDown = (props) => {
   const [selectedUserId, SetSelectedUserId] = useState();
 
  
-
   // Fetch data from API
   const fetchUsers = async () => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(TWILIO_PHONE_URL, {
+      const response = await fetch(PHONE_GET_AVAILABLE_NUMBERS_URL, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

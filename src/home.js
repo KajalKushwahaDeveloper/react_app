@@ -131,7 +131,7 @@ const Home = () => {
 
           <Button
             style={{
-              width: "15rem",
+              width: "10rem",
               background: "#007dc6",
               color: "white",
               marginBottom: "1rem",

@@ -81,7 +81,7 @@ td {
   border: none;
   box-shadow: $tableShadow;
   text-align: left;
-  padding:  .4rem;
+  padding:0 .4rem;
   background-color:white;
 }
 
@@ -96,16 +96,8 @@ th {
 .table_footer{
   height:10px;
 }
-@media screen and (max-width: 768px) {
-  table {
-    font-size: 0.75rem;
-  }
 
-  td,
-  th {
-    padding: 8px;
-  }
-}
+
 @media screen and (max-width: 786px) {
   .gps_page {
     flex-wrap: wrap;

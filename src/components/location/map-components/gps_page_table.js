@@ -195,7 +195,8 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                           overflow: "hidden",
                           whiteSpace: "nowrap",
                           maxWidth:"150px",
-                          textAlign: "center"
+                          textAlign: "center",
+                          marginTop:".7rem"
                         }}
                         align="right"
                       >
@@ -217,6 +218,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                     display: "flex",
                     width: "auto",
                     alignItems: "center",
+                    justifyContent:"space-between"
                   }}
                   align="right"
                 >
@@ -254,7 +256,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                   />
                 </td>
                 <td style={{ width: "auto" }} align="right">
-                  <div style={{ display: "flex" }}>
+                  <div style={{ display: "flex", justifyContent:"space-between" }}>
                     {/* Trip Status */}
                     <p style={{ textAlign: "center" }}>{row.tripStatus}</p>
                     {/* Trip Status Action */}

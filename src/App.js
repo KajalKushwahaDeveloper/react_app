@@ -3,7 +3,6 @@ import LoginPage from "./login_page";
 import Home from "./home";
 import GPS from "./gps";
 import Logout from "./logout.js";
-import Settings from "./settings.js";
 import Navbar from "./components/navbar";
 import ResetPasswordPage from "./resetPassword";
 
@@ -94,7 +93,6 @@ function App() {
       <Route element={<AuthenticatedLayout isAdmin={isAdmin} />}>
         <Route path="/home" element={<Home />} />
         <Route path="/gps" element={<GPS />} />
-        <Route path="/settings" element={<Settings />} />
         <Route path="/logout" element={<Logout />} />
       </Route>
     </Routes>
