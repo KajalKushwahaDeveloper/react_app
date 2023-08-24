@@ -6,6 +6,7 @@ import TablePagination, {
 import { Checkbox, Hidden } from "@mui/material";
 import { styled } from "@mui/system";
 import {
+  EMULATOR_NOTIFICATION_URL,
   EMULATOR_URL,
   TRIP_HISTORY,
   TRIP_TOGGLE,
@@ -23,6 +24,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 //components
 import ContactDialogComponent from "./ContactDialogComponent";
@@ -123,6 +125,22 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     }
   };
 
+  const handleRestartButtonClick = async (row) => {
+    console.log("emulator notification :", row);
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_NOTIFICATION_URL + "/" + row.id,
+      "POST",
+      null,
+      token
+    );
+    if (success) {
+      showToast("Notification send", "success");
+    } else {
+      showToast("Error", "error");
+    }
+  };
+
   const handleActionButtonClick = async (row) => {
     if (row.tripStatus === "RESTING") {
       showToast("Cannot resume trip of resting emulator!", "error");
@@ -171,39 +189,56 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
             </tr>
           </thead>
 
-          <tbody >
+          <tbody>
             {(rowsPerPage > 0
               ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : data
             ).map((row) => (
-              <tr key={row.id || "N/A"} >
+              <tr key={row.id || "N/A"}>
                 <td
                   style={{
                     background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
+                    display: "flex",
+                    alignItems: "center",
+                    padding: ".5rem",
                   }}
                 >
                   {row.status || "N/A"}
+
+                  {/* Restart/Reset Button */}
+
+                  <RestartAltIcon
+                    onClick={() => handleRestartButtonClick(row)}
+                  />
+
+                  {/* Restart/Reset Button */}
                 </td>
 
-                <td style={{ width: "auto", alignItems: "center" }} align="right">
-                  <div style={{ display: "flex" }}>
-                    <Tooltip title={row.emulatorSsid || "N/A"} placement="top" alignItems="center"
-                      display= "flex">
+                <td
+                  style={{ width: "auto", alignItems: "center" }}
+                  align="right"
+                >
+                  <div style={{ display: "flex", maxWidth: "150px" }}>
+                    <Tooltip
+                      title={row.emulatorSsid || "N/A"}
+                      placement="top"
+                      alignItems="center"
+                      display="flex"
+                    >
                       <div
                         style={{
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                           whiteSpace: "nowrap",
-                          maxWidth:"150px",
+                          maxWidth: "150px",
                           textAlign: "center",
-                          marginTop:".7rem"
+                          marginTop: ".7rem",
                         }}
                         align="right"
                       >
                         {row.emulatorSsid || "N/A"}
                       </div>
                     </Tooltip>
-
 
                     {/* Show History */}
                     <IconButton>
@@ -212,13 +247,14 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                       />
                     </IconButton>
                   </div>
+                  
                 </td>
                 <td
                   style={{
                     display: "flex",
                     width: "auto",
                     alignItems: "center",
-                    justifyContent:"space-between"
+                    justifyContent: "space-between",
                   }}
                   align="right"
                 >
@@ -256,7 +292,9 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                   />
                 </td>
                 <td style={{ width: "auto" }} align="right">
-                  <div style={{ display: "flex", justifyContent:"space-between" }}>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
                     {/* Trip Status */}
                     <p style={{ textAlign: "center" }}>{row.tripStatus}</p>
                     {/* Trip Status Action */}
