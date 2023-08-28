@@ -115,28 +115,49 @@ const Map = ({ showToast }) => {
     if (newEmulatorData === null) {
       return;
     }
-    const { latitude, longitude, status, tripStatus, address } =
+    // validate OldEmulatorInsideEmulatorsList
+    emulators
+    .forEach((oldEmulator) => {
+        if (oldEmulator.id === newEmulatorData.id) {
+          const { latitude, longitude, status, tripStatus, address , currentTripPointIndex } =
+            newEmulatorData;
+          const isOldEmulatorChanged =
+            (oldEmulator && latitude && longitude && status &&  address && currentTripPointIndex && oldEmulator.latitude && oldEmulator.latitude !== latitude) ||
+            (oldEmulator.longitude && oldEmulator.longitude !== longitude) ||
+            (oldEmulator.tripStatus && oldEmulator.tripStatus !== tripStatus) ||
+            (oldEmulator.address && oldEmulator.address !== address) ||
+            (oldEmulator.status && oldEmulator.status !== status) ||
+            (oldEmulator.currentTripPointIndex !== currentTripPointIndex);
+      
+          console.log("isOldEmulatorChanged :", isOldEmulatorChanged);
+          if (isOldEmulatorChanged) {
+            const updatedEmulators = emulators.map((emulator) => {
+                return {
+                  ...emulator, // Copy all properties from the current emulator
+                  ...newEmulatorData, // Copy all changed properties from newEmulatorData
+                };
+              return oldEmulator;
+            });
+            setEmulators(updatedEmulators);
+          }
+        }
+    });
+    // validate OldSelectedEmulator
+    const { latitude, longitude, status, tripStatus, address , currentTripPointIndex } =
       newEmulatorData;
     const isEmulatorChanged =
-      (emulator && emulator.latitude !== latitude) ||
-      emulator.longitude !== longitude ||
-      (emulator && emulator.tripStatus !== tripStatus) ||
-      emulator.status !== status;
+      (emulator && latitude && longitude && status &&  address && currentTripPointIndex && emulator.latitude && emulator.latitude !== latitude) ||
+      (emulator.longitude && emulator.longitude !== longitude) ||
+      (emulator.tripStatus && emulator.tripStatus !== tripStatus) ||
+      (emulator.address && emulator.address !== address) ||
+      (emulator.status && emulator.status !== status) ||
+      (emulator.currentTripPointIndex !== currentTripPointIndex);
 
+    console.log("isEmulatorChanged :", isEmulatorChanged);
     if (isEmulatorChanged) {
-      const updatedEmulators = emulators.map((emulator) => {
-        if (emulator.id === newEmulatorData.id) {
-          return {
-            ...emulator, // Copy all properties from the current emulator
-            ...newEmulatorData, // Copy all changed properties from newEmulatorData
-          };
+        if (newEmulatorData.id === selectedEmId) {
+          setEmulator(newEmulatorData);
         }
-        return emulator;
-      });
-      if (newEmulatorData.id === selectedEmId) {
-        setEmulator(newEmulatorData);
-      }
-      setEmulators(updatedEmulators);
     }
   };
 

@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 
 const GoogleMapContainer = ({
   mapRef,
@@ -22,25 +29,41 @@ const GoogleMapContainer = ({
   onClose,
   DialogText,
   confirmNewLocation,
-  calculateTimeFromTripPointIndexToStopPoint
+  calculateTimeFromTripPointIndexToStopPoint,
 }) => {
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
-  const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] = useState("N/A");
+  const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
+    useState("N/A");
 
   useEffect(() => {
     if (selectedEmulator != null && stops != null) {
-      let selectedEmulatorNearestStopPoint = stops.find((stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex);
-      const selectedEmulatorTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(selectedEmulator.currentTripPointIndex, selectedEmulatorNearestStopPoint, selectedEmulator.speed)
+      let selectedEmulatorNearestStopPoint = stops.find(
+        (stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex
+      );
+      const selectedEmulatorTimeToReachStop =
+        calculateTimeFromTripPointIndexToStopPoint(
+          selectedEmulator.currentTripPointIndex,
+          selectedEmulatorNearestStopPoint,
+          selectedEmulator.speed
+        );
       setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
     }
   }, [selectedEmulator, stops, calculateTimeFromTripPointIndexToStopPoint]);
-  
+
   useEffect(() => {
     if (selectedEmulator !== null) {
       if (pathsRoute !== null) {
-        setPathTraveled(pathsRoute.filter((item, index) => index <= selectedEmulator.currentTripPointIndex));
-        setPathNotTraveled(pathsRoute.filter((item, index) => index >= selectedEmulator.currentTripPointIndex));
+        setPathTraveled(
+          pathsRoute.filter(
+            (item, index) => index <= selectedEmulator.currentTripPointIndex
+          )
+        );
+        setPathNotTraveled(
+          pathsRoute.filter(
+            (item, index) => index >= selectedEmulator.currentTripPointIndex
+          )
+        );
       } else {
         setPathTraveled();
         setPathNotTraveled();
@@ -50,7 +73,12 @@ const GoogleMapContainer = ({
 
   return (
     <div className="gMapCont">
-      <GoogleMap ref={mapRef} defaultZoom={7} center={center} default={{gestureHandling:"greedy"}}>
+      <GoogleMap
+        ref={mapRef}
+        defaultZoom={7}
+        center={center}
+        default={{ gestureHandling: "greedy" }}
+      >
         {pathTraveled != null && (
           <Polyline
             path={pathTraveled}
@@ -127,11 +155,9 @@ const GoogleMapContainer = ({
               <p style={{ color: "black" }}>
                 {emulatorTimeLeftToReachNextStop}
               </p>
-
             </div>
           </InfoWindow>
         )}
-
 
         {emulators !== null &&
           emulators
@@ -140,32 +166,29 @@ const GoogleMapContainer = ({
                 emulator.latitude !== null && emulator.longitude !== null
             )
             .map((emulator, index) => {
+              console.log("emulator ::::: ", emulator.currentTripPointIndex);
               const isActiveUser =
                 emulator.status === "ACTIVE" && emulator.user !== null;
-
-              const isInActiveUserNull =
-                emulator.status === "INACTIVE" && emulator.user === null;
 
               var rotationAngle = 0;
               try {
                 if (pathsRoute != null && emulator.currentTripPointIndex > -1) {
-                  rotationAngle = pathsRoute[emulator.currentTripPointIndex].bearing
+                  rotationAngle =
+                    pathsRoute[emulator.currentTripPointIndex].bearing;
                 }
               } catch (e) {
                 console.log("rotationAngle Error : ", e);
               }
 
-              console.log("rotationAngle  : ", rotationAngle);
               const emulatorIcon = {
-                url: isActiveUser
-                  ? "images/green_truck.png"
-                  : isInActiveUserNull
-                    ? "images/truck.png"
-                    : "images/blue_truck.png",
-                scaledSize: new window.google.maps.Size(40, 40),
+                url: emulator
+                  ? `images/${emulator.tripStatus}_truck_icon_${
+                      isActiveUser ? "green" : "red"
+                    }.png`
+                  : "images/blue_truck.png",
+                scaledSize: new window.google.maps.Size(30, 30),
                 anchor: new window.google.maps.Point(20, 20),
                 scale: 0.7,
-                //TODO rotation now working...
               };
 
               return (
@@ -184,7 +207,9 @@ const GoogleMapContainer = ({
                     }
                     label={`Emulator ${emulator.id}`}
                     onClick={() => handleEmulatorMarkerClick(emulator)}
-                    draggable={emulator?.id === selectedEmulator?.id ? true : false}
+                    draggable={
+                      emulator?.id === selectedEmulator?.id ? true : false
+                    }
                     onDragEnd={(event) =>
                       handleEmulatorMarkerDragEnd(emulator, event)
                     }
@@ -198,7 +223,7 @@ const GoogleMapContainer = ({
             position={{ lat: startLat, lng: startLng }}
             icon={{
               url: "images/start_location.png",
-              scaledSize: new window.google.maps.Size(15, 15),
+              scaledSize: new window.google.maps.Size(10, 10),
               anchor: new window.google.maps.Point(15, 15),
               scale: 0.3,
             }}
@@ -210,27 +235,26 @@ const GoogleMapContainer = ({
             position={{ lat: endLat, lng: endLng }}
             icon={{
               url: "images/start_location.png",
-              scaledSize: new window.google.maps.Size(15, 15),
+              scaledSize: new window.google.maps.Size(10, 10),
               anchor: new window.google.maps.Point(15, 15),
               scale: 0.3,
             }}
           />
         )}
-        <Dialog
-          open={openDialog}
-          onClose={onClose}
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"logbook gps"}
-          </DialogTitle>
+        <Dialog open={openDialog} onClose={onClose}>
+          <DialogTitle id="alert-dialog-title">{"logbook gps"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               {DialogText}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={confirmNewLocation} autoFocus>Confim</Button>
-            <Button onClick={onClose} autoFocus>Cancel</Button>
+            <Button onClick={confirmNewLocation} autoFocus>
+              Confim
+            </Button>
+            <Button onClick={onClose} autoFocus>
+              Cancel
+            </Button>
           </DialogActions>
         </Dialog>
       </GoogleMap>
