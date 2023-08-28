@@ -118,41 +118,31 @@ const Map = ({ showToast }) => {
   
     const updatedEmulators = emulators.map((oldEmulator) => {
       if (oldEmulator.id === newEmulatorData.id) {
-        const updatedFields = {};
-
-        if (oldEmulator.currentTripPointIndex !== newEmulatorData.currentTripPointIndex) {
-          updatedFields.currentTripPointIndex = newEmulatorData.currentTripPointIndex;
-        }
-
-        if (oldEmulator.latitude !== newEmulatorData.latitude) {
-          updatedFields.latitude = newEmulatorData.latitude;
-        }
-
-        if (oldEmulator.longitude !== newEmulatorData.longitude) {
-          updatedFields.longitude = newEmulatorData.longitude;
-        }
-
-        if (oldEmulator.tripStatus !== newEmulatorData.tripStatus) {
-          updatedFields.tripStatus = newEmulatorData.tripStatus;
-        }
-
-        if (oldEmulator.status !== newEmulatorData.status) {
-          updatedFields.status = newEmulatorData.status;
-        }
-
-        if (oldEmulator.address !== newEmulatorData.address) {
-          updatedFields.address = newEmulatorData.address;
-        }
-
-        if (Object.keys(updatedFields).length > 0) {
+        const {
+          currentTripPointIndex,
+          latitude,
+          longitude,
+          status,
+          tripStatus,
+          address,
+        } = newEmulatorData;
+        if (
+          oldEmulator.currentTripPointIndex !== currentTripPointIndex ||
+          oldEmulator.latitude !== latitude ||
+          oldEmulator.longitude !== longitude ||
+          oldEmulator.tripStatus !== tripStatus ||
+          oldEmulator.status !== status ||
+          oldEmulator.address !== address
+        ) {
           return {
             ...oldEmulator,
-            ...updatedFields,
+            ...newEmulatorData,
           };
         }
       }
       return oldEmulator; // Keep the unmodified emulator
     });
+    
     setEmulators(updatedEmulators);
 
     if (newEmulatorData.id === selectedEmId) {
