@@ -244,7 +244,7 @@ function ShowHistory({ dialogType, data }) {
                   <Grid container>
                     <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
                       <Typography fontWeight={800}>From:</Typography>
-                      <Typography fontWeight={400}>{msgData.from}</Typography>
+                      <Typography fontWeight={400}>{msgData.from.endpoint}</Typography>
                     </Grid>
                     <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
                       <Typography fontWeight={800}>To:</Typography>
