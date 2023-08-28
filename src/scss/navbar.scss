@@ -31,6 +31,7 @@
                 display: flex;
                 justify-content: start;
                 align-items: center;
+                padding-bottom:2.5rem;
         img{
             width:15rem;
             height: auto;
@@ -49,6 +50,7 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
+       
     }
 
 
@@ -57,6 +59,7 @@
     .menu-link ul li {
         font-size: 1.1rem;
         padding: .8rem .6rem;
+       
 
         &:hover {
             background: $active_color;
@@ -121,12 +124,6 @@
             background: $active_color;
             padding: 0.5rem;
         }
-    }
-
-    .logo,
-    .menu-link ul,
-    .social-media ul {
-        // height: 8rem;
     }
 }
 

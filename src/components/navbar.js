@@ -66,7 +66,7 @@ const Navbar = ({ isAdmin }) => {
           <div
             className={menuIcon ? "menu-link mobile-menu-link" : "menu-link"}
           >
-            <ul className="" style={{marginTop:"5px"}}>
+            <ul className="" style={{ paddingBottom:"3rem"}}>
               {isAdmin && (
                 <li>
                   <NavLink
@@ -108,7 +108,7 @@ const Navbar = ({ isAdmin }) => {
             {/* hamburger menu start  */}
             <div className="hamburger-menu">
               <a href="#" onClick={() => setMenuIcon(!menuIcon)}>
-                <MenuIcon style={{ width: "4rem", height: "4rem" }} />
+                <MenuIcon style={{ width: "4rem", height: "4rem",paddingBottom:"2.5rem", }} />
               </a>
             </div>
           </div>
