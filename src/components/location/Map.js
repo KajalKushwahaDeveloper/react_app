@@ -115,28 +115,65 @@ const Map = ({ showToast }) => {
     if (newEmulatorData === null) {
       return;
     }
-    const { latitude, longitude, status, tripStatus, address } =
-      newEmulatorData;
-    const isEmulatorChanged =
-      (emulator && emulator.latitude !== latitude) ||
-      emulator.longitude !== longitude ||
-      (emulator && emulator.tripStatus !== tripStatus) ||
-      emulator.status !== status;
+  
+    const updatedEmulators = emulators.map((oldEmulator) => {
+      if (oldEmulator.id === newEmulatorData.id) {
+        const updatedFields = {};
 
-    if (isEmulatorChanged) {
-      const updatedEmulators = emulators.map((emulator) => {
-        if (emulator.id === newEmulatorData.id) {
+        if (oldEmulator.currentTripPointIndex !== newEmulatorData.currentTripPointIndex) {
+          updatedFields.currentTripPointIndex = newEmulatorData.currentTripPointIndex;
+        }
+
+        if (oldEmulator.latitude !== newEmulatorData.latitude) {
+          updatedFields.latitude = newEmulatorData.latitude;
+        }
+
+        if (oldEmulator.longitude !== newEmulatorData.longitude) {
+          updatedFields.longitude = newEmulatorData.longitude;
+        }
+
+        if (oldEmulator.tripStatus !== newEmulatorData.tripStatus) {
+          updatedFields.tripStatus = newEmulatorData.tripStatus;
+        }
+
+        if (oldEmulator.status !== newEmulatorData.status) {
+          updatedFields.status = newEmulatorData.status;
+        }
+
+        if (oldEmulator.address !== newEmulatorData.address) {
+          updatedFields.address = newEmulatorData.address;
+        }
+
+        if (Object.keys(updatedFields).length > 0) {
           return {
-            ...emulator, // Copy all properties from the current emulator
-            ...newEmulatorData, // Copy all changed properties from newEmulatorData
+            ...oldEmulator,
+            ...updatedFields,
           };
         }
-        return emulator;
-      });
-      if (newEmulatorData.id === selectedEmId) {
+      }
+      return oldEmulator; // Keep the unmodified emulator
+    });
+    setEmulators(updatedEmulators);
+
+    if (newEmulatorData.id === selectedEmId) {
+      const {
+        currentTripPointIndex,
+        latitude,
+        longitude,
+        status,
+        tripStatus,
+        address,
+      } = newEmulatorData;
+      if (
+        emulator.currentTripPointIndex !== currentTripPointIndex ||
+        emulator.latitude !== latitude ||
+        emulator.longitude !== longitude ||
+        emulator.tripStatus !== tripStatus ||
+        emulator.status !== status ||
+        emulator.address !== address
+      ) {
         setEmulator(newEmulatorData);
       }
-      setEmulators(updatedEmulators);
     }
   };
 
