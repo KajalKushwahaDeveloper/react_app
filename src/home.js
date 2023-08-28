@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/navbar.js";
-import axios from "axios";
 import "./scss/home.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
