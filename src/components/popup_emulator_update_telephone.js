@@ -124,7 +124,7 @@ const PopUpEmulatorTelephone = ({
 
             <DropDown setTwilioUpdatedPhone = {setTwilioUpdatedPhone}/>
 
-            <button className="login_button" type="submit">
+            <button type="submit" style={{width:"6rem",float:"right",marginRight:"0px",padding:".5rem 0"}}>
               Add
             </button>
             {error && <p className="error">{error}</p>}
