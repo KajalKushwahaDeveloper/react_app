@@ -28,8 +28,6 @@ const PopUpEmulatorHistory = ({
     e.preventDefault();
     handleClose(0);
   };
-
-  console.log("emulatorHistory : ", emulatorHistory);
   return (
     <div>
       <Modal

@@ -166,7 +166,7 @@ const GoogleMapContainer = ({
                 emulator.latitude !== null && emulator.longitude !== null
             )
             .map((emulator, index) => {
-              console.log("emulator ::::: ", emulator);
+              console.log("emulator ::::: ", emulator.currentTripPointIndex);
               const isActiveUser =
                 emulator.status === "ACTIVE" && emulator.user !== null;
 
@@ -180,7 +180,6 @@ const GoogleMapContainer = ({
                 console.log("rotationAngle Error : ", e);
               }
 
-              console.log("rotationAngle  : ", rotationAngle);
               const emulatorIcon = {
                 url: emulator
                   ? `images/${emulator.tripStatus}_truck_icon_${
@@ -190,7 +189,6 @@ const GoogleMapContainer = ({
                 scaledSize: new window.google.maps.Size(30, 30),
                 anchor: new window.google.maps.Point(20, 20),
                 scale: 0.7,
-                rotation: rotationAngle, // Set rotation angle
               };
 
               return (
