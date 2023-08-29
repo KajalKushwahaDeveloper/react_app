@@ -111,56 +111,41 @@ const Map = ({ showToast }) => {
     };
   }, [paths, startEmulation]);
 
-  const validateEmulatorData = (newEmulatorData) => {
-    if (newEmulatorData === null) {
+  const validateEmulatorsData = (newEmulatorsData) => {
+    if (newEmulatorsData === null) {
       return;
     }
-  
-    // Validate old selected emulator
-    const {
-      latitude,
-      longitude,
-      status,
-      tripStatus,
-      address,
-      currentTripPointIndex
-    } = newEmulatorData;
-  
-    const isEmulatorChanged =
-      (emulator &&
-        latitude &&
-        longitude &&
-        status &&
-        address &&
-        currentTripPointIndex &&
-        emulator.latitude !== latitude) ||
-      (emulator.longitude !== longitude) ||
-      (emulator.tripStatus !== tripStatus) ||
-      (emulator.address !== address) ||
-      (emulator.status !== status) ||
-      (emulator.currentTripPointIndex !== currentTripPointIndex);
-  
-    console.log("isEmulatorChanged :", isEmulatorChanged);
-    if (isEmulatorChanged && newEmulatorData.id === selectedEmId) {
-      setEmulator(newEmulatorData);
-    }
-  
-    // Validate old emulator inside emulators list
+    
+    console.log(
+      `newEmulatorsData : ${newEmulatorsData}`,
+      newEmulatorsData
+    );
+    
+    var selectedEmulatorToValidate = null;
+    
     const updatedEmulators = emulators.map((oldEmulator) => {
-      if (oldEmulator.id === newEmulatorData.id) {
+      const newEmulatorData = newEmulatorsData.find(item => item.id === oldEmulator.id);
+      
+      if (newEmulatorData) {
+        if (newEmulatorData.id === selectedEmId) {
+          selectedEmulatorToValidate = newEmulatorData;
+        }
+        
         const isOldEmulatorChanged =
-          (latitude &&
-            longitude &&
-            status &&
-            address &&
-            currentTripPointIndex &&
-            oldEmulator.latitude !== latitude) ||
-          (oldEmulator.longitude !== longitude) ||
-          (oldEmulator.tripStatus !== tripStatus) ||
-          (oldEmulator.address !== address) ||
-          (oldEmulator.status !== status) ||
-          (oldEmulator.currentTripPointIndex !== currentTripPointIndex);
-  
+          oldEmulator.latitude !== newEmulatorData.latitude ||
+          oldEmulator.longitude !== newEmulatorData.longitude ||
+          oldEmulator.tripStatus !== newEmulatorData.tripStatus ||
+          oldEmulator.address !== newEmulatorData.address ||
+          oldEmulator.status !== newEmulatorData.status ||
+          oldEmulator.currentTripPointIndex !== newEmulatorData.currentTripPointIndex;
+          
+          console.log(
+            `validating ID : ${newEmulatorData.id} 
+            currentTripPointIndex old : ${oldEmulator.currentTripPointIndex} 
+            currentTripPointIndex new : ${newEmulatorData.currentTripPointIndex} 
+            isOldEmulatorChanged : ${isOldEmulatorChanged}`
+          );
+
         if (isOldEmulatorChanged) {
           return {
             ...oldEmulator,
@@ -168,10 +153,55 @@ const Map = ({ showToast }) => {
           };
         }
       }
+      
       return oldEmulator;
     });
-  
+    
+  if (selectedEmulatorToValidate !== null) {
+    validateEmulatorData(selectedEmulatorToValidate);
+  }
     setEmulators(updatedEmulators);
+  };
+
+  const validateEmulatorData = (newEmulatorData) => {
+
+    console.log(
+      `validating ID : ${newEmulatorData.id} 
+      currentTripPointIndex old : ${emulator.currentTripPointIndex} 
+      currentTripPointIndex new : ${newEmulatorData.currentTripPointIndex} `
+    );
+    if (newEmulatorData === null) {
+      return;
+    }
+    const {
+      latitude,
+      longitude,
+      status,
+      tripStatus,
+      address,
+      currentTripPointIndex,
+    } = newEmulatorData;
+
+    if (newEmulatorData.id === selectedEmId) {
+      // Validate old selected emulator
+      const isEmulatorChanged =
+        emulator.latitude !== latitude ||
+        emulator.longitude !== longitude ||
+        emulator.tripStatus !== tripStatus ||
+        emulator.address !== address ||
+        emulator.status !== status ||
+        emulator.currentTripPointIndex !== currentTripPointIndex;
+        console.log(
+          `validating ID : ${newEmulatorData.id} 
+          currentTripPointIndex old : ${emulator.currentTripPointIndex} 
+          currentTripPointIndex new : ${newEmulatorData.currentTripPointIndex} 
+          isOldEmulatorChanged : ${newEmulatorData}`
+        );
+
+      if (isEmulatorChanged) {
+        setEmulator(newEmulatorData);
+      }
+    }
   };
 
   useEffect(() => {
@@ -188,9 +218,7 @@ const Map = ({ showToast }) => {
           token
         );
         if (success) {
-          data.forEach((emulator) => {
-            validateEmulatorData(emulator);
-          });
+          validateEmulatorsData(data);
         } else {
           console.log("old Emulator ERROR : ", error);
         }
