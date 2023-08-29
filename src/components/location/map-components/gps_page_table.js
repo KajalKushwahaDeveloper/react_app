@@ -71,7 +71,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
       setEmptyRows(
         rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
       );
-      if (selectedEmulator == null) {
+      if (selectedEmulator == null && selectedEmId != null) {
         setSelectedEmulator(data[0]?.id);
         setSelectedEmId(data[0]?.id);
       }
@@ -79,18 +79,20 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     } else {
       setLoading(true);
     }
-    if (selectedEmId != selectedEmulator) {
-      setSelectedEmulator(selectedEmId);
-      const selectedEmIndex = data.findIndex(
-        (item) => item.id === selectedEmId
-      );
-      // Calculate the new active page based on the selected checkbox index and rowsPerPage
-      if (selectedEmIndex !== -1) {
-        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
-        setPage(newActivePage);
+    if(selectedEmId != null && selectedEmulator != null){
+      if (selectedEmId !== selectedEmulator) {
+        setSelectedEmulator(selectedEmId);
+        const selectedEmIndex = data.findIndex(
+          (item) => item.id === selectedEmId
+        );
+        // Calculate the new active page based on the selected checkbox index and rowsPerPage
+        if (selectedEmIndex !== -1) {
+          const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
+          setPage(newActivePage);
+        }
       }
     }
-  }, [data, selectedEmId]);
+  }, [data, page, rowsPerPage, selectedEmId, selectedEmulator, setSelectedEmId]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -102,8 +104,15 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   };
 
   const handleEmulatorCheckboxChange = (id) => {
-    setSelectedEmulator(id);
-    setSelectedEmId(id);
+    if (selectedEmulator === id) {
+      // If the clicked checkbox is already selected, unselect it
+      setSelectedEmulator(null);
+      setSelectedEmId(null);
+    } else {
+      // Otherwise, select the clicked checkbox
+      setSelectedEmulator(id);
+      setSelectedEmId(id);
+    }
   };
 
   const handleHistoryButtonClick = async (emulatorForHistory) => {
@@ -141,10 +150,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   };
 
   const handleActionButtonClick = async (row) => {
-    if (row.tripStatus === "RESTING") {
-      showToast("Cannot resume trip of resting emulator!", "error");
-      return;
-    }
     if (row.tripStatus === "FINISHED") {
       showToast("Trip already Finished!", "error");
       return;
@@ -322,12 +327,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                 </td>
               </tr>
             ))}
-
-            {/* {emptyRows != null && emptyRows > 0 && (
-              <tr style={{ height: 35 * emptyRows }}>
-                <td colSpan={5} />
-              </tr>
-            )} */}
           </tbody>
 
           <tfoot className="table_footer">
