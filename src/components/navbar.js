@@ -51,9 +51,9 @@ const Navbar = ({ isAdmin }) => {
   return (
     <>
       <div className="header">
-        <div className="main-nav" style={{height:"60px"}}>
+        <div className="main-nav">
           {/* 1st logo part  */}
-          <div className="logo" style={{marginBottom:"10px",}}>
+          <div className="logo">
             <img
               className="logo_image"
               // style={{ width: "17rem", height: "auto" }}
@@ -66,7 +66,7 @@ const Navbar = ({ isAdmin }) => {
           <div
             className={menuIcon ? "menu-link mobile-menu-link" : "menu-link"}
           >
-            <ul className="" style={{ paddingBottom:"3rem"}}>
+            <ul>
               {isAdmin && (
                 <li>
                   <NavLink
