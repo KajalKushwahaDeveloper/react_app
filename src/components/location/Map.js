@@ -252,7 +252,7 @@ const Map = ({ showToast }) => {
         });
       }
     }
-  }, [emulators, selectedEmId]);
+  }, [selectedEmId]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
