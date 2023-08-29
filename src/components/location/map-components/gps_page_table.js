@@ -67,7 +67,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   };
 
   useEffect(() => {
-    console.log("Data : THIS RAN");
     if (data != null) {
       setEmptyRows(
         rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)

@@ -166,7 +166,6 @@ const GoogleMapContainer = ({
                 emulator.latitude !== null && emulator.longitude !== null
             )
             .map((emulator, index) => {
-              console.log("emulator ::::: ", emulator.currentTripPointIndex);
               const isActiveUser =
                 emulator.status === "ACTIVE" && emulator.user !== null;
 
