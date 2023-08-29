@@ -8,6 +8,11 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import "../../../scss/map.scss";
+
+const {
+  MarkerWithLabel
+} = require('react-google-maps/lib/components/addons/MarkerWithLabel');
 
 const GoogleMapContainer = ({
   mapRef,
@@ -64,11 +69,13 @@ const GoogleMapContainer = ({
             (item, index) => index >= selectedEmulator.currentTripPointIndex
           )
         );
-      } else {
-        setPathTraveled();
-        setPathNotTraveled();
+        return
       }
     }
+    setPathTraveled();
+    setPathNotTraveled();
+    console.log("selectedEmId changed at Map.js so pathTraveled also nulled", pathTraveled);
+    console.log("selectedEmId changed at Map.js so pathNotTraveled also nulled", pathNotTraveled);
   }, [selectedEmulator, pathsRoute]);
 
   return (
@@ -77,7 +84,9 @@ const GoogleMapContainer = ({
         ref={mapRef}
         defaultZoom={7}
         center={center}
-        default={{ gestureHandling: "greedy" }}
+        gestureHandling="none"
+        zoomControl={false}
+        options={{ scrollwheel: true }}
       >
         {pathTraveled != null && (
           <Polyline
@@ -192,7 +201,7 @@ const GoogleMapContainer = ({
 
               return (
                 <React.Fragment key={index}>
-                  <Marker
+                  <MarkerWithLabel
                     icon={emulatorIcon}
                     position={{
                       lat: emulator.latitude,
@@ -204,15 +213,17 @@ const GoogleMapContainer = ({
                         ? "selectedMarker"
                         : `S${emulator?.id}`
                     }
-                    label={`Emulator ${emulator.id}`}
+                    labelStyle={{ textAlign: "center", width:'auto', color: "#000000", fontSize: "12px", padding: "1px"}}
+                    labelAnchor={{ x: 'auto' , y: 'auto' }}
                     onClick={() => handleEmulatorMarkerClick(emulator)}
                     draggable={
                       emulator?.id === selectedEmulator?.id ? true : false
                     }
                     onDragEnd={(event) =>
                       handleEmulatorMarkerDragEnd(emulator, event)
-                    }
-                  />
+                    }>
+                      <span>{`Em.${emulator.id}`}</span>
+                  </MarkerWithLabel>
                 </React.Fragment>
               );
             })}
