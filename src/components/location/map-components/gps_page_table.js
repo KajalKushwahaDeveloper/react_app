@@ -72,8 +72,8 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
         rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
       );
       if (selectedEmulator == null) {
-        setSelectedEmulator(data[0].id);
-        setSelectedEmId(data[0].id);
+        setSelectedEmulator(data[0]?.id);
+        setSelectedEmId(data[0]?.id);
       }
       setLoading(false);
     } else {
