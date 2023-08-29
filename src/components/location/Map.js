@@ -157,10 +157,10 @@ const Map = ({ showToast }) => {
       return oldEmulator;
     });
     
-  if (selectedEmulatorToValidate !== null) {
-    validateEmulatorData(selectedEmulatorToValidate);
-  }
-    setEmulators(updatedEmulators);
+    if (selectedEmulatorToValidate !== null) {
+      validateEmulatorData(selectedEmulatorToValidate);
+    }
+      setEmulators(updatedEmulators);
   };
 
   const validateEmulatorData = (newEmulatorData) => {
@@ -240,7 +240,7 @@ const Map = ({ showToast }) => {
     return () => {
       stopEmulatorInterval();
     };
-  }, [selectedEmId, emulator, emulators, setEmulator, setEmulators]);
+  }, [emulator, emulators, setEmulator, setEmulators]);
 
   useEffect(() => {
     if (selectedEmId != null && emulators != null) {
@@ -252,7 +252,7 @@ const Map = ({ showToast }) => {
         });
       }
     }
-  }, [selectedEmId]);
+  }, [emulators, selectedEmId]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
