@@ -90,7 +90,7 @@ console.log("selectedEmId......:", selectedEmId);
           <tbody>
             <tr>
               <td>
-                <div className="container" style={{ width: "auto" }}>
+                <div className="container" style={{ width: "auto" ,margin:"1rem 0"}}>
                   <SearchBar
                     setLat={setFromLat}
                     setLong={setFromLong}
@@ -104,7 +104,7 @@ console.log("selectedEmId......:", selectedEmId);
             </tr>
             <tr>
               <td>
-                <div className="container" style={{ width: "auto" }}>
+                <div className="container" style={{ width: "auto" ,margin:"1rem 0"}}>
                   <SearchBar
                     setLat={setToLat}
                     setLong={setToLong}
