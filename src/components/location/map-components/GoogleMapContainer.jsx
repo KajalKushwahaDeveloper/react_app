@@ -84,6 +84,9 @@ const GoogleMapContainer = ({
         ref={mapRef}
         defaultZoom={7}
         center={center}
+        gestureHandling="none"
+        zoomControl={false}
+        options={{ scrollwheel: true }}
       >
         {pathTraveled != null && (
           <Polyline
