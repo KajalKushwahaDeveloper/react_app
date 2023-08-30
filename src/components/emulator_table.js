@@ -288,7 +288,7 @@ const EmulatorTable = ({
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
               <td
-                style={{ width: "auto", display: "flex" , padding:".5rem 0"}}
+                style={{ width: "auto", padding:".5rem 0"}}
                 align="right"
               >
                 <IconButton aria-label="delete">
