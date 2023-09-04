@@ -85,6 +85,7 @@ const UserTable = ({
     setUserData(updatedData);
   };
 
+  //DELETED BUTTON
   const handleDeleteButtonClick = async (user) => {
     const confirmed = window.confirm(
       "Delete this user : " + user.firstName + " " + user.lastName + "?"
@@ -109,7 +110,7 @@ const UserTable = ({
       }
     }
   };
-
+  // Fetch data from API
   const refreshEditedUser = async (userId) => {
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
@@ -133,7 +134,6 @@ const UserTable = ({
       return { success: false, error: "Failed to unassign user" };
     }
   };
-
   // Fetch data from API
   const refreshUser = async (userId) => {
     const token = localStorage.getItem("token");
@@ -244,7 +244,7 @@ const UserTable = ({
 
   return (
     <Root sx={{ width: "auto", maxWidth: "100%" }}>
-          <table aria-label="custom pagination table">
+      <table aria-label="custom pagination table" className="w-100 shadow">
         <tbody>
           {(rowsPerPage > 0
             ? userData.slice(
@@ -258,28 +258,12 @@ const UserTable = ({
 
             return (
               <tr key={row.id}>
-                <td
-                  align="right"
-                  display="flex"
-                  padding="0px 12px"
-                  style={{ display: "flex" }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "25rem",
-                    }}
-                  >
+                <div></div>
+                <td align="right">
+                  <div className="spcBetween">
                     <div style={{ display: "flex", flexDirection: "column" }}>
-                      <h3
-                       style={{
-                        fontSize: "1rem", fontWeight:"600", marginTop:".5rem"
-                      }}
-                      >
-                        {row.firstName + " " + row.lastName || "N/A"}
-                      </h3>
-                      <ul style={{ listStyleType: "none" }}>
+                      <h5>{row.firstName + " " + row.lastName || "N/A"}</h5>
+                      <ul>
                         <li>Email : {row.email || "N/A"}</li>
                         <li>Tel. # : {row.telephone || "N/A"}</li>
                         <li>Registration Date : {formattedDate}</li>
@@ -295,37 +279,28 @@ const UserTable = ({
                         </li>
                       </ul>
                     </div>
-                  </div>
-                  <div style={{  display:"flex",
-                         flexDirection:"row",
-                         alignItems:"center" }}>
-                    <div
-                      style={{
-                        paddingBottom: "10px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <IconButton 
-                        style={{  
-                        height: "40px",
-                        width: "40px",
-                        marginRight: "10px",
-                        borderRadius: "50%",
-                        backgroundColor: "#007dc6",
-                        color: "#fff",
+                    <div>
+                      <IconButton
+                        className="roundIncon"
+                        style={{
+                          height: "40px",
+                          width: "40px",
+                          marginRight: "10px",
+                          borderRadius: "50%",
+                          backgroundColor: "#007dc6",
+                          color: "#fff",
                         }}
                         aria-label="edit"
                       >
                         <EditIcon onClick={() => handleEditButtonClick(row)} />
                       </IconButton>
-                      <IconButton 
-                        style={{ height: "40px",
+                      <IconButton
+                        style={{
+                          height: "40px",
                           width: "40px",
                           marginRight: "10px",
                           borderRadius: "50%",
-                          backgroundColor: "red", 
+                          backgroundColor: "red",
                           color: "#fff",
                         }}
                         aria-label="delete"
@@ -334,56 +309,50 @@ const UserTable = ({
                           onClick={() => handleDeleteButtonClick(row)}
                         />
                       </IconButton>
+                      <button
+                        className="btn"
+                        style={{
+                          backgroundColor:
+                            row.status === "ENABLED" ? "green" : "red",
+                          color: "white",
+                          height: "40px",
+                          width: "7rem",
+                        }}
+                        onClick={() =>
+                          handleActionButtonClick(row.id, row.status)
+                        }
+                      >
+                        {row.status}
+                      </button>
                     </div>
-                    <button
-                      style={{
-                        height: "45px",
-                        width: "7rem",
-                        backgroundColor:
-                          row.status === "ENABLED" ? "green" : "red",
-                        color: "white",
-                      }}
-                      onClick={() =>
-                        handleActionButtonClick(row.id, row.status)
-                      }
-                    >
-                      {row.status}
-                    </button>
                   </div>
                 </td>
               </tr>
             );
           })}
+
+          {emptyRows > 0 && (
+            <tr style={{ height: 34 * emptyRows }}>
+              <td colSpan={3} />
+            </tr>
+          )}
         </tbody>
 
         <tfoot>
           <tr>
-            <td
+            <CustomTablePagination
+              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
               colSpan={3}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-                padding:".5rem 0",
+              count={userData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: { "aria-label": "rows per page" },
+                native: true,
               }}
-            >
-              <CustomTablePagination
-                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-                colSpan={3}
-                count={userData.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: { "aria-label": "rows per page" },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-              <span style={{ color: "#bbbaba", fontSize: ".9rem" }}>
-                User Table
-              </span>
-            </td>
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </tr>
         </tfoot>
       </table>
@@ -421,7 +390,15 @@ const Root = styled("div")(
                 padding:0.5rem;
               }
               
-
+              td,
+              th {
+                border: 1px solid ${
+                  theme.palette.mode === "dark" ? grey[800] : grey[200]
+                };
+                text-align: left;
+                padding: 12px;
+              }
+              
               th {
                 background-color: ${
                   theme.palette.mode === "dark" ? grey[900] : grey[100]

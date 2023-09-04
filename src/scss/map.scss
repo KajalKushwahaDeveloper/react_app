@@ -1,7 +1,7 @@
 @import "./mixins.scss";
 @import "./variables.scss";
 
-body{
+body {
   @include main;
 }
 
@@ -11,8 +11,7 @@ body{
   justify-content: flex-start;
   height: 100vh;
   flex-wrap: nowrap;
-  // padding-top: 2rem;
- 
+  padding-top: 63px;
 }
 
 .gps_map {
@@ -28,10 +27,9 @@ body{
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 10px;
+  padding: 0 10px;
   margin-top: 3rem;
   z-index: 2;
-  width:550px;
 }
 
 .gps_createTrip_overlay {
@@ -56,47 +54,55 @@ body{
   flex-basis: 70%;
   height: 100vh;
 }
+
 .create_trip_button {
   position: absolute;
   top: 0;
   left: 50;
   padding: 10px;
 }
+
 .create_trip_button button {
   padding: 8px 12px;
 }
 
 //table//
-table {
-  font-family: Raleway, sans-serif;
-  font-size: 0.875rem;
-  border-collapse: collapse;
-  width: auto;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  background: $light-grey;
+.tableBox {
+  padding: 10px;
+  // background-color: rgba($color: $secondary, $alpha: 0.2);
 }
 
-td {
-  border: none;
-  box-shadow: $tableShadow;
+table {
+  font-size: 16px;
+  width: auto;
+  padding: 0.5rem;
+  background: white;
+  overflow: hidden;
+}
+
+td,
+th {
+  border: 1px solid $light-grey;
   text-align: left;
-  padding:0 .4rem;
-  background-color:white;
+  padding: 12px;
+  vertical-align: middle;
 }
 
 th {
-  border: none;
-  box-shadow: $tableShadow;
-  text-align: left;
-  padding:  .6rem;
   background-color: $background-color;
+  color: $background-color;
 }
 
-.table_footer{
-  height:10px;
-}
+@media screen and (max-width: 768px) {
+  table {
+    font-size: 0.75rem;
+  }
 
+  td,
+  th {
+    padding: 8px;
+  }
+}
 
 @media screen and (max-width: 786px) {
   .gps_page {
@@ -110,7 +116,7 @@ th {
 }
 
 .mapContainer {
-  height:100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -125,4 +131,10 @@ th {
   justify-content: center;
   align-items: center;
   background: $background-color;
+}
+
+@media only screen and (max-width: 552px) {
+  .gps_page {
+    padding-top: 107px;
+  }
 }

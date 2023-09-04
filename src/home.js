@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./scss/home.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { CLIENT_CURRENT, EMULATOR_CREATE_RANDOM_URL, EMULATOR_URL } from "./constants.js";
+import {
+  CLIENT_CURRENT,
+  EMULATOR_CREATE_RANDOM_URL,
+  EMULATOR_URL,
+} from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";
 import { Button } from "@mui/material";
@@ -36,8 +40,8 @@ const Home = () => {
     setUserToEdit(null);
   };
 
-  const handleCreateEmulator =  async() => {
-    showToast("Creating Emulator","info")
+  const handleCreateEmulator = async () => {
+    showToast("Creating Emulator", "info");
     const { success, data, error } = await ApiService.makeApiCall(
       EMULATOR_CREATE_RANDOM_URL,
       "POST",
@@ -45,9 +49,9 @@ const Home = () => {
       null
     );
     if (success) {
-      showToast(" Emulator Created ","success")
+      showToast(" Emulator Created ", "success");
     } else {
-      showToast(" Failed to create Emulator ","error")
+      showToast(" Failed to create Emulator ", "error");
     }
   };
 
@@ -115,103 +119,83 @@ const Home = () => {
     <>
       <ToastContainer style={{ zIndex: 3 }} />
 
-      <div className="home_div">
-        <div
-          className="emulator_table"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "0rem 1rem",
-            marginTop: "0.5rem",
-          }}
-        >
-          <DownloadApk />
+      <section className="dashboard">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-lg-6">
+              <DownloadApk />
 
-          <Button
-            style={{
-              width: "10rem",
-              background: "#007dc6",
-              color: "white",
-              marginBottom: "1rem",
-            }}
-            onClick={handleCreateEmulator}
-          >
-            Create Emulator
-          </Button>
+              <Button
+                style={{
+                  width: "10rem",
+                  background: "#007dc6",
+                  color: "white",
+                  marginBottom: "1rem",
+                }}
+                onClick={handleCreateEmulator}
+              >
+                Create Emulator
+              </Button>
+              <EmulatorTable
+                showToast={showToast}
+                handleAssignUserButtonClick={handleAssignUserButtonClick}
+                userAssingedEmulator={userAssingedEmulator}
+                setUserAssingedEmulator={setUserAssingedEmulator}
+                handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
+                emulatorEditedId={emulatorEditedId}
+                handleGeneratedIdButtonClick={handleGeneratedIdButtonClick}
+              />
+            </div>
+            <div className="col-lg-6 mt-4 mt-lg-0">
+              <div className="mb-5">
+                <button className="btn btn-green mb-4" onClick={handleOpen}>
+                  Add User
+                </button>
+                <PopUpUser
+                  showToast={showToast}
+                  handleClose={handleClose}
+                  open={openUserPopup}
+                  userToEdit={userToEdit}
+                />
 
-          <EmulatorTable
-            showToast={showToast}
-            handleAssignUserButtonClick={handleAssignUserButtonClick}
-            userAssingedEmulator={userAssingedEmulator}
-            setUserAssingedEmulator={setUserAssingedEmulator}
-            handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
-            emulatorEditedId={emulatorEditedId}
-            handleGeneratedIdButtonClick={handleGeneratedIdButtonClick}
-          />
+                {/* emulator telephone number edit popup */}
+                <PopUpEmulatorTelephone
+                  showToast={showToast}
+                  handleClose={handleClose}
+                  open={openEmulatorPopup}
+                  userToEdit={userToEdit}
+                />
+
+                <ChangeEmulatorSsidPopup
+                  showToast={showToast}
+                  open={openChangeSsidPopup}
+                  handleClose={handleClose}
+                  emulatorToChangeSsid={emulatorToChangeSsid}
+                  handleEmulatorSsidChanged={handleEmulatorSsidChanged}
+                  handleAssignedUserToEmulator={handleAssignedUserToEmulator}
+                />
+
+                {/* assign user popup */}
+                <PopUpAssignUser
+                  showToast={showToast}
+                  close={handleClose}
+                  open={openUserAssignPopup}
+                  emulatorToAssignUser={emulatorToAssignUser}
+                  handleAssignedUserToEmulator={handleAssignedUserToEmulator}
+                />
+
+                {/* user table */}
+                <UserTable
+                  showToast={showToast}
+                  handleEditButtonClick={handleEditButtonClick}
+                  userEditedId={userEditedId}
+                  userAssingedEmulator={userAssingedEmulator}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div
-          className="user_table"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            marginBottom: "9rem",
-          }}
-        >
-          <Button
-            style={{
-              width: "9rem",
-              background: "#007dc6",
-              color: "white",
-              marginBottom: "1rem",
-            }}
-            onClick={handleOpen}
-          >
-            Add User
-          </Button>
-
-          {/* emulator user popup */}
-          <PopUpUser
-            showToast={showToast}
-            handleClose={handleClose}
-            open={openUserPopup}
-            userToEdit={userToEdit}
-          />
-
-          {/* emulator telephone number edit popup */}
-          <PopUpEmulatorTelephone
-            showToast={showToast}
-            handleClose={handleClose}
-            open={openEmulatorPopup}
-            userToEdit={userToEdit}
-          />
-
-          <ChangeEmulatorSsidPopup
-           showToast={showToast}
-           open={openChangeSsidPopup}
-           handleClose={handleClose}
-           emulatorToChangeSsid={emulatorToChangeSsid}
-           handleEmulatorSsidChanged={handleEmulatorSsidChanged}
-           handleAssignedUserToEmulator={handleAssignedUserToEmulator}
-          />
-
-          {/* assign user popup */}
-          <PopUpAssignUser
-            showToast={showToast}
-            close={handleClose}
-            open={openUserAssignPopup}
-            emulatorToAssignUser={emulatorToAssignUser}
-            handleAssignedUserToEmulator={handleAssignedUserToEmulator}
-          />
-
-          {/* user table */}
-          <UserTable
-            showToast={showToast}
-            handleEditButtonClick={handleEditButtonClick}
-            userEditedId={userEditedId}
-            userAssingedEmulator={userAssingedEmulator}
-          />
-        </div>
-      </div>
+      </section>
     </>
   );
 };
