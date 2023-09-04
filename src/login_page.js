@@ -56,7 +56,7 @@ const LoginPage = () => {
   return (
     <>
       <div className="authScreen">
-        <div className="container-fluid h-100" style={{paddingRight:"0"}}>
+        <div className="container_div container-fluid h-100">
           <div class="row h-100">
             <div class="col-md-6 centerMid d-none d-md-flex" style={{  
             display: "flex",
@@ -66,9 +66,9 @@ const LoginPage = () => {
               <div class="Left_content">
                 <img src="images/logo2.png" />
                 <hr className="hr"></hr>
-                <p className="para">
+                {/* <p className="para">
                   Vivamus at dui consequat, dapibus tellus vitae
-                </p>
+                </p> */}
               </div>
             </div>
             <div className="col-md-6 formBox bg-light  centerMid flex-column" style={{
@@ -116,7 +116,7 @@ const LoginPage = () => {
                         
                       </div>
                     </div>
-                    <div className="col-12 mt-3 btns" style={{margin:"2rem"}}>
+                    <div className="col-12 mt-3 btns" style={{}}>
                       <button className="btn btn-main" type="submit" style={{background:"#007dc6", color:"white",width:"6rem"}}>
                         Login
                       </button>
