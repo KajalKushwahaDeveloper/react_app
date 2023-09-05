@@ -88,7 +88,7 @@ const DownloadApk = () => {
         <div className="d-flex justify-content-between mt-5">
           <Button
             variant="contained"
-          className="btn btn-main"
+            className="btn btn-main"
             startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
             onClick={handleDownloadFile}
             style={{ marginLeft: "1.2rem", width: "12rem !important" }}
