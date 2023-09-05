@@ -31,6 +31,7 @@ const PopUpUser = ({
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
+  const [password, seteditpassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
@@ -43,6 +44,7 @@ const PopUpUser = ({
       setTelephone(userToEdit.telephone);
       setFirstName(userToEdit.firstName);
       setLastName(userToEdit.lastName);
+      seteditpassword(userToEdit.password);
     }
   }, [userToEdit]);
 
@@ -62,6 +64,9 @@ const PopUpUser = ({
     setLastName(e.target.value);
   };
 
+  const handleeditpassword = (e) =>{
+    seteditpassword(e.target.value);
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -182,6 +187,13 @@ const PopUpUser = ({
               placeholder="Enter your telephone number"
               value={telephone}
               onChange={handleTelephoneChange}
+            />
+               <input
+              type="password"
+              id="content_input"
+              placeholder="Enter new password"
+              value={password}
+              onChange={handleeditpassword}
             />
             <button className="login_button" type="submit">
               {userToEdit === null ? "Add User" : "Edit User"}
