@@ -79,7 +79,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     } else {
       setLoading(true);
     }
-    if(selectedEmId != null && selectedEmulator != null){
+    if (selectedEmId != null && selectedEmulator != null) {
       if (selectedEmId !== selectedEmulator) {
         setSelectedEmulator(selectedEmId);
         const selectedEmIndex = data.findIndex(
@@ -92,7 +92,14 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
         }
       }
     }
-  }, [data, page, rowsPerPage, selectedEmId, selectedEmulator, setSelectedEmId]);
+  }, [
+    data,
+    page,
+    rowsPerPage,
+    selectedEmId,
+    selectedEmulator,
+    setSelectedEmId,
+  ]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -180,7 +187,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
 
   return (
     <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
-      <div style={{ height: "90%", width: "100%" }}>
+      <div style={{ height: "100%", width: "100%" }}>
         <table aria-label="custom pagination table">
           <thead>
             <tr>
@@ -222,7 +229,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                   style={{ width: "auto", alignItems: "center" }}
                   align="right"
                 >
-                  <div style={{ display: "flex", maxWidth: "150px" }}>
+                  <div style={{ display: "flex", maxWidth: "100px" }}>
                     <Tooltip
                       title={row.emulatorSsid || "N/A"}
                       placement="top"
@@ -234,7 +241,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                           whiteSpace: "nowrap",
-                          maxWidth: "150px",
+                          maxWidth: "100px",
                           textAlign: "center",
                           marginTop: ".7rem",
                         }}
@@ -251,7 +258,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                       />
                     </IconButton>
                   </div>
-                  
                 </td>
                 <td
                   style={{
@@ -259,10 +265,23 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                     width: "auto",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    maxWidth: "150px",
                   }}
                   align="right"
                 >
-                  {row.telephone || "N/A"}
+                  <Tooltip title={row.telephone || "N/A"} placement="top">
+                    <div
+                      style={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                      }}
+                      align="right"
+                    >
+                      {row.telephone || "N/A"}
+                    </div>
+                  </Tooltip>
+
                   <IconButton
                     onClick={() => handleContactDetails("call", row.id)}
                   >
@@ -275,7 +294,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                     <MessageRoundedIcon />
                   </IconButton>
                 </td>
-                <td style={{ maxWidth: "150px" }}>
+                <td style={{ maxWidth: "100px" }}>
                   <Tooltip title={row.address || "N/A"} placement="top">
                     <div
                       style={{
@@ -297,10 +316,14 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                 </td>
                 <td style={{ width: "auto" }} align="right">
                   <div
-                    style={{ display: "flex", justifyContent: "space-between", alignItems:"center" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                   >
                     {/* Trip Status */}
-                    <p>{row.tripStatus}</p>
+                    <p style={{marginTop:"0", marginBottom:"0"}}>{row.tripStatus}</p>
                     {/* Trip Status Action */}
                     <IconButton>
                       {row.tripStatus === "RUNNING" && (

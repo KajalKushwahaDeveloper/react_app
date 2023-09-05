@@ -10,24 +10,6 @@ body {
    overflow-y: auto !important;  
   }
 }
-.home_div {
-  margin:0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding-top: 8rem;
-  flex-wrap: wrap;
-  background-color:rgb(245, 243, 243);
-}
-
-
-.home_div {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 8rem 1rem 1rem 1rem;
-  margin-right: -1rem;
-  margin-left: -1rem;
-}
 
 
 //reset_password
@@ -45,36 +27,9 @@ body {
   }
 }
 
-
-@media (min-width: 768px) {
-  .column {
-    width: 50%;
-    padding: 0 10px;
-  }
-}
-@media (min-width: 1024px) {
-  .home_div {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: row;
-    padding-top: 8rem;
-    // margin-top:10rem;
-    flex-wrap: nowrap;
-  }
-
-  .emulator_table {
-    margin: 0rem 1rem;
-  }
-}
 @media (min-width: 440px) {
-  .home_div {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: row;
-    padding-top: 8rem;
-    flex-wrap: nowrap;
+  td{
+    font-size: 8px;
   }
 
   .emulator_table {

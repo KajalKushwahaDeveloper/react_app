@@ -51,7 +51,8 @@ body {
 }
 
 .gps_map {
-  flex-basis: 70%;
+  width: 100vw;
+  // flex-basis: 70%;
   height: 100vh;
 }
 
@@ -80,15 +81,19 @@ table {
   overflow: hidden;
 }
 
-td,
-th {
+td{
   border: 1px solid $light-grey;
   text-align: left;
-  padding: 2px;
+  padding: 1px;
   vertical-align: middle;
 }
 
+thead, 
 th {
+  border: 1px solid $light-grey;
+  text-align: left;
+  padding: 5px;
+  vertical-align: middle;
   background-color: $background-color;
   color: $background-color;
 }
@@ -119,7 +124,7 @@ th {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 100vw;
   box-sizing: border-box;
   flex-shrink: 0;
   position: static;

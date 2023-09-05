@@ -27,12 +27,12 @@ const AddressTable = ({ tripData }) => {
     
   return (
     <div style={{ position:"relative",bottom:"0"}}>
-      <table aria-label="custom pagination table">
+      <table aria-label="custom pagination table" className="table">
         <thead>
           <tr>
-            <th>From Address</th>
-            <th>To Address</th>
-            <th>Total Time</th>
+            <th scope="col">From Address</th>
+            <th scope="col">To Address</th>
+            <th scope="col">Total Time</th>
           </tr>
         </thead>
         <tbody style={{ width: "100vh"}}>

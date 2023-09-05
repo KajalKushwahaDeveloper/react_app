@@ -55,15 +55,16 @@ th{
 }
 .btn-main {
   background-color: $background-color;
-  border-radius: 12px;
+  border-radius: 12px !important;
   color: white;
+
   &:hover {
     color: $light;
 }
 }
 .btn-green {
   background-color: #59ac42;
-  border-radius: 12px;
+  border-radius: 12px !important;
   color:white;
   &:hover {
     color: $light;
@@ -72,7 +73,7 @@ th{
 
 .dashboard {
 
-  padding: 8rem 1rem;
+  padding: 8rem 1rem 1rem 1rem ;
 
 }
 
@@ -87,4 +88,18 @@ th{
 }
 td{
  font-size: 10px;
+}
+
+@media (min-width: 440px) {
+  .btn-main {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+    border-radius: 12px !important;
+    color: white;
+  
+    &:hover {
+      color: $light;
+  }
+  }
 }
