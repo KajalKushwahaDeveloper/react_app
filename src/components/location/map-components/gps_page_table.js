@@ -297,10 +297,10 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                 </td>
                 <td style={{ width: "auto" }} align="right">
                   <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                    style={{ display: "flex", justifyContent: "space-between", alignItems:"center" }}
                   >
                     {/* Trip Status */}
-                    <p style={{ textAlign: "center" }}>{row.tripStatus}</p>
+                    <p>{row.tripStatus}</p>
                     {/* Trip Status Action */}
                     <IconButton>
                       {row.tripStatus === "RUNNING" && (

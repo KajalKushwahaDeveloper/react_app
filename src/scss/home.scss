@@ -20,35 +20,15 @@ body {
   background-color:rgb(245, 243, 243);
 }
 
-.add_items {
-  width: auto;
-  border-radius: 0;
-}
-
-.add_user {
-  width: auto;
-  height: auto;
-  box-shadow: $shadow;
-}
-
-.column {
-  flex: 1;
-  width: 100%;
-}
 
 .home_div {
   display: flex;
   flex-wrap: wrap;
-  padding: 8rem 1rem;
+  padding: 8rem 1rem 1rem 1rem;
   margin-right: -1rem;
   margin-left: -1rem;
 }
 
-.column {
-  flex: 0 0 100%;
-  max-width: 100%;
-  padding: 0 1rem;
-}
 
 //reset_password
 
@@ -78,11 +58,23 @@ body {
     align-items: center;
     justify-content: space-around;
     flex-direction: row;
-    /* Set the direction to row */
     padding-top: 8rem;
     // margin-top:10rem;
     flex-wrap: nowrap;
-    /* Prevent wrapping */
+  }
+
+  .emulator_table {
+    margin: 0rem 1rem;
+  }
+}
+@media (min-width: 440px) {
+  .home_div {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+    padding-top: 8rem;
+    flex-wrap: nowrap;
   }
 
   .emulator_table {

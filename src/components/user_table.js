@@ -279,7 +279,8 @@ const UserTable = ({
                         </li>
                       </ul>
                     </div>
-                    <div>
+                    <div className="d-flex align-items-center justify-content-center flex-column">
+                      <div className="d-flex align-items-center justify-content-center flex-sm-row mb-2">
                       <IconButton
                         className="roundIncon"
                         style={{
@@ -309,6 +310,7 @@ const UserTable = ({
                           onClick={() => handleDeleteButtonClick(row)}
                         />
                       </IconButton>
+                      </div>
                       <button
                         className="btn"
                         style={{

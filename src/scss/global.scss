@@ -57,11 +57,17 @@ th{
   background-color: $background-color;
   border-radius: 12px;
   color: white;
+  &:hover {
+    color: $light;
+}
 }
 .btn-green {
-  background-color: $active_color;
+  background-color: #59ac42;
   border-radius: 12px;
   color:white;
+  &:hover {
+    color: $light;
+}
 }
 
 .dashboard {
@@ -75,7 +81,10 @@ input {
     box-shadow: none !important;
   }
 }
-
+th{
+  font-size: 12px;
+  font-weight: 900;
+}
 td{
  font-size: 10px;
 }

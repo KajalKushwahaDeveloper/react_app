@@ -1,22 +1,21 @@
 .stacktable { 
-    table-layout:fixed;
-    width: 100%;
- }
+  width: 100%;
+}
 .st-head-row {
-     padding-top: 1em;
-     }
+   padding-top: 1em;
+   }
 .st-head-row.st-head-row-main { 
-    font-size: 1.5em;
-    padding-top: 0; 
-    }
+  font-size: 1.5em;
+  padding-top: 0; 
+  }
 .st-key { 
-    width: 49%; 
-    text-align: right; 
-    padding-right: 1%; }
+  width: 49%; 
+  text-align: right; 
+  padding-right: 1%; }
 .st-val { 
-    width: 49%; 
-    padding-left: 1%;
- }
+  width: 49%; 
+  padding-left: 1%;
+}
 
 
 
@@ -26,33 +25,29 @@
 .stacktable.small-only { display: none; }
 
 @media (max-width: 800px) {
+.stacktable.large-only { display: none; }
+.stacktable.small-only { display: table; }
+}
+@media (max-width: 400px) {
   .stacktable.large-only { display: none; }
   .stacktable.small-only { display: table; }
 }
-@media (max-width: 400px) {
-    .stacktable.large-only { display: none; }
-    .stacktable.small-only { display: table; }
-  }
 
 h2 {
-  text-align: center;
-  padding-top: 10px;
+text-align: center;
+padding-top: 10px;
 }
 
 table caption {
-	padding: .5em 0;
+padding: .5em 0;
 }
 
 .p {
-  text-align: center;
-  padding-top: 140px;
-  font-size: 14px;
+text-align: center;
+padding-top: 140px;
+font-size: 14px;
 }
 .gps_table_container {
-  height: 100vh;
-  overflow-y: auto;
-}
-p{
-     margin-top: .7rem; 
-     margin-bottom: 0;
+height: 100vh;
+overflow-y: auto;
 }
