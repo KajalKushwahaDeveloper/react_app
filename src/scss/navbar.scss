@@ -183,6 +183,10 @@
                 align-items: center;
                 color: $white-color;
                 margin-bottom: 1rem;
+
+                .username_para{
+                    margin-bottom: 1rem;
+                }
             }
 
             .menu-link ul li {
@@ -247,7 +251,9 @@
             ul {
                 flex-direction: column; // Stack menu items vertically
                 align-items: center; // Center align menu items
-
+                .username_para{
+                    margin-bottom: 1rem;
+                }
                 li {
                     margin-bottom: 1rem; // Add spacing between menu items
                 }

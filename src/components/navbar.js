@@ -88,7 +88,7 @@ const Navbar = ({ isAdmin }) => {
                 </NavLink>
               </li>
         
-              <p style={{marginBottom:"0rem"}}>
+              <p className="username_para" style={{margin :"1rem 0"}}>
                 {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
                 {data?.username || "N/A"})
               </p>

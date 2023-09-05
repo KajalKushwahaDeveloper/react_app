@@ -79,9 +79,9 @@ const LoginPage = () => {
               <div className="authCard shadow">
                 <div class="Left_content d-block d-md-none">
                   <img src="images/logo2.png" />
-                  <p className="para">
+                  {/* <p className="para">
                     Vivamus at dui consequat, dapibus tellus vitae
-                  </p>
+                  </p> */}
                 </div>
                 <form onSubmit={handleSubmit}>
                   <h1>Log in </h1>
