@@ -117,7 +117,7 @@ const LoginPage = () => {
                       </div>
                     </div>
                     <div className="col-12 mt-3 btns" style={{}}>
-                      <button className="btn btn-main" type="submit" style={{background:"#007dc6", color:"white",width:"6rem"}}>
+                      <button className="btn btn-main" type="submit" style={{background:"#007dc6", color:"white",width:"6rem",marginLeft:"7rem"}}>
                         Login
                       </button>
                     </div>
