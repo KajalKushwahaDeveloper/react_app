@@ -17,6 +17,7 @@ import {
   EMULATOR_DRAG_URL,
 } from "../../constants";
 import CardComponent from "./map-components/CardComponent";
+import GpsTable from "./map-components/gps_page_table";
 import CreateTripButton from "./map-components/CreateTripButton.jsx";
 import GpsOverlay from "./map-components/GpsOverlay";
 import CreateTripOverlay from "./map-components/CreateTripOverlay";
@@ -26,9 +27,10 @@ import ApiService from "../../ApiService";
 const Map = ({ showToast }) => {
   const [selectedEmId, setSelectedEmId] = useState(null);
   const [createTrip, setCreateTrip] = useState(false);
-
+  const [showEmulatorNotSelectedToast, setShowEmulatorNotSelectedToast] = useState(false);
   const [pathsRoute, setPathsRoute] = useState(null);
-
+  const [selectedEmulator, setSelectedEmulator] = useState(null);
+  const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
   const [isTableVisible, setIsTableVisible] = useState(false);
   const [startEmulation, setStartEmulation] = useState(null);
   const [createTripInfo, setCreateTripInfo] = useState();
@@ -46,13 +48,20 @@ const Map = ({ showToast }) => {
     lat: defaultLat,
     lng: defaultLng,
   });
-
   const mapRef = useRef(null);
   const intervalRef = useRef(null);
 
   const handleCreateTripButton = () => {
+    if (selectedEmulator===null){
+        showToast("Emulator is not selected","error")//Emulator is not selected error 
+    }
+    else if(AssignedTelephoneNumber===null){
+      console.log("Assigned number",AssignedTelephoneNumber)
+        showToast("Telephone Number is not Assigned","error")//Telephone Number is not Assigned
+    }else{
     setCreateTrip(true);
     setIsTableVisible(!isTableVisible);
+  }
   };
 
   const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
@@ -85,10 +94,10 @@ const Map = ({ showToast }) => {
 
           const { lat: lat2, lng: lng2 } = array[startEmulation ? 1 : 0];
           const latLong2 = new window.google.maps.LatLng(lat2, lng2);
-
+          console.log(mapRef.current)
           const distance =
             window.google.maps.geometry.spherical.computeDistanceBetween(
-              latLong1,
+              latLong1, 
               latLong2
             );
 
@@ -477,9 +486,13 @@ const Map = ({ showToast }) => {
       <GpsOverlay
         showToast={showToast}
         setSelectedEmId={setSelectedEmId}
+        setSelectedEmulator={setSelectedEmulator}
         selectedEmId={selectedEmId}
         emulators={emulators}
         tripData={tripData}
+        selectedEmulator={selectedEmulator}
+        AssignedTelephoneNumber={AssignedTelephoneNumber}
+        setAssignedTelephoneNumber={setAssignedTelephoneNumber}
       />
       <GoogleMapContainer
         mapRef={mapRef}
