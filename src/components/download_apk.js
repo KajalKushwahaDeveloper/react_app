@@ -85,13 +85,13 @@ const DownloadApk = () => {
         <Typography variant="h5" component="h2">
           Mock Application Version
         </Typography>
-        <div className="d-flex justify-content-between mt-5">
+        <div className="d-flex justify-content-around mt-5">
           <Button
             variant="contained"
-            className="btn btn-main"
+            className="btn btn-main d-flex flex-column flex-sm-row" 
             startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
             onClick={handleDownloadFile}
-            style={{ marginLeft: "1.2rem", width: "12rem !important" }}
+            style={{ marginLeft: "1.2rem", width: "12rem !important" ,}}
             endIcon={loading && <CircularProgress color="inherit" size={20} />} 
             disabled={loading} 
           >
