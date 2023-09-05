@@ -172,7 +172,7 @@
                 display: block;
 
                 align-items: center;
-                padding: 9rem 0;
+                padding: 12rem 0;
 
             }
 
@@ -187,11 +187,12 @@
 
             .menu-link ul li {
                 font-size: 1.6rem;
-                // padding: 1.1rem 1.6rem;
+                padding: .1rem .6rem;
 
                 &:hover {
                     background: $active_color;
-                    padding: 0.1rem 1rem;
+                    padding: .1rem .6rem;
+
                     border-radius: 0.4rem;
                 }
             }
