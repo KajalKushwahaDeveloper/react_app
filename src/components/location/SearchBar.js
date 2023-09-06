@@ -133,8 +133,8 @@ class SearchBar extends React.Component {
                       display: "flex",
                       flexDirection: "column",
                       overflowY: "scroll",
-                      maxHeight: "100px",
-                      width: "100%",
+                      maxHeight: "70px",
+                      width: "210px",
                       cursor: "pointer",
                     }}
                   >
@@ -142,7 +142,6 @@ class SearchBar extends React.Component {
                       const className = classnames("Demo__suggestion-item", {
                         "Demo__suggestion-item--active": suggestion.active,
                       });
-
                       return (
                         <div
                           {...getSuggestionItemProps(suggestion, { className })}
@@ -175,28 +174,6 @@ class SearchBar extends React.Component {
         {errorMessage.length > 0 && (
           <div className="Demo__error-message">{this.state.errorMessage}</div>
         )}
-
-        {/* {((latitude && longitude) || isGeocoding) && (
-          <div>
-            <h3 className="Demo__geocode-result-header">Geocode result</h3>
-            {isGeocoding ? (
-              <div>
-                <i className="fa fa-spinner fa-pulse fa-3x fa-fw Demo__spinner" />
-              </div>
-            ) : (
-              <div>
-                <div className="Demo__geocode-result-item--lat">
-                  <label>Latitude:</label>
-                  <span>{latitude}</span>
-                </div>
-                <div className="Demo__geocode-result-item--lng">
-                  <label>Longitude:</label>
-                  <span>{longitude}</span>
-                </div>
-              </div>
-            )}
-          </div>
-        )} */}
       </div>
     );
   }

@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchBar from "../SearchBar.js";
 import { CREATE_TRIP_URL } from "../../../constants.js";
 import CloseIcon from "@mui/icons-material/Close";
 import ApiService from "../../../ApiService.js";
-import { Login } from "@mui/icons-material";
+import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
+import "../../../scss/button.scss";
 
-
-const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdatedTripPath, setSelectedEmId ,setCreateTripInfo}) => {
+const CreateTripTable = ({
+  showToast,
+  selectedEmId,
+  setIsTableVisible,
+  setUpdatedTripPath,
+  setSelectedEmId,
+  setCreateTripInfo,
+}) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
@@ -15,10 +22,10 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
+  const [open, setOpen] = useState(true); // Automatically open the modal
 
-
-  const handleTableClose = () => {
-    setIsTableVisible(false);
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const handleInputChange = (event) => {
@@ -26,15 +33,13 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
   };
 
   const handleAddClick = async () => {
-    
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
       setError("Please fill both locations.");
       return;
     }
-  
+
     setError("");
 
-    console.log("selectedEmId:", selectedEmId);
     const token = localStorage.getItem("token");
 
     const payload = {
@@ -47,7 +52,6 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
       speed: 60,
       emulatorDetailsId: selectedEmId,
     };
-    console.log("payload create trip: ", payload);
 
     const { success, data, error } = await ApiService.makeApiCall(
       CREATE_TRIP_URL,
@@ -64,81 +68,81 @@ const CreateTripTable = ({ showToast, selectedEmId, setIsTableVisible,setUpdated
       showToast(error, "error");
     }
 
-    setIsTableVisible(false);
+    handleClose();
   };
-console.log("selectedEmId......:", selectedEmId);
+
   return (
-    <div style={{ width: "50%" }}>
-      <div style={{ width: "100%", padding: ".5rem", maxWidth: "100%" }}>
-        <table aria-label="custom pagination table">
-          <thead>
-            <tr>
-              <th
-                colSpan="2"
-                style={{
-                  width: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                Create Trip
-                <CloseIcon onClick={handleTableClose} />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div className="container" style={{ width: "auto" ,margin:"1rem 0"}}>
-                  <SearchBar
-                    setLat={setFromLat}
-                    setLong={setFromLong}
-                    setAddress={setFromAddress}
-                    inputValue={inputValue}
-                    setInputValue={setInputValue}
-                    handleInputChange={handleInputChange}
-                  />
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div className="container" style={{ width: "auto" ,margin:"1rem 0"}}>
-                  <SearchBar
-                    setLat={setToLat}
-                    setLong={setToLong}
-                    setAddress={setToAddress}
-                    inputValue={inputValue}
-                    setInputValue={setInputValue}
-                    handleInputChange={handleInputChange}
-                  />
-                    {error && <p className="error">{error}</p>}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colSpan="2" style={{ textAlign: "center" }}>
-              
-              </td>
-            </tr>
-            <tr>
-              <th
-                onClick={handleAddClick}
-                colSpan="2"
-                style={{
-                  cursor: "pointer",
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                Add
-              </th>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "300px",
+          bgcolor: "background.paper",
+          boxShadow: 24,
+          p: 4,
+          paddingTop:"0px",
+          paddingLeft:"0px",
+          paddingRight:"0px",
+          paddingBottom:"1rem"
+        }}
+      >
+        <IconButton
+          edge="end"
+          color="inherit"
+          onClick={handleClose}
+          aria-label="close"
+          sx={{
+            position: "absolute",
+            top: 0,
+            right: 10,
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <Typography variant="h6" component="h2" style={{paddingBottom:"20px",backgroundColor:"#007dc6",color:"white"}}>
+          Create Trip
+        </Typography>
+        <div style={{ margin: "1rem 0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between",flexDirection:"column",alignItems:"center" }}>
+          <div style={{ flex: 1}}>
+          <SearchBar 
+            setLat={setFromLat}
+            setLong={setFromLong}
+            setAddress={setFromAddress}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            handleInputChange={handleInputChange}
+          />
+        </div>
+        <div style={{ margin: "1rem 0" }}>
+          <SearchBar
+            setLat={setToLat}
+            setLong={setToLong}
+            setAddress={setToAddress}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            handleInputChange={handleInputChange}
+          />
+          {error && <p className="error">{error}</p>}
+        </div>
+        </div>
+        </div>
+        <Button
+          onClick={handleAddClick}
+          style={{ cursor: "pointer", width: "auto", textAlign: "center",float:"right",backgroundColor:"#1976d2",color:"white",marginLeft:"2.7rem" }}
+        >
+          Add
+        </Button>
+      </Box>
+    </Modal>
   );
 };
 

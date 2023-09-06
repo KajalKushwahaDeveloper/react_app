@@ -33,16 +33,15 @@ import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Tooltip } from "@mui/material";
 
-const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
+const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedEmulator, selectedEmulator,setAssignedTelephoneNumber,AssignedTelephoneNumber }) => {
   // State variables
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
+    const [rowsPerPage, setRowsPerPage] = useState(3);
   const [emptyRows, setEmptyRows] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedEmulator, setSelectedEmulator] = useState(null);
   const [contactDialog, setContactDialog] = useState({
     open: false,
     dialogType: "",
@@ -67,6 +66,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   };
 
   useEffect(() => {
+ 
     if (data != null) {
       setEmptyRows(
         rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
@@ -101,7 +101,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     setSelectedEmId,
   ]);
 
-  const handleChangePage = (event, newPage) => {
+   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -110,7 +110,9 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
     setPage(0);
   };
 
-  const handleEmulatorCheckboxChange = (id) => {
+  const handleEmulatorCheckboxChange = (id,telephone) => {
+    setAssignedTelephoneNumber(telephone);
+   
     if (selectedEmulator === id) {
       // If the clicked checkbox is already selected, unselect it
       setSelectedEmulator(null);
@@ -176,7 +178,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
       showToast("Error CHANGING TRIP STATUS", "error");
     }
   };
-
+  
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -311,7 +313,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                 <td style={{ width: "auto" }} align="right">
                   <Checkbox
                     checked={selectedEmulator === row.id}
-                    onChange={() => handleEmulatorCheckboxChange(row.id)}
+                    onChange={() => handleEmulatorCheckboxChange(row.id,row.telephone)}
                   />
                 </td>
                 <td style={{ width: "auto" }} align="right">
