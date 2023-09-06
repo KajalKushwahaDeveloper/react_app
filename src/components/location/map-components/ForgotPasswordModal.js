@@ -67,7 +67,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           transform: "translate(-50%, -50%)",
         }}
       >
-        <span className="close" onClick={onClose} style={{float:"right",marginTop:".5rem",height:"2rem",width:"2rem"}}>
+        <span className="close" onClick={onClose} style={{float:"right",marginTop:".5rem",height:"2rem",width:"2rem",cursor:"pointer"}}>
           &times;
         </span>
         <Typography id="modal-modal-title" variant="h6" component="h2" style={{paddingTop:"5px"}}>
