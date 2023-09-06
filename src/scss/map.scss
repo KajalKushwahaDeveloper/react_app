@@ -69,7 +69,7 @@ body {
 
 //table//
 .tableBox {
-  padding: 10px;
+  // padding: 30px;
   // background-color: rgba($color: $secondary, $alpha: 0.2);
 }
 
@@ -101,6 +101,7 @@ th {
 @media screen and (max-width: 768px) {
   table {
     font-size: 0.75rem;
+    overflow-x: auto;
   }
 
   td,
@@ -119,7 +120,10 @@ th {
     flex-basis: auto;
   }
 }
-
+.table-responsive {
+  overflow-x: scroll;
+  max-width: 380px ; 
+}
 .mapContainer {
   height: 100vh;
   display: flex;

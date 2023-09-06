@@ -1,5 +1,5 @@
 import React from "react";
-
+import "../../../scss/map.scss";
 const AddressTable = ({ tripData }) => {
  
   const fromAddress =
@@ -26,8 +26,8 @@ const AddressTable = ({ tripData }) => {
     const totalTime = `~${hours} hours and ${minutes} minutes`;
     
   return (
-    <div style={{ position:"relative",bottom:"0"}}>
-      <table aria-label="custom pagination table" className="table">
+    <div className="table-responsive tableBox" style={{ position:"relative",bottom:"0"}}>
+      <table aria-label="custom pagination table" className="table shadow mb-0 n=">
         <thead>
           <tr>
             <th scope="col">From Address</th>

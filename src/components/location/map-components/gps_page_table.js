@@ -186,15 +186,15 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
-      <div style={{ height: "100%", width: "100%" }}>
-        <table aria-label="custom pagination table">
+    <div className="table-responsive tableBox" gps_table_container>
+     
+      <table aria-label="custom pagination table" className="table-responsive table shadow mb-0 n=">
           <thead>
             <tr>
               <th>Status</th>
               <th>ID / History</th>
               <th>Number</th>
-              <th style={{ maxWidth: "300px" }}>Address</th>
+              <th>Address</th>
               <th>Select</th>
               <th>Trip/Action</th>
             </tr>
@@ -383,7 +383,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
           handleContactDialog={handleContactDetails}
           showToast={showToast}
         />
-      </div>
+
     </div>
   );
 };
