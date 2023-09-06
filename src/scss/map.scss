@@ -20,6 +20,7 @@ body {
 }
 
 .gps_overlay {
+  width: 40%;
   position: absolute;
   top: 0;
   left: 0;
@@ -98,6 +99,10 @@ th {
   color: $background-color;
 }
 
+
+.gps_overlay {
+  width: 40%;
+}
 @media screen and (max-width: 768px) {
   table {
     font-size: 0.75rem;
@@ -109,7 +114,9 @@ th {
     padding: 8px;
   }
 }
-
+.gps_overlay {
+  width: 80%;
+}
 @media screen and (max-width: 786px) {
   .gps_page {
     flex-wrap: wrap;
@@ -124,10 +131,13 @@ th {
   overflow-x: hidden;
  
 }
+.gps_overlay {
+  width: 80%;
+}
 @media screen and (max-width: 786px) {
   .table-responsive {
     overflow-x: scroll;
-    max-width: 380px ; 
+    max-width: 560px ; 
   }
 }
 .mapContainer {
@@ -147,9 +157,27 @@ th {
   align-items: center;
   background: $background-color;
 }
-
+.gps_overlay {
+  width: 80%;
+}
 @media only screen and (max-width: 552px) {
+  .table-responsive {
+    overflow-x: scroll;
+    max-width: 420px ; 
+  }
   .gps_page {
     padding-top: 107px;
+  }
+}
+.gps_overlay {
+  width: 80%;
+}
+@media only screen and (max-width: 440px) {
+  .table-responsive {
+    overflow-x: scroll;
+    max-width: 380px ; 
+  }
+  .gps_overlay {
+    width: 80%;
   }
 }

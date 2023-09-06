@@ -11,7 +11,7 @@ const GpsOverlay = ({
   tripData,
 }) => {
   return (
-    <div className="gps_overlay" style={{ marginTop: "4rem", marginBottom:"1rem" }}>
+    <div className="gps_overlay" style={{width:"40%", marginTop: "4rem", marginBottom:"1rem" }}>
       <GpsTable
         showToast={showToast}
         setSelectedEmId={setSelectedEmId}
