@@ -121,8 +121,14 @@ th {
   }
 }
 .table-responsive {
-  overflow-x: scroll;
-  max-width: 380px ; 
+  overflow-x: hidden;
+ 
+}
+@media screen and (max-width: 786px) {
+  .table-responsive {
+    overflow-x: scroll;
+    max-width: 380px ; 
+  }
 }
 .mapContainer {
   height: 100vh;
