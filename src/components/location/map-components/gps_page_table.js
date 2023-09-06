@@ -211,7 +211,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data }) => {
                     background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
                     display: "flex",
                     alignItems: "center",
-                    padding: ".5rem",
+                    padding: "1rem .1rem",
                   }}
                 >
                   {row.status || "N/A"}
