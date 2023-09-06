@@ -9,6 +9,7 @@ export const BASE_URL = LIVE_API_CLIENT;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
+export const FORGOT_PASSWORD = BASE_URL + "/forgot-password";
 export const CLIENT_CURRENT = BASE_URL + "/current";
 export const CLIENT_LOGIN = BASE_URL + "/log-in";
 
