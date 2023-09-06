@@ -218,9 +218,9 @@ const EmulatorTable = ({
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%", fontSize: "9px" }}>
-      <table aria-label="custom pagination table">
-        <thead>
+    <div className="table-responsive tableBox">
+ <table aria-label="custom pagination table" className="table shadow mb-0 n=">
+        <thead style={{background:"#007dc6"}}>
           <tr>
             <th>STATUS</th>
             <th>SERIAL NO</th>
@@ -239,13 +239,13 @@ const EmulatorTable = ({
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
-              <td>
+              <td style={{  display: "flex",
+              alignItems:"center",
+              overflow: "hidden",
+              whiteSpace: "nowrap",}}>
                 <div
                   style={{
-                    display: "inline-block",
                     maxWidth: "60px",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
                     marginTop:".8rem"
                   }}
                 >
@@ -288,7 +288,7 @@ const EmulatorTable = ({
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
               <td
-                style={{ width: "auto", padding:".5rem 0"}}
+                style={{ display:"flex",width: "auto", padding:".5rem 0"}}
                 align="right"
               >
                 <IconButton aria-label="delete">
@@ -306,7 +306,7 @@ const EmulatorTable = ({
                   style={{
                     backgroundColor: row.user === null ? "green" : "red",
                     // width: row.user === null ? "95px" : "",
-                    width: "7.5rem",
+                    width: "6.5rem",
                   }}
                   onClick={() => handleActionButtonClick(row)}
                 >

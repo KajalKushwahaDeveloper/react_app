@@ -172,7 +172,7 @@
                 display: block;
 
                 align-items: center;
-                padding: 9rem 0;
+                padding: 12rem 0;
 
             }
 
@@ -183,15 +183,20 @@
                 align-items: center;
                 color: $white-color;
                 margin-bottom: 1rem;
+
+                .username_para{
+                    margin-bottom: 1rem;
+                }
             }
 
             .menu-link ul li {
                 font-size: 1.6rem;
-                // padding: 1.1rem 1.6rem;
+                padding: .1rem .6rem;
 
                 &:hover {
                     background: $active_color;
-                    padding: 0.1rem 1rem;
+                    padding: .1rem .6rem;
+
                     border-radius: 0.4rem;
                 }
             }
@@ -246,7 +251,9 @@
             ul {
                 flex-direction: column; // Stack menu items vertically
                 align-items: center; // Center align menu items
-
+                .username_para{
+                    margin-bottom: 1rem;
+                }
                 li {
                     margin-bottom: 1rem; // Add spacing between menu items
                 }

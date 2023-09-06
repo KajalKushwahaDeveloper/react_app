@@ -18,7 +18,7 @@ const GpsOverlay = ({
   
 }) => {
   return (
-    <div className="gps_overlay" style={{ marginTop: "5rem" }}>
+    <div className="gps_overlay" style={{width:"40%", marginTop: "4rem", marginBottom:"1rem" }}>
       <GpsTable
         showToast={showToast}
         setSelectedEmId={setSelectedEmId}
@@ -29,7 +29,9 @@ const GpsOverlay = ({
         AssignedTelephoneNumber={AssignedTelephoneNumber}
         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
       />
+         <div style={{ marginTop: "1rem", width:"80%"}}>
       <AddressTable tripData={tripData} />
+      </div>
     </div>
   );
 };

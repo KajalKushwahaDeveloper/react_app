@@ -79,7 +79,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
     } else {
       setLoading(true);
     }
-    if(selectedEmId != null && selectedEmulator != null){
+    if (selectedEmId != null && selectedEmulator != null) {
       if (selectedEmId !== selectedEmulator) {
         setSelectedEmulator(selectedEmId);
         const selectedEmIndex = data.findIndex(
@@ -92,7 +92,14 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
         }
       }
     }
-  }, [data, page, rowsPerPage, selectedEmId, selectedEmulator, setSelectedEmId]);
+  }, [
+    data,
+    page,
+    rowsPerPage,
+    selectedEmId,
+    selectedEmulator,
+    setSelectedEmId,
+  ]);
 
    const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -181,15 +188,15 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
   }
 
   return (
-    <div sx={{ width: "auto", maxWidth: "100%" }} gps_table_container>
-      <div style={{ height: "90%", width: "100%" }}>
-        <table aria-label="custom pagination table">
+    <div className="table-responsive tableBox" gps_table_container>
+     
+      <table aria-label="custom pagination table" className="table-responsive table shadow mb-0 n=">
           <thead>
             <tr>
               <th>Status</th>
               <th>ID / History</th>
               <th>Number</th>
-              <th style={{ maxWidth: "300px" }}>Address</th>
+              <th>Address</th>
               <th>Select</th>
               <th>Trip/Action</th>
             </tr>
@@ -206,7 +213,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
                     background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
                     display: "flex",
                     alignItems: "center",
-                    padding: ".5rem",
+                    padding: "1rem .1rem",
                   }}
                 >
                   {row.status || "N/A"}
@@ -224,7 +231,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
                   style={{ width: "auto", alignItems: "center" }}
                   align="right"
                 >
-                  <div style={{ display: "flex", maxWidth: "150px" }}>
+                  <div style={{ display: "flex", maxWidth: "100px" }}>
                     <Tooltip
                       title={row.emulatorSsid || "N/A"}
                       placement="top"
@@ -236,7 +243,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
                           textOverflow: "ellipsis",
                           overflow: "hidden",
                           whiteSpace: "nowrap",
-                          maxWidth: "150px",
+                          maxWidth: "100px",
                           textAlign: "center",
                           marginTop: ".7rem",
                         }}
@@ -253,7 +260,6 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
                       />
                     </IconButton>
                   </div>
-                  
                 </td>
                 <td
                   style={{
@@ -261,10 +267,23 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
                     width: "auto",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    maxWidth: "150px",
                   }}
                   align="right"
                 >
-                  {row.telephone || "N/A"}
+                  <Tooltip title={row.telephone || "N/A"} placement="top">
+                    <div
+                      style={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                      }}
+                      align="right"
+                    >
+                      {row.telephone || "N/A"}
+                    </div>
+                  </Tooltip>
+
                   <IconButton
                     onClick={() => handleContactDetails("call", row.id)}
                   >
@@ -277,7 +296,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
                     <MessageRoundedIcon />
                   </IconButton>
                 </td>
-                <td style={{ maxWidth: "150px" }}>
+                <td style={{ maxWidth: "100px" }}>
                   <Tooltip title={row.address || "N/A"} placement="top">
                     <div
                       style={{
@@ -299,10 +318,14 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
                 </td>
                 <td style={{ width: "auto" }} align="right">
                   <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                   >
                     {/* Trip Status */}
-                    <p style={{ textAlign: "center" }}>{row.tripStatus}</p>
+                    <p style={{marginTop:"0", marginBottom:"0"}}>{row.tripStatus}</p>
                     {/* Trip Status Action */}
                     <IconButton>
                       {row.tripStatus === "RUNNING" && (
@@ -362,7 +385,7 @@ const GpsTable = ({ showToast, setSelectedEmId, selectedEmId, data, setSelectedE
           handleContactDialog={handleContactDetails}
           showToast={showToast}
         />
-      </div>
+
     </div>
   );
 };
