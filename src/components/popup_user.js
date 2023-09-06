@@ -31,7 +31,7 @@ const PopUpUser = ({
   const [id, setId] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [password, seteditpassword] = useState("");
+  const [password, setEditPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
@@ -63,9 +63,10 @@ const PopUpUser = ({
     setLastName(e.target.value);
   };
 
-  const handleeditpassword = (e) => {
-    seteditpassword(e.target.value);
+  const handleEditPassword = (e) => {
+    setEditPassword(e.target.value);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -120,7 +121,7 @@ const PopUpUser = ({
     console.log("token : ", token);
     try {
       const response = await fetch(USER_URL, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -204,9 +205,9 @@ const PopUpUser = ({
               <input
                 type="password"
                 id="content_input"
-                placeholder="Enter new password"
+                placeholder="password (empty if unchanged)"
                 value={password}
-                onChange={handleeditpassword}
+                onChange={handleEditPassword}
               />
             )}
             <button className="login_button" type="submit">

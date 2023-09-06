@@ -9,8 +9,8 @@ import { FORGOT_PASSWORD } from "../../../constants";
 const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [resetSuccess, setResetSuccess] = useState(false);
-  const [responseError, setResponseError] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(null);
+  const [responseError, setResponseError] = useState(null);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -34,7 +34,8 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
         if (success) {
           const token = data.token;
           localStorage.setItem("token", token);
-          console.log("Login successful");
+          console.log("Sent reset password mail successful");
+          setResetSuccess("Sent reset password mail successful")
         } else {
           setResponseError(error || "Invalid Email"); // Display appropriate error message
         }
