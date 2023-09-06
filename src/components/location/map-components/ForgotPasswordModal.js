@@ -4,11 +4,13 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ApiService from "../../../ApiService";
+import { FORGOT_PASSWORD } from "../../../constants";
 
 const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [resetSuccess, setResetSuccess] = useState(false);
+  const [responseError, setResponseError] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -22,15 +24,23 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
       setEmailError("Please enter your email address.");
     } else {
       try {
-        // Send a request to your API to initiate the password reset process
-        const response = await ApiService.sendPasswordResetEmail(email);
-        if (response.success) {
-          setResetSuccess(true);
+        const { success, data, error } = await ApiService.makeApiCall(
+          FORGOT_PASSWORD,
+          "GET",
+          null,
+          null,
+          email
+        );
+        if (success) {
+          const token = data.token;
+          localStorage.setItem("token", token);
+          console.log("Login successful");
         } else {
-          setEmailError("Email not found. Please check your email address.");
+          setResponseError(error || "Invalid Email"); // Display appropriate error message
         }
       } catch (error) {
-        setEmailError("An error occurred while sending the reset email.");
+        console.log("Error occurred during login:", error);
+        setResponseError("An error occurred during login"); // Display a generic error message
       }
     }
   };
@@ -79,6 +89,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                 className="form-control"
               />
               {emailError && <p className="error">{emailError}</p>}
+              {responseError && <p className="error">{responseError}</p>}
             </div>
             <Button type="submit" variant="contained" color="primary" style={{marginTop: "30px", float: "right"}}>
               Reset Password

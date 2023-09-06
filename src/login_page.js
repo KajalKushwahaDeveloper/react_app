@@ -60,18 +60,9 @@ const LoginPage = () => {
   const closeForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(false); // Close the "Forgot Password" modal
   };
+  
   const handleForgotPasswordClick = async () => {
         setIsForgotPasswordModalOpen(true);
-             try {
-      const response = await ApiService.sendPasswordResetEmail(email);
-      if (response.success) {
-        setResponseError("Password reset instructions sent to your email.");
-      } else {
-        setResponseError(response.error || "Failed to send reset email.");
-      }
-    } catch (error) {
-      setResponseError("An error occurred while sending the reset email.");
-    }
   };
 
   return (

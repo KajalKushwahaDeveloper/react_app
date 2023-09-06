@@ -3,8 +3,8 @@ import Modal from "@mui/material/Modal";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../scss/login.scss";
-import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from "@mui/material/IconButton";
+import ClearIcon from "@mui/icons-material/Clear";
 import { USER_URL } from "../constants";
 
 const style = {
@@ -35,8 +35,8 @@ const PopUpUser = ({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
-  
- console.log("userToEdit1234:", userToEdit);
+
+  console.log("userToEdit1234:", userToEdit);
   useEffect(() => {
     if (userToEdit) {
       setId(userToEdit.id);
@@ -44,7 +44,6 @@ const PopUpUser = ({
       setTelephone(userToEdit.telephone);
       setFirstName(userToEdit.firstName);
       setLastName(userToEdit.lastName);
-      seteditpassword(userToEdit.password);
     }
   }, [userToEdit]);
 
@@ -64,9 +63,9 @@ const PopUpUser = ({
     setLastName(e.target.value);
   };
 
-  const handleeditpassword = (e) =>{
+  const handleeditpassword = (e) => {
     seteditpassword(e.target.value);
-  }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -89,7 +88,12 @@ const PopUpUser = ({
           } else {
             handleClose(0, null);
           }
-          showToast("User Added", "success"); // Call the showToast method with two arguments
+
+          if (userToEdit) {
+            showToast("User Updated", "success"); // Call the showToast method with two arguments
+          } else {
+            showToast("User Added", "success"); // Call the showToast method with two arguments
+          }
           // navigate("/home"); // Redirect to the home page
         } else {
           showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
@@ -109,6 +113,7 @@ const PopUpUser = ({
       lastName,
       email,
       telephone,
+      password,
     };
 
     const token = localStorage.getItem("token");
@@ -131,7 +136,7 @@ const PopUpUser = ({
       return { success: true };
     } catch (e) {
       showToast(`Failed to unassign user ${e}`, "error");
-      return { success: false, error: e};
+      return { success: false, error: e };
     }
   };
 
@@ -145,9 +150,9 @@ const PopUpUser = ({
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
-        <IconButton
+          <IconButton
             sx={{
-              position: 'absolute',
+              position: "absolute",
               top: 8,
               right: 8,
               zIndex: 1,
@@ -157,8 +162,15 @@ const PopUpUser = ({
             <ClearIcon />
           </IconButton>
           <form onSubmit={handleSubmit}>
-            
-            <h1 style={{marginBottom:"3rem",fontSize:"1.5rem", fontWeight:"600"}}>{userToEdit === null ? "Add User" : "Edit User"}</h1>
+            <h1
+              style={{
+                marginBottom: "3rem",
+                fontSize: "1.5rem",
+                fontWeight: "600",
+              }}
+            >
+              {userToEdit === null ? "Add User" : "Edit User"}
+            </h1>
 
             <input
               type="text"
@@ -188,13 +200,15 @@ const PopUpUser = ({
               value={telephone}
               onChange={handleTelephoneChange}
             />
-               <input
-              type="password"
-              id="content_input"
-              placeholder="Enter new password"
-              value={password}
-              onChange={handleeditpassword}
-            />
+            {userToEdit && (
+              <input
+                type="password"
+                id="content_input"
+                placeholder="Enter new password"
+                value={password}
+                onChange={handleeditpassword}
+              />
+            )}
             <button className="login_button" type="submit">
               {userToEdit === null ? "Add User" : "Edit User"}
             </button>
