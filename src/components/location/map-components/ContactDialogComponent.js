@@ -21,7 +21,7 @@ import {
   MESSAGE_SEND_MSG,
   CALL_MAKE_CALL,
 } from "../../../constants";
-
+import CallingDialogeComponent from "./callingDialogeComponent";
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -60,6 +60,19 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
   const [message, setMessage] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [messageError, setMessageError] = useState("");
+
+  const [isCalling, setIsCalling] = useState(false);
+  const [isCallDialogOpen, setIsCallDialogOpen] = useState(false); // Add a state variable for the dialog
+
+  const startCall = () => {
+    setIsCalling(false);
+    setIsCallDialogOpen(true); // Open the dialog when the call starts
+  };
+
+  const endCall = () => {
+    setIsCalling(false);
+    setIsCallDialogOpen(false); // Close the dialog when the call ends
+  };
 
   const validatePhoneNumber = (number) => {
     if (!number) {
@@ -142,10 +155,33 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
         error={!!messageError}
         helperText={messageError}
       />
-      <div style={{ marginTop: "1rem" }}>
-        <Button type="Submit" variant="contained" fullWidth>
+      <div style={{ marginTop: "1rem" ,display:"flex", gap:"1rem" , float:"right"}}>
+        <Button
+          type="Submit"
+          style={{
+            backgroundColor: "#007dc6",
+            color: "white",
+            // float: "right",
+            // marginLeft: "1rem",
+          }}
+        >
           Submit
         </Button>
+        <div className="call-controls">
+         
+        <Button onClick={startCall} type="button"  style={{
+            backgroundColor: "green",
+            color: "white",
+          
+            // marginRight: "3rem",
+          }}>
+          Call
+          </Button>
+
+          {isCallDialogOpen && (
+            <CallingDialogeComponent setIsCalling={setIsCalling} />
+          )}
+        </div>
       </div>
     </form>
   );
@@ -163,23 +199,47 @@ function ShowHistory({ dialogType, data }) {
                   style={{ padding: "0.5rem", boxShadow: "0px 0px 8px -4px" }}
                 >
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>From:</Typography>
                       <Typography fontWeight={400}>{callData.from}</Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>To:</Typography>
                       <Typography fontWeight={400}>{callData.to}</Typography>
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Start Time:</Typography>
                       <Typography fontWeight={400}>
                         {new Date(callData.startTime).toLocaleTimeString()}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>End Time:</Typography>
                       <Typography fontWeight={400}>
                         {new Date(callData.endTime).toLocaleTimeString()}
@@ -187,13 +247,25 @@ function ShowHistory({ dialogType, data }) {
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Duration:</Typography>
                       <Typography fontWeight={400}>
                         {callData.duration}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Status:</Typography>
                       <Typography fontWeight={400}>
                         {callData.status}
@@ -201,7 +273,13 @@ function ShowHistory({ dialogType, data }) {
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>AnsweredBy:</Typography>
                       <Typography fontWeight={400}>
                         {callData.answeredBy === null
@@ -209,7 +287,13 @@ function ShowHistory({ dialogType, data }) {
                           : callData.answeredBy}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Price:</Typography>
                       <Typography fontWeight={400}>
                         {callData.price + " " + callData.priceUnit}
@@ -217,16 +301,31 @@ function ShowHistory({ dialogType, data }) {
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Direction:</Typography>
                       <Typography fontWeight={400}>
                         {callData.direction}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Caller Name:</Typography>
                       <Typography fontWeight={400}>
-                        {callData.callerName === null || callData.callerName === ""  ? "N/A" : callData.callerName}
+                        {callData.callerName === null ||
+                        callData.callerName === ""
+                          ? "N/A"
+                          : callData.callerName}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -242,23 +341,49 @@ function ShowHistory({ dialogType, data }) {
                   style={{ padding: "0.5rem", boxShadow: "0px 0px 8px -4px" }}
                 >
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>From:</Typography>
-                      <Typography fontWeight={400}>{msgData.from.endpoint}</Typography>
+                      <Typography fontWeight={400}>
+                        {msgData.from.endpoint}
+                      </Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>To:</Typography>
                       <Typography fontWeight={400}>{msgData.to}</Typography>
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Sent Date:</Typography>
                       <Typography fontWeight={400}>
                         {new Date(msgData.dateSent).toLocaleTimeString()}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Sent Time:</Typography>
                       <Typography fontWeight={400}>
                         {new Date(msgData.dateSent).toLocaleDateString()}
@@ -266,11 +391,23 @@ function ShowHistory({ dialogType, data }) {
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Status:</Typography>
                       <Typography fontWeight={400}>{msgData.status}</Typography>
                     </Grid>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Durations:</Typography>
                       <Typography fontWeight={400}>
                         {msgData.direction}
@@ -278,7 +415,13 @@ function ShowHistory({ dialogType, data }) {
                     </Grid>
                   </Grid>
                   <Grid container>
-                    <Grid item xs={6} display={"flex"} direction={"row"} gap={1}>
+                    <Grid
+                      item
+                      xs={6}
+                      display={"flex"}
+                      direction={"row"}
+                      gap={1}
+                    >
                       <Typography fontWeight={800}>Price:</Typography>
                       <Typography fontWeight={400}>
                         {msgData.price + " " + msgData.priceUnit}
