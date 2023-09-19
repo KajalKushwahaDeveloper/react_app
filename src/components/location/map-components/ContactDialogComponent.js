@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import ApiService from "../../../ApiService";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   CALL_URL,
   MESSAGE_URL,
@@ -22,6 +23,7 @@ import {
   CALL_MAKE_CALL,
 } from "../../../constants";
 import CallingDialogeComponent from "./callingDialogeComponent";
+
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
@@ -61,17 +63,10 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [messageError, setMessageError] = useState("");
 
-  const [isCalling, setIsCalling] = useState(false);
-  const [isCallDialogOpen, setIsCallDialogOpen] = useState(false); // Add a state variable for the dialog
+  const [showCallingDialog, setShowCallingDialog] = useState(false);
 
-  const startCall = () => {
-    setIsCalling(false);
-    setIsCallDialogOpen(true); // Open the dialog when the call starts
-  };
-
-  const endCall = () => {
-    setIsCalling(false);
-    setIsCallDialogOpen(false); // Close the dialog when the call ends
+  const handleCallButtonClick = () => {
+    setShowCallingDialog(true);
   };
 
   const validatePhoneNumber = (number) => {
@@ -125,65 +120,79 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
     }
   };
 
+  const handleCallingDetails = (emulatorId) => {
+    setShowCallingDialog(false);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <TextField
-        label="Phone Number"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        type="number"
-        value={phoneNumber}
-        onChange={(event) => {
-          setPhoneNumber(event.target.value);
-          setPhoneNumberError("");
-        }}
-        error={!!phoneNumberError}
-        helperText={phoneNumberError}
-      />
-      <TextField
-        id="outlined-multiline-static"
-        label="Message"
-        multiline
-        rows={4}
-        fullWidth
-        value={message}
-        onChange={(event) => {
-          setMessage(event.target.value);
-          setMessageError("");
-        }}
-        error={!!messageError}
-        helperText={messageError}
-      />
-      <div style={{ marginTop: "1rem" ,display:"flex", gap:"1rem" , float:"right"}}>
-        <Button
-          type="Submit"
+    <div>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Phone Number"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          type="number"
+          value={phoneNumber}
+          onChange={(event) => {
+            setPhoneNumber(event.target.value);
+            setPhoneNumberError("");
+          }}
+          error={!!phoneNumberError}
+          helperText={phoneNumberError}
+        />
+        <TextField
+          id="outlined-multiline-static"
+          label="Message"
+          multiline
+          rows={4}
+          fullWidth
+          value={message}
+          onChange={(event) => {
+            setMessage(event.target.value);
+            setMessageError("");
+          }}
+          error={!!messageError}
+          helperText={messageError}
+        />
+        <div
           style={{
-            backgroundColor: "#007dc6",
-            color: "white",
-            // float: "right",
-            // marginLeft: "1rem",
+            marginTop: "1rem",
+            display: "flex",
+            gap: "1rem",
+            float: "right",
           }}
         >
-          Submit
-        </Button>
-        <div className="call-controls">
-         
-        <Button onClick={startCall} type="button"  style={{
-            backgroundColor: "green",
-            color: "white",
-          
-            // marginRight: "3rem",
-          }}>
-          Call
+          <Button
+            type="Submit"
+            style={{
+              backgroundColor: "#007dc6",
+              color: "white",
+            }}
+          >
+            Submit
           </Button>
-
-          {isCallDialogOpen && (
-            <CallingDialogeComponent setIsCalling={setIsCalling} />
-          )}
+          <div className="call-controls">
+            <Button
+              onClick={handleCallButtonClick}
+              type="button"
+              style={{
+                backgroundColor: "green",
+                color: "white",
+              }}
+            >
+              Call
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+      {showCallingDialog && (
+        <CallingDialogeComponent
+          open={setShowCallingDialog}
+          handleCallingDetails={handleCallingDetails}
+        />
+      )}
+    </div>
   );
 }
 
@@ -492,9 +501,15 @@ function ContactDialogComponent({
     <div className="ContactDialogContainer">
       <Dialog
         open={open}
-        onClose={() => handleContactDialog(dialogType)}
+        //onClose={() => handleContactDialog(dialogType)}
         fullWidth
       >
+        <div>
+          <CloseIcon
+            style={{ float: "right", cursor: "pointer" }}
+            onClick={() => handleContactDialog(dialogType)}
+          />
+        </div>
         {handleContactDialog && (
           <div>
             <Tabs

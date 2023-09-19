@@ -1,31 +1,55 @@
 @import "./mixins.scss";
 
 .dialogue-box {
-    width: 300px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: #fff;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 999;
-  }
-  .call-controls{
-    @include vertical-list;
+  width: 300px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #fff;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.call-controls {
 
   .call-controls button:hover {
     background-color: #128c7e;
   }
-
-  .call_buttons{
-    width:3rem;
-    height:3rem; 
-    border-radius:50%;
+  .call-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
   }
-  
+  .call_buttons {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    margin-top: 5rem ;
+  }
 }
-.call_header,
-.calling_text{
+
+.call_header {
   text-align: center;
-  color:black;
+  color: black;
+  margin-bottom: 1rem;
+}
+
+.calling_text {
+  text-align: center;
+  color: black;
+  margin-bottom: 4rem;
+}
+
+.CenterImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background: #000;
+  margin: auto;
+ 
 }
