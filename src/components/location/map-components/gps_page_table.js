@@ -7,10 +7,8 @@ import { Checkbox, Hidden } from "@mui/material";
 import { styled } from "@mui/system";
 import {
   EMULATOR_NOTIFICATION_URL,
-  EMULATOR_URL,
   TRIP_HISTORY,
   TRIP_TOGGLE,
-  USER_URL,
 } from "../../../constants";
 //scss
 import "../../../scss/table.scss";

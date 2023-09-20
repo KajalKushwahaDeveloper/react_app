@@ -22,7 +22,8 @@ import {
   MESSAGE_SEND_MSG,
   CALL_MAKE_CALL,
 } from "../../../constants";
-import CallingDialogeComponent from "./callingDialogeComponent";
+import OutGoingCallDialogBox from "./outGoingCallDialogBox";
+import InComingCallDialogBox from "./inComingCallDialogBox";
 
 function a11yProps(index) {
   return {
@@ -186,8 +187,15 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
           </div>
         </div>
       </form>
+      {/* {showCallingDialog && (
+        <OutGoingCallDialogBox
+          open={setShowCallingDialog}
+          handleCallingDetails={handleCallingDetails}
+        />
+      )} */}
+
       {showCallingDialog && (
-        <CallingDialogeComponent
+        <InComingCallDialogBox
           open={setShowCallingDialog}
           handleCallingDetails={handleCallingDetails}
         />

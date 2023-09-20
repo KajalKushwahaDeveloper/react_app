@@ -7,14 +7,12 @@ import MicIcon from "@mui/icons-material/Mic";
 import "../../../scss/calling.scss";
 import {
   Dialog,
-  Button,
   DialogTitle,
   DialogContent,
-  DialogActions,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
 
-const CallingDialogeComponent = ({
+
+const OutGoingCallDialogBox = ({
   contactName,
   setIsCalling,
   open,
@@ -29,12 +27,7 @@ const CallingDialogeComponent = ({
 
   return (
     <Dialog open={open} maxWidth="sm" fullWidth>
-      <div>
-        <CloseIcon
-          style={{ float: "right", cursor: "pointer" }}
-          onClick={handleCallingDetails}
-        />
-      </div>
+      
       <DialogTitle>{contactName} kajal kushwaha </DialogTitle>
       <DialogContent>
         <div style={{ color: "black" }} className="calling_text">
@@ -86,4 +79,4 @@ const CallingDialogeComponent = ({
   );
 };
 
-export default CallingDialogeComponent;
+export default OutGoingCallDialogBox;
