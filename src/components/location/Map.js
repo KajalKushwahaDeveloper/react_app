@@ -27,7 +27,8 @@ import ApiService from "../../ApiService";
 const Map = ({ showToast }) => {
   const [selectedEmId, setSelectedEmId] = useState(null);
   const [createTrip, setCreateTrip] = useState(false);
-  const [showEmulatorNotSelectedToast, setShowEmulatorNotSelectedToast] = useState(false);
+  const [showEmulatorNotSelectedToast, setShowEmulatorNotSelectedToast] =
+    useState(false);
   const [pathsRoute, setPathsRoute] = useState(null);
   const [selectedEmulator, setSelectedEmulator] = useState(null);
   const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
@@ -52,16 +53,15 @@ const Map = ({ showToast }) => {
   const intervalRef = useRef(null);
 
   const handleCreateTripButton = () => {
-    if (selectedEmulator===null){
-        showToast("Emulator is not selected","error")//Emulator is not selected error 
+    if (selectedEmulator === null) {
+      showToast("Emulator is not selected", "error"); //Emulator is not selected error
+    } else if (AssignedTelephoneNumber === null) {
+      console.log("Assigned number", AssignedTelephoneNumber);
+      showToast("Telephone Number is not Assigned", "error"); //Telephone Number is not Assigned
+    } else {
+      setCreateTrip(true);
+      setIsTableVisible(!isTableVisible);
     }
-    else if(AssignedTelephoneNumber===null){
-      console.log("Assigned number",AssignedTelephoneNumber)
-        showToast("Telephone Number is not Assigned","error")//Telephone Number is not Assigned
-    }else{
-    setCreateTrip(true);
-    setIsTableVisible(!isTableVisible);
-  }
   };
 
   const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
@@ -94,10 +94,10 @@ const Map = ({ showToast }) => {
 
           const { lat: lat2, lng: lng2 } = array[startEmulation ? 1 : 0];
           const latLong2 = new window.google.maps.LatLng(lat2, lng2);
-          console.log(mapRef.current)
+          console.log(mapRef.current);
           const distance =
             window.google.maps.geometry.spherical.computeDistanceBetween(
-              latLong1, 
+              latLong1,
               latLong2
             );
 
@@ -120,60 +120,74 @@ const Map = ({ showToast }) => {
     };
   }, [paths, startEmulation]);
 
-  const validateEmulatorsData = (newEmulatorsData) => {
-    if (newEmulatorsData === null) {
-      return;
-    }
-    
-    console.log(
-      `newEmulatorsData : ${newEmulatorsData}`,
-      newEmulatorsData
-    );
-    
+  const validateEmulatorsData = (newEmulatorsData, newEmulatorData) => {
     var selectedEmulatorToValidate = null;
-    
-    const updatedEmulators = emulators.map((oldEmulator) => {
-      const newEmulatorData = newEmulatorsData.find(item => item.id === oldEmulator.id);
-      
-      if (newEmulatorData) {
-        if (newEmulatorData.id === selectedEmId) {
-          selectedEmulatorToValidate = newEmulatorData;
-        }
-        
-        const isOldEmulatorChanged =
-          oldEmulator.latitude !== newEmulatorData.latitude ||
-          oldEmulator.longitude !== newEmulatorData.longitude ||
-          oldEmulator.tripStatus !== newEmulatorData.tripStatus ||
-          oldEmulator.address !== newEmulatorData.address ||
-          oldEmulator.status !== newEmulatorData.status ||
-          oldEmulator.currentTripPointIndex !== newEmulatorData.currentTripPointIndex;
-          
-          console.log(
-            `validating ID : ${newEmulatorData.id} 
-            currentTripPointIndex old : ${oldEmulator.currentTripPointIndex} 
-            currentTripPointIndex new : ${newEmulatorData.currentTripPointIndex} 
-            isOldEmulatorChanged : ${isOldEmulatorChanged}`
-          );
-
-        if (isOldEmulatorChanged) {
-          return {
-            ...oldEmulator,
-            ...newEmulatorData,
-          };
-        }
+    if (newEmulatorData) {
+      if (newEmulatorData.id === selectedEmId) {
+        selectedEmulatorToValidate = newEmulatorData;
       }
-      
-      return oldEmulator;
-    });
-    
-    if (selectedEmulatorToValidate !== null) {
+      const updatedEmulators = emulators.map((oldEmulator) => {
+        if (oldEmulator.id === newEmulatorData.id) {
+          const isOldEmulatorChanged =
+            oldEmulator.latitude !== newEmulatorData.latitude ||
+            oldEmulator.longitude !== newEmulatorData.longitude ||
+            oldEmulator.tripStatus !== newEmulatorData.tripStatus ||
+            oldEmulator.address !== newEmulatorData.address ||
+            oldEmulator.status !== newEmulatorData.status ||
+            oldEmulator.currentTripPointIndex !==
+              newEmulatorData.currentTripPointIndex;
+
+          if (isOldEmulatorChanged) {
+            return {
+              ...oldEmulator,
+              ...newEmulatorData,
+            };
+          }
+        }
+        return oldEmulator;
+      });
+      setEmulators(updatedEmulators);
+    }
+
+    if (newEmulatorsData) {
+      selectedEmulatorToValidate = newEmulatorsData.find(
+        (item) => item.id === selectedEmId
+      );
+      const updatedEmulators = emulators.map((oldEmulator) => {
+        const newEmulatorData = newEmulatorsData.find(
+          (item) => item.id === oldEmulator.id
+        );
+        if (newEmulatorData) {
+          const isOldEmulatorChanged =
+            oldEmulator.latitude !== newEmulatorData.latitude ||
+            oldEmulator.longitude !== newEmulatorData.longitude ||
+            oldEmulator.tripStatus !== newEmulatorData.tripStatus ||
+            oldEmulator.address !== newEmulatorData.address ||
+            oldEmulator.status !== newEmulatorData.status ||
+            oldEmulator.currentTripPointIndex !==
+              newEmulatorData.currentTripPointIndex;
+
+          if (isOldEmulatorChanged) {
+            return {
+              ...oldEmulator,
+              ...newEmulatorData,
+            };
+          }
+        }
+        return oldEmulator;
+      });
+      setEmulators(updatedEmulators);
+    }
+
+    if (selectedEmulatorToValidate) {
+      console.log(
+        `validating ID of newEmulatorData : ${selectedEmulatorToValidate}  `
+      );
       validateEmulatorData(selectedEmulatorToValidate);
     }
-      setEmulators(updatedEmulators);
   };
 
   const validateEmulatorData = (newEmulatorData) => {
-
     console.log(
       `validating ID : ${newEmulatorData.id} 
       currentTripPointIndex old : ${emulator.currentTripPointIndex} 
@@ -200,13 +214,6 @@ const Map = ({ showToast }) => {
         emulator.address !== address ||
         emulator.status !== status ||
         emulator.currentTripPointIndex !== currentTripPointIndex;
-        console.log(
-          `validating ID : ${newEmulatorData.id} 
-          currentTripPointIndex old : ${emulator.currentTripPointIndex} 
-          currentTripPointIndex new : ${newEmulatorData.currentTripPointIndex} 
-          isOldEmulatorChanged : ${newEmulatorData}`
-        );
-
       if (isEmulatorChanged) {
         setEmulator(newEmulatorData);
       }
@@ -227,7 +234,7 @@ const Map = ({ showToast }) => {
           token
         );
         if (success) {
-          validateEmulatorsData(data);
+          validateEmulatorsData(data, null);
         } else {
           console.log("old Emulator ERROR : ", error);
         }
@@ -421,35 +428,30 @@ const Map = ({ showToast }) => {
   };
 
   const confirmNewLocation = async () => {
-    var payload;
-    if (dragId && nearestTripPoint) {
-      const { lat, lng } = nearestTripPoint;
-      payload = {
-        emulatorId: dragId,
-        latitude: lat,
-        longitude: lng,
-        cancelTrip: false,
-        newTripIndex: nearestTripPoint.tripPointIndex,
-      };
-    } else if (dragId && draggOutRange) {
+    if (!dragId) return;
+
+    let payload = {
+      emulatorId: dragId,
+      cancelTrip: false,
+      newTripIndex: null,
+    };
+
+    if (nearestTripPoint) {
+      const { lat, lng, tripPointIndex } = nearestTripPoint;
+      payload.latitude = lat;
+      payload.longitude = lng;
+      payload.newTripIndex = tripPointIndex;
+    } else if (draggOutRange) {
       const { lat, lng } = draggOutRange;
-      payload = {
-        emulatorId: dragId,
-        latitude: lat,
-        longitude: lng,
-        cancelTrip: true,
-        newTripIndex: null,
-      };
+      payload.latitude = lat;
+      payload.longitude = lng;
+      payload.cancelTrip = true;
     } else if (draggWithoutTrip) {
       const { lat, lng } = draggWithoutTrip;
-      payload = {
-        emulatorId: dragId,
-        latitude: lat,
-        longitude: lng,
-        cancelTrip: false,
-        newTripIndex: null,
-      };
+      payload.latitude = lat;
+      payload.longitude = lng;
     }
+
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
       EMULATOR_DRAG_URL,
@@ -458,8 +460,9 @@ const Map = ({ showToast }) => {
       token,
       null
     );
+    console.log("LOG 1 - updated Emulator: ", data);
     if (success) {
-      validateEmulatorData(data);
+      validateEmulatorsData(null, data);
       setOpenDialog(false);
     } else if (error) {
       setOpenDialog(false);
