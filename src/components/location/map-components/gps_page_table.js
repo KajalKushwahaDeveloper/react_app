@@ -59,7 +59,6 @@ const GpsTable = ({
   const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] =
     useState(null);
 
-
   const handleClose = (id) => {
     setOpenEmulatorHistoryPopUp(false);
     setSelectedEmulatorForHistoryData(null);
@@ -71,7 +70,6 @@ const GpsTable = ({
       emulatorId,
       open: !state.open,
     }));
-
   };
 
   useEffect(() => {
@@ -171,7 +169,10 @@ const GpsTable = ({
       showToast("Trip already Finished!", "error");
       return;
     }
-    console.log("row data in emulator_page:", row);
+    if (row.tripStatus === "STOP") {
+      showToast("No Trip Created yet!", "error");
+      return;
+    }
     const token = localStorage.getItem("token");
     console.log("token : ", token);
     const { success, data, error } = await ApiService.makeApiCall(
@@ -181,8 +182,10 @@ const GpsTable = ({
       token
     );
     if (success) {
+      console.log(`CHANGED TRIP STATUS : ${data.tripStatus}`);
       showToast("CHANGED TRIP STATUS", "success");
     } else {
+      console.log(`Error CHANGING TRIP STATUS : ${error}`);
       showToast("Error CHANGING TRIP STATUS", "error");
     }
   };
@@ -220,7 +223,12 @@ const GpsTable = ({
             <tr key={row.id || "N/A"}>
               <td
                 style={{
-                  background: row.status === "ACTIVE" ? "#16BA00" : "#ff4d4d",
+                  background:
+                    row.status === "ACTIVE"
+                      ? "#16BA00"
+                      : row.status === "INACTIVE"
+                      ? "#FFA500"
+                      : "#ff4d4d",
                   display: "flex",
                   alignItems: "center",
                   padding: "1rem .1rem",
@@ -349,7 +357,11 @@ const GpsTable = ({
                         onClick={() => handleActionButtonClick(row)}
                       />
                     )}
-                    {row.tripStatus === "STOP" && <PlayCircleOutlineIcon />}
+                    {row.tripStatus === "STOP" && (
+                      <PlayCircleOutlineIcon
+                        onClick={() => handleActionButtonClick(row)}
+                      />
+                    )}
                     {row.tripStatus === "RESTING" && (
                       <PlayCircleOutlineIcon
                         onClick={() => handleActionButtonClick(row)}
