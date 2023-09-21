@@ -69,15 +69,30 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
           aria-labelledby="additional-modal-title"
           aria-describedby="additional-modal-description"
         >
-          <Box sx={{ ...style, width: 400 }}>
+          <Box sx={{ ...style, width: 600 }}>
+            {/* Display cancelDetails if cancelled */}
+            {historyRowSelected.cancelDetails && (
+              <div>
+                <h4>Cancelled:</h4>
+                <ol style={{ maxHeight: "150px", overflowY: "auto" }}>
+                  <li>
+                    Latitude: {historyRowSelected.cancelDetails.latitude} <br />
+                    Longitude: {historyRowSelected.cancelDetails.longitude}<br />
+                    deleteTime: {historyRowSelected.cancelDetails.deleteTime}
+                  </li>
+                </ol>
+              </div>
+            )}
             {/* Display Trip Points */}
             <div>
               <h4>Route:</h4>
               <ol style={{ maxHeight: "150px", overflowY: "auto" }}>
                 {historyRowSelected.tripPoints.map((point, index) => (
                   <li key={index}>
-                    Latitude: {point.lat}, Longitude: {point.lng}, Bearing:{" "}
-                    {point.bearing}, Distance: {point.distance}
+                    Latitude: {point.lat}<br />
+                    Longitude: {point.lng}<br />
+                    Bearing:{point.bearing}<br />
+                    Distance: {point.distance}
                   </li>
                 ))}
               </ol>
@@ -114,8 +129,13 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
                       <ol style={{ maxHeight: "150px", overflowY: "auto" }}>
                         {stop?.tripPoints.map((point, index) => (
                           <li key={index}>
-                            Lat: {point.lat}, Lng: {point.lng}, Bearing:
-                            {point.bearing}, Distance: {point.distance}
+                            Lat: {point.lat}
+                            <br />
+                            Lng: {point.lng}
+                            <br />
+                            Bearing:{point.bearing}
+                            <br />
+                            Distance: {point.distance}
                           </li>
                         ))}
                       </ol>
