@@ -13,6 +13,7 @@ const GpsOverlay = ({
   tripData,
   setSelectedEmulator,
   selectedEmulator,
+  emulator,
   AssignedTelephoneNumber,
   setAssignedTelephoneNumber,
   
@@ -30,7 +31,7 @@ const GpsOverlay = ({
         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
       />
          <div style={{ marginTop: "1rem", width:"80%"}}>
-      <AddressTable tripData={tripData} />
+      <AddressTable tripData={tripData} emulator={emulator}/>
       </div>
     </div>
   );

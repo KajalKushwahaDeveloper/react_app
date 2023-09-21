@@ -494,6 +494,7 @@ const Map = ({ showToast }) => {
         emulators={emulators}
         tripData={tripData}
         selectedEmulator={selectedEmulator}
+        emulator={emulator}
         AssignedTelephoneNumber={AssignedTelephoneNumber}
         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
       />
