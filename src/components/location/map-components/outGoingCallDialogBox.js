@@ -34,7 +34,7 @@ const OutGoingCallDialogBox = ({
           Calling...
         </div>
 
-        <div className="CenterImage">
+        <div className="outgoing_CenterImage">
           <h3 style={{ color: "white", fontWeight: "900" }}>KK</h3>
         </div>
         <div className="call-controls">

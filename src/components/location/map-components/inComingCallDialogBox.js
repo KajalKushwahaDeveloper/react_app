@@ -36,7 +36,7 @@ const InComingCallDialogBox = ({
     }}
   >
       
-      <div className="outgoing_header">
+      <div className="incoming_header">
 
         <DialogTitle>{contactName} kajal kushwaha </DialogTitle>
 
@@ -47,7 +47,7 @@ const InComingCallDialogBox = ({
       </div>
       <DialogContent>
         
-        <div style={{ color: "black" }} className="calling_text">
+        <div style={{ color: "black" }} className="incoming_calling_text">
           Incoming call...
         </div>
 

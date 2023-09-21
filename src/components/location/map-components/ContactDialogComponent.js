@@ -173,6 +173,7 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
           >
             Submit
           </Button>
+          
           <div className="call-controls">
             <Button
               onClick={handleCallButtonClick}
@@ -187,19 +188,19 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
           </div>
         </div>
       </form>
-      {/* {showCallingDialog && (
+      {showCallingDialog && (
         <OutGoingCallDialogBox
           open={setShowCallingDialog}
           handleCallingDetails={handleCallingDetails}
         />
-      )} */}
-
+      )}
+      {/* 
       {showCallingDialog && (
         <InComingCallDialogBox
           open={setShowCallingDialog}
           handleCallingDetails={handleCallingDetails}
         />
-      )}
+      )} */}
     </div>
   );
 }

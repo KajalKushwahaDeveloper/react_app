@@ -32,11 +32,12 @@
   margin-bottom: 4rem;
 }
 
-//incoming call css
-.outgoing_header{
+
+.incoming_header{
   display: flex;
   align-items: center;
   justify-content: center;
+
 .CenterImage {
   width: 2rem;
   height: 2rem;
@@ -52,6 +53,7 @@
 }
 }
 
+//incoming call css
 .incoming_call_buttons{
   width: 5rem;
   padding: .3rem .5rem;
@@ -65,8 +67,19 @@
   margin-top: 2rem ;
 }
 
-.calling_text {
+.incoming_calling_text {
   text-align: center;
   color: black;
   margin-bottom: 1rem;
 }
+
+.outgoing_CenterImage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background: #000;
+    margin: auto;
+  }  
