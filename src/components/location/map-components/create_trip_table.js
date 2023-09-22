@@ -138,7 +138,7 @@ const CreateTripTable = ({
         </div>
         <Button
           onClick={handleAddClick}
-          style={{ cursor: "pointer", width: "auto", textAlign: "center",float:"right",backgroundColor:"#1976d2",color:"white",marginLeft:"0.7rem" }}
+          style={{ cursor: "pointer", width: "auto", textAlign: "center",float:"right",backgroundColor:"#1976d2",color:"white",marginRight:"0.7rem" }}
         >
           Add
         </Button>
