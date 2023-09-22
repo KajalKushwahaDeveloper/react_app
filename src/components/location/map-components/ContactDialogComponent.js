@@ -188,12 +188,15 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
           </div>
         </div>
       </form>
+
+      {/* outgoing ui */}
       {showCallingDialog && (
         <OutGoingCallDialogBox
           open={setShowCallingDialog}
           handleCallingDetails={handleCallingDetails}
         />
       )}
+      {/* incoming ui */}
       {/* 
       {showCallingDialog && (
         <InComingCallDialogBox
