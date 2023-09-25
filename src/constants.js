@@ -1,10 +1,10 @@
 export const MY_CONSTANT_STRING = "Hello, World!";
 export const LOCAL_API = "http://192.168.1.116:8080";
-export const LOCAL_API_2 = "http://192.168.1.121:8080";
+export const LOCAL_API_2 = "http://192.168.1.129:8080";
 export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
-export const BASE_URL = LIVE_API_CLIENT;
+export const BASE_URL = LOCAL_API_2;
 
 
 //BASE
@@ -59,6 +59,10 @@ export const CALL_MAKE_CALL = CALL_URL + "/make-call";
 //twilio
 export const PHONE_URL = BASE_URL + "/phone";
 export const PHONE_GET_AVAILABLE_NUMBERS_URL = PHONE_URL + "/getAvailableNumbers";
+
+//voice
+export const VOICE_URL = BASE_URL + "/voice";
+export const VOICE_GET_TOKEN_URL = VOICE_URL + "/token";
 
 //notification
 export const EMULATOR_SEND_URL = BASE_URL + "/send";
