@@ -1,0 +1,93 @@
+@import "./variables.scss";
+@import "./mixins.scss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Slab&display=swap');
+
+
+*{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    }
+th{
+  color:white;
+  font-weight: bolder;
+  text-align: center;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background:$background-color;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $background-color;
+}
+
+/* // Common Classes */
+
+.centerMid {
+  @include itemPosition(center, center);
+}
+
+.spcBetween {
+  @include itemPosition(flex-start, space-between);
+  gap: 10px;
+}
+.flex-column {
+  flex-direction: column;
+}
+
+.btn {
+  &:focus {
+    box-shadow: none;
+  }
+}
+.btn-main {
+  background-color: $background-color;
+  border-radius: 12px !important;
+  color: white;
+
+  &:hover {
+    color: $light;
+}
+}
+.btn-green {
+  background-color: #59ac42;
+  border-radius: 12px !important;
+  color:white;
+  &:hover {
+    color: $light;
+}
+}
+
+.dashboard {
+
+  padding: 8rem 1rem 1rem 1rem ;
+
+}
+
+input {
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+th{
+  font-size: 12px;
+  font-weight: 900;
+}
+td{
+ font-size: 10px;
+}
+
+

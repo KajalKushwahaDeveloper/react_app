@@ -6,9 +6,9 @@ export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 
 export const BASE_URL = LOCAL_API_2;
 
-
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
+export const FORGOT_PASSWORD = BASE_URL + "/forgot-password";
 export const CLIENT_CURRENT = BASE_URL + "/current";
 export const CLIENT_LOGIN = BASE_URL + "/log-in";
 

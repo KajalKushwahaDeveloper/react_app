@@ -10,45 +10,7 @@ body {
    overflow-y: auto !important;  
   }
 }
-.home_div {
-  margin:0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding-top: 8rem;
-  flex-wrap: wrap;
-  background-color:rgb(245, 243, 243);
-}
 
-.add_items {
-  width: auto;
-  border-radius: 0;
-}
-
-.add_user {
-  width: auto;
-  height: auto;
-  box-shadow: $shadow;
-}
-
-.column {
-  flex: 1;
-  width: 100%;
-}
-
-.home_div {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 8rem 1rem;
-  margin-right: -1rem;
-  margin-left: -1rem;
-}
-
-.column {
-  flex: 0 0 100%;
-  max-width: 100%;
-  padding: 0 1rem;
-}
 
 //reset_password
 
@@ -65,24 +27,9 @@ body {
   }
 }
 
-
-@media (min-width: 768px) {
-  .column {
-    width: 50%;
-    padding: 0 10px;
-  }
-}
-@media (min-width: 1024px) {
-  .home_div {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: row;
-    /* Set the direction to row */
-    padding-top: 8rem;
-    // margin-top:10rem;
-    flex-wrap: nowrap;
-    /* Prevent wrapping */
+@media (min-width: 440px) {
+  td{
+    font-size: 8px;
   }
 
   .emulator_table {

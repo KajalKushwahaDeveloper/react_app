@@ -103,11 +103,12 @@ const CreateTripTable = ({
             position: "absolute",
             top: 0,
             right: 10,
+            color:"white"
           }}
         >
           <CloseIcon />
         </IconButton>
-        <Typography variant="h6" component="h2" style={{paddingBottom:"20px",backgroundColor:"#007dc6",color:"white"}}>
+        <Typography variant="h6" component="h2" style={{paddingBottom:"10px",backgroundColor:"#007dc6",color:"white"}}>
           Create Trip
         </Typography>
         <div style={{ margin: "1rem 0" }}>
@@ -137,7 +138,7 @@ const CreateTripTable = ({
         </div>
         <Button
           onClick={handleAddClick}
-          style={{ cursor: "pointer", width: "auto", textAlign: "center",float:"right",backgroundColor:"#1976d2",color:"white",marginLeft:"2.7rem" }}
+          style={{ cursor: "pointer", width: "auto", textAlign: "center",float:"right",backgroundColor:"#1976d2",color:"white",marginRight:"0.7rem" }}
         >
           Add
         </Button>

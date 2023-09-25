@@ -10,7 +10,7 @@ const CreateTripButton = ({ onClick }) => {
           zIndex: 2,
           position: "absolute",
           top: 11,
-          left: 175,
+          right: 45,
           padding: ".65rem",
         }}
         onClick={onClick}
