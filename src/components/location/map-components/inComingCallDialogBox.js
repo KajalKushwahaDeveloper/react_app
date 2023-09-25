@@ -77,6 +77,9 @@ const InComingCallDialogBox = ({
         </div>
       </div>
       <DialogContent>
+        {!clicked && <button onClick={handleClick}>Connect to Phone</button>}
+        {token ? <Phone token={token}></Phone> : <p>Loading...</p>}
+
         <div style={{ color: "black" }} className="incoming_calling_text">
           Incoming call...
         </div>
@@ -106,8 +109,6 @@ const InComingCallDialogBox = ({
             </div>
           </div>
         </div>
-      {!clicked && <button onClick={handleClick}>Connect to Phone</button>}
-      {token ? <Phone token={token}></Phone> : <p>Loading...</p>}
       </DialogContent>
     </Dialog>
   );
