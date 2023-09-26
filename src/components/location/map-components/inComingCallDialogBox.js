@@ -36,6 +36,7 @@ const InComingCallDialogBox = ({
       // showToast("Error getting token : " + error, "error");
     }
   };
+
   const endCall = () => {
     setIsCalling(false);
   };
