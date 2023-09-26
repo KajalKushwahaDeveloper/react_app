@@ -1,8 +1,6 @@
 import React from "react";
 import "../../../scss/map.scss";
 const AddressTable = ({ tripData , emulator }) => {
-  console.log("LOG -1 tripData : ", tripData);
-  console.log("LOG -2 emulator : ", emulator);
  
   const fromAddress =
     tripData?.fromAddress[0]?.long_name +
