@@ -23,7 +23,6 @@ import {
   CALL_MAKE_CALL,
 } from "../../../constants";
 import OutGoingCallDialogBox from "./outGoingCallDialogBox";
-import InComingCallDialogBox from "./inComingCallDialogBox";
 
 function a11yProps(index) {
   return {
@@ -196,14 +195,6 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
           handleCallingDetails={handleCallingDetails}
         />
       )}
-      {/* incoming ui */}
-      {/* 
-      {showCallingDialog && (
-        <InComingCallDialogBox
-          open={setShowCallingDialog}
-          handleCallingDetails={handleCallingDetails}
-        />
-      )} */}
     </div>
   );
 }

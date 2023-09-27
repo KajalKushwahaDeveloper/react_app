@@ -55,56 +55,10 @@ const OutGoingCallDialogBox = ({
 
   return (
     <Dialog open={open} maxWidth="sm" fullWidth>
-      
-      <DialogTitle>{contactName} kajal kushwaha </DialogTitle>
+      <DialogTitle>{contactName} CALL </DialogTitle>
       <DialogContent>
         {!clicked && <button onClick={handleClick}>Connect to Phone</button>}
         {token ? <Phone token={token}></Phone> : <p>Loading...</p>}
-
-        <div style={{ color: "black" }} className="calling_text">
-          Calling...
-        </div>
-
-        <div className="outgoing_CenterImage">
-          <h3 style={{ color: "white", fontWeight: "900" }}>KK</h3>
-        </div>
-        <div className="call-controls">
-          <div className="call-buttons">
-            <div>
-              <button
-                className="call_buttons"
-                onClick={() => setIsMuted(!isMuted)}
-                style={{
-                  color: "#808080",
-                  backgroundColor: isMuted ? "#E9E8E8" : "#ffffff",
-                }}
-              >
-                {isMuted ? <MicOffIcon /> : <MicIcon />}
-              </button>
-            </div>
-            <div>
-              <button
-                className="call_buttons"
-                onClick={() => setIsSpeakerOn(!isSpeakerOn)}
-                style={{
-                  color: "#808080",
-                  backgroundColor: isSpeakerOn ? "#E9E8E8" : "#ffffff",
-                }}
-              >
-                {isSpeakerOn ? <VolumeOffIcon /> : <VolumeUpIcon />}
-              </button>
-            </div>
-            <div>
-              <button
-                className="call_buttons"
-                style={{ backgroundColor: "red" }}
-                onClick={endCall}
-              >
-                <CallEndIcon />
-              </button>
-            </div>
-          </div>
-        </div>
       </DialogContent>
     </Dialog>
   );
