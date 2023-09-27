@@ -223,10 +223,6 @@ const Map = ({ showToast }) => {
 
   useEffect(() => {
     let emulatorInterval;
-    //TODO: Remove this for auto refresh on local/changed live URL.
-    if(BASE_URL !== "https://149.28.69.114:8080") {
-      return
-    }
     const startEmulatorInterval = () => {
       const token = localStorage.getItem("token");
       emulatorInterval = setInterval(async () => {
