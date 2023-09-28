@@ -68,7 +68,7 @@ const Phone = ({ token }) => {
     });
 
     return () => {
-      console.log("device destroyed");
+      console.log("device destroyed");  
       device.destroy();
       setDevice(null);
       setState(states.OFFLINE);
@@ -106,6 +106,11 @@ const Phone = ({ token }) => {
   }
   return (
     <>
+      <FakeState
+        currentState={state}
+        setState={setState}
+        setConn={setConn}
+      ></FakeState>
       {render}
       <p className="status">{state}</p>
     </>
