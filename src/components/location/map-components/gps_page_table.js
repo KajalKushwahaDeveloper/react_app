@@ -64,13 +64,15 @@ const GpsTable = ({
     setSelectedEmulatorForHistoryData(null);
   };
 
-  const handleContactDetails = (dialogType, emulatorId) => {
-    setContactDialog((state) => ({
-      dialogType,
-      emulatorId,
-      open: !state.open,
-    }));
-  };
+  const handleContactDetails = (dialogType, emulatorId, selectedPhoneNumber) => {
+  setContactDialog((prevState) => ({
+    ...prevState, // Copy previous state
+    open: !prevState.open, // Toggle the "open" property
+    dialogType,
+    emulatorId,
+    selectedPhoneNumber,
+  }));
+};
 
   useEffect(() => {
     if (data != null) {
@@ -299,7 +301,7 @@ const GpsTable = ({
 
                 {/* calling icon */}
                 <IconButton
-                  onClick={() => handleContactDetails("call", row.id)}
+                  onClick={() => handleContactDetails("call", row.id, row.telephone)}
                 >
                   <CallRoundedIcon />
                 </IconButton>
@@ -402,9 +404,7 @@ const GpsTable = ({
         emulatorHistory={selectedEmulatorForHistoryData}
       />
       <ContactDialogComponent
-        dialogType={contactDialog.dialogType}
-        open={contactDialog.open}
-        emulatorId={contactDialog.emulatorId}
+        contactDialog= {contactDialog}
         handleContactDialog={handleContactDetails}
         showToast={showToast}
       />

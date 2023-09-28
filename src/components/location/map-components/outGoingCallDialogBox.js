@@ -19,13 +19,14 @@ import {
 const OutGoingCallDialogBox = ({
   contactName,
   setIsCalling,
+  emulatorId,
+  selectedPhoneNumber,
   open,
   handleCallingDetails,
 }) => {
 
   const [token, setToken] = useState(null);
   const [clicked, setClicked] = useState(false);
-  const identity = "saurabh";
 
   const [isMuted, setIsMuted] = useState(false);
   const [isSpeakerOn, setIsSpeakerOn] = useState(false);
@@ -33,12 +34,13 @@ const OutGoingCallDialogBox = ({
   const handleClick = async () => {
     setClicked(true);
     const token = localStorage.getItem("token");
+    console.log("selectedPhoneNumber : ", selectedPhoneNumber);
     const { success, data, error } = await ApiService.makeApiCall(
       VOICE_GET_TOKEN_URL,
       "GET",
       null,
       token,
-      identity
+      selectedPhoneNumber
     );
 
     if (success) {
@@ -58,7 +60,7 @@ const OutGoingCallDialogBox = ({
       <DialogTitle>{contactName} CALL </DialogTitle>
       <DialogContent>
         {!clicked && <button onClick={handleClick}>Connect to Phone</button>}
-        {token ? <Phone token={token}></Phone> : <p>Loading...</p>}
+        {token ? <Phone token={token} emulatorId={token}></Phone> : <p>Loading...</p>}
       </DialogContent>
     </Dialog>
   );
