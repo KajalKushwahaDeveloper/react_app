@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import TablePagination, {
+import  {TablePagination,
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
 
