@@ -23,7 +23,6 @@ import {
   CALL_MAKE_CALL,
 } from "../../../constants";
 import OutGoingCallDialogBox from "./outGoingCallDialogBox";
-import InComingCallDialogBox from "./inComingCallDialogBox";
 
 function a11yProps(index) {
   return {
@@ -58,7 +57,7 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function ContactForm({ dialogType, emulatorId, showToast }) {
+function ContactForm({ dialogType, emulatorId, selectedPhoneNumber, showToast }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
@@ -193,17 +192,11 @@ function ContactForm({ dialogType, emulatorId, showToast }) {
       {showCallingDialog && (
         <OutGoingCallDialogBox
           open={setShowCallingDialog}
+          selectedPhoneNumber={selectedPhoneNumber}
+          emulatorId={emulatorId}
           handleCallingDetails={handleCallingDetails}
         />
       )}
-      {/* incoming ui */}
-      {/* 
-      {showCallingDialog && (
-        <InComingCallDialogBox
-          open={setShowCallingDialog}
-          handleCallingDetails={handleCallingDetails}
-        />
-      )} */}
     </div>
   );
 }
@@ -470,10 +463,8 @@ function ShowHistory({ dialogType, data }) {
 }
 
 function ContactDialogComponent({
+  contactDialog,
   handleContactDialog,
-  dialogType,
-  open,
-  emulatorId,
   showToast,
 }) {
   const [value, setValue] = useState(0);
@@ -489,7 +480,7 @@ function ContactDialogComponent({
     SetData([]);
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
-      dialogType === "messages" ? MESSAGE_URL : CALL_URL,
+      contactDialog.dialogType === "messages" ? MESSAGE_URL : CALL_URL,
       "GET",
       null,
       token,
@@ -506,20 +497,20 @@ function ContactDialogComponent({
   };
 
   useEffect(() => {
-    emulatorId !== undefined && handleContactData(emulatorId);
-  }, [emulatorId]);
+    contactDialog.emulatorId !== undefined && handleContactData(contactDialog.emulatorId);
+  }, [contactDialog]);
 
   return (
     <div className="ContactDialogContainer">
       <Dialog
-        open={open}
+        open={contactDialog.open}
         //onClose={() => handleContactDialog(dialogType)}
         fullWidth
       >
         <div>
           <CloseIcon
             style={{ float: "right", cursor: "pointer" }}
-            onClick={() => handleContactDialog(dialogType)}
+            onClick={() => handleContactDialog(contactDialog.dialogType)}
           />
         </div>
         {handleContactDialog && (
@@ -531,7 +522,7 @@ function ContactDialogComponent({
             >
               <Tab
                 label={
-                  handleContactDialog && dialogType === "call"
+                  handleContactDialog && contactDialog.dialogType === "call"
                     ? "Call"
                     : "Message"
                 }
@@ -539,7 +530,7 @@ function ContactDialogComponent({
               />
               <Tab
                 label={
-                  handleContactDialog && dialogType === "call"
+                  handleContactDialog && contactDialog.dialogType === "call"
                     ? "Call History"
                     : "Message History"
                 }
@@ -548,8 +539,9 @@ function ContactDialogComponent({
             </Tabs>
             <TabPanel value={value} index={0} style={{ height: "20rem" }}>
               <ContactForm
-                dialogType={dialogType}
-                emulatorId={emulatorId}
+                dialogType={contactDialog.dialogType}
+                emulatorId={contactDialog.emulatorId}
+                selectedPhoneNumber={contactDialog.selectedPhoneNumber}
                 showToast={showToast}
               />
             </TabPanel>
@@ -558,7 +550,7 @@ function ContactDialogComponent({
               index={1}
               style={{ height: "20rem", overflow: "auto" }}
             >
-              <ShowHistory dialogType={dialogType} data={data} />
+              <ShowHistory dialogType={contactDialog.dialogType} data={data} />
               <Backdrop
                 sx={{
                   color: "#fff",

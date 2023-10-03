@@ -19,13 +19,14 @@ import {
 const OutGoingCallDialogBox = ({
   contactName,
   setIsCalling,
+  emulatorId,
+  selectedPhoneNumber,
   open,
   handleCallingDetails,
 }) => {
 
   const [token, setToken] = useState(null);
   const [clicked, setClicked] = useState(false);
-  const identity = "saurabh";
 
   const [isMuted, setIsMuted] = useState(false);
   const [isSpeakerOn, setIsSpeakerOn] = useState(false);
@@ -33,12 +34,13 @@ const OutGoingCallDialogBox = ({
   const handleClick = async () => {
     setClicked(true);
     const token = localStorage.getItem("token");
+    console.log("selectedPhoneNumber : ", selectedPhoneNumber);
     const { success, data, error } = await ApiService.makeApiCall(
       VOICE_GET_TOKEN_URL,
       "GET",
       null,
       token,
-      identity
+      selectedPhoneNumber
     );
 
     if (success) {
@@ -55,56 +57,10 @@ const OutGoingCallDialogBox = ({
 
   return (
     <Dialog open={open} maxWidth="sm" fullWidth>
-      
-      <DialogTitle>{contactName} kajal kushwaha </DialogTitle>
+      <DialogTitle>{contactName} CALL </DialogTitle>
       <DialogContent>
         {!clicked && <button onClick={handleClick}>Connect to Phone</button>}
-        {token ? <Phone token={token}></Phone> : <p>Loading...</p>}
-
-        <div style={{ color: "black" }} className="calling_text">
-          Calling...
-        </div>
-
-        <div className="outgoing_CenterImage">
-          <h3 style={{ color: "white", fontWeight: "900" }}>KK</h3>
-        </div>
-        <div className="call-controls">
-          <div className="call-buttons">
-            <div>
-              <button
-                className="call_buttons"
-                onClick={() => setIsMuted(!isMuted)}
-                style={{
-                  color: "#808080",
-                  backgroundColor: isMuted ? "#E9E8E8" : "#ffffff",
-                }}
-              >
-                {isMuted ? <MicOffIcon /> : <MicIcon />}
-              </button>
-            </div>
-            <div>
-              <button
-                className="call_buttons"
-                onClick={() => setIsSpeakerOn(!isSpeakerOn)}
-                style={{
-                  color: "#808080",
-                  backgroundColor: isSpeakerOn ? "#E9E8E8" : "#ffffff",
-                }}
-              >
-                {isSpeakerOn ? <VolumeOffIcon /> : <VolumeUpIcon />}
-              </button>
-            </div>
-            <div>
-              <button
-                className="call_buttons"
-                style={{ backgroundColor: "red" }}
-                onClick={endCall}
-              >
-                <CallEndIcon />
-              </button>
-            </div>
-          </div>
-        </div>
+        {token ? <Phone token={token} emulatorId={token}></Phone> : <p>Loading...</p>}
       </DialogContent>
     </Dialog>
   );

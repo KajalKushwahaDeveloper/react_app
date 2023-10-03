@@ -15,6 +15,7 @@ import {
   EMULATOR_URL,
   TRIP_URL,
   EMULATOR_DRAG_URL,
+  BASE_URL,
 } from "../../constants";
 import CardComponent from "./map-components/CardComponent";
 import GpsTable from "./map-components/gps_page_table";
@@ -222,7 +223,6 @@ const Map = ({ showToast }) => {
 
   useEffect(() => {
     let emulatorInterval;
-
     const startEmulatorInterval = () => {
       const token = localStorage.getItem("token");
       emulatorInterval = setInterval(async () => {
