@@ -51,11 +51,6 @@ console.log("setNumber11")
     }
   };
 
-  // const handleDeleteNumber = (numberToDelete) => {
-  //   const newHistory = history.filter((dialledNumber) => dialledNumber !== numberToDelete);
-  //   setHistory(newHistory);
-  //   localStorage.setItem("dialedNumbers", JSON.stringify(newHistory)); // Save updated history to local storage
-  // };
 
   const handleCallButtonClick = () => {
     handleCall();
@@ -65,6 +60,7 @@ console.log("setNumber11")
 
   return (
     <>
+    {/* dropdown */}
     <div style={{float : "right"}}><DropDown/></div>
       <input
         type="tel"
