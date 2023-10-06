@@ -1,57 +1,57 @@
 @import "./mixins.scss";
 
 
-.call-controls {
+// .call-controls {
 
-  .call-controls button:hover {
-    background-color: #128c7e;
-  }
-  .call-buttons{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-  }
-  .call_buttons {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    margin-top: 5rem ;
-  }
-}
+//   .call-controls button:hover {
+//     background-color: #128c7e;
+//   }
+//   .call-buttons{
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-direction: row;
+//   }
+//   .call_buttons {
+//     width: 3rem;
+//     height: 3rem;
+//     border-radius: 50%;
+//     margin-top: 5rem ;
+//   }
+// }
 
-.call_header {
-  text-align: center;
-  color: black;
-  margin-bottom: 1rem;
-}
+// .call_header {
+//   text-align: center;
+//   color: black;
+//   margin-bottom: 1rem;
+// }
 
-.calling_text {
-  text-align: center;
-  color: black;
-  margin-bottom: 4rem;
-}
+// .calling_text {
+//   text-align: center;
+//   color: black;
+//   margin-bottom: 4rem;
+// }
 
 
-.incoming_header{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// .incoming_header{
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
 
-.CenterImage {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: #000;
-  h3{
-    color: white;
-    font-weight: 700;
-    font-size: 1rem;
-    text-align: center;
-    margin-top:.4rem;
-  }
-}
-}
+// .CenterImage {
+//   width: 2rem;
+//   height: 2rem;
+//   border-radius: 50%;
+//   background: #000;
+//   h3{
+//     color: white;
+//     font-weight: 700;
+//     font-size: 1rem;
+//     text-align: center;
+//     margin-top:.4rem;
+//   }
+// }
+// }
 
 //incoming call css
 .incoming_call_buttons{

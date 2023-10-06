@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import KeypadButton from "./KeypadButton";
 import useLoudness from "./hooks/useLoudness";
 import useMuteWarning from "./hooks/useMuteWarning";
+import CallEndIcon from "@mui/icons-material/CallEnd";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import MicIcon from "@mui/icons-material/Mic";
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import "./OnCall.css";
 
 const OnCall = ({ handleHangup, connection }) => {
@@ -23,14 +28,15 @@ const OnCall = ({ handleHangup, connection }) => {
     <>
       {showMuteWarning && muteWarning}
       <div className="call">
-        <div className="call-options">
+        <div className="call_buttons">
           <KeypadButton handleClick={handleMute} color={muted ? "red" : ""}>
-            {muted ? "Unmute" : "Mute"}
+            {muted ? <MicOffIcon /> : <MicIcon />}
           </KeypadButton>
         </div>
+
         <div className="hang-up">
           <KeypadButton handleClick={handleHangup} color="red">
-            Hang up
+            <CallEndIcon />
           </KeypadButton>
         </div>
       </div>

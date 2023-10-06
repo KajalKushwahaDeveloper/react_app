@@ -56,10 +56,10 @@ const OutGoingCallDialogBox = ({
   };
 
   return (
-    <Dialog open={open} maxWidth="sm" fullWidth>
+    <Dialog open={open} maxWidth="sm" fullWidth >
       <DialogTitle>{contactName} CALL </DialogTitle>
       <DialogContent>
-        {!clicked && <button onClick={handleClick}>Connect to Phone</button>}
+        {!clicked && <button style={{marginBottom:"1rem"}} onClick={handleClick}>Connect to Phone</button>}
         {token ? <Phone token={token} emulatorId={token}></Phone> : <p>Loading...</p>}
       </DialogContent>
     </Dialog>

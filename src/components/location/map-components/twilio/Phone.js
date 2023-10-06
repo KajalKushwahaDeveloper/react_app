@@ -4,40 +4,40 @@ import Dialler from "./Dialler";
 import KeypadButton from "./KeypadButton";
 import Incoming from "./Incoming";
 import OnCall from "./OnCall";
-import "./Phone.css";
+import "./Phone.scss";
 import states from "./states";
 import FakeState from "./FakeState";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import MicIcon from "@mui/icons-material/Mic";
+import DialpadIcon from "@mui/icons-material/Dialpad";
 
 const Phone = ({ token }) => {
   const [state, setState] = useState(states.CONNECTING);
   const [number, setNumber] = useState("");
   const [conn, setConn] = useState(null);
+  const [isMuted, setIsMuted] = useState(null);
+  const [isSpeakerOn, setIsSpeakerOn] = useState(null);
+  const [isDialler, setIsDialler] = useState(false);
   const [device, setDevice] = useState(null);
 
   useEffect(() => {
     console.log("device token : ", token);
     const device = new Device();
+    console.log("device", device);
 
     device.setup(token, {
-      // Set Opus as our preferred codec. Opus generally performs better, requiring less bandwidth and
-      // providing better audio quality in restrained network conditions. Opus will be default in 2.0.
       codecPreferences: ["opus", "pcmu"],
-      // Use fake DTMF tones client-side. Real tones are still sent to the other end of the call,
-      // but the client-side DTMF tones are fake. This prevents the local mic capturing the DTMF tone
-      // a second time and sending the tone twice. This will be default in 2.0.
+
       fakeLocalDTMF: true,
-      // Use `enableRingingState` to enable the device to emit the `ringing`
-      // state. The TwiML backend also needs to have the attribute
-      // `answerOnBridge` also set to true in the `Dial` verb. This option
-      // changes the behavior of the SDK to consider a call `ringing` starting
-      // from the connection to the TwiML backend to when the recipient of
-      // the `Dial` verb answers.
+
       enableRingingState: true,
       debug: true,
     });
 
     device.on("ready", () => {
-      setDevice(device);
+      // setDevice(device);
       setState(states.READY);
     });
     device.on("connect", (connection) => {
@@ -45,10 +45,12 @@ const Phone = ({ token }) => {
       setConn(connection);
       setState(states.ON_CALL);
     });
+
     device.on("disconnect", () => {
       setState(states.READY);
       setConn(null);
     });
+
     device.on("incoming", (connection) => {
       console.log("Incoming call received : ", connection);
       setState(states.INCOMING);
@@ -58,19 +60,21 @@ const Phone = ({ token }) => {
         setConn(null);
       });
     });
+
     device.on("cancel", () => {
       setState(states.READY);
       setConn(null);
     });
+    
     device.on("reject", () => {
       setState(states.READY);
       setConn(null);
     });
 
     return () => {
-      console.log("device destroyed");  
+      console.log("device destroyed");
       device.destroy();
-      setDevice(null);
+      // setDevice(null);
       setState(states.OFFLINE);
     };
   }, [token]);
@@ -85,6 +89,11 @@ const Phone = ({ token }) => {
     device.disconnectAll();
   };
 
+  const diallerHandler = () => {
+    setIsDialler(!isDialler);
+    console.log("dialler");
+  };
+
   let render;
   if (conn) {
     if (state === states.INCOMING) {
@@ -95,24 +104,57 @@ const Phone = ({ token }) => {
   } else {
     render = (
       <>
-        <Dialler number={number} setNumber={setNumber}></Dialler>
-        <div className="call">
-          <KeypadButton handleClick={handleCall} color="green">
-            Call
-          </KeypadButton>
+        {isDialler && <Dialler number={number} setNumber={setNumber} handleCall={handleCall}/>}
+    
+        <div class="twilio_calling">
+          <div>
+            <button
+              className="call_buttons"
+              onClick={() => setIsMuted(!isMuted)}
+              style={{
+                backgroundColor: isMuted ? "#E9E8E8" : "#ffffff",
+              }}
+            >
+              {isMuted ? <MicOffIcon /> : <MicIcon />}
+            </button>
+          </div>
+          <div>
+            <button
+              className="call_buttons"
+              onClick={() => diallerHandler()}
+              style={{
+                backgroundColor: "#E9E8E8",
+              }}
+            >
+              <DialpadIcon />
+            </button>
+          </div>
+          <div>
+            <button
+              className="call_buttons"
+              onClick={() => setIsSpeakerOn(!isSpeakerOn)}
+              style={{
+                backgroundColor: isSpeakerOn ? "#E9E8E8" : "#ffffff",
+              }}
+            >
+              {isSpeakerOn ? <VolumeOffIcon /> : <VolumeUpIcon />}
+            </button>
+          </div>
         </div>
       </>
     );
   }
   return (
     <>
-      <FakeState
+    {/* <Dialler/> */}
+      <p className="status">{state}</p>
+      {render}
+      {/* <OnCall/> */}
+      {/* <FakeState
         currentState={state}
         setState={setState}
         setConn={setConn}
-      ></FakeState>
-      {render}
-      <p className="status">{state}</p>
+      ></FakeState> */}
     </>
   );
 };
