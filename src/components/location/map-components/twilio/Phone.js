@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Device } from "twilio-client";
 import Dialler from "./Dialler";
-import KeypadButton from "./KeypadButton";
 import Incoming from "./Incoming";
 import OnCall from "./OnCall";
 import "./Phone.scss";
 import states from "./states";
-import FakeState from "./FakeState";
-import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import MicIcon from "@mui/icons-material/Mic";
-import DialpadIcon from "@mui/icons-material/Dialpad";
+
 
 const Phone = ({ token }) => {
   const [state, setState] = useState(states.CONNECTING);
   const [number, setNumber] = useState("");
   const [conn, setConn] = useState(null);
-  const [isMuted, setIsMuted] = useState(null);
-  const [isSpeakerOn, setIsSpeakerOn] = useState(null);
   const [isDialler, setIsDialler] = useState(false);
   const [device, setDevice] = useState(null);
 
@@ -104,57 +96,14 @@ const Phone = ({ token }) => {
   } else {
     render = (
       <>
-        {isDialler && <Dialler number={number} setNumber={setNumber} handleCall={handleCall}/>}
-    
-        <div class="twilio_calling">
-          <div>
-            <button
-              className="call_buttons"
-              onClick={() => setIsMuted(!isMuted)}
-              style={{
-                backgroundColor: isMuted ? "#E9E8E8" : "#ffffff",
-              }}
-            >
-              {isMuted ? <MicOffIcon /> : <MicIcon />}
-            </button>
-          </div>
-          <div>
-            <button
-              className="call_buttons"
-              onClick={() => diallerHandler()}
-              style={{
-                backgroundColor: "#E9E8E8",
-              }}
-            >
-              <DialpadIcon />
-            </button>
-          </div>
-          <div>
-            <button
-              className="call_buttons"
-              onClick={() => setIsSpeakerOn(!isSpeakerOn)}
-              style={{
-                backgroundColor: isSpeakerOn ? "#E9E8E8" : "#ffffff",
-              }}
-            >
-              {isSpeakerOn ? <VolumeOffIcon /> : <VolumeUpIcon />}
-            </button>
-          </div>
-        </div>
+         <Dialler number={number} setNumber={setNumber} handleCall={handleCall}/>
       </>
     );
   }
   return (
     <>
-    {/* <Dialler/> */}
       <p className="status">{state}</p>
       {render}
-      {/* <OnCall/> */}
-      {/* <FakeState
-        currentState={state}
-        setState={setState}
-        setConn={setConn}
-      ></FakeState> */}
     </>
   );
 };

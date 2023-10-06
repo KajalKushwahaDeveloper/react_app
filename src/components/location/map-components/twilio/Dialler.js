@@ -3,6 +3,7 @@ import "./Dialler.css";
 import KeypadButton from "./KeypadButton";
 import CallIcon from "@mui/icons-material/Call";
 import CloseIcon from "@mui/icons-material/Close";
+import DropDown from "../../../dropDown";
 
 const Dialler = ({ number, setNumber, handleCall }) => {
   const [history, setHistory] = useState([]);
@@ -18,15 +19,9 @@ console.log("setNumber11")
 
   const handleNumberChange = (event) => {
     const inputNumber = event.target.value;
-  if (/^\d{0,13}$/.test(inputNumber)) {
+    if (/^[\d\W]{0,13}$/.test(inputNumber)) {
     setNumber(inputNumber);
   }
-    // Check if the input consists of only digits and is no longer than 13 characters
-    // if (/^[0-9]+$/.test(inputNumber) && inputNumber.length <= 13) {
-    //   setNumber(inputNumber);
-    // } else if (/^[*#+]+$/.test(inputNumber) && inputNumber.length <= 13) {
-    //   setNumber(inputNumber);
-    // }
   };
   
 
@@ -36,10 +31,11 @@ console.log("setNumber11")
 
   const handleClear = () => {
     setNumber(""); // Clears the entire string
-  };  
+  }; 
+
   const handleNumberPressed = (newNumber) => {
     const updatedNumber = `${number}${newNumber}`;
-    if (/^\d{0,13}$/.test(updatedNumber)) {
+    if (/^[\d\W]{0,13}$/.test(updatedNumber)) {
       setNumber(updatedNumber);
     }
   };
@@ -69,6 +65,7 @@ console.log("setNumber11")
 
   return (
     <>
+    <div style={{float : "right"}}><DropDown/></div>
       <input
         type="tel"
         list="history"
@@ -121,7 +118,7 @@ console.log("setNumber11")
           <KeypadButton handleClick={() => handleNumberPressed("#")}>#</KeypadButton>
         </li>  
         <li>
-            <KeypadButton handleClick={() => handleBackSpace}>&lt;&lt;</KeypadButton>
+            <KeypadButton handleClick={() => handleBackSpace()}>&lt;&lt;</KeypadButton>
         </li>                        
         <li>
           <KeypadButton handleClick={() => handleNumberPressed("+")}>+</KeypadButton>
@@ -130,13 +127,13 @@ console.log("setNumber11")
         <KeypadButton handleClick={() => handleClear()}>Clear</KeypadButton>
         </li>  
       </ol>
-      {number?.length > 0 && (
+    
         <div className="call">
-          <KeypadButton handleClick={handleCallButtonClick} color="green">
-            <CallIcon />
+          <KeypadButton className="call_button" handleClick={handleCallButtonClick} color="green"  >
+            <CallIcon /> Call
           </KeypadButton>
         </div>
-      )}
+    
     </>
   );
 };

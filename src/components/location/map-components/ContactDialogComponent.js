@@ -23,6 +23,8 @@ import {
   CALL_MAKE_CALL,
 } from "../../../constants";
 import OutGoingCallDialogBox from "./outGoingCallDialogBox";
+import { VOICE_GET_TOKEN_URL } from "../../../constants";
+
 
 function a11yProps(index) {
   return {
@@ -57,16 +59,43 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function ContactForm({ dialogType, emulatorId, selectedPhoneNumber, showToast }) {
+function ContactForm({
+  dialogType,
+  emulatorId,
+  selectedPhoneNumber,
+  showToast,
+}) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [messageError, setMessageError] = useState("");
 
   const [showCallingDialog, setShowCallingDialog] = useState(false);
+  const [token, setToken] = useState(null);
+  const [clicked, setClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleCallButtonClick = () => {
-    setShowCallingDialog(true);
+  const handleCallButtonClick = async () => {
+    setClicked(true);
+    const token = localStorage.getItem("token");
+    console.log("token23 : ", token);
+    setLoading(true); 
+    const { success, data, error } = await ApiService.makeApiCall(
+      VOICE_GET_TOKEN_URL,
+      "GET",
+      null,
+      token,
+      selectedPhoneNumber
+    );
+
+    if (success) {
+      console.log("sucess23:", data);
+      setToken(data);
+      setShowCallingDialog(true);
+    } else {
+      console.log("Error getting token : ", error);
+      // showToast("Error getting token : " + error, "error");
+    }
   };
 
   const validatePhoneNumber = (number) => {
@@ -172,7 +201,7 @@ function ContactForm({ dialogType, emulatorId, selectedPhoneNumber, showToast })
           >
             Submit
           </Button>
-          
+
           <div className="call-controls">
             <Button
               onClick={handleCallButtonClick}
@@ -182,19 +211,23 @@ function ContactForm({ dialogType, emulatorId, selectedPhoneNumber, showToast })
                 color: "white",
               }}
             >
-              Call
+              {loading ? ( // Render loader when loading is true
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+               
+              "Call"
+              )}
             </Button>
           </div>
         </div>
       </form>
 
+
       {/* outgoing ui */}
       {showCallingDialog && (
         <OutGoingCallDialogBox
           open={setShowCallingDialog}
-          selectedPhoneNumber={selectedPhoneNumber}
-          emulatorId={emulatorId}
-          handleCallingDetails={handleCallingDetails}
+          token={token}
         />
       )}
     </div>
@@ -497,7 +530,8 @@ function ContactDialogComponent({
   };
 
   useEffect(() => {
-    contactDialog.emulatorId !== undefined && handleContactData(contactDialog.emulatorId);
+    contactDialog.emulatorId !== undefined &&
+      handleContactData(contactDialog.emulatorId);
   }, [contactDialog]);
 
   return (

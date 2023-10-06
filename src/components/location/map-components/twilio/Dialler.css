@@ -28,7 +28,7 @@
 
 .input {
   font-size: 20px;
-  border: 2px solid #ccc;
+  border: 2.5px solid #ccc;
   width: calc(100%-10px); 
   height: 2.5rem;
   text-align: center;
@@ -38,6 +38,7 @@
   outline: none;
   background-color: #fff; 
   color: #333; 
+  margin-bottom: 2rem;
 }
 
 
