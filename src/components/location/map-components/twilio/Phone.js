@@ -6,27 +6,23 @@ import OnCall from "./OnCall";
 import "./Phone.scss";
 import states from "./states";
 import KeypadButton from "./KeypadButton";
-
+import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress
 
 const Phone = ({ token }) => {
   const [state, setState] = useState(states.CONNECTING);
   const [number, setNumber] = useState("");
   const [conn, setConn] = useState(null);
-  const [isDialler, setIsDialler] = useState(false);
   const [device, setDevice] = useState(null);
   const [history, setHistory] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     console.log("device token : ", token);
     const device = new Device();
     console.log("device", device);
-
     device.setup(token, {
       codecPreferences: ["opus", "pcmu"],
-
       fakeLocalDTMF: true,
-
       enableRingingState: true,
       debug: true,
     });
@@ -60,7 +56,7 @@ const Phone = ({ token }) => {
       setState(states.READY);
       setConn(null);
     });
-    
+
     device.on("reject", () => {
       setState(states.READY);
       setConn(null);
@@ -75,7 +71,7 @@ const Phone = ({ token }) => {
   }, [token]);
 
   const handleCall = () => {
-    console.log("handleCall")
+    console.log("handleCall");
     if (device) {
       device.connect({ To: number });
     }
@@ -96,12 +92,8 @@ const Phone = ({ token }) => {
   const handleCallButtonClick = () => {
     addToHistory(number);
     setNumber(""); // Clear the input field
+    setIsLoading(true);
   };
-
-  // const diallerHandler = () => {
-  //   setIsDialler(!isDialler);
-  //   console.log("dialler");
-  // };
 
   let render;
   if (conn) {
@@ -113,10 +105,18 @@ const Phone = ({ token }) => {
   } else {
     render = (
       <>
-         <Dialler number={number} setNumber={setNumber} handleCallButtonClick={handleCallButtonClick}/>
-         <div className="call">
+        <Dialler
+          number={number}
+          setNumber={setNumber}
+          handleCallButtonClick={handleCallButtonClick}
+        />
+        <div className="call">
           <KeypadButton handleClick={handleCall} color="green">
-            Call
+            {isLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Call"
+            )}
           </KeypadButton>
         </div>
       </>

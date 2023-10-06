@@ -13,18 +13,43 @@ const OnCall = ({ handleHangup, connection }) => {
   const [muted, setMuted] = useState(false);
   const [running, setRunning, loudness] = useLoudness();
   const [showMuteWarning] = useMuteWarning(loudness, running);
-  const [isSpeakerOn, setIsSpeakerOn] = useState(null);
-  const [isMuted, setIsMuted] = useState(null);
+  const [isSpeakerOn, setIsSpeakerOn] = useState(false);
 
   const handleMute = () => {
-    // connection.mute(!muted);
-    setMuted(!muted);
-    setRunning(!muted);
+    if (connection) {
+      connection.mute(!muted); // Toggle mute state
+      setMuted(!muted);
+      setRunning(!muted);
+    }
+  };
+
+  const handleSpeakerToggle = () => {
+    // Toggle the speaker state
+    setIsSpeakerOn(!isSpeakerOn);
+    // Add code to switch between speaker and regular phone audio output (e.g., through Twilio)
+    if (connection) {
+      if (isSpeakerOn) {
+        // Turn off speaker
+        connection.source = "default"; // You may need to use the correct audio source
+      } else {
+        // Turn on speaker
+        connection.source = "speaker"; // You may need to use the correct audio source
+      }
+    }
   };
 
   const muteWarning = (
     <p className="warning">Are you speaking? You are on mute!</p>
   );
+
+  const declineCall = () => {
+    if (connection) {
+      connection.disconnect();
+    }
+    if (typeof handleHangup === "function") {
+      handleHangup();
+    }
+  };
 
   return (
     <>
@@ -34,27 +59,27 @@ const OnCall = ({ handleHangup, connection }) => {
           <div>
             <button
               className="call_buttons"
-              onClick={() => setIsMuted(!isMuted)}
+              onClick={handleMute}
               style={{
-                backgroundColor: isMuted ? "#E9E8E8" : "#ffffff",
-                marginRight: "100px", // Add margin-right for space
+                backgroundColor: muted ? "#E9E8E8" : "#ffffff",
+                marginRight: "100px",
               }}
             >
-              {isMuted ? <MicOffIcon /> : <MicIcon />}
+              {muted ? <MicOffIcon /> : <MicIcon />}
             </button>
           </div>
           <div>
             <KeypadButton handleClick={handleMute} color="red">
-              <CallEndIcon />
+              <CallEndIcon onClick={declineCall} />
             </KeypadButton>
           </div>
           <div>
             <button
               className="call_buttons"
-              onClick={() => setIsSpeakerOn(!isSpeakerOn)}
+              onClick={handleSpeakerToggle}
               style={{
                 backgroundColor: isSpeakerOn ? "#E9E8E8" : "#ffffff",
-                marginLeft: "100px", // Add margin-left for space
+                marginLeft: "100px",
               }}
             >
               {isSpeakerOn ? <VolumeOffIcon /> : <VolumeUpIcon />}
