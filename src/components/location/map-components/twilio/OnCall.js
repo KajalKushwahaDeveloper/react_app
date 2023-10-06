@@ -44,7 +44,7 @@ const OnCall = ({ handleHangup, connection }) => {
             </button>
           </div>
           <div>
-            <KeypadButton handleClick={handleHangup} color="red">
+            <KeypadButton handleClick={handleMute} color="red">
               <CallEndIcon />
             </KeypadButton>
           </div>

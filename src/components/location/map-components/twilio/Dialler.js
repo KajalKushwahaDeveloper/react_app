@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Dialler.css";
 import KeypadButton from "./KeypadButton";
-import CallIcon from "@mui/icons-material/Call";
-import CloseIcon from "@mui/icons-material/Close";
 import DropDown from "../../../dropDown";
 
-const Dialler = ({ number, setNumber, handleCall }) => {
+const Dialler = ({ number, setNumber }) => {
   const [history, setHistory] = useState([]);
 
 
@@ -52,16 +50,19 @@ console.log("setNumber11")
   };
 
 
-  const handleCallButtonClick = () => {
-    handleCall();
-    addToHistory(number);
-    setNumber(""); // Clear the input field
-  };
+  // const handleCallButtonClick = () => {
+  //   handleCall();
+  //   addToHistory(number);
+  //   setNumber(""); // Clear the input field
+  // };
 
   return (
     <>
     {/* dropdown */}
-    <div style={{float : "right"}}><DropDown/></div>
+    <div style={{float : "right"}}>
+      <DropDown onSelect={handleSelectNumber}/>
+      </div>
+    
       <input
         type="tel"
         list="history"
@@ -124,11 +125,11 @@ console.log("setNumber11")
         </li>  
       </ol>
     
-        <div className="call">
+        {/* <div className="call">
           <KeypadButton className="call_button" handleClick={handleCallButtonClick} color="green"  >
             <CallIcon /> Call
           </KeypadButton>
-        </div>
+        </div> */}
     
     </>
   );

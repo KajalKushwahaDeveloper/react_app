@@ -5,6 +5,7 @@ import Incoming from "./Incoming";
 import OnCall from "./OnCall";
 import "./Phone.scss";
 import states from "./states";
+import KeypadButton from "./KeypadButton";
 
 
 const Phone = ({ token }) => {
@@ -13,6 +14,8 @@ const Phone = ({ token }) => {
   const [conn, setConn] = useState(null);
   const [isDialler, setIsDialler] = useState(false);
   const [device, setDevice] = useState(null);
+  const [history, setHistory] = useState([]);
+
 
   useEffect(() => {
     console.log("device token : ", token);
@@ -29,7 +32,7 @@ const Phone = ({ token }) => {
     });
 
     device.on("ready", () => {
-      // setDevice(device);
+      setDevice(device);
       setState(states.READY);
     });
     device.on("connect", (connection) => {
@@ -66,12 +69,13 @@ const Phone = ({ token }) => {
     return () => {
       console.log("device destroyed");
       device.destroy();
-      // setDevice(null);
+      setDevice(null);
       setState(states.OFFLINE);
     };
   }, [token]);
 
   const handleCall = () => {
+    console.log("handleCall")
     if (device) {
       device.connect({ To: number });
     }
@@ -81,10 +85,23 @@ const Phone = ({ token }) => {
     device.disconnectAll();
   };
 
-  const diallerHandler = () => {
-    setIsDialler(!isDialler);
-    console.log("dialler");
+  const addToHistory = (newNumber) => {
+    if (!history.includes(newNumber)) {
+      const newHistory = [...history, newNumber];
+      setHistory(newHistory);
+      localStorage.setItem("dialedNumbers", JSON.stringify(newHistory)); // Save to local storage
+    }
   };
+
+  const handleCallButtonClick = () => {
+    addToHistory(number);
+    setNumber(""); // Clear the input field
+  };
+
+  // const diallerHandler = () => {
+  //   setIsDialler(!isDialler);
+  //   console.log("dialler");
+  // };
 
   let render;
   if (conn) {
@@ -96,7 +113,12 @@ const Phone = ({ token }) => {
   } else {
     render = (
       <>
-         <Dialler number={number} setNumber={setNumber} handleCall={handleCall}/>
+         <Dialler number={number} setNumber={setNumber} handleCallButtonClick={handleCallButtonClick}/>
+         <div className="call">
+          <KeypadButton handleClick={handleCall} color="green">
+            Call
+          </KeypadButton>
+        </div>
       </>
     );
   }

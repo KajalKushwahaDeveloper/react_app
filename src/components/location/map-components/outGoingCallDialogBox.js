@@ -16,8 +16,6 @@ const OutGoingCallDialogBox = ({
   open,
 }) => {
 
-
-
   return (
     <Dialog open={open} maxWidth="sm" fullWidth >
       <DialogTitle>{contactName} CALL </DialogTitle>
