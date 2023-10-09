@@ -1,12 +1,6 @@
 import React from "react";
 
-const Incoming = ({ device }) => {
-  const acceptConnection = () => {
-    device.conn.accept();
-  };
-  const rejectConnection = () => {
-    device.conn.reject();
-  };
+const Incoming = ({ device , acceptConnection, rejectConnection}) => {
   return (
     <>
       <button onClick={acceptConnection}>Accept</button>

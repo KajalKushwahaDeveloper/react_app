@@ -52,7 +52,7 @@ const GpsTable = ({
   const [selectedDevice, setSelectedDevice] = useState({
     open: false,
     dialogType: "",
-    emulator: null,
+    emulatorId: null,
     index: null,
   });
 
@@ -66,13 +66,13 @@ const GpsTable = ({
     setSelectedEmulatorForHistoryData(null);
   };
 
-  const handleContactDetails = (dialogType, emulator, index) => {
+  const handleContactDetails = (dialogType, emulator, emulatorIndex) => {
   setSelectedDevice((prevState) => ({
-    ...prevState, // Copy previous state
-    open: !prevState.open, // Toggle the "open" property
-    dialogType,
-    emulator,
-    index
+    ...prevState,
+    open: !prevState.open,
+    dialogType: dialogType,
+    emulatorId: emulator && emulator.id !== undefined ? emulator.id : null,
+    index: emulatorIndex,
   }));
 };
 
@@ -102,14 +102,7 @@ const GpsTable = ({
         }
       }
     }
-  }, [
-    emulators,
-    page,
-    rowsPerPage,
-    selectedEmId,
-    selectedEmulator,
-    setSelectedEmId,
-  ]);
+  }, [emulators, page, rowsPerPage, selectedEmId, selectedEmulator, setSelectedEmId, setSelectedEmulator]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

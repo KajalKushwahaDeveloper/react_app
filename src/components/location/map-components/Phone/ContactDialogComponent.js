@@ -31,25 +31,6 @@ function ContactDialogComponent({
   const [onCallDevice, setOnCallDevice] = useState(null);
 
   useEffect(() => {
-    if (devices !== null || devices !== undefined)
-      devices.forEach((device) => {
-        if (device.state === states.INCOMING) {
-          setIncomingDevice(device);
-          const incomingEmulatorIndex = emulators.findIndex(
-            (emulator) => emulator.id === device.emulatorId
-          );
-          setSelectedDevice((prevState) => ({
-            ...prevState,
-            open: !prevState.open,
-            emulator: emulators[incomingEmulatorIndex],
-            index: incomingEmulatorIndex,
-          }));
-          return;
-        }
-      });
-  }, [devices, emulators, setSelectedDevice]);
-
-  useEffect(() => {
     const handleContactData = async (id) => {
       setLoading(true);
       SetHistoryData([]);
@@ -62,7 +43,6 @@ function ContactDialogComponent({
         id
       );
       if (success) {
-        console.log("Data get successfully", data);
         setLoading(false);
         SetHistoryData(data);
       } else {
@@ -71,7 +51,6 @@ function ContactDialogComponent({
       }
     };
 
-    console.log("selectedDevice : ", selectedDevice);
     if (
       selectedDevice &&
       selectedDevice.emulator &&
@@ -103,9 +82,10 @@ function ContactDialogComponent({
         device: null,
         number: emulator.telephone,
       };
+      deviceDataModels.push(deviceDataModel)
     });
     setDevicesData(deviceDataModels);
-    emulators.map(async (emulator) => {
+    emulators.map(async (emulator, index) => {
       var state = states.CONNECTING;
       var conn = null;
       var device = new Device();
@@ -126,9 +106,10 @@ function ContactDialogComponent({
           codecPreferences: ["opus", "pcmu"],
           fakeLocalDTMF: true,
           enableRingingState: true,
-          debug: true,
+          debug: false,
         });
         device.on("ready", () => {
+          console.log("device ready");
           state = states.READY;
           const deviceDataModel = {
             emulatorId: emulator.id,
@@ -141,6 +122,7 @@ function ContactDialogComponent({
           updateDeviceState(deviceDataModel);
         });
         device.on("connect", (connection) => {
+          console.log("device connect", connection);
           conn = connection;
           state = states.ON_CALL;
           const deviceDataModel = {
@@ -154,6 +136,7 @@ function ContactDialogComponent({
           updateDeviceState(deviceDataModel);
         });
         device.on("disconnect", () => {
+          console.log("device disconnect");
           state = states.READY;
           conn = null;
           const deviceDataModel = {
@@ -165,12 +148,15 @@ function ContactDialogComponent({
             number: emulator.telephone,
           };
           updateDeviceState(deviceDataModel);
+          setOnCallDevice(null)
+          setIncomingDevice(null)
         });
         device.on("incoming", (connection) => {
-          console.log("Incoming call received : ", connection);
+          console.log("device Incoming call received : ", connection);
           state = states.INCOMING;
           conn = connection;
           connection.on("reject", () => {
+            console.log("device call rejected");
             state = states.READY;
             conn = null;
           });
@@ -183,8 +169,17 @@ function ContactDialogComponent({
             number: emulator.telephone,
           };
           updateDeviceState(deviceDataModel);
+          setIncomingDevice(deviceDataModel);
+          setSelectedDevice((prevState) => ({
+            ...prevState,
+            open: !prevState.open,
+            dialogType: "Call",
+            emulatorId: emulator.id,
+            index: index,
+          }));
         });
         device.on("cancel", () => {
+          console.log("device call cancel");
           state = states.READY;
           conn = null;
           const deviceDataModel = {
@@ -210,29 +205,17 @@ function ContactDialogComponent({
           };
           updateDeviceState(deviceDataModel);
         });
-        const deviceDataModel = {
-          emulatorId: emulator.id,
-          token: data,
-          state: state,
-          conn: conn,
-          device: device,
-          number: emulator.telephone,
-        };
-        deviceDataModels.push(deviceDataModel);
       } else {
         console.log("Error getting token : ", error);
         return null;
       }
     });
-  }, [deviceLoader, emulators, selectedDevice, token]);
+  }, [deviceLoader, emulators, selectedDevice, setSelectedDevice, token]);
 
   const updateDeviceState = (updatedDevice) => {
     setDevicesData((prevDevices) => {
       return prevDevices.map((device) => {
-        console.log("updating device states 1 ", device);
-        console.log("updating device states 2 ", updatedDevice);
         if (device.emulatorId === updatedDevice.emulatorId) {
-          // Update the state of the matching device
           return { ...device, ...updatedDevice };
         }
         return device;
@@ -249,63 +232,61 @@ function ContactDialogComponent({
             onClick={() => handleContactDialog(selectedDevice.dialogType)}
           />
         </div>
-        {selectedDevice &&
-          selectedDevice.emulator &&
-          selectedDevice.emulator.id && (
-            <div>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
+        {selectedDevice && selectedDevice.emulatorId && (
+          <div>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab
+                label={
+                  handleContactDialog && selectedDevice.dialogType === "call"
+                    ? "Call"
+                    : "Message"
+                }
+                {...a11yProps(0)}
+              />
+              <Tab
+                label={
+                  handleContactDialog && selectedDevice.dialogType === "call"
+                    ? "Call History"
+                    : "Message History"
+                }
+                {...a11yProps(1)}
+              />
+            </Tabs>
+            <TabPanel value={value} index={0} style={{ height: "20rem" }}>
+              <Phone
+                devices={devices}
+                selectedDevice={selectedDevice}
+                incomingDevice={incomingDevice}
+                setIncomingDevice={setIncomingDevice}
+                onCallDevice={onCallDevice}
+                setOnCallDevice={setOnCallDevice}
+              ></Phone>
+            </TabPanel>
+            <TabPanel
+              value={value}
+              index={1}
+              style={{ height: "20rem", overflow: "auto" }}
+            >
+              <ShowHistory
+                dialogType={selectedDevice.dialogType}
+                data={historyData}
+              />
+              <Backdrop
+                sx={{
+                  color: "#fff",
+                  zIndex: (theme) => theme.zIndex.drawer + 1,
+                }}
+                open={loader}
               >
-                <Tab
-                  label={
-                    handleContactDialog && selectedDevice.dialogType === "call"
-                      ? "Call"
-                      : "Message"
-                  }
-                  {...a11yProps(0)}
-                />
-                <Tab
-                  label={
-                    handleContactDialog && selectedDevice.dialogType === "call"
-                      ? "Call History"
-                      : "Message History"
-                  }
-                  {...a11yProps(1)}
-                />
-              </Tabs>
-              <TabPanel value={value} index={0} style={{ height: "20rem" }}>
-                <Phone
-                  devices={devices}
-                  selectedDevice={selectedDevice}
-                  incomingDevice={incomingDevice}
-                  setIncomingDevice={setIncomingDevice}
-                  onCallDevice={onCallDevice}
-                  setOnCallDevice={setOnCallDevice}
-                ></Phone>
-              </TabPanel>
-              <TabPanel
-                value={value}
-                index={1}
-                style={{ height: "20rem", overflow: "auto" }}
-              >
-                <ShowHistory
-                  dialogType={selectedDevice.dialogType}
-                  data={historyData}
-                />
-                <Backdrop
-                  sx={{
-                    color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                  }}
-                  open={loader}
-                >
-                  <CircularProgress color="inherit" />
-                </Backdrop>
-              </TabPanel>
-            </div>
-          )}
+                <CircularProgress color="inherit" />
+              </Backdrop>
+            </TabPanel>
+          </div>
+        )}
       </Dialog>
     </div>
   );

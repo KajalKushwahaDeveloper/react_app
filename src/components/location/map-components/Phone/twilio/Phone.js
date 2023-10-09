@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Device } from "twilio-client";
 import Dialler from "./Dialler";
 import KeypadButton from "./KeypadButton";
 import Incoming from "./Incoming";
@@ -16,29 +15,60 @@ const Phone = ({
   onCallDevice,
   setOnCallDevice,
 }) => {
-  const [state, setState] = useState(states.CONNECTING);
+  const [phoneState, setPhoneState] = useState(states.READY);
   const [number, setNumber] = useState("");
-  const [conn, setConn] = useState(null);
 
-  const handleHangup = (device) => {
-    device.disconnectAll();
+  var clicked = 0;
+  useEffect(() => {
+    console.log("Phone devices : ", devices);
+    console.log("Phone selectedDevice : ", selectedDevice);
+  }, [devices, selectedDevice]);
+
+  const acceptConnection = () => {
+    incomingDevice.conn.accept();
+    setOnCallDevice(incomingDevice);
+    setIncomingDevice(null);
+    setPhoneState(states.ON_CALL)
+  };
+
+  const rejectConnection = () => {
+    incomingDevice.conn.reject();
     setOnCallDevice(null);
     setIncomingDevice(null);
+    setPhoneState(states.READY)
+  };
+
+  const handleHangup = () => {
+    if(clicked < 2){
+      clicked = clicked + 1
+      return
+    }
+    console.log("handleHangup");
+    if (devices !== null && selectedDevice  !== null && selectedDevice.index !== null) {
+      devices[selectedDevice.index].device.disconnectAll();
+      setOnCallDevice(null);
+      setIncomingDevice(null);
+      setPhoneState(states.READY)
+    }
   };
 
 
-  const handleCall = (device) => {
-    if (device) {
-      device.connect({ To: number });
-      setOnCallDevice(device)
+  const handleCall = () => {
+    console.log("handleHangup");
+    if (devices !== null && selectedDevice  !== null && selectedDevice.index !== null) {
+      devices[selectedDevice.index].device.connect({ To: number });
+      setOnCallDevice(devices[selectedDevice.index])
       setIncomingDevice(null)
+      setPhoneState(states.ON_CALL)
     }
   };
 
   let render;
   
   if (incomingDevice) {
-    render = <Incoming device={incomingDevice}></Incoming>;
+    render = <Incoming device={incomingDevice} 
+    acceptConnection={acceptConnection} 
+    rejectConnection={rejectConnection}></Incoming>;
   } else if (onCallDevice) {
     render = (
       <OnCall handleHangup={handleHangup} device={onCallDevice}></OnCall>
@@ -63,7 +93,7 @@ const Phone = ({
         setConn={setConn}
       ></FakeState> */}
       {render}
-      <p className="status">{state}</p>
+      <p className="status">{phoneState}</p>
     </>
   );
 };
