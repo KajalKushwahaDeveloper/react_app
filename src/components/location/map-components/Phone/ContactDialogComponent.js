@@ -27,8 +27,7 @@ function ContactDialogComponent({
 
   const token = localStorage.getItem("token");
 
-  const [incomingDevice, setIncomingDevice] = useState(null);
-  const [onCallDevice, setOnCallDevice] = useState(null);
+  const [phoneState, setPhoneState] = useState(states.READY);
 
   useEffect(() => {
     const handleContactData = async (id) => {
@@ -45,6 +44,7 @@ function ContactDialogComponent({
       if (success) {
         setLoading(false);
         SetHistoryData(data);
+        console.log("Got data", data);
       } else {
         setLoading(false);
         console.log("Error In getting data", "error");
@@ -53,10 +53,10 @@ function ContactDialogComponent({
 
     if (
       selectedDevice &&
-      selectedDevice.emulator &&
-      selectedDevice.emulator.id !== undefined
+      selectedDevice.emulatorId &&
+      selectedDevice.emulatorId !== undefined
     ) {
-      handleContactData(selectedDevice.emulator.id);
+      handleContactData(selectedDevice.emulatorId);
     }
   }, [selectedDevice]);
 
@@ -148,8 +148,7 @@ function ContactDialogComponent({
             number: emulator.telephone,
           };
           updateDeviceState(deviceDataModel);
-          setOnCallDevice(null)
-          setIncomingDevice(null)
+          setPhoneState(states.READY)
         });
         device.on("incoming", (connection) => {
           console.log("device Incoming call received : ", connection);
@@ -159,6 +158,23 @@ function ContactDialogComponent({
             console.log("device call rejected");
             state = states.READY;
             conn = null;
+            const deviceDataModel = {
+              emulatorId: emulator.id,
+              token: data,
+              state: state,
+              conn: conn,
+              device: device,
+              number: emulator.telephone,
+            };
+            updateDeviceState(deviceDataModel);
+            setPhoneState(states.READY)
+            setSelectedDevice((prevState) => ({
+              ...prevState,
+              open: false,
+              dialogType: "Call",
+              emulatorId: emulator.id,
+              index: index,
+            }));
           });
           const deviceDataModel = {
             emulatorId: emulator.id,
@@ -169,10 +185,10 @@ function ContactDialogComponent({
             number: emulator.telephone,
           };
           updateDeviceState(deviceDataModel);
-          setIncomingDevice(deviceDataModel);
+          setPhoneState(states.INCOMING)
           setSelectedDevice((prevState) => ({
             ...prevState,
-            open: !prevState.open,
+            open: true,
             dialogType: "Call",
             emulatorId: emulator.id,
             index: index,
@@ -260,10 +276,8 @@ function ContactDialogComponent({
               <Phone
                 devices={devices}
                 selectedDevice={selectedDevice}
-                incomingDevice={incomingDevice}
-                setIncomingDevice={setIncomingDevice}
-                onCallDevice={onCallDevice}
-                setOnCallDevice={setOnCallDevice}
+                phoneState = {phoneState}
+                setPhoneState = {setPhoneState}
               ></Phone>
             </TabPanel>
             <TabPanel

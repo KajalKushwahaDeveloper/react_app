@@ -10,12 +10,9 @@ import FakeState from "./FakeState";
 const Phone = ({
   devices,
   selectedDevice,
-  incomingDevice,
-  setIncomingDevice,
-  onCallDevice,
-  setOnCallDevice,
+  phoneState,
+  setPhoneState,
 }) => {
-  const [phoneState, setPhoneState] = useState(states.READY);
   const [number, setNumber] = useState("");
 
   const acceptConnection = () => {
@@ -25,8 +22,6 @@ const Phone = ({
       selectedDevice.index !== null
     ) {
       devices[selectedDevice.index].conn.accept();
-      setOnCallDevice(devices[selectedDevice.index].device);
-      setIncomingDevice(null);
       setPhoneState(states.ON_CALL);
     }
   };
@@ -38,8 +33,6 @@ const Phone = ({
       selectedDevice.index !== null
     ) {
       devices[selectedDevice.index].conn.reject();
-      setOnCallDevice(null);
-      setIncomingDevice(null);
       setPhoneState(states.READY);
     }
   };
@@ -51,8 +44,6 @@ const Phone = ({
       selectedDevice.index !== null
     ) {
       devices[selectedDevice.index].device.disconnectAll();
-      setOnCallDevice(null);
-      setIncomingDevice(null);
       setPhoneState(states.READY);
     }
   };
@@ -64,15 +55,13 @@ const Phone = ({
       selectedDevice.index !== null
     ) {
       devices[selectedDevice.index].device.connect({ To: number });
-      setOnCallDevice(devices[selectedDevice.index]);
-      setIncomingDevice(null);
       setPhoneState(states.ON_CALL);
     }
   };
 
   let render;
 
-  if (incomingDevice) {
+  if (phoneState === states.INCOMING) {
     render = (
       <Incoming
         device={devices[selectedDevice.index].device}
@@ -80,7 +69,7 @@ const Phone = ({
         rejectConnection={rejectConnection}
       ></Incoming>
     );
-  } else if (onCallDevice) {
+  } else if (phoneState === states.ON_CALL) {
     render = (
       <OnCall
         handleHangup={handleHangup}
