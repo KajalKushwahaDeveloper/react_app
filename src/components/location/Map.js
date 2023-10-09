@@ -497,8 +497,7 @@ const Map = ({ showToast }) => {
         AssignedTelephoneNumber={AssignedTelephoneNumber}
         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
       />
-      {/* NOTE TODO :  //uncomment these for map to work later. */}
-      {/* <GoogleMapContainer
+      <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}
         center={center}
@@ -521,7 +520,7 @@ const Map = ({ showToast }) => {
         calculateTimeFromTripPointIndexToStopPoint={
           calculateTimeFromTripPointIndexToStopPoint
         }
-      /> */}
+      />
     </CardComponent>
   );
 };
