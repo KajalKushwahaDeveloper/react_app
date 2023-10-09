@@ -525,6 +525,4 @@ const Map = ({ showToast }) => {
   );
 };
 
-//NOTE TODO : uncomment these for map to work later.
-// export default withScriptjs(withGoogleMap(Map));
-export default withScriptjs(Map);
+export default withScriptjs(withGoogleMap(Map));
