@@ -18,7 +18,6 @@ import {
   BASE_URL,
 } from "../../constants";
 import CardComponent from "./map-components/CardComponent";
-import GpsTable from "./map-components/gps_page_table";
 import CreateTripButton from "./map-components/CreateTripButton.jsx";
 import GpsOverlay from "./map-components/GpsOverlay";
 import CreateTripOverlay from "./map-components/CreateTripOverlay";
@@ -498,7 +497,8 @@ const Map = ({ showToast }) => {
         AssignedTelephoneNumber={AssignedTelephoneNumber}
         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
       />
-      <GoogleMapContainer
+      {/* NOTE TODO :  //uncomment these for map to work later. */}
+      {/* <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}
         center={center}
@@ -521,9 +521,11 @@ const Map = ({ showToast }) => {
         calculateTimeFromTripPointIndexToStopPoint={
           calculateTimeFromTripPointIndexToStopPoint
         }
-      />
+      /> */}
     </CardComponent>
   );
 };
 
-export default withScriptjs(withGoogleMap(Map));
+//NOTE TODO : uncomment these for map to work later.
+// export default withScriptjs(withGoogleMap(Map));
+export default withScriptjs(Map);

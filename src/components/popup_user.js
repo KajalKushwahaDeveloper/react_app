@@ -120,8 +120,12 @@ const PopUpUser = ({
     const token = localStorage.getItem("token");
     console.log("token : ", token);
     try {
+      const requestType = "POST"
+      if (userToEdit) {
+        requestType = "PUT"
+      }
       const response = await fetch(USER_URL, {
-        method: "PUT",
+        method: requestType,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

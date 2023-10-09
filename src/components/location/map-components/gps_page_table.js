@@ -25,7 +25,7 @@ import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 //components
-import ContactDialogComponent from "./ContactDialogComponent";
+import ContactDialogComponent from "./Phone/ContactDialogComponent";
 
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
@@ -35,7 +35,7 @@ const GpsTable = ({
   showToast,
   setSelectedEmId,
   selectedEmId,
-  data,
+  emulators,
   setSelectedEmulator,
   selectedEmulator,
   setAssignedTelephoneNumber,
@@ -49,9 +49,11 @@ const GpsTable = ({
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [contactDialog, setContactDialog] = useState({
+  const [selectedDevice, setSelectedDevice] = useState({
     open: false,
     dialogType: "",
+    emulator: null,
+    index: null,
   });
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
@@ -64,24 +66,24 @@ const GpsTable = ({
     setSelectedEmulatorForHistoryData(null);
   };
 
-  const handleContactDetails = (dialogType, emulatorId, selectedPhoneNumber) => {
-  setContactDialog((prevState) => ({
+  const handleContactDetails = (dialogType, emulator, index) => {
+  setSelectedDevice((prevState) => ({
     ...prevState, // Copy previous state
     open: !prevState.open, // Toggle the "open" property
     dialogType,
-    emulatorId,
-    selectedPhoneNumber,
+    emulator,
+    index
   }));
 };
 
   useEffect(() => {
-    if (data != null) {
+    if (emulators != null) {
       setEmptyRows(
-        rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
+        rowsPerPage - Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
       );
       if (selectedEmulator == null && selectedEmId != null) {
-        setSelectedEmulator(data[0]?.id);
-        setSelectedEmId(data[0]?.id);
+        setSelectedEmulator(emulators[0]?.id);
+        setSelectedEmId(emulators[0]?.id);
       }
       setLoading(false);
     } else {
@@ -90,7 +92,7 @@ const GpsTable = ({
     if (selectedEmId != null && selectedEmulator != null) {
       if (selectedEmId !== selectedEmulator) {
         setSelectedEmulator(selectedEmId);
-        const selectedEmIndex = data.findIndex(
+        const selectedEmIndex = emulators.findIndex(
           (item) => item.id === selectedEmId
         );
         // Calculate the new active page based on the selected checkbox index and rowsPerPage
@@ -101,7 +103,7 @@ const GpsTable = ({
       }
     }
   }, [
-    data,
+    emulators,
     page,
     rowsPerPage,
     selectedEmId,
@@ -219,9 +221,9 @@ const GpsTable = ({
 
         <tbody>
           {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
-          ).map((row) => (
+            ? emulators.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : emulators
+          ).map((row, index)=> (
             <tr key={row.id || "N/A"}>
               <td
                 style={{
@@ -301,14 +303,14 @@ const GpsTable = ({
 
                 {/* calling icon */}
                 <IconButton
-                  onClick={() => handleContactDetails("call", row.id, row.telephone)}
+                  onClick={() => handleContactDetails("call", row, index)}
                 >
                   <CallRoundedIcon />
                 </IconButton>
 
                 {/* message icon */}
                 <IconButton
-                  onClick={() => handleContactDetails("messages", row.id)}
+                  onClick={() => handleContactDetails("messages", row, index)}
                 >
                   <MessageRoundedIcon />
                 </IconButton>
@@ -384,7 +386,7 @@ const GpsTable = ({
             <CustomTablePagination
               rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
               colSpan={6}
-              count={data.length}
+              count={emulators.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
@@ -404,7 +406,8 @@ const GpsTable = ({
         emulatorHistory={selectedEmulatorForHistoryData}
       />
       <ContactDialogComponent
-        contactDialog= {contactDialog}
+        emulators= {emulators}
+        selectedDevice= {selectedDevice}
         handleContactDialog={handleContactDetails}
         showToast={showToast}
       />
