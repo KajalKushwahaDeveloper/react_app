@@ -1,11 +1,11 @@
 import React from "react";
 
-const Incoming = ({ connection, device }) => {
+const Incoming = ({ device }) => {
   const acceptConnection = () => {
-    connection.accept();
+    device.conn.accept();
   };
   const rejectConnection = () => {
-    connection.reject();
+    device.conn.reject();
   };
   return (
     <>

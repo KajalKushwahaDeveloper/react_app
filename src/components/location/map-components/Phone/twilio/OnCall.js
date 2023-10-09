@@ -4,13 +4,13 @@ import useLoudness from "./hooks/useLoudness";
 import useMuteWarning from "./hooks/useMuteWarning";
 import "./OnCall.css";
 
-const OnCall = ({ handleHangup, connection }) => {
+const OnCall = ({ handleHangup, device }) => {
   const [muted, setMuted] = useState(false);
   const [running, setRunning, loudness] = useLoudness();
   const [showMuteWarning] = useMuteWarning(loudness, running);
 
   const handleMute = () => {
-    // connection.mute(!muted);
+    device.conn.mute(!muted);
     setMuted(!muted);
     setRunning(!muted);
   };
@@ -29,7 +29,7 @@ const OnCall = ({ handleHangup, connection }) => {
           </KeypadButton>
         </div>
         <div className="hang-up">
-          <KeypadButton handleClick={handleHangup} color="red">
+          <KeypadButton handleClick={handleHangup(device)} color="red">
             Hang up
           </KeypadButton>
         </div>

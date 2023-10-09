@@ -408,6 +408,7 @@ const GpsTable = ({
       <ContactDialogComponent
         emulators= {emulators}
         selectedDevice= {selectedDevice}
+        setSelectedDevice = {setSelectedDevice}
         handleContactDialog={handleContactDetails}
         showToast={showToast}
       />
