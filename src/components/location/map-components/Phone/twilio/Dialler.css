@@ -1,19 +1,76 @@
 .keypad {
+  width: auto;
   display: grid;
-  list-style: none;
-  padding: 0;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 15px;
+  padding: 10px;
+  background-color: transparent; 
 }
+
 .keypad li {
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: auto;
+  color: #fff;
+  font-size: 20px;
+  border: 2px solid #ccc; 
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  list-style-type: none; 
 }
 
+.keypad li:hover {
+  background-color: #f2f2f2; 
+}
+
+
 .input {
+  font-size: 20px;
+  border: 2.5px solid #ccc;
+  width: calc(100%-10px); 
+  height: 2.5rem;
+  text-align: center;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  background-color: #fff; 
+  color: #333; 
+  margin-bottom: 2rem;
+}
+
+
+.call-button {
   font-size: 24px;
-  border-color: transparent;
+  border: none;
   width: 100%;
   text-align: center;
-  margin: 2em 0;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  background-color: #007bff; 
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.call-button:hover {
+  background-color: #0056b3; 
+}
+
+.input-container {
+  position: relative;
+}
+
+.history-dropdown {
+  position: absolute;
+  width: 100%; /* Same width as the input field */
+  top: calc(100% + 4px); /* Position at the bottom */
+}
+
+#history{
+  width:"100%";
 }

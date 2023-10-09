@@ -44,7 +44,6 @@ function ContactDialogComponent({
       if (success) {
         setLoading(false);
         SetHistoryData(data);
-        console.log("Got data", data);
       } else {
         setLoading(false);
         console.log("Error In getting data", "error");
@@ -272,8 +271,9 @@ function ContactDialogComponent({
                 {...a11yProps(1)}
               />
             </Tabs>
-            <TabPanel value={value} index={0} style={{ height: "20rem" }}>
+            <TabPanel value={value} index={0} style={{ height: "90vh" }}>
               <Phone
+                showToast={showToast}
                 devices={devices}
                 selectedDevice={selectedDevice}
                 phoneState = {phoneState}
@@ -283,7 +283,7 @@ function ContactDialogComponent({
             <TabPanel
               value={value}
               index={1}
-              style={{ height: "20rem", overflow: "auto" }}
+              style={{ height: "90vh", overflow: "auto" }}
             >
               <ShowHistory
                 dialogType={selectedDevice.dialogType}

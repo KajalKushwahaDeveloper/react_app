@@ -1,0 +1,42 @@
+.incoming-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.caller-name {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.incoming-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.accept-button,
+.reject-button {
+  padding: 15px 20px;
+  font-size: 18px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+
+.accept-button {
+  background-color: #009000;
+  color: white;
+}
+
+.reject-button {
+  background-color: red;
+  color: white;
+}
+
+.accept-button:hover,
+.reject-button:hover {
+  opacity: 0.8;
+}

@@ -1,9 +1,17 @@
 import React from "react";
 import "./Dialler.css";
 import KeypadButton from "./KeypadButton";
+import PhoneDropDown from "./PhoneDropDown";
 
-const Dialler = ({ number, setNumber }) => {
-  const handleNumberChange = event => {
+const Dialler = ({
+  showToast,
+  devices,
+  number,
+  setNumber,
+  selectedDeviceToCallWith,
+  setSelectedDeviceToCallWith,
+}) => {
+  const handleNumberChange = (event) => {
     setNumber(event.target.value);
   };
 
@@ -11,7 +19,7 @@ const Dialler = ({ number, setNumber }) => {
     setNumber(number.substring(0, number.length - 1));
   };
 
-  const handleNumberPressed = newNumber => {
+  const handleNumberPressed = (newNumber) => {
     return () => {
       setNumber(`${number}${newNumber}`);
     };
@@ -19,12 +27,20 @@ const Dialler = ({ number, setNumber }) => {
 
   return (
     <>
+      <PhoneDropDown
+        showToast={showToast}
+        devices={devices}
+        selectedDeviceToCallWith={selectedDeviceToCallWith}
+        setSelectedDeviceToCallWith={setSelectedDeviceToCallWith}
+      />
+
       <input
         type="tel"
         value={number}
         onChange={handleNumberChange}
         className="input"
       />
+
       <ol className="keypad">
         <li>
           <KeypadButton handleClick={handleNumberPressed("1")}>1</KeypadButton>

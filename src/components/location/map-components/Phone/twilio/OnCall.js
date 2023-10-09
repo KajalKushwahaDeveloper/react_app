@@ -19,23 +19,31 @@ const OnCall = ({ handleHangup, device, conn}) => {
     <p className="warning">Are you speaking? You are on mute!</p>
   );
 
-   return (
-    <>
-      {showMuteWarning && muteWarning}
-      <div className="call">
+return (
+  <>
+    {showMuteWarning && muteWarning}
+    <div className="call">
+      <div className="buttons-row">
         <div className="call-options">
-          <KeypadButton handleClick={() => handleMute()} color={muted ? "red" : ""}>
+          <KeypadButton
+            handleClick={() => handleMute()}
+            className={`call-button ${muted ? "red" : "green"}`}
+          >
             {muted ? "Unmute" : "Mute"}
           </KeypadButton>
         </div>
         <div className="hang-up">
-          <KeypadButton handleClick={() => handleHangup()} color="red">
+          <KeypadButton
+            handleClick={() => handleHangup()}
+            className="red"
+          >
             Hang up
           </KeypadButton>
         </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 };
 
 export default OnCall;

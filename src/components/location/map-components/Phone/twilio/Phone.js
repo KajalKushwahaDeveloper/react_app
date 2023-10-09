@@ -7,14 +7,9 @@ import "./Phone.css";
 import states from "./states";
 import FakeState from "./FakeState";
 
-const Phone = ({
-  devices,
-  selectedDevice,
-  phoneState,
-  setPhoneState,
-}) => {
+const Phone = ({ showToast, devices, selectedDevice, phoneState, setPhoneState }) => {
   const [number, setNumber] = useState("");
-
+  const [selectedDeviceToCallWith, setSelectedDeviceToCallWith] = useState(0);
   const acceptConnection = () => {
     if (
       devices !== null &&
@@ -64,7 +59,7 @@ const Phone = ({
   if (phoneState === states.INCOMING) {
     render = (
       <Incoming
-        device={devices[selectedDevice.index].device}
+        callerName={devices[selectedDevice.index].conn}
         acceptConnection={acceptConnection}
         rejectConnection={rejectConnection}
       ></Incoming>
@@ -80,7 +75,14 @@ const Phone = ({
   } else {
     render = (
       <>
-        <Dialler number={number} setNumber={setNumber}></Dialler>
+        <Dialler 
+          showToast={showToast} 
+          devices={devices} 
+          number={number} 
+          setNumber={setNumber}
+          selectedDeviceToCallWith={selectedDeviceToCallWith}
+          setSelectedDeviceToCallWith={setSelectedDeviceToCallWith}
+        ></Dialler>
         <div className="call">
           <KeypadButton handleClick={handleCall} color="green">
             Call
@@ -96,8 +98,8 @@ const Phone = ({
         setState={setState}
         setConn={setConn}
       ></FakeState> */}
-      {render}
       <p className="status">{phoneState}</p>
+      {render}
     </>
   );
 };
