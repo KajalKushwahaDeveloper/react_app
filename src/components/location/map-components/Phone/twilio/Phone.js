@@ -19,56 +19,75 @@ const Phone = ({
   const [number, setNumber] = useState("");
 
   var clicked = 0;
-  useEffect(() => {
-    console.log("Phone devices : ", devices);
-    console.log("Phone selectedDevice : ", selectedDevice);
-  }, [devices, selectedDevice]);
 
   const acceptConnection = () => {
-    incomingDevice.conn.accept();
-    setOnCallDevice(incomingDevice);
-    setIncomingDevice(null);
-    setPhoneState(states.ON_CALL)
+    if (
+      devices !== null &&
+      selectedDevice !== null &&
+      selectedDevice.index !== null
+    ) {
+      devices[selectedDevice.index].conn.accept();
+      setOnCallDevice(devices[selectedDevice.index].device);
+      setIncomingDevice(null);
+      setPhoneState(states.ON_CALL);
+    }
   };
 
   const rejectConnection = () => {
-    incomingDevice.conn.reject();
-    setOnCallDevice(null);
-    setIncomingDevice(null);
-    setPhoneState(states.READY)
+    console.log("rejectConnection devices : ", devices);
+    console.log("rejectConnection selectedDevice : ", selectedDevice);
+    if (
+      devices !== null &&
+      selectedDevice !== null &&
+      selectedDevice.index !== null
+    ) {
+      devices[selectedDevice.index].device.conn.reject();
+      setOnCallDevice(null);
+      setIncomingDevice(null);
+      setPhoneState(states.READY);
+    }
   };
 
   const handleHangup = () => {
-    if(clicked < 2){
-      clicked = clicked + 1
-      return
+    if (clicked < 1) {
+      clicked = clicked + 1;
+      return;
     }
-    console.log("handleHangup");
-    if (devices !== null && selectedDevice  !== null && selectedDevice.index !== null) {
+    if (
+      devices !== null &&
+      selectedDevice !== null &&
+      selectedDevice.index !== null
+    ) {
       devices[selectedDevice.index].device.disconnectAll();
       setOnCallDevice(null);
       setIncomingDevice(null);
-      setPhoneState(states.READY)
+      setPhoneState(states.READY);
     }
   };
 
-
   const handleCall = () => {
-    console.log("handleHangup");
-    if (devices !== null && selectedDevice  !== null && selectedDevice.index !== null) {
+    if (
+      devices !== null &&
+      selectedDevice !== null &&
+      selectedDevice.index !== null
+    ) {
       devices[selectedDevice.index].device.connect({ To: number });
-      setOnCallDevice(devices[selectedDevice.index])
-      setIncomingDevice(null)
-      setPhoneState(states.ON_CALL)
+      setOnCallDevice(devices[selectedDevice.index]);
+      setIncomingDevice(null);
+      setPhoneState(states.ON_CALL);
     }
   };
 
   let render;
-  
+
   if (incomingDevice) {
-    render = <Incoming device={incomingDevice} 
-    acceptConnection={acceptConnection} 
-    rejectConnection={rejectConnection}></Incoming>;
+    render = (
+      <Incoming
+        device={devices[selectedDevice.index].device}
+        acceptConnection={acceptConnection}
+        rejectConnection={rejectConnection}
+      ></Incoming>
+    );
   } else if (onCallDevice) {
     render = (
       <OnCall handleHangup={handleHangup} device={onCallDevice}></OnCall>
