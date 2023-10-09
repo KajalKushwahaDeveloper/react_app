@@ -18,8 +18,6 @@ const Phone = ({
   const [phoneState, setPhoneState] = useState(states.READY);
   const [number, setNumber] = useState("");
 
-  var clicked = 0;
-
   const acceptConnection = () => {
     if (
       devices !== null &&
@@ -34,14 +32,12 @@ const Phone = ({
   };
 
   const rejectConnection = () => {
-    console.log("rejectConnection devices : ", devices);
-    console.log("rejectConnection selectedDevice : ", selectedDevice);
     if (
       devices !== null &&
       selectedDevice !== null &&
       selectedDevice.index !== null
     ) {
-      devices[selectedDevice.index].device.conn.reject();
+      devices[selectedDevice.index].conn.reject();
       setOnCallDevice(null);
       setIncomingDevice(null);
       setPhoneState(states.READY);
@@ -49,10 +45,6 @@ const Phone = ({
   };
 
   const handleHangup = () => {
-    if (clicked < 1) {
-      clicked = clicked + 1;
-      return;
-    }
     if (
       devices !== null &&
       selectedDevice !== null &&
@@ -90,7 +82,11 @@ const Phone = ({
     );
   } else if (onCallDevice) {
     render = (
-      <OnCall handleHangup={handleHangup} device={onCallDevice}></OnCall>
+      <OnCall
+        handleHangup={handleHangup}
+        device={devices[selectedDevice.index].device}
+        conn={devices[selectedDevice.index].conn}
+      ></OnCall>
     );
   } else {
     render = (

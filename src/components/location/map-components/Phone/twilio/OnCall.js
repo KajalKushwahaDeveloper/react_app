@@ -4,13 +4,13 @@ import useLoudness from "./hooks/useLoudness";
 import useMuteWarning from "./hooks/useMuteWarning";
 import "./OnCall.css";
 
-const OnCall = ({ handleHangup, device }) => {
+const OnCall = ({ handleHangup, device, conn}) => {
   const [muted, setMuted] = useState(false);
   const [running, setRunning, loudness] = useLoudness();
   const [showMuteWarning] = useMuteWarning(loudness, running);
 
   const handleMute = () => {
-    device.conn.mute(!muted);
+    conn.mute(!muted);
     setMuted(!muted);
     setRunning(!muted);
   };
