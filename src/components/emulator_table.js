@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-import  TablePagination,{
+import { TablePagination,
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
 
@@ -14,7 +13,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
 import { EMULATOR_DELETE_URL } from "../constants";
 import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator";
-import { display } from "@material-ui/system";
 import { Tooltip } from "@mui/material";
 const EmulatorTable = ({
   showToast,
@@ -55,6 +53,7 @@ const EmulatorTable = ({
       emulatorEditedId
     );
     if (success) {
+
       const updatedData = emulators.map((item) => {
         if (item.id === data.id) {
           return data;
@@ -124,6 +123,7 @@ const EmulatorTable = ({
     const { success, data, error } = await GetEmulatorApi();
 
     if (success) {
+      console.log("emulator_telephone:", data)
       setEmulators(data);
       setLoading(false);
     } else {

@@ -11,6 +11,7 @@ import { styled } from "@mui/material/styles";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { GetEmulatorApi } from "../components/api/emulator";
 import { PHONE_GET_AVAILABLE_NUMBERS_URL } from "../constants";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -50,6 +51,7 @@ BootstrapDialogTitle.propTypes = {
   children: PropTypes.node,
   onClose: PropTypes.func.isRequired,
 };
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -62,103 +64,90 @@ const MenuProps = {
 };
 
 const DropDown = (props) => {
-  const {
-    showToast,
-    open,
-    close,
-    setTwilioUpdatedPhone
-  } = props;
+  const { showToast, open, close, setTwilioUpdatedPhone } = props;
   const theme = useTheme();
-  
-  const [phoneNumber, setPhoneNumber] = React.useState();
+
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [twilioPhoneNumber, setTwilioPhoneNumber] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedUserId, SetSelectedUserId] = useState();
 
- 
-  // Fetch data from API
   const fetchUsers = async () => {
-    const token = localStorage.getItem("token");
+    setLoading(true);
     try {
-      const response = await fetch(PHONE_GET_AVAILABLE_NUMBERS_URL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok || response.status !== 200) {
-        return { success: false, error: "Invalid credentials" };
-      } else {
-        const responseData = await response.text();
+      const { success, data, error } = await GetEmulatorApi();
 
-        const deserializedData = JSON.parse(responseData);
-        console.log("response11:::", deserializedData);
-
-        setTwilioPhoneNumber(deserializedData);
+      if (success) {
+        setTwilioPhoneNumber(data);
         setLoading(false);
-        return { success: true, error: null };
+      } else {
+        setError(error);
+        setLoading(false);
       }
     } catch (error) {
-      console.log("User Data Error: " + error);
+      console.log("Error fetching data: ", error);
       setError(error.message);
       setLoading(false);
     }
   };
 
   const handleChange = (e) => {
-    console.log("helloh");
     const {
       target: { value },
     } = e;
-    
-  
-    SetSelectedUserId(value);
+    console.log("number", value);
     setPhoneNumber(value);
-    setTwilioUpdatedPhone(e.target.value);
+
+    // Store the selected phone number in localStorage
+    localStorage.setItem("selectedPhoneNumber", value);
   };
 
-
-  useEffect(async () => {
+  useEffect(() => {
     console.log("open::12", open);
-    //  setLoading(true);
-    const userData = await fetchUsers();
-    console.log("userData111", userData);
+    fetchUsers();
+
+    // Retrieve the selected phone number from localStorage
+    const storedPhoneNumber = localStorage.getItem("selectedPhoneNumber");
+
+    if (storedPhoneNumber) {
+      setPhoneNumber(storedPhoneNumber);
+    }
+
+    // Set phoneNumber to the first number in the list when twilioPhoneNumber updates
+    if (twilioPhoneNumber.length > 0) {
+      setPhoneNumber(twilioPhoneNumber[0].telephone);
+    }
   }, [open]);
 
   return (
     <div>
-     
-          <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
-            <InputLabel
-              id="demo-multiple-name-label"
-              style={{ borderRadius: "2rem" }}
+      <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
+        <InputLabel
+          id="demo-multiple-name-label"
+          style={{ borderRadius: "2rem" }}
+        >
+          Tel. No.
+        </InputLabel>
+        <Select
+          labelId="demo-multiple-name-label"
+          id="demo-multiple-name"
+          value={phoneNumber}
+          onChange={handleChange}
+          input={<OutlinedInput label="Name" />}
+          MenuProps={MenuProps}
+        >
+          {twilioPhoneNumber?.map((currentData, index) => (
+            <MenuItem
+              key={index}
+              value={currentData?.telephone}
             >
-              Tel. No.
-            </InputLabel>
-            <Select
-              labelId="demo-multiple-name-label"
-              id="demo-multiple-name"
-              value={phoneNumber}
-              onChange={handleChange}
-              input={<OutlinedInput label="Name" />}
-              MenuProps={MenuProps}
-            >
-              {console.log("users23:", twilioPhoneNumber)}
-
-              {twilioPhoneNumber?.map((telephone, index) => (
-                
-                <MenuItem key={index} value={telephone}  onChange={() => handleChange()}>
-               {telephone}
-              
-                </MenuItem>
-              ))}
-            </Select>
-          
-          </FormControl>
- 
+              {currentData?.telephone}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </div>
   );
-}
+};
+
 export default DropDown;

@@ -57,13 +57,8 @@ const Phone = ({
   }
   return (
     <>
-      {/* <FakeState
-        currentState={state}
-        setState={setState}
-        setConn={setConn}
-      ></FakeState> */}
-      {render}
       <p className="status">{state}</p>
+      {render}
     </>
   );
 };

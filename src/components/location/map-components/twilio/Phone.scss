@@ -1,0 +1,74 @@
+
+.twilio_calling{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.call {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.status {
+  text-align: center;
+  background: #f8f8f8;
+  display: block;
+  width: 200px;
+  padding: 0.5em;
+  border-radius: 6px;
+  margin: 1em auto 0;
+}
+
+
+button:hover  {
+    background-color: #128c7e;
+  }
+  .call-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+  }
+  .call_buttons {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    margin-top: 3rem ;
+    color:#808080;
+  }
+
+
+.call_header {
+  text-align: center;
+  color: black;
+  margin-bottom: 1rem;
+}
+
+.calling_text {
+  text-align: center;
+  color: black;
+  margin-bottom: 4rem;
+}
+
+
+.incoming_header{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+.CenterImage {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #000;
+  
+  .CenterImage h3{
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    margin-top:.4rem;
+  }
+}
+}

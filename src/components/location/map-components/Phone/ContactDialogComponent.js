@@ -4,7 +4,7 @@ import ApiService from "../../../../ApiService";
 import CloseIcon from "@mui/icons-material/Close";
 import { CALL_URL, MESSAGE_URL } from "../../../../constants";
 import { a11yProps, TabPanel } from "./a11yProps";
-import { ShowHistory } from "./ShowHistory";
+import ShowHistory from "./ShowHistory.js";
 import { Device } from "twilio-client";
 
 import { VOICE_GET_TOKEN_URL } from "../../../../constants";
@@ -275,7 +275,7 @@ function ContactDialogComponent({
                   {...a11yProps(1)}
                 />
               </Tabs>
-              <TabPanel value={value} index={0} style={{ height: "20rem" }}>
+              <TabPanel value={value} index={0} style={{ height:"100vh"}}>
                 <Phone
                   devices={devices}
                   selectedDevice={selectedDevice}
@@ -288,7 +288,7 @@ function ContactDialogComponent({
               <TabPanel
                 value={value}
                 index={1}
-                style={{ height: "20rem", overflow: "auto" }}
+                style={{ height: "auto"}}
               >
                 <ShowHistory
                   dialogType={selectedDevice.dialogType}
