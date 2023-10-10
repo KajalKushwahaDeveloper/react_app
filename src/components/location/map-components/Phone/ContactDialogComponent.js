@@ -32,6 +32,7 @@ function ContactDialogComponent({
 
   useEffect(() => {
     const handleContactData = async (id) => {
+      console.log("selectedDevice", selectedDevice);
       setLoading(true);
       SetHistoryData([]);
       const token = localStorage.getItem("token");
@@ -154,6 +155,24 @@ function ContactDialogComponent({
           console.log("device Incoming call received : ", connection);
           state = states.INCOMING;
           conn = connection;
+          const deviceDataModel = {
+            emulatorId: emulator.id,
+            token: data,
+            state: state,
+            conn: conn,
+            device: device,
+            number: emulator.telephone,
+          };
+          updateDeviceState(deviceDataModel);
+          setPhoneState(states.INCOMING)
+          setSelectedDevice((prevState) => ({
+            ...prevState,
+            open: true,
+            dialogType: "call",
+            emulatorId: emulator.id,
+            index: index,
+          }));
+
           connection.on("reject", () => {
             console.log("device call rejected");
             state = states.READY;
@@ -171,28 +190,12 @@ function ContactDialogComponent({
             setSelectedDevice((prevState) => ({
               ...prevState,
               open: false,
-              dialogType: "Call",
+              dialogType: "call",
               emulatorId: emulator.id,
               index: index,
             }));
           });
-          const deviceDataModel = {
-            emulatorId: emulator.id,
-            token: data,
-            state: state,
-            conn: conn,
-            device: device,
-            number: emulator.telephone,
-          };
-          updateDeviceState(deviceDataModel);
-          setPhoneState(states.INCOMING)
-          setSelectedDevice((prevState) => ({
-            ...prevState,
-            open: true,
-            dialogType: "Call",
-            emulatorId: emulator.id,
-            index: index,
-          }));
+          
         });
         device.on("cancel", () => {
           console.log("device call cancel");
