@@ -3,6 +3,7 @@ import { TextField, Button } from "@mui/material";
 import ApiService from "../../../../../ApiService";
 import { MESSAGE_SEND_MSG } from "../../../../../constants";
 import UploadFiles from "./components/upload-files.component.js";
+import "../../../../../scss/ContactForm.scss"
 
 export function ContactForm({
   dialogType,
@@ -68,16 +69,18 @@ export function ContactForm({
   };
 
   return (
-    <div>
+    <div className="sms_form">
       <form onSubmit={handleSubmit}>
         {/* Form inputs */}
         <input
+          className="smsInput"
           type="text"
           placeholder="Phone Number"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
         <textarea
+          className="smsTextarea"
           placeholder="Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
@@ -85,7 +88,7 @@ export function ContactForm({
 
         <UploadFiles />
 
-        {/* Submit button */}
+        {/*Submit button */}
         <Button type="submit" variant="contained" color="primary">
           SEND
         </Button>

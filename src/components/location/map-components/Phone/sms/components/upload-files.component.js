@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import UploadService from "../services/upload-files.service.js";
+import "../../../../../../scss/ContactForm.scss";
 
 export default class UploadFiles extends Component {
   constructor(props) {
@@ -95,7 +96,8 @@ export default class UploadFiles extends Component {
         )}
 
         <label className="btn btn-default">
-          <input type="file" onChange={this.selectFile} />
+          <input type="file" onChange={this.selectFile} className="smsInput"/>
+          
         </label>
 
         <button
