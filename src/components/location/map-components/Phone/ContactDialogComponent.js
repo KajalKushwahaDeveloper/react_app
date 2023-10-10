@@ -10,6 +10,7 @@ import { Device } from "twilio-client";
 import { VOICE_GET_TOKEN_URL } from "../../../../constants";
 import states from "./twilio/states";
 import Phone from "./twilio/Phone";
+import { ContactForm } from "./ContactForm";
 
 function ContactDialogComponent({
   emulators,
@@ -272,13 +273,22 @@ function ContactDialogComponent({
               />
             </Tabs>
             <TabPanel value={value} index={0} style={{ height: "90vh" }}>
-              <Phone
-                showToast={showToast}
+            {selectedDevice && selectedDevice.dialogType === "call" ? (
+              <Phone showToast={showToast}
                 devices={devices}
                 selectedDevice={selectedDevice}
                 phoneState = {phoneState}
                 setPhoneState = {setPhoneState}
-              ></Phone>
+                />
+            ) : (
+              <ContactForm
+                showToast 
+                emulatorId = {selectedDevice.emulatorId}
+                selectedPhoneNumber  = {selectedDevice.number}
+                dialogType={selectedDevice.dialogType}
+              />
+            )}
+
             </TabPanel>
             <TabPanel
               value={value}

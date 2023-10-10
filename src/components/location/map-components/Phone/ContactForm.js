@@ -1,26 +1,19 @@
 import React, { useState } from "react";
-import {
-  TextField,
-  Button
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import ApiService from "../../../../ApiService";
-import {
-  MESSAGE_SEND_MSG,
-  CALL_MAKE_CALL
-} from "../../../../constants";
-import OutGoingCallDialogBox from "../outGoingCallDialogBox";
+import { MESSAGE_SEND_MSG } from "../../../../constants";
 
-export function ContactForm({ dialogType, emulatorId, selectedPhoneNumber, showToast }) {
+export function ContactForm({
+  dialogType,
+  emulatorId,
+  selectedPhoneNumber,
+  showToast,
+}) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
-  const [phoneNumberError, setPhoneNumberError] = useState("");
   const [messageError, setMessageError] = useState("");
+  const [numberError, setPhoneNumberError] = useState("");
 
-  const [showCallingDialog, setShowCallingDialog] = useState(false);
-
-  const handleCallButtonClick = () => {
-    setShowCallingDialog(true);
-  };
 
   const validatePhoneNumber = (number) => {
     if (!number) {
@@ -55,7 +48,7 @@ export function ContactForm({ dialogType, emulatorId, selectedPhoneNumber, showT
       };
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
-        dialogType === "messages" ? MESSAGE_SEND_MSG : CALL_MAKE_CALL,
+        MESSAGE_SEND_MSG,
         "POST",
         payload,
         token,
@@ -73,54 +66,27 @@ export function ContactForm({ dialogType, emulatorId, selectedPhoneNumber, showT
     }
   };
 
-  const handleCallingDetails = (emulatorId) => {
-    setShowCallingDialog(false);
-  };
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div
-          style={{
-            marginTop: "1rem",
-            display: "flex",
-            gap: "1rem",
-            float: "right",
-          }}
-        >
-          <Button
-            type="Submit"
-            style={{
-              backgroundColor: "#007dc6",
-              color: "white",
-            }}
-          >
-            Submit
-          </Button>
+        {/* Form inputs */}
+        <input
+          type="text"
+          placeholder="Phone Number"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+        />
+        <textarea
+          placeholder="Message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
 
-          <div className="call-controls">
-            <Button
-              onClick={handleCallButtonClick}
-              type="button"
-              style={{
-                backgroundColor: "green",
-                color: "white",
-              }}
-            >
-              Call
-            </Button>
-          </div>
-        </div>
+        {/* Submit button */}
+        <Button type="submit" variant="contained" color="primary">
+          SEND
+        </Button>
       </form>
-
-      {/* outgoing ui */}
-      {showCallingDialog && (
-        <OutGoingCallDialogBox
-          open={setShowCallingDialog}
-          selectedPhoneNumber={selectedPhoneNumber}
-          emulatorId={emulatorId}
-          handleCallingDetails={handleCallingDetails} />
-      )}
     </div>
   );
 }

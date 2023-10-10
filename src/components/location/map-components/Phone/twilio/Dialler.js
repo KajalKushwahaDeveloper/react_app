@@ -1,15 +1,10 @@
 import React from "react";
 import "./Dialler.css";
 import KeypadButton from "./KeypadButton";
-import PhoneDropDown from "./PhoneDropDown";
 
 const Dialler = ({
-  showToast,
-  devices,
   number,
   setNumber,
-  selectedDeviceToCallWith,
-  setSelectedDeviceToCallWith,
 }) => {
   const handleNumberChange = (event) => {
     setNumber(event.target.value);
@@ -27,13 +22,6 @@ const Dialler = ({
 
   return (
     <>
-      <PhoneDropDown
-        showToast={showToast}
-        devices={devices}
-        selectedDeviceToCallWith={selectedDeviceToCallWith}
-        setSelectedDeviceToCallWith={setSelectedDeviceToCallWith}
-      />
-
       <input
         type="tel"
         value={number}
