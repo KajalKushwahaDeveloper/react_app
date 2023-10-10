@@ -74,7 +74,7 @@ export default class UploadFiles extends Component {
         this.setState({
           fileInfos: files.data,
         });
-        this.props.setFileNames(files)
+        this.props.setFileNames(files.data)
       })
       .catch(() => {
         this.setState({

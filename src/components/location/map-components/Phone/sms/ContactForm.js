@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import ApiService from "../../../../../ApiService";
 import { MESSAGE_SEND_MSG } from "../../../../../constants";
