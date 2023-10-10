@@ -1,0 +1,49 @@
+.sms_form {
+    form {
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 2rem;
+
+        .smsInput {
+            padding: 0 15px;
+            width: -webkit-fill-available;
+            // margin: 2rem 0;
+            height: 40px;
+            border-radius: 5px;
+            font-weight: bold;
+            background: transparent;
+            border: 2px solid #cacaca;
+            // outline: none;
+            color: rgb(47, 99, 117) 0, 97%, 38%, 0.485;
+            transition: all 500ms ease-out;
+        }
+
+        .smsTextarea {
+            width: 93%;
+            margin: 0 1rem;
+            min-height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 16px;
+            resize: vertical;
+
+            &:active {
+                border: #cacaca;
+
+            }
+        }
+    }
+}
+.sms_list_card{
+    overflow-y: auto;
+    max-height: 10rem;
+    height:10rem;
+    color:black;
+    .card_list{
+        color: black;
+    }
+}
