@@ -272,7 +272,7 @@ function ContactDialogComponent({
                 {...a11yProps(1)}
               />
             </Tabs>
-            <TabPanel value={value} index={0} style={{ height: "90vh" }}>
+            <TabPanel value={value} index={0} style={{ height: "63%" }}>
             {selectedDevice && selectedDevice.dialogType === "call" ? (
               <Phone showToast={showToast}
                 devices={devices}
@@ -293,7 +293,7 @@ function ContactDialogComponent({
             <TabPanel
               value={value}
               index={1}
-              style={{ height: "90vh", overflow: "auto" }}
+              style={{ height: "63%" }}
             >
               <ShowHistory
                 dialogType={selectedDevice.dialogType}
