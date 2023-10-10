@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import ApiService from "../../../../ApiService";
 import { MESSAGE_SEND_MSG } from "../../../../constants";
-import contactform from "../../../../scss/"
 
 export function ContactForm({
   dialogType,
