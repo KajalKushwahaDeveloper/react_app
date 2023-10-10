@@ -8,6 +8,13 @@ import states from "./states";
 import FakeState from "./FakeState";
 
 const Phone = ({ devices, selectedDevice, phoneState, setPhoneState }) => {
+
+
+  useEffect(() => {
+    console.log("phoneState" ,phoneState);
+  }, [phoneState]);
+
+
   const [number, setNumber] = useState("");
   const acceptConnection = () => {
     if (
