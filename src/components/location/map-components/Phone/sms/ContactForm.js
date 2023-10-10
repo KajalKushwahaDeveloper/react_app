@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import { TextField, Button } from "@mui/material";
 import ApiService from "../../../../../ApiService";
 import { MESSAGE_SEND_MSG } from "../../../../../constants";
@@ -15,6 +15,7 @@ export function ContactForm({
   const [messageError, setMessageError] = useState("");
   const [numberError, setPhoneNumberError] = useState("");
 
+  const [fileNames, setFileNames] = useState([]);
 
   const validatePhoneNumber = (number) => {
     if (!number) {
@@ -42,10 +43,14 @@ export function ContactForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
+      console.log("fileNames",fileNames);
+      const extractedNames = fileNames.map(file => file.name);
+
       const payload = {
         emulatorId: emulatorId,
         message: message,
         number: phoneNumber,
+        fileNames: extractedNames,
       };
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
@@ -83,7 +88,7 @@ export function ContactForm({
           onChange={(e) => setMessage(e.target.value)}
         />
 
-        <UploadFiles />
+        <UploadFiles setFileNames={setFileNames} />
 
         {/* Submit button */}
         <Button type="submit" variant="contained" color="primary">
