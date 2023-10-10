@@ -51,7 +51,7 @@ export const TRIP_HISTORY = TRIP_URL + "/history";
 //Message
 
 export const MESSAGE_URL = BASE_URL + "/message";
-export const MESSAGE_SEND_MSG = MESSAGE_URL + "/send-message";
+export const MESSAGE_SEND_MSG = MESSAGE_URL + "/send";
 
 //Call
 export const CALL_URL = BASE_URL + "/call";

@@ -25,6 +25,15 @@ class UploadFilesService {
         Authorization: `Bearer ${token}`,
       }}, );
   }
+
+  deleteFile(file) {
+    const token = localStorage.getItem("token");
+    return http.delete(`/message/files/${file}`, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      }}, );
+  }
 }
 
 export default new UploadFilesService();

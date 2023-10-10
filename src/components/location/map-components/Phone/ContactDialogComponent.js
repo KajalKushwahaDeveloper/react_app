@@ -282,10 +282,10 @@ function ContactDialogComponent({
                 />
             ) : (
               <ContactForm
-                showToast 
                 emulatorId = {selectedDevice.emulatorId}
                 selectedPhoneNumber  = {selectedDevice.number}
                 dialogType={selectedDevice.dialogType}
+                showToast = { showToast }
               />
             )}
 

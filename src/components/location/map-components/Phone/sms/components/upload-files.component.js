@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import UploadService from "../services/upload-files.service.js";
+import UploadService from "../services/upload-files.service";
+import DeleteIcon from "@mui/icons-material/Delete";
 import "../../../../../../scss/ContactForm.scss";
 
 export default class UploadFiles extends Component {
   constructor(props) {
     super(props);
+
     this.selectFile = this.selectFile.bind(this);
     this.upload = this.upload.bind(this);
 
@@ -18,11 +20,28 @@ export default class UploadFiles extends Component {
     };
   }
 
+  handleDeleteButtonClick(index) {
+    console.log('index', this.state.fileInfos);
+    console.log('index', index);
+    console.log('name', this.state.fileInfos[index].name);
+    UploadService.deleteFile(this.state.fileInfos[index].name).then((response) => {
+      console.log("deleteFile response", response);
+      UploadService.getFiles().then((response) => {
+        this.setState({
+          fileInfos: response.data,
+        });
+        this.props.setFileNames(response.data)
+      });
+    });
+  }
+
+  
   componentDidMount() {
     UploadService.getFiles().then((response) => {
       this.setState({
         fileInfos: response.data,
       });
+      this.props.setFileNames(response.data)
     });
   }
 
@@ -55,6 +74,7 @@ export default class UploadFiles extends Component {
         this.setState({
           fileInfos: files.data,
         });
+        this.props.setFileNames(files)
       })
       .catch(() => {
         this.setState({
@@ -77,7 +97,7 @@ export default class UploadFiles extends Component {
       message,
       fileInfos,
     } = this.state;
-
+    
     return (
       <div>
         {currentFile && (
@@ -119,6 +139,7 @@ export default class UploadFiles extends Component {
               fileInfos.map((file, index) => (
                 <li className="list-group-item" key={index}>
                   <a className="card_list" href={file.url}>{file.name}</a>
+                  <DeleteIcon onClick={() => this.handleDeleteButtonClick(index)} />
                 </li>
               ))}
           </ul>
