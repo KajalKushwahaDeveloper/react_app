@@ -10,7 +10,7 @@ import { Device } from "twilio-client";
 import { VOICE_GET_TOKEN_URL } from "../../../../constants";
 import states from "./twilio/states";
 import Phone from "./twilio/Phone";
-import { ContactForm } from "./ContactForm";
+import { ContactForm } from "./sms/ContactForm";
 
 function ContactDialogComponent({
   emulators,
