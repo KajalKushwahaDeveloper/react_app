@@ -95,7 +95,7 @@ export default class UploadFiles extends Component {
           </div>
         )}
 
-        <label className="btn btn-default">
+        <label className="btn btn-default" style={{width:"93%"}}>
           <input type="file" onChange={this.selectFile} className="smsInput"/>
           
         </label>
@@ -112,13 +112,13 @@ export default class UploadFiles extends Component {
           {message}
         </div>
 
-        <div className="card">
+        <div className="card sms_list_card" >
           <div className="card-header">List of Files</div>
           <ul className="list-group list-group-flush">
             {fileInfos &&
               fileInfos.map((file, index) => (
                 <li className="list-group-item" key={index}>
-                  <a href={file.url}>{file.name}</a>
+                  <a className="card_list" href={file.url}>{file.name}</a>
                 </li>
               ))}
           </ul>

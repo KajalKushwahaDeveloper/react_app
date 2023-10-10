@@ -38,3 +38,12 @@
         }
     }
 }
+.sms_list_card{
+    overflow-y: auto;
+    max-height: 10rem;
+    height:10rem;
+    color:black;
+    .card_list{
+        color: black;
+    }
+}
