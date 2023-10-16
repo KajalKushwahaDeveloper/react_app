@@ -11,7 +11,7 @@ const showToast = (message, type) => {
 };
 
 const GPS = () => {
-  const mapURL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAOJ2QPH1vPWF7wXqdHMGFR54Vzlb13M1E`;
+  const mapURL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E`;
 
   return (
     <>
