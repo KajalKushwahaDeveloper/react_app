@@ -6,6 +6,7 @@ import "../scss/login.scss";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { USER_URL } from "../constants";
+import ApiService from "../ApiService";
 
 const style = {
   position: "absolute",
@@ -80,16 +81,14 @@ const PopUpUser = ({
       setError("Please enter your firstName");
     } else {
       try {
-        const { success, error } = await addUser();
-
+        console.log("User Add/Edit triggered : " + userToEdit);
+        const { success, error } = await addOrUpdate();
         if (success) {
-          console.log("User added successfully");
           if (userToEdit != null) {
             handleClose(userToEdit?.id, null);
           } else {
             handleClose(0, null);
           }
-
           if (userToEdit) {
             showToast("User Updated", "success"); // Call the showToast method with two arguments
           } else {
@@ -107,7 +106,7 @@ const PopUpUser = ({
     }
   };
 
-  const addUser = async () => {
+  const addOrUpdate = async () => {
     const user = {
       id,
       firstName,
@@ -120,27 +119,25 @@ const PopUpUser = ({
     const token = localStorage.getItem("token");
     console.log("token : ", token);
     try {
-      const requestType = "POST"
+      var requestType = "POST"
       if (userToEdit) {
         requestType = "PUT"
       }
-      const response = await fetch(USER_URL, {
-        method: requestType,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(user),
-      });
-      console.log("addUser response:", response);
-      if (!response.ok || response.status !== 200) {
-        const text = await response.text();
-        console.error("addUser error:", text);
-        return { success: false, error: text };
+      const { success, data, error } = await ApiService.makeApiCall(
+        USER_URL,
+        requestType,
+        user,
+        token
+      );
+      if (success) {
+        console.log("addUser response:", data);
+        return { success: true};
+      }else {
+        return { success: false, error: error };
       }
-      return { success: true };
     } catch (e) {
-      showToast(`Failed to unassign user ${e}`, "error");
+      console.log("addUser Failed to add/update user:", e);
+      showToast(`Failed to add/update User ${e}`, "error");
       return { success: false, error: e };
     }
   };
