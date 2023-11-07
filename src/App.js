@@ -21,7 +21,6 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State variable for login status
 
   const checkToken = async () => {
     const token = localStorage.getItem("token");
@@ -73,7 +72,6 @@ function App() {
       } catch (error) {
         console.error("CLIENT_CURRENT 2 Error: ", error);
         localStorage.removeItem("token");
-        setIsLoggedIn(false); // Set login status to false
         navigate("/login");
       }
     }
@@ -82,7 +80,6 @@ function App() {
   useEffect(() => {
     checkToken();
   }, [location.pathname]);
-
   // TODO: When checkToken is running, we need to show a redirecting page....
 
   return (
@@ -91,12 +88,11 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route element={<AuthenticatedLayout isAdmin={isAdmin} />}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/gps" element={<GPS />} />
-        <Route path="/logout" element={<Logout />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/gps" element={<GPS />} />
+      <Route path="/logout" element={<Logout />} />
       </Route>
     </Routes>
-  
   );
 }
 

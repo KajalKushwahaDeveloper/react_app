@@ -3,6 +3,7 @@ import React from "react";
 import GpsTable from "./gps_page_table";
 import AddressTable from "./address_table";
 import { useState } from "react";
+import "../../../scss/map.scss";
 
 
 const GpsOverlay = ({
@@ -19,7 +20,10 @@ const GpsOverlay = ({
   
 }) => {
   return (
-    <div className="gps_overlay" style={{width:"40%", marginTop: "4rem", marginBottom:"1rem" }}>
+    <div className="gps_overlay" style={{width:"40%", marginTop: "4rem", marginBottom:"1rem", paddingBottom: "58px" }}>
+      <div style={{ marginBottom: "1rem"}}>
+        <AddressTable tripData={tripData} emulator={emulator}/>
+      </div>
       <GpsTable
         showToast={showToast}
         setSelectedEmId={setSelectedEmId}
@@ -30,9 +34,6 @@ const GpsOverlay = ({
         AssignedTelephoneNumber={AssignedTelephoneNumber}
         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
       />
-         <div style={{ marginTop: "1rem", width:"80%"}}>
-      <AddressTable tripData={tripData} emulator={emulator}/>
-      </div>
     </div>
   );
 };
