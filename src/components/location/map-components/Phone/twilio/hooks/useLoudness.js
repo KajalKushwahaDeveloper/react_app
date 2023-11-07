@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Meyda from "meyda";
 
-const useLoudness = () => {
+const useLoudness = (showToast) => {
   const [analyser, setAnalyser] = useState(null);
   const [running, setRunning] = useState(false);
   const [loudness, setLoudness] = useState(0);
@@ -13,6 +13,7 @@ const useLoudness = () => {
         video: false
       });
     } catch (err) {
+      showToast("Require mic permission","error")
       console.error("Error:", err);
     }
   };

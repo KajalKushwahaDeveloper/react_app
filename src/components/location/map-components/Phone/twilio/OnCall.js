@@ -7,9 +7,9 @@ import MicOffIcon from "@mui/icons-material/MicOff";
 import CallEndIcon from "@mui/icons-material/CallEnd";
 import "./OnCall.css";
 
-const OnCall = ({ handleHangup, device, conn}) => {
+const OnCall = ({ handleHangup, device, conn, showToast}) => {
   const [muted, setMuted] = useState(false);
-  const [running, setRunning, loudness] = useLoudness();
+  const [running, setRunning, loudness] = useLoudness(showToast);
   const [showMuteWarning] = useMuteWarning(loudness, running);
 
   const handleMute = () => {

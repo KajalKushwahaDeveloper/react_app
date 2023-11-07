@@ -26,6 +26,15 @@ class UploadFilesService {
       }}, );
   }
 
+  resetFiles() {
+    const token = localStorage.getItem("token");
+    return http.delete("/message/files", {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      }}, );
+  }
+
   deleteFile(file) {
     const token = localStorage.getItem("token");
     return http.delete(`/message/files/${file}`, {

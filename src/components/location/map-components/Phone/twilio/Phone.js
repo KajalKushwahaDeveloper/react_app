@@ -7,7 +7,7 @@ import "./Phone.css";
 import states from "./states";
 import FakeState from "./FakeState";
 
-const Phone = ({ devices, selectedDevice, phoneState, setPhoneState }) => {
+const Phone = ({ devices, selectedDevice, phoneState, setPhoneState , showToast }) => {
 
 
   useEffect(() => {
@@ -76,6 +76,7 @@ const Phone = ({ devices, selectedDevice, phoneState, setPhoneState }) => {
         handleHangup={handleHangup}
         device={devices[selectedDevice.index].device}
         conn={devices[selectedDevice.index].conn}
+        showToast={showToast}
       ></OnCall>
     );
   } else {

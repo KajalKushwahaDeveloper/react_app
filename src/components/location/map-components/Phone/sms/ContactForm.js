@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { TextField, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import ApiService from "../../../../../ApiService";
 import { MESSAGE_SEND_MSG } from "../../../../../constants";
 import UploadFiles from "./components/upload-files.component.js";
-import "../../../../../scss/ContactForm.scss"
+import "../../../../../scss/ContactForm.scss";
 
 export function ContactForm({
-  dialogType,
   emulatorId,
-  selectedPhoneNumber,
   showToast,
 }) {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -44,8 +42,8 @@ export function ContactForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
-      console.log("fileNames",fileNames);
-      const extractedNames = fileNames.map(file => file.name);
+      console.log("fileNames", fileNames);
+      const extractedNames = fileNames.map((file) => file.name);
 
       const payload = {
         emulatorId: emulatorId,
@@ -68,7 +66,7 @@ export function ContactForm({
         setMessageError("");
         showToast("Data submit Successfully", "success");
       } else if (error) {
-        showToast(`error: ${error.message}`, "error");
+        showToast(`error: ${error}`, "error");
       }
     }
   };
@@ -91,7 +89,7 @@ export function ContactForm({
           onChange={(e) => setMessage(e.target.value)}
         />
 
-        <UploadFiles setFileNames={setFileNames} />
+        <UploadFiles setFileNames={setFileNames} showToast={showToast} />
 
         {/*Submit button */}
         <Button type="submit" variant="contained" color="primary">
