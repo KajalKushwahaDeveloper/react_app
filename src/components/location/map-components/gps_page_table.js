@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import  TablePagination,{
+import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
 import { Checkbox, Hidden } from "@mui/material";
@@ -13,6 +13,7 @@ import {
 //scss
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
+import ColumnResize from "react-table-column-resizer";
 
 //icons
 import IconButton from "@mui/material/IconButton";
@@ -67,22 +68,23 @@ const GpsTable = ({
   };
 
   const handleContactDetails = (dialogType, emulator, emulatorIndex) => {
-    console.log("handleContactDetails", dialogType );
-    console.log("handleContactDetails", emulator );
+    console.log("handleContactDetails", dialogType);
+    console.log("handleContactDetails", emulator);
     console.log("handleContactDetails", emulatorIndex);
-  setSelectedDevice((prevState) => ({
-    ...prevState,
-    open: !prevState.open,
-    dialogType: dialogType,
-    emulatorId: emulator && emulator.id !== undefined ? emulator.id : null,
-    index: emulatorIndex,
-  }));
-};
+    setSelectedDevice((prevState) => ({
+      ...prevState,
+      open: !prevState.open,
+      dialogType: dialogType,
+      emulatorId: emulator && emulator.id !== undefined ? emulator.id : null,
+      index: emulatorIndex,
+    }));
+  };
 
   useEffect(() => {
     if (emulators != null) {
       setEmptyRows(
-        rowsPerPage - Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
+        rowsPerPage -
+          Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
       );
       if (selectedEmulator == null && selectedEmId != null) {
         setSelectedEmulator(emulators[0]?.id);
@@ -105,7 +107,15 @@ const GpsTable = ({
         }
       }
     }
-  }, [emulators, page, rowsPerPage, selectedEmId, selectedEmulator, setSelectedEmId, setSelectedEmulator]);
+  }, [
+    emulators,
+    page,
+    rowsPerPage,
+    selectedEmId,
+    selectedEmulator,
+    setSelectedEmId,
+    setSelectedEmulator,
+  ]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -208,8 +218,26 @@ const GpsTable = ({
           <tr>
             <th>Status</th>
             <th>ID / History</th>
+            <ColumnResize
+              id={1}
+              resizeEnd={(width) => console.log("resize end", width)}
+              resizeStart={() => console.log("resize start")}
+              className="columnResizer"
+            />
             <th>Number</th>
+            <ColumnResize
+              id={2}
+              resizeEnd={(width) => console.log("resize end", width)}
+              resizeStart={() => console.log("resize start")}
+              className="columnResizer"
+            />
             <th>Address</th>
+            <ColumnResize
+              id={3}
+              resizeEnd={(width) => console.log("resize end", width)}
+              resizeStart={() => console.log("resize start")}
+              className="columnResizer"
+            />
             <th>Select</th>
             <th>Trip/Action</th>
           </tr>
@@ -217,9 +245,12 @@ const GpsTable = ({
 
         <tbody>
           {(rowsPerPage > 0
-            ? emulators.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            ? emulators.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
             : emulators
-          ).map((row, index)=> (
+          ).map((row, index) => (
             <tr key={row.id || "N/A"}>
               <td
                 style={{
@@ -235,82 +266,80 @@ const GpsTable = ({
                 }}
               >
                 {row.status || "N/A"}
-
                 {/* Restart/Reset Button */}
-
                 <RestartAltIcon onClick={() => handleRestartButtonClick(row)} />
-
-                {/* Restart/Reset Button */}
               </td>
 
-              <td style={{ width: "auto", alignItems: "center" }} align="right">
-                <div style={{ display: "flex", maxWidth: "100px" }}>
-                  <Tooltip
-                    title={row.emulatorSsid || "N/A"}
-                    placement="top"
-                    alignItems="center"
-                    display="flex"
-                  >
-                    <div
-                      style={{
-                        textOverflow: "ellipsis",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                        maxWidth: "100px",
-                        textAlign: "center",
-                        marginTop: ".7rem",
-                      }}
-                      align="right"
-                    >
-                      {row.emulatorSsid || "N/A"}
-                    </div>
-                  </Tooltip>
-
-                  {/* Show History */}
-                  <IconButton>
-                    <HistoryIcon
-                      onClick={() => handleHistoryButtonClick(row)}
-                    />
-                  </IconButton>
-                </div>
-              </td>
-              <td
-                style={{
-                  display: "flex",
-                  width: "auto",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  maxWidth: "150px",
-                }}
-                align="right"
-              >
-                <Tooltip title={row.telephone || "N/A"} placement="top">
+              {/* ID/HISTORY */}
+              <td style={{ maxWidth: "120px" }}>
+                <Tooltip
+                  style={{ display: "flex", alignItems: "center" }}
+                  title={row.emulatorSsid || "N/A"}
+                  placement="top"
+                  alignItems="center"
+                  display="flex"
+                >
                   <div
                     style={{
                       textOverflow: "ellipsis",
                       overflow: "hidden",
                       whiteSpace: "nowrap",
                     }}
-                    align="right"
+                  >
+                    {row.emulatorSsid || "N/A"}
+                  </div>
+                  {/* Show History */}
+                  <IconButton>
+                    <HistoryIcon
+                      onClick={() => handleHistoryButtonClick(row)}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </td>
+              <td className="column_resizer_body" />
+
+              {/* TELEPHONE */}
+              <td style={{ maxWidth: "120px" }}>
+                <Tooltip
+                  style={{ display: "flex", alignItems: "center" }}
+                  title={row.telephone || "N/A"}
+                  placement="top"
+                >
+                  <div
+                    style={{
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      flexGrow: 1,
+                    }}
                   >
                     {row.telephone || "N/A"}
                   </div>
+
+                  {/* Icons */}
+                  <div style={{ display: "flex", maxWidth: "100px" }}>
+                    {/* calling icon */}
+                    <IconButton
+                      onClick={() => handleContactDetails("call", row, index)}
+                    >
+                      <CallRoundedIcon />
+                    </IconButton>
+
+                    {/* message icon */}
+                    <IconButton
+                      onClick={() =>
+                        handleContactDetails("messages", row, index)
+                      }
+                    >
+                      <MessageRoundedIcon />
+                    </IconButton>
+                  </div>
                 </Tooltip>
-
-                {/* calling icon */}
-                <IconButton
-                  onClick={() => handleContactDetails("call", row, index)}
-                >
-                  <CallRoundedIcon />
-                </IconButton>
-
-                {/* message icon */}
-                <IconButton
-                  onClick={() => handleContactDetails("messages", row, index)}
-                >
-                  <MessageRoundedIcon />
-                </IconButton>
               </td>
+              <td className="column_resizer_body" />
+
+              {/* ADDRESS */}
+
               <td style={{ maxWidth: "100px" }}>
                 <Tooltip title={row.address || "N/A"} placement="top">
                   <div
@@ -319,12 +348,13 @@ const GpsTable = ({
                       overflow: "hidden",
                       whiteSpace: "nowrap",
                     }}
-                    align="right"
                   >
                     {row.address || "N/A"}
                   </div>
                 </Tooltip>
               </td>
+              <td className="column_resizer_body" />
+
               <td style={{ width: "auto" }} align="right">
                 <Checkbox
                   checked={selectedEmulator === row.id}
@@ -402,9 +432,9 @@ const GpsTable = ({
         emulatorHistory={selectedEmulatorForHistoryData}
       />
       <ContactDialogComponent
-        emulators= {emulators}
-        selectedDevice= {selectedDevice}
-        setSelectedDevice = {setSelectedDevice}
+        emulators={emulators}
+        selectedDevice={selectedDevice}
+        setSelectedDevice={setSelectedDevice}
         handleContactDialog={handleContactDetails}
         showToast={showToast}
       />
