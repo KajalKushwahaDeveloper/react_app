@@ -117,8 +117,7 @@ const Home = () => {
 
   return (
     <>
-      <ToastContainer style={{ zIndex: 3 }} />
-
+      <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
       <section className="dashboard">
         <div className="container-fluid">
           <div className="row">
