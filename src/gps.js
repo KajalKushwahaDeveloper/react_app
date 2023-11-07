@@ -1,8 +1,6 @@
-import React, { useState } from "react";
 import "./scss/map.scss";
 import { ToastContainer, toast } from "react-toastify";
 import WrappedMap from "./components/location/Map";
-import LinearProgress from "@mui/material/LinearProgress";
 
 
 const showToast = (message, type) => {
@@ -15,7 +13,7 @@ const GPS = () => {
 
   return (
     <>
-      <ToastContainer style={{ zIndex: 3 }} />
+      <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
       <div className="gps_page" style={{paddingTop:"58px"}}>
         <div className="gps_map">
             <WrappedMap

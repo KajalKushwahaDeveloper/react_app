@@ -277,17 +277,16 @@ function ContactDialogComponent({
             </Tabs>
             <TabPanel value={value} index={0} style={{ height: "63%" }}>
             {selectedDevice && selectedDevice.dialogType === "call" ? (
-              <Phone showToast={showToast}
+              <Phone
                 devices={devices}
                 selectedDevice={selectedDevice}
                 phoneState = {phoneState}
                 setPhoneState = {setPhoneState}
+                showToast={showToast}
                 />
             ) : (
               <ContactForm
                 emulatorId = {selectedDevice.emulatorId}
-                selectedPhoneNumber  = {selectedDevice.number}
-                dialogType={selectedDevice.dialogType}
                 showToast = { showToast }
               />
             )}

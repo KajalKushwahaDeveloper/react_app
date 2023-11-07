@@ -37,15 +37,39 @@ export default class UploadFiles extends Component {
 
   
   componentDidMount() {
-    UploadService.getFiles().then((response) => {
-      this.setState({
-        fileInfos: response.data,
-      });
-      this.props.setFileNames(response.data)
+    UploadService.resetFiles().then((response) => {
+        UploadService.getFiles().then((response) => {
+          this.setState({
+            fileInfos: response.data,
+          });
+          this.props.setFileNames(response.data)
+        });
     });
   }
 
   selectFile(event) {
+    const allowedImageTypes = ["image/jpeg", "image/jpg", "image/png"];
+    const allowedDocumentTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+    const allowedVideoTypes = ["video/mp4"];
+    const allowedAudioTypes = ["audio/ogg"];
+
+    const selectedFiles = event.target.files;
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const fileType = selectedFiles[i].type;
+  
+      if (
+        !allowedImageTypes.includes(fileType) &&
+        !allowedDocumentTypes.includes(fileType) &&
+        !allowedVideoTypes.includes(fileType) &&
+        !allowedAudioTypes.includes(fileType)
+      ) {
+        console.error("Invalid file type. Please select files of type JPG, JPEG, PNG, PDF, DOC, DOCX, PPTX, XLSX, MP4 (with H.264 video codec and AAC audio), or OGG.");
+        this.props.showToast("Invalid file type.", "error")
+        return; // Prevent further processing or setting state
+      }
+    }
+
     this.setState({
       selectedFiles: event.target.files,
     });
