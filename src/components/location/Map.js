@@ -422,9 +422,13 @@ const Map = ({ showToast }) => {
       setDragOutRange();
       setNearestTripPoint();
       setDragWithoutTrip({ lat, lng });
-      handleDialog("Do you want to change the location of this emulator?");
+      // handleDialog("Do you want to change the location of this emulator?");
     }
   };
+
+  useEffect(() => {
+    confirmNewLocation();
+  }, [nearestTripPoint, draggOutRange, draggWithoutTrip]);
 
   const confirmNewLocation = async () => {
     if (!dragId) return;
@@ -462,9 +466,9 @@ const Map = ({ showToast }) => {
     console.log("LOG 1 - updated Emulator: ", data);
     if (success) {
       validateEmulatorsData(null, data);
-      setOpenDialog(false);
+      // setOpenDialog(false);
     } else if (error) {
-      setOpenDialog(false);
+      // setOpenDialog(false);
     }
     setDragId();
   };
