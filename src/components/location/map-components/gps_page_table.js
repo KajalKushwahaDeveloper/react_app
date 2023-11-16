@@ -250,8 +250,12 @@ const GpsTable = ({
                 page * rowsPerPage + rowsPerPage
               )
             : emulators
-          ).map((row, index) => (
-            <tr key={row.id || "N/A"}>
+          )?.map((row, index) => (
+            <tr key={row.id || "N/A"} 
+            style={{
+              background: selectedEmulator === row.id ? "lightblue" : "white",
+            }}
+            >
               <td
                 style={{
                   background:
