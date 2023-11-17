@@ -209,7 +209,7 @@ const GpsTable = ({
   }
 
   return (
-    <div className="table-responsive tableBox" gps_table_container>
+    <div className="table-sm table-responsive tableBox" gps_table_container>
       <table
         aria-label="custom pagination table"
         className="table-responsive table shadow mb-0 n="

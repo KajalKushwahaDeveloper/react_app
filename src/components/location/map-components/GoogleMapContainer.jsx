@@ -11,8 +11,8 @@ import {
 import "../../../scss/map.scss";
 
 const {
-  MarkerWithLabel
-} = require('react-google-maps/lib/components/addons/MarkerWithLabel');
+  MarkerWithLabel,
+} = require("react-google-maps/lib/components/addons/MarkerWithLabel");
 
 const GoogleMapContainer = ({
   mapRef,
@@ -69,13 +69,19 @@ const GoogleMapContainer = ({
             (item, index) => index >= selectedEmulator.currentTripPointIndex
           )
         );
-        return
+        return;
       }
     }
     setPathTraveled();
     setPathNotTraveled();
-    console.log("selectedEmId changed at Map.js so pathTraveled also nulled", pathTraveled);
-    console.log("selectedEmId changed at Map.js so pathNotTraveled also nulled", pathNotTraveled);
+    console.log(
+      "selectedEmId changed at Map.js so pathTraveled also nulled",
+      pathTraveled
+    );
+    console.log(
+      "selectedEmId changed at Map.js so pathNotTraveled also nulled",
+      pathNotTraveled
+    );
   }, [selectedEmulator, pathsRoute]);
 
   return (
@@ -211,18 +217,32 @@ const GoogleMapContainer = ({
                     title={
                       emulator?.id === selectedEmulator?.id
                         ? "selectedMarker"
-                        : `S${emulator?.id}`
+                        : `ADDRESS: ${
+                            emulator?.address === null
+                              ? "N/A"
+                              : ` ${emulator?.address}`
+                          } 
+                        STATUS: ${emulator.status} 
+                        TELEPHONE: ${emulator.telephone} 
+                        TRIP STATUS: ${emulator.tripStatus}`
                     }
-                    labelStyle={{ textAlign: "center", width:'auto', color: "#000000", fontSize: "12px", padding: "1px"}}
-                    labelAnchor={{ x: 'auto' , y: 'auto' }}
+                    labelStyle={{
+                      textAlign: "center",
+                      width: "auto",
+                      color: "#000000",
+                      fontSize: "12px",
+                      padding: "1px",
+                    }}
+                    labelAnchor={{ x: "auto", y: "auto" }}
                     onClick={() => handleEmulatorMarkerClick(emulator)}
                     draggable={
                       emulator?.id === selectedEmulator?.id ? true : false
                     }
                     onDragEnd={(event) =>
                       handleEmulatorMarkerDragEnd(emulator, event)
-                    }>
-                      <span>{`Em.${emulator.id}`}</span>
+                    }
+                  >
+                    <span>{`Em.${emulator.id}`}</span>
                   </MarkerWithLabel>
                 </React.Fragment>
               );
