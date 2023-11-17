@@ -21,8 +21,8 @@ const GpsOverlay = ({
   
 }) => {
   return (
-    <div className="gps_overlay" style={{width:"40%", marginTop: "4rem", marginBottom:"1rem", paddingBottom: "58px" }}>
-      <div style={{ marginBottom: "1rem"}}>
+    <div className="gps_overlay" style={{width:"40%",  marginBottom:"4rem" }}>
+      <div>
         <AddressTable tripData={tripData} emulator={emulator}/>
       </div>
       <GpsTable

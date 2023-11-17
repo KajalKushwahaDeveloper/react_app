@@ -290,7 +290,7 @@ const GpsTable = ({
                           : "#ff4d4d",
                       display: "flex",
                       alignItems: "center",
-                      padding: "1rem .1rem",
+                      padding: "0.7rem .1rem",
                     }}>
                     {row.status || "N/A"}
                     {/* Restart/Reset Button */}
