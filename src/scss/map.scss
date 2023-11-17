@@ -163,7 +163,7 @@ th {
 }
 .table-responsive {
   overflow-x: hidden;
-  max-height: 30rem;
+  max-height: 50vh;
   max-width: 640px ; 
 }
 
@@ -190,7 +190,7 @@ th {
   .table-responsive {
     overflow-x: scroll;
     max-width: 640px ; 
-    max-height: 30rem;
+    max-height: 50vh;
   }
 }
 .mapContainer {
@@ -234,7 +234,7 @@ th {
   .table-responsive {
     overflow-x: scroll;
     max-width: 420px ; 
-    max-height: 30rem;
+    max-height: 50vh;
   }
   .gps_page {
     padding-top: 107px;
@@ -264,7 +264,7 @@ th {
   .table-responsive {
     overflow-x: scroll;
     max-width: 380px ; 
-    max-height: 30rem;
+    max-height: 50vh;
   }
   .gps_overlay {
     width: 40%;
