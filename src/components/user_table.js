@@ -24,7 +24,7 @@ const UserTable = ({
   // State variables
   const [userData, setUserData] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5); // Number of items to display per page
   const [loading, setLoading] = useState(true);
@@ -244,6 +244,7 @@ const UserTable = ({
 
   return (
     <Root sx={{ width: "auto", maxWidth: "100%" }}>
+      <div className="table-responsive">
       <table aria-label="custom pagination table" className="w-100 shadow">
         <tbody>
           {(rowsPerPage > 0
@@ -343,7 +344,7 @@ const UserTable = ({
         <tfoot>
           <tr>
             <CustomTablePagination
-              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[10,20, 30, { label: "All", value: -1 }]}
               colSpan={3}
               count={userData.length}
               rowsPerPage={rowsPerPage}
@@ -358,6 +359,7 @@ const UserTable = ({
           </tr>
         </tfoot>
       </table>
+      </div>
     </Root>
   );
 };

@@ -117,6 +117,7 @@ th {
   align-items: flex-start;
 }
 
+
 @media screen and (max-width: 768px) {
   table {
     font-size: 0.75rem;
@@ -160,7 +161,7 @@ th {
 }
 .table-responsive {
   overflow-x: hidden;
- 
+  max-height: 48rem;
 }
 
 .gps_overlay {
@@ -186,6 +187,7 @@ th {
   .table-responsive {
     overflow-x: scroll;
     max-width: 560px ; 
+    max-height: 48rem;
   }
 }
 .mapContainer {
@@ -229,6 +231,7 @@ th {
   .table-responsive {
     overflow-x: scroll;
     max-width: 420px ; 
+    max-height: 48rem;
   }
   .gps_page {
     padding-top: 107px;
@@ -258,6 +261,7 @@ th {
   .table-responsive {
     overflow-x: scroll;
     max-width: 380px ; 
+    max-height: 48rem;
   }
   .gps_overlay {
     width: 40%;
