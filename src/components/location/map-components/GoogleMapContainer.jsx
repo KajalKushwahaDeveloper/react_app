@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
+import { GoogleMap, Polyline, Marker, InfoWindow, Circle } from "react-google-maps";
 import {
   Dialog,
   DialogActions,
@@ -21,6 +21,9 @@ const GoogleMapContainer = ({
   stops,
   selectedStop,
   handleMarkerClick,
+  hoveredMarker,
+  handleMarkerMouseOver,
+  handleMarkerMouseOut,
   handleInfoWindowClose,
   selectedEmulator,
   emulators,
@@ -188,6 +191,11 @@ const GoogleMapContainer = ({
                 console.log("rotationAngle Error : ", e);
               }
 
+              const isHovered = hoveredMarker === emulator;
+              console.log("hoveredMarker: ",  hoveredMarker)
+              console.log("emulator: ",  emulator)
+              console.log("isHovered: ",  hoveredMarker === emulator)
+
               const emulatorIcon = {
                 url: emulator
                   ? `images/${emulator.tripStatus}_truck_icon_${
@@ -198,6 +206,9 @@ const GoogleMapContainer = ({
                 anchor: new window.google.maps.Point(20, 20),
                 scale: 0.7,
               };
+              if(isHovered) {
+                  // show different icons to illustrate hovering effect
+              }
 
               return (
                 <React.Fragment key={index}>
@@ -216,6 +227,8 @@ const GoogleMapContainer = ({
                     labelStyle={{ textAlign: "center", width:'auto', color: "#000000", fontSize: "12px", padding: "1px"}}
                     labelAnchor={{ x: 'auto' , y: 'auto' }}
                     onClick={() => handleEmulatorMarkerClick(emulator)}
+                    onMouseOver={() => handleMarkerMouseOver(emulator)}
+                    onMouseOut={handleMarkerMouseOut}
                     draggable={
                       emulator?.id === selectedEmulator?.id ? true : false
                     }

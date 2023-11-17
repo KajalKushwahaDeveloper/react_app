@@ -73,6 +73,8 @@ const Map = ({ showToast }) => {
   );
   const [selectedStop, setSelectedStop] = useState(null);
 
+  const [hoveredMarker, setHoveredMarker] = useState(null);
+
   const emulatorIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -271,6 +273,16 @@ const Map = ({ showToast }) => {
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
+  };
+  
+  const handleMarkerMouseOver = (emulator) => {
+    console.log("Hovering : STARTED ", emulator.id);
+    setHoveredMarker(emulator);
+  };
+
+  const handleMarkerMouseOut = () => {
+    console.log("Hovering : ENDED");
+    setHoveredMarker(null);
   };
 
   const handleInfoWindowClose = () => {
@@ -508,6 +520,9 @@ const Map = ({ showToast }) => {
         stops={stops}
         selectedStop={selectedStop}
         handleMarkerClick={handleMarkerClick}
+        hoveredMarker={hoveredMarker}
+        handleMarkerMouseOver ={handleMarkerMouseOver}
+        handleMarkerMouseOut={handleMarkerMouseOut}
         handleInfoWindowClose={handleInfoWindowClose}
         selectedEmulator={emulator}
         emulators={emulators}
