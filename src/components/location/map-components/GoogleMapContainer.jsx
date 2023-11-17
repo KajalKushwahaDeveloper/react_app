@@ -44,6 +44,16 @@ const GoogleMapContainer = ({
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
 
+
+  const circleIcon = {
+    path: window.google.maps.SymbolPath.CIRCLE,
+    fillColor: "transparent", // Set the color you want for the circle
+    fillOpacity: 0.5, // Adjust the opacity as needed
+    scale: 10, // Adjust the scale to make it larger or smaller
+    strokeColor: "black", // Set the border color
+    strokeWeight: 2, // Adjust the border thickness
+  };
+
   useEffect(() => {
     if (selectedEmulator != null && stops != null) {
       let selectedEmulatorNearestStopPoint = stops.find(
@@ -197,8 +207,6 @@ const GoogleMapContainer = ({
                 console.log("rotationAngle Error : ", e);
               }
 
-              const isHovered = hoveredMarker === emulator;
-
               const emulatorIcon = {
                 url: emulator
                   ? `images/${emulator.tripStatus}_truck_icon_${
@@ -206,15 +214,28 @@ const GoogleMapContainer = ({
                     }.png`
                   : "images/blue_truck.png",
                 scaledSize: new window.google.maps.Size(20, 20),
-                anchor: new window.google.maps.Point(20, 20),
+                anchor: new window.google.maps.Point(10, 10),
                 scale: 0.7,
               };
+
+              const isHovered = hoveredMarker === emulator;
+
               if(isHovered) {
-                  // show different icons to illustrate hovering effect
+                // create a slightly larger circle icon and show behind the emulatorIcon.
               }
 
               return (
                 <React.Fragment key={index}>
+                  {isHovered && (
+                    <Marker
+                      position={{
+                        lat: emulator.latitude,
+                        lng: emulator.longitude,
+                      }}
+                      icon={circleIcon}
+                      clickable={false}
+                    />
+                  )}
                   <MarkerWithLabel
                     icon={emulatorIcon}
                     position={{
