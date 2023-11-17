@@ -213,6 +213,7 @@ const GpsTable = ({
 
   return (
     <div className="table-responsive tableBox" gps_table_container>
+      {/* Collapse table */}
       {showHideTable === true ? (
         <ArrowCircleRightIcon
           style={{ cursor: "pointer" }}
