@@ -13,6 +13,7 @@ import {
 //scss
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
+import "../../../scss/global.scss";
 import ColumnResize from "react-table-column-resizer";
 
 //icons
@@ -251,10 +252,11 @@ const GpsTable = ({
               )
             : emulators
           )?.map((row, index) => (
-            <tr key={row.id || "N/A"} 
-            style={{
-              background: selectedEmulator === row.id ? "lightblue" : "white",
-            }}
+            <tr
+              key={row.id || "N/A"}
+              style={{
+                background: selectedEmulator === row.id ? "lightblue" : "white",
+              }}
             >
               <td
                 style={{
@@ -271,7 +273,10 @@ const GpsTable = ({
               >
                 {row.status || "N/A"}
                 {/* Restart/Reset Button */}
-                <RestartAltIcon onClick={() => handleRestartButtonClick(row)} />
+                <RestartAltIcon
+                  fontSize="small"
+                  onClick={() => handleRestartButtonClick(row)}
+                />
               </td>
 
               {/* ID/HISTORY */}
@@ -293,8 +298,9 @@ const GpsTable = ({
                     {row.emulatorSsid || "N/A"}
                   </div>
                   {/* Show History */}
-                  <IconButton>
+                  <IconButton size="small">
                     <HistoryIcon
+                      fontSize="small"
                       onClick={() => handleHistoryButtonClick(row)}
                     />
                   </IconButton>
@@ -324,18 +330,20 @@ const GpsTable = ({
                   <div style={{ display: "flex", maxWidth: "100px" }}>
                     {/* calling icon */}
                     <IconButton
+                      size="small"
                       onClick={() => handleContactDetails("call", row, index)}
                     >
-                      <CallRoundedIcon />
+                      <CallRoundedIcon fontSize="small" />
                     </IconButton>
 
                     {/* message icon */}
                     <IconButton
+                      size="small"
                       onClick={() =>
                         handleContactDetails("messages", row, index)
                       }
                     >
-                      <MessageRoundedIcon />
+                      <MessageRoundedIcon fontSize="small" />
                     </IconButton>
                   </div>
                 </Tooltip>
@@ -361,6 +369,7 @@ const GpsTable = ({
 
               <td style={{ width: "auto" }} align="right">
                 <Checkbox
+                  size="small"
                   checked={selectedEmulator === row.id}
                   onChange={() =>
                     handleEmulatorCheckboxChange(row.id, row.telephone)
@@ -380,29 +389,33 @@ const GpsTable = ({
                     {row.tripStatus}
                   </p>
                   {/* Trip Status Action */}
-                  <IconButton>
+                  <IconButton size="small">
                     {row.tripStatus === "RUNNING" && (
                       <PauseCircleOutlineIcon
+                        fontSize="small"
                         onClick={() => handleActionButtonClick(row)}
                       />
                     )}
                     {row.tripStatus === "PAUSED" && (
                       <PlayCircleOutlineIcon
+                        fontSize="small"
                         onClick={() => handleActionButtonClick(row)}
                       />
                     )}
                     {row.tripStatus === "STOP" && (
                       <PlayCircleOutlineIcon
+                        fontSize="small"
                         onClick={() => handleActionButtonClick(row)}
                       />
                     )}
                     {row.tripStatus === "RESTING" && (
                       <PlayCircleOutlineIcon
+                        fontSize="small"
                         onClick={() => handleActionButtonClick(row)}
                       />
                     )}
                     {row.tripStatus === "FINISHED" && (
-                      <CheckCircleOutlineIcon />
+                      <CheckCircleOutlineIcon fontSize="small" />
                     )}
                   </IconButton>
                 </div>
