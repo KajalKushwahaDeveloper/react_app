@@ -208,7 +208,7 @@ const GoogleMapContainer = ({
                       isActiveUser ? "green" : "red"
                     }.png`
                   : "images/blue_truck.png",
-                scaledSize: new window.google.maps.Size(30, 30),
+                scaledSize: new window.google.maps.Size(20, 20),
                 anchor: new window.google.maps.Point(20, 20),
                 scale: 0.7,
               };
