@@ -262,6 +262,7 @@ const EmulatorTable = ({
                         whiteSpace: "nowrap",
                         maxWidth: "150px",
                         textAlign: "center",
+                        fontWeight: "bold"
                       }}
                       align="right"
                     >
@@ -271,6 +272,7 @@ const EmulatorTable = ({
                 </div>
 
                 <IconButton
+                size="small"
                   style={{
                     height: "auto",
                     width: "35px",
@@ -278,7 +280,7 @@ const EmulatorTable = ({
                   }}
                   aria-label="edit"
                 >
-                  <EditIcon onClick={() => handleGeneratedIdButtonClick(row)} />
+                  <EditIcon fontSize="small" onClick={() => handleGeneratedIdButtonClick(row)} />
                 </IconButton>
               </td>
               <td  align="right">
@@ -291,16 +293,17 @@ const EmulatorTable = ({
                 style={{ display:"flex",width: "auto", padding:".5rem 0"}}
                 align="right"
               >
-                <IconButton aria-label="delete">
-                  <EditIcon onClick={() => handleEmulatorTelephonePopup(row)} />
+                <IconButton size="small" aria-label="delete">
+                  <EditIcon fontSize="small" onClick={() => handleEmulatorTelephonePopup(row)} />
                 </IconButton>
                 <IconButton
+                size="small"
                   style={{
                     margin: "2px",
                   }}
                   aria-label="delete"
                 >
-                  <DeleteIcon onClick={() => handleDeleteButtonClick(row)} />
+                  <DeleteIcon fontSize="small" onClick={() => handleDeleteButtonClick(row)} />
                 </IconButton>
                 <button
                   style={{

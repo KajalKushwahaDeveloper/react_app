@@ -283,6 +283,7 @@ const UserTable = ({
                     <div className="d-flex align-items-center justify-content-center flex-column">
                       <div className="d-flex align-items-center justify-content-center flex-sm-row mb-2">
                       <IconButton
+                      size="small"
                         className="roundIncon"
                         style={{
                           height: "40px",
@@ -294,9 +295,10 @@ const UserTable = ({
                         }}
                         aria-label="edit"
                       >
-                        <EditIcon onClick={() => handleEditButtonClick(row)} />
+                        <EditIcon fontSize="small" onClick={() => handleEditButtonClick(row)} />
                       </IconButton>
                       <IconButton
+                      size="small"
                         style={{
                           height: "40px",
                           width: "40px",
@@ -308,12 +310,13 @@ const UserTable = ({
                         aria-label="delete"
                       >
                         <DeleteIcon
+                        fontSize="small"
                           onClick={() => handleDeleteButtonClick(row)}
                         />
                       </IconButton>
                       </div>
                       <button
-                        className="btn"
+                        className="btn btn-sm"
                         style={{
                           backgroundColor:
                             row.status === "ENABLED" ? "green" : "red",
