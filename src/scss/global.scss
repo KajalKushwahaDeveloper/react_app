@@ -1,18 +1,82 @@
 @import "./variables.scss";
 @import "./mixins.scss";
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Slab&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Slab&display=swap");
 
+@font-face {
+  font-family: "Gotham-Bold";
+  src: url("../../public/fonts/Gotham-Black.eot");
+  src: url("../../public/fonts/Gotham-Bold.eot?#iefix")
+      format("embedded-opentype"),
+    url("../../public/fonts/Gotham-Bold.woff2") format("woff2"),
+    url("../../public/fonts/Gotham-Bold.woff") format("woff"),
+    url("../../public/fonts/Gotham-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
 
-*{
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
-    }
-th{
-  color:white;
+@font-face {
+  font-family: "Gotham-Black";
+  src: url("../../public/fonts/Gotham-Black.eot");
+  src: url("../../public/fonts/Gotham-Black.eot?#iefix")
+      format("embedded-opentype"),
+    url("../../public/fonts/Gotham-Black.woff2") format("woff2"),
+    url("../../public/fonts/Gotham-Black.woff") format("woff"),
+    url("../../public/fonts/Gotham-Black.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham-Book";
+  src: url("../../public/fonts/Gotham-Book.eot");
+  src: url("../../public/fonts/Gotham-Book.eot?#iefix")
+      format("embedded-opentype"),
+    url("../../public/fonts/Gotham-Book.woff2") format("woff2"),
+    url("../../public/fonts/Gotham-Book.woff") format("woff"),
+    url("../../public/fonts/Gotham-Book.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham-BoldItalic";
+  src: url("../../public/fonts/Gotham-BoldItalic.eot");
+  src: url("../../public/fonts/Gotham-BoldItalic.eot?#iefix")
+      format("embedded-opentype"),
+    url("../../public/fonts/Gotham-BoldItalic.woff2") format("woff2"),
+    url("../../public/fonts/Gotham-BoldItalic.woff") format("woff"),
+    url("../../public/fonts/Gotham-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham-Light";
+  src: url("../../public/fonts/Gotham-Light.eot");
+  src: url("../../public/fonts/Gotham-Light.eot?#iefix")
+      format("embedded-opentype"),
+    url("../../public/fonts/Gotham-Light.woff2") format("woff2"),
+    url("../../public/fonts/Gotham-Light.woff") format("woff"),
+    url("../../public/fonts/Gotham-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  font-family: "Gotham-Book";
+  font-weight: 500;
+}
+
+th {
+  color: white;
   font-weight: bolder;
   text-align: center;
 }
-
 
 /* width */
 ::-webkit-scrollbar {
@@ -26,7 +90,7 @@ th{
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background:$background-color;
+  background: $background-color;
 }
 
 /* Handle on hover */
@@ -60,21 +124,19 @@ th{
 
   &:hover {
     color: $light;
-}
+  }
 }
 .btn-green {
   background-color: #59ac42;
   border-radius: 12px !important;
-  color:white;
+  color: white;
   &:hover {
     color: $light;
-}
+  }
 }
 
 .dashboard {
-
-  padding: 8rem 1rem 1rem 1rem ;
-
+  padding: 8rem 1rem 1rem 1rem;
 }
 
 input {
@@ -82,12 +144,11 @@ input {
     box-shadow: none !important;
   }
 }
-th{
+th {
   font-size: 12px;
   font-weight: 900;
 }
-td{
- font-size: 10px;
+td {
+  font-size: 11px;
+  font-weight: bold !important;
 }
-
-
