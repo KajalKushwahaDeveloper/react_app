@@ -228,14 +228,8 @@ const GoogleMapContainer = ({
                     title={
                       emulator?.id === selectedEmulator?.id
                         ? "selectedMarker"
-                        : `ADDRESS: ${
-                            emulator?.address === null
-                              ? "N/A"
-                              : ` ${emulator?.address}`
-                          } 
-                        STATUS: ${emulator.status} 
-                        TELEPHONE: ${emulator.telephone} 
-                        TRIP STATUS: ${emulator.tripStatus}`
+                        : `${emulator.telephone} ${emulator.tripStatus}(${emulator.status})`
+                         
                     }
                     labelStyle={{
                       textAlign: "center",
