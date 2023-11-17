@@ -44,7 +44,7 @@ const GpsTable = ({
 }) => {
   // State variables
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [emptyRows, setEmptyRows] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3); // Number of items to display per page
@@ -414,7 +414,7 @@ const GpsTable = ({
         <tfoot className="table_footer">
           <tr>
             <CustomTablePagination
-              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[10, 20, 30, { label: "All", value: -1 }]}
               colSpan={6}
               count={emulators.length}
               rowsPerPage={rowsPerPage}

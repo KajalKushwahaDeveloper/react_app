@@ -28,7 +28,7 @@ const EmulatorTable = ({
   // State variables
   const [emulators, setEmulators] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
@@ -321,7 +321,7 @@ const EmulatorTable = ({
           <tr style={{ textAlign: "center" }}>
             <td colSpan={5} style={{ textAlign: "right", paddingTop:".5rem"}}>
               <CustomTablePagination
-                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[10, 20, 30, { label: "All", value: -1 }]}
                 colSpan={5}
                 count={emulators.length}
                 rowsPerPage={rowsPerPage}

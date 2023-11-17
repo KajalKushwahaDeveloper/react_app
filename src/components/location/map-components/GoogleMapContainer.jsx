@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, Polyline, Marker, InfoWindow, Circle } from "react-google-maps";
+import { GoogleMap, Polyline, Marker, InfoWindow } from "react-google-maps";
 import {
   Dialog,
   DialogActions,
@@ -11,8 +11,8 @@ import {
 import "../../../scss/map.scss";
 
 const {
-  MarkerWithLabel
-} = require('react-google-maps/lib/components/addons/MarkerWithLabel');
+  MarkerWithLabel,
+} = require("react-google-maps/lib/components/addons/MarkerWithLabel");
 
 const GoogleMapContainer = ({
   mapRef,
@@ -21,9 +21,6 @@ const GoogleMapContainer = ({
   stops,
   selectedStop,
   handleMarkerClick,
-  hoveredMarker,
-  handleMarkerMouseOver,
-  handleMarkerMouseOut,
   handleInfoWindowClose,
   selectedEmulator,
   emulators,
@@ -43,6 +40,17 @@ const GoogleMapContainer = ({
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
+
+  const [hoveredEmulator, setHoveredEmulator] = useState(null);
+
+  const handleEmulatorMarkerMouseOver = (emulator) => {
+    console.log("Mouse over marker:", emulator.id);
+    setHoveredEmulator(emulator.id);
+  };
+
+  const handleEmulatorMarkerMouseOut = () => {
+    setHoveredEmulator(null);
+  };
 
   useEffect(() => {
     if (selectedEmulator != null && stops != null) {
@@ -72,13 +80,19 @@ const GoogleMapContainer = ({
             (item, index) => index >= selectedEmulator.currentTripPointIndex
           )
         );
-        return
+        return;
       }
     }
     setPathTraveled();
     setPathNotTraveled();
-    console.log("selectedEmId changed at Map.js so pathTraveled also nulled", pathTraveled);
-    console.log("selectedEmId changed at Map.js so pathNotTraveled also nulled", pathNotTraveled);
+    console.log(
+      "selectedEmId changed at Map.js so pathTraveled also nulled",
+      pathTraveled
+    );
+    console.log(
+      "selectedEmId changed at Map.js so pathNotTraveled also nulled",
+      pathNotTraveled
+    );
   }, [selectedEmulator, pathsRoute]);
 
   return (
@@ -191,10 +205,7 @@ const GoogleMapContainer = ({
                 console.log("rotationAngle Error : ", e);
               }
 
-              const isHovered = hoveredMarker === emulator;
-              console.log("hoveredMarker: ",  hoveredMarker)
-              console.log("emulator: ",  emulator)
-              console.log("isHovered: ",  hoveredMarker === emulator)
+              const isHovered = hoveredEmulator === emulator.id;
 
               const emulatorIcon = {
                 url: emulator
@@ -204,39 +215,52 @@ const GoogleMapContainer = ({
                   : "images/blue_truck.png",
                 scaledSize: new window.google.maps.Size(30, 30),
                 anchor: new window.google.maps.Point(20, 20),
+                filter: isHovered ? "brightness(120%)" : "brightness(100%)", // Apply brightness filter on hover
+                transition: "filter 0.3s",
                 scale: 0.7,
               };
-              if(isHovered) {
-                  // show different icons to illustrate hovering effect
-              }
 
               return (
                 <React.Fragment key={index}>
-                  <MarkerWithLabel
-                    icon={emulatorIcon}
-                    position={{
-                      lat: emulator.latitude,
-                      lng: emulator.longitude,
-                    }}
-                    animation={2}
-                    title={
-                      emulator?.id === selectedEmulator?.id
-                        ? "selectedMarker"
-                        : `S${emulator?.id}`
-                    }
-                    labelStyle={{ textAlign: "center", width:'auto', color: "#000000", fontSize: "12px", padding: "1px"}}
-                    labelAnchor={{ x: 'auto' , y: 'auto' }}
-                    onClick={() => handleEmulatorMarkerClick(emulator)}
-                    onMouseOver={() => handleMarkerMouseOver(emulator)}
-                    onMouseOut={handleMarkerMouseOut}
-                    draggable={
-                      emulator?.id === selectedEmulator?.id ? true : false
-                    }
-                    onDragEnd={(event) =>
-                      handleEmulatorMarkerDragEnd(emulator, event)
-                    }>
-                      <span>{`Em.${emulator.id}`}</span>
-                  </MarkerWithLabel>
+                  <div
+                    className={`marker_Img ${isHovered ? "hovered" : ""}`}
+                    style={{ backgroundColor: "blue !important" }}
+                  >
+                    <MarkerWithLabel
+                      icon={emulatorIcon}
+                      position={{
+                        lat: emulator.latitude,
+                        lng: emulator.longitude,
+                      }}
+                      animation={2}
+                      title={
+                        emulator?.id === selectedEmulator?.id
+                          ? "selectedMarker"
+                          : `S${emulator?.id}`
+                      }
+                      labelAnchor={{ x: "auto", y: "auto" }}
+                      onClick={() => handleEmulatorMarkerClick(emulator)}
+                      
+                      onMouseOver={() =>
+                        handleEmulatorMarkerMouseOver(emulator)
+                      }
+                      onMouseOut={handleEmulatorMarkerMouseOut}
+                      
+                      className={`marker-img ${
+                        isHovered ? "marker-hovered" : ""
+                      }`}
+                      draggable={
+                        emulator?.id === selectedEmulator?.id ? true : false
+                      }
+                      onDragEnd={(event) =>
+                        handleEmulatorMarkerDragEnd(emulator, event)
+                      }
+                    >
+                     <span>{`Em.${emulator.id} ${emulator.status}`}</span>
+
+                    </MarkerWithLabel>
+                    {console.log("emulator45:", emulator)}
+                  </div>
                 </React.Fragment>
               );
             })}
