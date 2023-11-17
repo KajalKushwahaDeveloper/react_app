@@ -11,6 +11,7 @@ const GpsOverlay = ({
   emulators,
   setSelectedEmId,
   selectedEmId,
+  hoveredMarker,
   tripData,
   setSelectedEmulator,
   selectedEmulator,
@@ -28,6 +29,7 @@ const GpsOverlay = ({
         showToast={showToast}
         setSelectedEmId={setSelectedEmId}
         selectedEmId={selectedEmId}
+        hoveredMarker={hoveredMarker}
         emulators={emulators}
         setSelectedEmulator={setSelectedEmulator}
         selectedEmulator={selectedEmulator}

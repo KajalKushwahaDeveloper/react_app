@@ -198,9 +198,6 @@ const GoogleMapContainer = ({
               }
 
               const isHovered = hoveredMarker === emulator;
-              console.log("hoveredMarker: ",  hoveredMarker)
-              console.log("emulator: ",  emulator)
-              console.log("isHovered: ",  hoveredMarker === emulator)
 
               const emulatorIcon = {
                 url: emulator

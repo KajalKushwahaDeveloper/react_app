@@ -39,6 +39,7 @@ const GpsTable = ({
   showToast,
   setSelectedEmId,
   selectedEmId,
+  hoveredMarker,
   emulators,
   setSelectedEmulator,
   selectedEmulator,
@@ -277,7 +278,7 @@ const GpsTable = ({
                   key={row.id || "N/A"}
                   style={{
                     background:
-                      selectedEmulator === row.id ? "lightblue" : "white",
+                      selectedEmulator === row.id ? "lightblue" : hoveredMarker?.id === row.id ? "lightpink" : "white",
                   }}>
                   <td
                     style={{

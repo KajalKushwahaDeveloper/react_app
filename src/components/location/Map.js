@@ -276,12 +276,10 @@ const Map = ({ showToast }) => {
   };
   
   const handleMarkerMouseOver = (emulator) => {
-    console.log("Hovering : STARTED ", emulator.id);
     setHoveredMarker(emulator);
   };
 
   const handleMarkerMouseOut = () => {
-    console.log("Hovering : ENDED");
     setHoveredMarker(null);
   };
 
@@ -388,61 +386,70 @@ const Map = ({ showToast }) => {
     const lng = latLng.lng();
     setDragId(id);
 
-    if (emulator.startLat !== null && emulator.tripStatus !== "STOP" && emulator.tripStatus !== "FINISHED") {
-      const { nearestDistance, nearestTripPoint } = findNearestMarker(
-        pathsRoute,
-        lat,
-        lng
-      );
-      if (nearestDistance <= 10) {
-        setDragOutRange();
-        setNearestTripPoint(nearestTripPoint);
-        const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(
-          emulator.currentTripPointIndex
-        );
-        const nearestTripPointStopPoint = calculateNextStopPointIndex(
-          nearestTripPoint.tripPointIndex
-        );
-        const previousTimeToReachStop =
-          calculateTimeFromTripPointIndexToStopPoint(
-            emulator.currentTripPointIndex,
-            emulatorCurrentTripPointStopPoint,
-            emulator.speed
-          );
-        const newTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(
-          nearestTripPoint.tripPointIndex,
-          nearestTripPointStopPoint,
-          emulator.speed
-        );
-        handleDialog(
-          `${
-            "The emulator will be snapped to nearest route under 10 miles range. The Previous time to reach next Stop Point was " +
-            previousTimeToReachStop +
-            ". The new location will take " +
-            newTimeToReachStop +
-            " to reach the same next station. Do you want to set new Location of this emulator?"
-          }`
-        );
-      } else {
-        setNearestTripPoint();
-        setDragOutRange({ lat, lng });
-        handleDialog(
-          "This is too far from its current route, setting this as emulators new location will cancel the trip."
-        );
-      }
-    } else {
+    if (emulator.startLat === null && emulator.tripStatus === "STOP") {
       setDragOutRange();
       setNearestTripPoint();
       setDragWithoutTrip({ lat, lng });
+      return
+    }
+
+    if (emulator.id !== selectedEmId) {
+      showToast("Please select this emulator first as a trip already exists.", "error")
+      return
+    }
+
+    const { nearestDistance, nearestTripPoint } = findNearestMarker(
+      pathsRoute,
+      lat,
+      lng
+    );
+    if (nearestDistance <= 10) {
+      setDragOutRange();
+      setNearestTripPoint(nearestTripPoint);
+      const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(
+        emulator.currentTripPointIndex
+      );
+      const nearestTripPointStopPoint = calculateNextStopPointIndex(
+        nearestTripPoint.tripPointIndex
+      );
+      const previousTimeToReachStop =
+        calculateTimeFromTripPointIndexToStopPoint(
+          emulator.currentTripPointIndex,
+          emulatorCurrentTripPointStopPoint,
+          emulator.speed
+        );
+      const newTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(
+        nearestTripPoint.tripPointIndex,
+        nearestTripPointStopPoint,
+        emulator.speed
+      );
+      handleDialog(
+        `${
+          "The emulator will be snapped to nearest route under 10 miles range. The Previous time to reach next Stop Point was " +
+          previousTimeToReachStop +
+          ". The new location will take " +
+          newTimeToReachStop +
+          " to reach the same next station. Do you want to set new Location of this emulator?"
+        }`
+      );
+    } else {
+      setNearestTripPoint();
+      setDragOutRange({ lat, lng });
+      handleDialog(
+        "This is too far from its current route, setting this as emulators new location will cancel the trip."
+      );
     }
   };
 
   useEffect(() => {
     confirmNewLocation();
-  }, [nearestTripPoint, draggOutRange, draggWithoutTrip]);
+  }, [draggWithoutTrip]);
 
   const confirmNewLocation = async () => {
-    if (!dragId) return;
+    if (!dragId) {
+      console.log("No dragged Id present...");
+      return;
+    }
 
     let payload = {
       emulatorId: dragId,
@@ -464,6 +471,8 @@ const Map = ({ showToast }) => {
       const { lat, lng } = draggWithoutTrip;
       payload.latitude = lat;
       payload.longitude = lng;
+      setDragWithoutTrip();
+      setPathsRoute();
     }
 
     const token = localStorage.getItem("token");
@@ -477,7 +486,7 @@ const Map = ({ showToast }) => {
     console.log("LOG 1 - updated Emulator: ", data);
     if (success) {
       validateEmulatorsData(null, data);
-      // setOpenDialog(false);
+      setOpenDialog(false);
     } else if (error) {
       // setOpenDialog(false);
     }
@@ -505,6 +514,7 @@ const Map = ({ showToast }) => {
         setSelectedEmId={setSelectedEmId}
         setSelectedEmulator={setSelectedEmulator}
         selectedEmId={selectedEmId}
+        hoveredMarker={hoveredMarker}
         emulators={emulators}
         tripData={tripData}
         selectedEmulator={selectedEmulator}
