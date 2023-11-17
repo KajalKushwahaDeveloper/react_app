@@ -388,7 +388,7 @@ const Map = ({ showToast }) => {
     const lng = latLng.lng();
     setDragId(id);
 
-    if (emulator.startLat !== null) {
+    if (emulator.startLat !== null && emulator.tripStatus !== "STOP" && emulator.tripStatus !== "FINISHED") {
       const { nearestDistance, nearestTripPoint } = findNearestMarker(
         pathsRoute,
         lat,
@@ -434,7 +434,6 @@ const Map = ({ showToast }) => {
       setDragOutRange();
       setNearestTripPoint();
       setDragWithoutTrip({ lat, lng });
-      // handleDialog("Do you want to change the location of this emulator?");
     }
   };
 

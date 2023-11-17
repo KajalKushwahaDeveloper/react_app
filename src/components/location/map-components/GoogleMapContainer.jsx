@@ -248,9 +248,7 @@ const GoogleMapContainer = ({
                     onClick={() => handleEmulatorMarkerClick(emulator)}
                     onMouseOver={() => handleMarkerMouseOver(emulator)}
                     onMouseOut={handleMarkerMouseOut}
-                    draggable={
-                      emulator?.id === selectedEmulator?.id ? true : false
-                    }
+                    draggable = {true}
                     onDragEnd={(event) =>
                       handleEmulatorMarkerDragEnd(emulator, event)
                     }
