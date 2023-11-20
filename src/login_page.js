@@ -79,7 +79,7 @@ const LoginPage = () => {
               }}
             >
               <div class="Left_content">
-                <img src="images/logo2.png" />
+                <img src="images/logo3.png" />
                 <hr className="hr"></hr>
                 {/* <p className="para">
                   Vivamus at dui consequat, dapibus tellus vitae
@@ -96,7 +96,7 @@ const LoginPage = () => {
             >
               <div className="authCard shadow">
                 <div class="Left_content d-block d-md-none">
-                  <img src="images/logo2.png" />
+                  <img src="images/logo3.png" />
                   {/* <p className="para">
                     Vivamus at dui consequat, dapibus tellus vitae
                   </p> */}
