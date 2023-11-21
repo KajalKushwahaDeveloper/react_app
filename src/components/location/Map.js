@@ -71,6 +71,7 @@ const Map = ({ showToast }) => {
   const { data: emulator, setData: setEmulator } = useFetch(
     EMULATOR_URL + `/${selectedEmId}`
   );
+  
   const [selectedStop, setSelectedStop] = useState(null);
 
   const [hoveredMarker, setHoveredMarker] = useState(null);
@@ -96,7 +97,6 @@ const Map = ({ showToast }) => {
 
           const { lat: lat2, lng: lng2 } = array[startEmulation ? 1 : 0];
           const latLong2 = new window.google.maps.LatLng(lat2, lng2);
-          console.log(mapRef.current);
           const distance =
             window.google.maps.geometry.spherical.computeDistanceBetween(
               latLong1,
@@ -182,20 +182,12 @@ const Map = ({ showToast }) => {
     }
 
     if (selectedEmulatorToValidate) {
-      console.log(
-        `validating ID of newEmulatorData : ${selectedEmulatorToValidate}  `
-      );
       validateEmulatorData(selectedEmulatorToValidate);
     }
   };
 
   const validateEmulatorData = (newEmulatorData) => {
-    console.log(
-      `validating ID : ${newEmulatorData.id} 
-      currentTripPointIndex old : ${emulator.currentTripPointIndex} 
-      currentTripPointIndex new : ${newEmulatorData.currentTripPointIndex} `
-    );
-    if (newEmulatorData === null) {
+    if (newEmulatorData === null || newEmulatorData === undefined) {
       return;
     }
     const {
@@ -217,11 +209,13 @@ const Map = ({ showToast }) => {
         emulator.status !== status ||
         emulator.currentTripPointIndex !== currentTripPointIndex;
       if (isEmulatorChanged) {
+        console.log("Old Emulator Updated!");
         setEmulator(newEmulatorData);
       }
     }
   };
 
+  // Auto refresh emulators
   useEffect(() => {
     let emulatorInterval;
     const startEmulatorInterval = () => {
@@ -288,10 +282,15 @@ const Map = ({ showToast }) => {
   };
 
   const handleEmulatorMarkerClick = (emulator) => {
-    setSelectedEmId(emulator.id);
-    clearInterval(intervalRef.current); // Clear any existing interval
-
-    setStartEmulation(emulator); // Set the selected emulation as the start emulation
+    setAssignedTelephoneNumber(emulator.telephone);
+    if (selectedEmulator?.id !== emulator.id) {
+      setSelectedEmulator(emulator);
+      setSelectedEmId(emulator.id);
+    } else {
+      // Otherwise, un-select the selected emulator
+    }
+    // clearInterval(intervalRef.current); // Clear any existing interval
+    // setStartEmulation(emulator); // Set the selected emulation as the start emulation
   };
 
   const handleDialog = (text) => {
@@ -385,10 +384,10 @@ const Map = ({ showToast }) => {
     const lat = latLng.lat();
     const lng = latLng.lng();
     setDragId(id);
-
+    // if emulator has no Trip
     if (emulator.startLat === null && emulator.tripStatus === "STOP") {
-      setDragOutRange();
-      setNearestTripPoint();
+      setDragOutRange(null);
+      setNearestTripPoint(null);
       setDragWithoutTrip({ lat, lng });
       return
     }
@@ -442,6 +441,7 @@ const Map = ({ showToast }) => {
   };
 
   useEffect(() => {
+    if(draggWithoutTrip !== null && draggWithoutTrip !== undefined)
     confirmNewLocation();
   }, [draggWithoutTrip]);
 
@@ -471,8 +471,6 @@ const Map = ({ showToast }) => {
       const { lat, lng } = draggWithoutTrip;
       payload.latitude = lat;
       payload.longitude = lng;
-      setDragWithoutTrip();
-      setPathsRoute();
     }
 
     const token = localStorage.getItem("token");
@@ -490,7 +488,10 @@ const Map = ({ showToast }) => {
     } else if (error) {
       // setOpenDialog(false);
     }
-    setDragId();
+    setDragId(null);
+    setDragWithoutTrip(null);
+    setDragOutRange(null);
+    setNearestTripPoint(null);
   };
 
   const startLat = pathsRoute ? pathsRoute[0].lat : null;
@@ -504,6 +505,7 @@ const Map = ({ showToast }) => {
       <CreateTripOverlay
         isTableVisible={isTableVisible}
         selectedEmId={selectedEmId}
+        selectedEmulator={selectedEmulator}
         showToast={showToast}
         setIsTableVisible={setIsTableVisible}
         setSelectedEmId={setSelectedEmId}
@@ -533,7 +535,8 @@ const Map = ({ showToast }) => {
         handleMarkerMouseOver ={handleMarkerMouseOver}
         handleMarkerMouseOut={handleMarkerMouseOut}
         handleInfoWindowClose={handleInfoWindowClose}
-        selectedEmulator={emulator}
+        selectedEmulator={selectedEmulator}
+        emulator={emulator}
         emulators={emulators}
         endLat={endLat}
         endLng={endLng}

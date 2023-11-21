@@ -6,6 +6,7 @@ import "../../../scss/map.scss";
 const CreateTripOverlay = ({
   isTableVisible,
   selectedEmId,
+  selectedEmulator,
   showToast,
   setIsTableVisible,
   setSelectedEmId,
@@ -16,6 +17,7 @@ const CreateTripOverlay = ({
       {isTableVisible && (
         <CreateTripTable
           selectedEmId={selectedEmId}
+          selectedEmulator={selectedEmulator}
           showToast={showToast}
           setIsTableVisible={setIsTableVisible}
           setSelectedEmId={setSelectedEmId}

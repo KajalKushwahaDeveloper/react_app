@@ -26,6 +26,7 @@ const GoogleMapContainer = ({
   handleMarkerMouseOut,
   handleInfoWindowClose,
   selectedEmulator,
+  emulator,
   emulators,
   endLat,
   endLng,
@@ -70,8 +71,8 @@ const GoogleMapContainer = ({
   }, [selectedEmulator, stops, calculateTimeFromTripPointIndexToStopPoint]);
 
   useEffect(() => {
-    if (selectedEmulator !== null) {
-      if (pathsRoute !== null) {
+    if (selectedEmulator !== null && selectedEmulator !== undefined) {
+      if (pathsRoute !== null && pathsRoute !== undefined) {
         setPathTraveled(
           pathsRoute.filter(
             (item, index) => index <= selectedEmulator.currentTripPointIndex
@@ -243,12 +244,7 @@ const GoogleMapContainer = ({
                       lng: emulator.longitude,
                     }}
                     animation={2}
-                    title={
-                      emulator?.id === selectedEmulator?.id
-                        ? "selectedMarker"
-                        : `${emulator.telephone} ${emulator.tripStatus}(${emulator.status})`
-                         
-                    }
+                    title={`${emulator.telephone} ${emulator.tripStatus}(${emulator.status})`}
                     labelStyle={{
                       textAlign: "center",
                       width: "auto",

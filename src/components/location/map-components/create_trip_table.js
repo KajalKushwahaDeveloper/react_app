@@ -9,6 +9,7 @@ import "../../../scss/button.scss";
 const CreateTripTable = ({
   showToast,
   selectedEmId,
+  selectedEmulator,
   setIsTableVisible,
   setUpdatedTripPath,
   setSelectedEmId,
@@ -41,34 +42,44 @@ const CreateTripTable = ({
     setError("");
 
     const token = localStorage.getItem("token");
+    let confirmed = false;
 
-    const payload = {
-      startLat: fromLat,
-      startLong: fromLong,
-      endLat: toLat,
-      endLong: toLong,
-      fromAddress: fromAddress,
-      toAddress: toAddress,
-      speed: 60,
-      emulatorDetailsId: selectedEmId,
-    };
-
-    const { success, data, error } = await ApiService.makeApiCall(
-      CREATE_TRIP_URL,
-      "POST",
-      payload,
-      token
-    );
-    if (success) {
-      showToast("Added successfully", "success");
-      setSelectedEmId(0);
-      setSelectedEmId(selectedEmId);
-      setCreateTripInfo(data);
+    if (selectedEmulator.startLat !== null && selectedEmulator.tripStatus !== "STOP") {
+      confirmed = window.confirm(
+        "Creating new Trip will remove running trip for this emulator!! Continue?"
+      );
     } else {
-      showToast(error, "error");
+      confirmed = true
     }
-
-    handleClose();
+    if(confirmed) {
+      const payload = {
+        startLat: fromLat,
+        startLong: fromLong,
+        endLat: toLat,
+        endLong: toLong,
+        fromAddress: fromAddress,
+        toAddress: toAddress,
+        speed: 60,
+        emulatorDetailsId: selectedEmId,
+      };
+  
+      const { success, data, error } = await ApiService.makeApiCall(
+        CREATE_TRIP_URL,
+        "POST",
+        payload,
+        token
+      );
+      if (success) {
+        showToast("Added successfully", "success");
+        setSelectedEmId(0);
+        setSelectedEmId(selectedEmId);
+        setCreateTripInfo(data);
+      } else {
+        showToast(error, "error");
+      }
+  
+      handleClose();
+    }
   };
 
   return (

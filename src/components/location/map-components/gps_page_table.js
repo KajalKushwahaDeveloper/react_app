@@ -92,7 +92,7 @@ const GpsTable = ({
           Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
       );
       if (selectedEmulator == null && selectedEmId != null) {
-        setSelectedEmulator(emulators[0]?.id);
+        setSelectedEmulator(emulators[0]);
         setSelectedEmId(emulators[0]?.id);
       }
       setLoading(false);
@@ -100,11 +100,11 @@ const GpsTable = ({
       setLoading(true);
     }
     if (selectedEmId != null && selectedEmulator != null) {
-      if (selectedEmId !== selectedEmulator) {
-        setSelectedEmulator(selectedEmId);
+      if (selectedEmId !== selectedEmulator.id) {
         const selectedEmIndex = emulators.findIndex(
           (item) => item.id === selectedEmId
         );
+        setSelectedEmulator(emulators[selectedEmIndex]);
         // Calculate the new active page based on the selected checkbox index and rowsPerPage
         if (selectedEmIndex !== -1) {
           const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
@@ -134,7 +134,7 @@ const GpsTable = ({
   const handleEmulatorCheckboxChange = (id, telephone) => {
     setAssignedTelephoneNumber(telephone);
 
-    if (selectedEmulator === id) {
+    if (selectedEmulator?.id === id) {
       // If the clicked checkbox is already selected, unselect it
       setSelectedEmulator(null);
       setSelectedEmId(null);
@@ -278,7 +278,7 @@ const GpsTable = ({
                   key={row.id || "N/A"}
                   style={{
                     background:
-                      selectedEmulator === row.id ? "lightblue" : hoveredMarker?.id === row.id ? "lightpink" : "white",
+                      selectedEmulator?.id === row.id ? "lightblue" : hoveredMarker?.id === row.id ? "lightpink" : "white",
                   }}>
                   <td
                     style={{
@@ -386,7 +386,7 @@ const GpsTable = ({
                   <td style={{ width: "auto" }} align="right">
                     <Checkbox
                       size="small"
-                      checked={selectedEmulator === row.id}
+                      checked={selectedEmulator?.id === row.id}
                       onChange={() =>
                         handleEmulatorCheckboxChange(row.id, row.telephone)
                       }
