@@ -22,7 +22,7 @@ const GpsOverlay = ({
   
 }) => {
   return (
-    <div className="gps_overlay" style={{width:"40%",  marginBottom:"4rem" }}>
+    <div style={{marginBottom:"4rem", position:"absolute", top:"50px"}}>
       <div>
         <GpsTable 
          showToast={showToast}

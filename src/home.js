@@ -121,7 +121,7 @@ const Home = () => {
       <section className="dashboard">
         <div className="container-fluid">
           <div className="row">
-            <div className="col-lg-6">
+            <div className="col-lg-6 hello">
               <DownloadApk />
 
               <Button

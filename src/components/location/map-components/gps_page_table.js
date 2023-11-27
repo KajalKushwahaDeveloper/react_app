@@ -233,7 +233,6 @@ const GpsTable = ({
         />
       ) : (
         <>
-          
           <table
             aria-label="custom pagination table"
             className=" shadow mb-0 n=">
