@@ -1,5 +1,5 @@
 // GpsOverlay.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import GpsTable from "./gps_page_table";
 import AddressTable from "./address_table";
 import { useState } from "react";
@@ -18,8 +18,7 @@ const GpsOverlay = ({
   selectedEmulator,
   emulator,
   AssignedTelephoneNumber,
-  setAssignedTelephoneNumber,
-  
+  setAssignedTelephoneNumber
 }) => {
   return (
     <div className="changeTopGpsTable" style={{marginBottom:"4rem", position:"absolute", top:"22vh"}}>
@@ -33,15 +32,13 @@ const GpsOverlay = ({
          setSelectedEmulator={setSelectedEmulator}
          selectedEmulator={selectedEmulator}
          AssignedTelephoneNumber={AssignedTelephoneNumber}
-         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+          setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+    
         />
       </div>
-      {/* <div>
-        <MyTable />
-      </div> */}
-      {/* <div>
+      <div>
         <AddressTable tripData={tripData} emulator={emulator}/>
-      </div> */}
+      </div>
     </div>
   );
 };
