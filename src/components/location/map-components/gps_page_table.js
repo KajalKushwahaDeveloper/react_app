@@ -215,20 +215,12 @@ const GpsTable = ({
 
   return (
     <div style={{display:"flex", flexDirection:"column"}}>
-     <div>
-     {showHideTable === false &&
-        <CancelIcon
-        style={{ float: "right", cursor: "pointer", marginBottom: "5px" }}
-        onClick={() => setShowHideTable(true)}
-      />
-      }
-     </div>
 
     <div className="table-responsive tableBox" gps_table_container>
       {/* Collapse table */}
       {showHideTable === true ? (
         <ArrowCircleRightIcon
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer" , marginTop:"1vh"}}
           onClick={() => setShowHideTable(false)}
         />
       ) : (
@@ -476,7 +468,15 @@ const GpsTable = ({
           />
         </>
       )}
-    </div>
+      </div>
+      <div>
+     {showHideTable === false &&
+        <CancelIcon
+        style={{ float: "right", cursor: "pointer", marginBottom: "5px" }}
+        onClick={() => setShowHideTable(true)}
+      />
+      }
+     </div>
     </div>
   );
 };

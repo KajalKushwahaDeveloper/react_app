@@ -35,6 +35,7 @@ const GPS = () => {
             }}
           >
             <div>Current location</div>
+            <div className="addressTable"></div>
           </div>
 
           <div
@@ -46,6 +47,7 @@ const GPS = () => {
             }}
           >
             <div>From address</div>
+            <div className="addressTable">Content of from address</div>
           </div>
           <div
             class="col-3 d-flex flex-column"
@@ -56,11 +58,13 @@ const GPS = () => {
             }}
           >
             <div>To address</div>
+            <div className="addressTable">Content of to address</div>
+
           </div>
 
           <div class="col-3" style={{ border: "2px solid", paddingRight: 0 }}>
             <div className="d-flex justify-content-between">
-              <div style={{alignSelf: "center"}}>
+              <div style={{alignSelf: "center", textAlign:"center", flex:"1"}}>
                 Total time
                 {/* Dynamic Content here */}
               </div>
@@ -85,6 +89,7 @@ const GPS = () => {
                 </button>
               </div>
             </div>
+            <div style={{marginTop:"5px !important", height:"15vh", textAlign:"center",maxWidth:"20vw"}}>Content of total time</div>
           </div>
         </div>
       </div>

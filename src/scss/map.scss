@@ -113,6 +113,20 @@ th {
   align-items: flex-start;
 }
 
+.addressTable{
+  height: 12vh !important;
+  text-align: center;
+  margin-top: 10px;
+  max-width: 20vw
+}
+
+.table-responsive {
+  overflow-x: scroll;
+  //max-width: 640px ; 
+  max-height: 30rem;
+  max-width: calc(100% - 65px);
+}
+
 
 @media screen and (max-width: 768px) {
   table {
@@ -148,8 +162,9 @@ th {
 
 .table-responsive {
   overflow-x: scroll;
-  max-width: 640px ; 
+  //max-width: 640px ; 
   max-height: 30rem;
+  max-width: calc(100% - 65px);
 }
 @media screen and (max-width: 786px) {
   .gps_page {

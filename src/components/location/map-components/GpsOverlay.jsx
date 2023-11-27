@@ -22,7 +22,7 @@ const GpsOverlay = ({
   
 }) => {
   return (
-    <div className="changeTopGpsTable" style={{marginBottom:"4rem", position:"absolute", top:"60px"}}>
+    <div className="changeTopGpsTable" style={{marginBottom:"4rem", position:"absolute", top:"22vh"}}>
       <div>
         <GpsTable 
          showToast={showToast}
