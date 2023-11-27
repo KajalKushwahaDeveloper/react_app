@@ -192,6 +192,9 @@ th {
     max-width: 640px ; 
     max-height: 50vh;
   }
+  .changeTopGpsTable{
+    top: 95px !important;
+  }
 }
 .mapContainer {
   height: 100vh;
@@ -285,5 +288,6 @@ th {
     // justify-content: flex-end;
     align-items: flex-start;
   }
+  
 }
 
