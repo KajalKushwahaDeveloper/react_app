@@ -4,6 +4,7 @@ import GpsTable from "./gps_page_table";
 import AddressTable from "./address_table";
 import { useState } from "react";
 import "../../../scss/map.scss";
+import MyTable from "../../MyTable";
 
 
 const GpsOverlay = ({
@@ -23,19 +24,24 @@ const GpsOverlay = ({
   return (
     <div className="gps_overlay" style={{width:"40%",  marginBottom:"4rem" }}>
       <div>
-        <AddressTable tripData={tripData} emulator={emulator}/>
+        <GpsTable 
+         showToast={showToast}
+         setSelectedEmId={setSelectedEmId}
+         selectedEmId={selectedEmId}
+         hoveredMarker={hoveredMarker}
+         emulators={emulators}
+         setSelectedEmulator={setSelectedEmulator}
+         selectedEmulator={selectedEmulator}
+         AssignedTelephoneNumber={AssignedTelephoneNumber}
+         setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+        />
       </div>
-      <GpsTable
-        showToast={showToast}
-        setSelectedEmId={setSelectedEmId}
-        selectedEmId={selectedEmId}
-        hoveredMarker={hoveredMarker}
-        emulators={emulators}
-        setSelectedEmulator={setSelectedEmulator}
-        selectedEmulator={selectedEmulator}
-        AssignedTelephoneNumber={AssignedTelephoneNumber}
-        setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-      />
+      {/* <div>
+        <MyTable />
+      </div> */}
+      {/* <div>
+        <AddressTable tripData={tripData} emulator={emulator}/>
+      </div> */}
     </div>
   );
 };

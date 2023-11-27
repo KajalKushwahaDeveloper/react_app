@@ -25,9 +25,9 @@ body {
   left: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   align-items: flex-start;
-  padding: 0 10px;
+  padding: 0 2px;
   z-index: 2;
 }
 .gps_createTrip_overlay {
@@ -96,20 +96,20 @@ th {
 .gps_overlay {
   width: 40%;
   position: absolute;
-  top: 0;
+  top: 55px;
   left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 0 10px;
+  padding: 0 2px;
   z-index: 2;
-  top: 0;
+  // top: 0;
   right: 0;
-  margin-top: 3rem;
+  // margin-top: 3rem;
   width: 40%;
   display: flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   align-items: flex-start;
 }
 
@@ -129,20 +129,20 @@ th {
 .gps_overlay {
   width: 40%;
   position: absolute;
-  top: 0;
+  top: 55px;
   left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 0 10px;
+  padding: 0 2px;
   z-index: 2;
-  top: 0;
+  // top: 0;
   right: 0;
-  margin-top: 3rem;
+  // margin-top: 3rem;
   width: 40%;
   display: flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   align-items: flex-start;
 }
 
@@ -170,20 +170,20 @@ th {
 .gps_overlay {
   width: 40%;
   position: absolute;
-  top: 0;
+  top: 55px;
   left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 0 10px;
+  padding: 0 2px;
   z-index: 2;
-  top: 0;
+  // top: 0;
   right: 0;
-  margin-top: 3rem;
+  // margin-top: 3rem;
   width: 40%;
   display: flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   align-items: flex-start;
 }
 @media screen and (max-width: 786px) {
@@ -214,20 +214,20 @@ th {
 .gps_overlay {
   width: 40%;
   position: absolute;
-  top: 0;
+  top: 55px;
   left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 0 10px;
+  padding: 0 2px;
   z-index: 2;
-  top: 0;
+  // top: 0;
   right: 0;
-  margin-top: 3rem;
+  // margin-top: 3rem;
   width: 40%;
   display: flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   align-items: flex-start;
 }
 @media only screen and (max-width: 552px) {
@@ -244,20 +244,20 @@ th {
 .gps_overlay {
   width: 40%;
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 0 10px;
+  padding: 0 2px;
   z-index: 2;
-  top: 0;
+  // top: 0;
   right: 0;
-  margin-top: 3rem;
+  // margin-top: 3rem;
   width: 40%;
   display: flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   align-items: flex-start;
 }
 @media only screen and (max-width: 440px) {
@@ -269,20 +269,21 @@ th {
   .gps_overlay {
     width: 40%;
     position: absolute;
-    top: 0;
+    // top: 10px;
     left: 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0 10px;
+    padding: 0 2px;
     z-index: 2;
-    top: 0;
-    right: 0;
-    margin-top: 3rem;
+    top: 10px;
+    // right: 0;
+    // margin-top: 3rem;
     width: 40%;
     display: flex;
-    justify-content: flex-end;
+    // justify-content: flex-end;
     align-items: flex-start;
   }
 }
+

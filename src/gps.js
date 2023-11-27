@@ -20,7 +20,7 @@ const GPS = () => {
         style={{
           position: "fixed",
           top: "64px",
-          zIndex: 99999,
+          zIndex: 3,
           background: "white",
         }}
       >

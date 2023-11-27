@@ -3,7 +3,7 @@ import React from "react";
 
 const CreateTripButton = ({ onClick }) => {
   return (
-    <div>
+    <div >
       <button
         style={{
           height:"38px",
@@ -12,6 +12,7 @@ const CreateTripButton = ({ onClick }) => {
           top: 11,
           right: 45,
           padding: ".65rem",
+          marginTop: '40px'
         }}
         onClick={onClick}
       >
