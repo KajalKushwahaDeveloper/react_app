@@ -188,7 +188,7 @@ th {
 }
 @media screen and (max-width: 786px) {
   .table-responsive {
-    overflow-x: scroll;
+    overflow-x: auto;
     max-width: 640px ; 
     max-height: 50vh;
   }
@@ -235,8 +235,8 @@ th {
 }
 @media only screen and (max-width: 552px) {
   .table-responsive {
-    overflow-x: scroll;
-    max-width: 420px ; 
+    overflow-x: auto;
+    max-width: calc(100vw - 6px); 
     max-height: 50vh;
   }
   .gps_page {
@@ -265,8 +265,8 @@ th {
 }
 @media only screen and (max-width: 440px) {
   .table-responsive {
-    overflow-x: scroll;
-    max-width: 380px ; 
+    overflow-x: auto;
+    max-width: calc(100vw - 6px);
     max-height: 50vh;
   }
   .gps_overlay {
