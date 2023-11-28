@@ -127,6 +127,24 @@ th {
   max-width: calc(100% - 65px);
 }
 
+.main-address-table{
+  position:fixed;
+  top: 64px;
+  z-index: 2;
+  background-color: white;
+
+  .address-table-heading{
+    font-weight: 600 !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .btn-group{
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 
 @media screen and (max-width: 768px) {
   table {
@@ -137,6 +155,28 @@ th {
   td,
   th {
     padding: 8px;
+  }
+  .btn-group{
+    display: flex;
+    flex-direction: column;
+    .alignPlusBtn{
+      height: 45px;
+      width: 45px;
+    }
+    .alignMinusBtn{
+      height: 45px;
+      width: 45px;
+    }
+  }
+  .address-table-heading{
+    font-weight: 600 !important;
+    font-size: 15px !important;
+  }
+  .totalTimeSubContent{
+    font-size: 11px
+  }
+  .addressTable{
+    font-size: 11px;
   }
 }
 
