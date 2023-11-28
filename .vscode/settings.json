@@ -2,5 +2,6 @@
     "cSpell.words": [
         "Assinged",
         "Ssid"
-    ]
+    ],
+    "editor.inlineSuggest.showToolbar": "onHover"
 }

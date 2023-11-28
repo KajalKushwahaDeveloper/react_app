@@ -219,7 +219,7 @@ const EmulatorTable = ({
 
   return (
     <div className="table-responsive tableBox">
- <table aria-label="custom pagination table" className="table shadow mb-0 n=">
+      <table aria-label="custom pagination table" className="table shadow mb-0 n=">
         <thead style={{background:"#007dc6"}}>
           <tr>
             <th>STATUS</th>

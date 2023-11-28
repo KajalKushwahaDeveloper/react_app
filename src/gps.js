@@ -1,6 +1,9 @@
 import "./scss/map.scss";
 import { ToastContainer, toast } from "react-toastify";
 import WrappedMap from "./components/location/Map";
+import GpsTable from "./components/location/map-components/gps_page_table";
+import MyTable from "./components/MyTable";
+import React, { useState } from "react";
 
 const showToast = (message, type) => {
   console.log("Showing toast...");
@@ -9,11 +12,11 @@ const showToast = (message, type) => {
 
 const GPS = () => {
   const mapURL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E`;
-
+  
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
-      <div className="gps_page" style={{ paddingTop: "58px" }}>
+      <div className="gps_page">
         <div className="gps_map">
           <WrappedMap
             showToast={showToast}

@@ -215,56 +215,47 @@ const GpsTable = ({
 
   return (
     <div style={{display:"flex", flexDirection:"column"}}>
-     <div>
-     {showHideTable === false &&
-        <CancelIcon
-        style={{ float: "right", cursor: "pointer", marginBottom: "5px" }}
-        onClick={() => setShowHideTable(true)}
-      />
-      }
-     </div>
 
     <div className="table-responsive tableBox" gps_table_container>
       {/* Collapse table */}
       {showHideTable === true ? (
         <ArrowCircleRightIcon
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer" , marginTop:"1vh"}}
           onClick={() => setShowHideTable(false)}
         />
       ) : (
         <>
-          
           <table
             aria-label="custom pagination table"
             className=" shadow mb-0 n=">
-            <thead>
-              <tr>
-                <th>Status</th>
-                <th>ID / History</th>
+            {/* <thead>
+              <tr> */}
+                {/* <th>Status</th> */}
+                {/* <th>ID / History</th>
                 <ColumnResize
                   id={1}
                   resizeEnd={(width) => console.log("resize end", width)}
                   resizeStart={() => console.log("resize start")}
                   className="columnResizer"
-                />
-                <th>Number</th>
+                /> */}
+                {/* <th>Number</th>
                 <ColumnResize
                   id={2}
                   resizeEnd={(width) => console.log("resize end", width)}
                   resizeStart={() => console.log("resize start")}
                   className="columnResizer"
-                />
-                <th>Address</th>
+                /> */}
+                {/* <th>Address</th>
                 <ColumnResize
                   id={3}
                   resizeEnd={(width) => console.log("resize end", width)}
                   resizeStart={() => console.log("resize start")}
                   className="columnResizer"
-                />
-                <th>Select</th>
-                <th>Trip/Action</th>
-              </tr>
-            </thead>
+                /> */}
+                {/* <th>Select</th>
+                <th>Trip/Action</th> */}
+              {/* </tr>
+            </thead> */}
 
             <tbody>
               {(rowsPerPage > 0
@@ -288,11 +279,15 @@ const GpsTable = ({
                           : row.status === "INACTIVE"
                           ? "#FFA500"
                           : "#ff4d4d",
-                      display: "flex",
-                      alignItems: "center",
-                      padding: "0.7rem .1rem",
+                          textAlign: 'center'
+                      // display: "flex",
+                      // alignItems: "center",
+                      // justifyContent: "center",
+                      // width: 36,
+                      // padding: "8px 0px 10px 0px"
+                      // padding: "0.7rem 0.1rem",
                     }}>
-                    {row.status || "N/A"}
+                    {/* {row.status || "N/A"} */}
                     {/* Restart/Reset Button */}
                     <RestartAltIcon
                       fontSize="small"
@@ -301,7 +296,7 @@ const GpsTable = ({
                   </td>
 
                   {/* ID/HISTORY */}
-                  <td style={{ maxWidth: "120px" }}>
+                  {/* <td style={{ maxWidth: "120px" }}>
                     <Tooltip
                       style={{ display: "flex", alignItems: "center" }}
                       title={row.emulatorSsid || "N/A"}
@@ -315,17 +310,17 @@ const GpsTable = ({
                           whiteSpace: "nowrap",
                         }}>
                         {row.emulatorSsid || "N/A"}
-                      </div>
+                      </div> */}
                       {/* Show History */}
-                      <IconButton size="small">
+                      {/* <IconButton size="small">
                         <HistoryIcon
                           fontSize="small"
                           onClick={() => handleHistoryButtonClick(row)}
                         />
                       </IconButton>
                     </Tooltip>
-                  </td>
-                  <td className="column_resizer_body" />
+                  </td> */}
+                  {/* <td className="column_resizer_body" /> */}
 
                   {/* TELEPHONE */}
                   <td style={{ maxWidth: "120px" }}>
@@ -365,11 +360,11 @@ const GpsTable = ({
                       </div>
                     </Tooltip>
                   </td>
-                  <td className="column_resizer_body" />
+                  {/* <td className="column_resizer_body" /> */}
 
                   {/* ADDRESS */}
 
-                  <td style={{ maxWidth: "100px" }}>
+                  {/* <td style={{ maxWidth: "100px" }}>
                     <Tooltip title={row.address || "N/A"} placement="top">
                       <div
                         style={{
@@ -380,10 +375,10 @@ const GpsTable = ({
                         {row.address || "N/A"}
                       </div>
                     </Tooltip>
-                  </td>
-                  <td className="column_resizer_body" />
+                  </td> */}
+                  {/* <td className="column_resizer_body" /> */}
 
-                  <td style={{ width: "auto" }} align="right">
+                  <td style={{ width: "30px" }} align="right">
                     <Checkbox
                       size="small"
                       checked={selectedEmulator?.id === row.id}
@@ -398,6 +393,7 @@ const GpsTable = ({
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
+                        maxWidth: 85
                       }}>
                       {/* Trip Status */}
                       <p style={{ marginTop: "0", marginBottom: "0" }}>
@@ -472,7 +468,15 @@ const GpsTable = ({
           />
         </>
       )}
-    </div>
+      </div>
+      <div>
+     {showHideTable === false &&
+        <CancelIcon
+        style={{ float: "right", cursor: "pointer", marginBottom: "5px" }}
+        onClick={() => setShowHideTable(true)}
+      />
+      }
+     </div>
     </div>
   );
 };

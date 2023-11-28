@@ -1,23 +1,32 @@
 import React from "react";
 import "../../../scss/map.scss";
 const AddressTable = ({ tripData, emulator }) => {
-  const fromAddress =
-    tripData?.fromAddress[0]?.long_name +
-      ", " +
-      tripData?.fromAddress[1]?.long_name +
-      ", " +
-      tripData?.fromAddress[2]?.long_name +
-      ", " +
-      tripData?.fromAddress[3]?.long_name || "N/A";
-  const toAddress =
-    tripData?.toAddress[0]?.long_name +
-      ", " +
-      tripData?.toAddress[1]?.long_name +
-      ", " +
-      tripData?.toAddress[2]?.long_name +
-      " ," +
-      tripData?.toAddress[3]?.long_name || "N/A";
-  const timeInHours = tripData?.distance / tripData?.velocity;
+  var fromAddress = null;
+  var toAddress = null;
+  var timeInHours = null;
+
+  if (tripData !== null && tripData !== undefined) {
+    fromAddress =
+      tripData?.fromAddress[0]?.long_name +
+        ", " +
+        tripData?.fromAddress[1]?.long_name +
+        ", " +
+        tripData?.fromAddress[2]?.long_name +
+        ", " +
+        tripData?.fromAddress[3]?.long_name || "N/A";
+
+    toAddress =
+      tripData?.toAddress[0]?.long_name +
+        ", " +
+        tripData?.toAddress[1]?.long_name +
+        ", " +
+        tripData?.toAddress[2]?.long_name +
+        " ," +
+        tripData?.toAddress[3]?.long_name || "N/A";
+
+    timeInHours = tripData?.distance / tripData?.velocity;
+  }
+
   var hours = Math.floor(timeInHours);
   var stopCount = 0;
   const minutes = Math.round((timeInHours - hours) * 60);
@@ -56,71 +65,120 @@ const AddressTable = ({ tripData, emulator }) => {
     stopRemainingTime = `Time Remaining: ${humanReadableTimeRemaining}`;
   }
 
-  if (
-    tripData == null ||
-    tripData === undefined ||
-    emulator == null ||
-    emulator === undefined
-  ) {
-    return (
-      <table
-        aria-label="custom pagination table"
-        className="table shadow mb-0 n="
-      >
-        <thead>
-          <tr>
-            <th scope="col">Trip Details</th>
-          </tr>
-        </thead>
-        <tbody style={{ width: "100vh" }}>
-          <p className="text-center mt-3" style={{ margin: "20px" }}>
-            No Trip Available
-          </p>
-        </tbody>
-      </table>
-    );
-  }
-
   return (
     <div
-      className="table-responsive tableBox"
-      style={{ position: "relative", bottom: "0" }}
-    >
-      <table
-        aria-label="custom pagination table"
-        className="table shadow mb-0 n="
-      >
-        <thead>
-          <tr>
-            <th scope="col">From Address</th>
-            <th scope="col">To Address</th>
-            <th scope="col">Total Time</th>
-            {emulator && emulator.tripStatus === "RESTING" && currentStop && (
-              <th scope="col">Stop Details</th>
-            )}
-          </tr>
-        </thead>
-        <tbody style={{ width: "100vh" }}>
-          <tr>
-            <td align="right" style={{ wordWrap: "break-word" }}>
-              {fromAddress}
-            </td>
-            <td align="right" style={{ wordWrap: "break-word" }}>
-              {toAddress}
-            </td>
-            <td align="right" style={{ wordWrap: "break-word" }}>
+      className="container-fluid"
+      style={{
+        position: "fixed",
+        top: "64px",
+        zIndex: 3,
+        background: "white",
+      }}>
+      <div className="row">
+        {/* CURRENT ADDRESS*/}
+        <div
+          class="col-3 d-flex flex-column"
+          style={{
+            border: "2px solid",
+            color: "black",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <div>Current location</div>
+          <div className="addressTable">
+            {emulator && emulator.address ? emulator.address : "N/A"}
+          </div>
+        </div>
+
+        {/* FROM ADDRESS*/}
+        <div
+          class="col-3 d-flex flex-column"
+          style={{
+            border: "2px solid",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <div>From address</div>
+
+          <div className="addressTable">
+            {fromAddress ? fromAddress : "N/A"}
+          </div>
+        </div>
+
+        {/* TO ADDRESS*/}
+        <div
+          class="col-3 d-flex flex-column"
+          style={{
+            border: "2px solid",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <div>To address</div>
+          <div className="addressTable">{toAddress ? toAddress : "N/A"}</div>
+        </div>
+
+        {/* TIME */}
+        <div
+          class="col-2 d-flex flex-column"
+          style={{
+            border: "2px solid",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <div>Total Time</div>
+          <div
+            style={{
+              marginTop: "5px !important",
+              height: "15vh",
+              textAlign: "center",
+              maxWidth: "20vw",
+            }}>
+            <div className="addressTable" style={{ wordWrap: "break-word" }}>
               {totalTime}
-            </td>
-            {emulator && emulator.tripStatus === "RESTING" && currentStop && (
-              <td align="right" style={{ wordWrap: "break-word" }}>
-                <p>{stopReachedTime}</p>
-                <p>{stopWaitingTillTime}</p>
-                <p>{stopRemainingTime}</p>
-              </td>
-            )}
-          </tr>
-        </tbody>
-      </table>
+            </div>
+            {tripData &&
+              emulator &&
+              emulator.tripStatus === "RESTING" &&
+              currentStop && (
+                <div
+                  className="addressTable"
+                  style={{ wordWrap: "break-word" }}>
+                  <p>{stopReachedTime}</p>
+                  <p>{stopWaitingTillTime}</p>
+                  <p>{stopRemainingTime}</p>
+                </div>
+              )}
+          </div>
+        </div>
+
+        {/* PLUS MINUS ICONS */}
+        <div
+          class="col-1 d-flex flex-column"
+          style={{
+            border: "2px solid",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-number border border-dark border-2 rounded-0"
+              data-type="plus"
+              data-field="quant[2]"
+              style={{ backgroundColor: "#ff0000", margin: 0 }}>
+              <i class="fa-solid fa-plus text-dark fa-lg"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-success btn-number border border-dark border-2 rounded-0"
+              data-type="minus"
+              data-field="quant[2]"
+              style={{ backgroundColor: "#39e600", margin: 0 }}>
+              <i class="fa-solid fa-minus text-dark fa-lg"></i>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
