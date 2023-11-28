@@ -501,7 +501,7 @@ const Map = ({ showToast }) => {
 
   return (
     <CardComponent>
-      <CreateTripButton onClick={handleCreateTripButton} />
+      <CreateTripButton onClick={handleCreateTripButton} tripData={tripData}  emulator={emulator}/>
       <CreateTripOverlay
         isTableVisible={isTableVisible}
         selectedEmId={selectedEmId}
