@@ -67,13 +67,7 @@ const AddressTable = ({ tripData, emulator }) => {
 
   return (
     <div
-      className="container-fluid"
-      style={{
-        position: "fixed",
-        top: "64px",
-        zIndex: 3,
-        background: "white",
-      }}>
+      className="container-fluid main-address-table">
       <div className="row">
         {/* CURRENT ADDRESS*/}
         <div
@@ -84,7 +78,7 @@ const AddressTable = ({ tripData, emulator }) => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <div>Current location</div>
+          <div className="address-table-heading">Current location</div>
           <div className="addressTable">
             {emulator && emulator.address ? emulator.address : "N/A"}
           </div>
@@ -98,8 +92,7 @@ const AddressTable = ({ tripData, emulator }) => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <div>From address</div>
-
+          <div className="address-table-heading">From address</div>
           <div className="addressTable">
             {fromAddress ? fromAddress : "N/A"}
           </div>
@@ -113,7 +106,7 @@ const AddressTable = ({ tripData, emulator }) => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <div>To address</div>
+          <div className="address-table-heading">To address</div>
           <div className="addressTable">{toAddress ? toAddress : "N/A"}</div>
         </div>
 
@@ -125,14 +118,15 @@ const AddressTable = ({ tripData, emulator }) => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <div>Total Time</div>
+          <div className="address-table-heading">Total Time </div>
           <div
             style={{
               marginTop: "5px !important",
               height: "15vh",
               textAlign: "center",
               maxWidth: "20vw",
-            }}>
+            }}
+            className="totalTimeSubContent">
             <div className="addressTable" style={{ wordWrap: "break-word" }}>
               {totalTime}
             </div>
@@ -162,19 +156,19 @@ const AddressTable = ({ tripData, emulator }) => {
           <div class="btn-group">
             <button
               type="button"
-              class="btn btn-number border border-dark border-2 rounded-0"
+              class="btn btn-number border border-dark border-2 rounded-0 alignPlusBtn"
               data-type="plus"
               data-field="quant[2]"
-              style={{ backgroundColor: "#ff0000", margin: 0 }}>
-              <i class="fa-solid fa-plus text-dark fa-lg"></i>
+              style={{ backgroundColor: "#ff0000", margin: 0}}>
+              <i class="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
             </button>
             <button
               type="button"
-              class="btn btn-success btn-number border border-dark border-2 rounded-0"
+              class="btn btn-success btn-number border border-dark border-2 rounded-0 alignMinusBtn"
               data-type="minus"
               data-field="quant[2]"
               style={{ backgroundColor: "#39e600", margin: 0 }}>
-              <i class="fa-solid fa-minus text-dark fa-lg"></i>
+              <i class="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
             </button>
           </div>
         </div>
