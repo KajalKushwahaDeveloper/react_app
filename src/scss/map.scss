@@ -5,20 +5,6 @@ body {
   @include main;
 }
 
-.gps_page {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 100vh;
-  flex-wrap: nowrap;
-  padding-top: 63px;
-}
-
-.gps_map {
-  flex: 1;
-  position: relative;
-}
-
 .gps_overlay {
   position: absolute;
   bottom: 0;
@@ -48,12 +34,6 @@ body {
   align-items: flex-end;
 }
 
-.gps_map {
-  width: 100vw;
-  // flex-basis: 70%;
-  height: 100vh;
-}
-
 .create_trip_button {
   position: absolute;
   top: 0;
@@ -64,9 +44,7 @@ body {
 .create_trip_button button {
   padding: 8px 12px;
 }
-
 //table//
-
 table {
   font-size: 16px;
   width: auto;
@@ -113,71 +91,85 @@ th {
   align-items: flex-start;
 }
 
-.addressTable{
-  height: 12vh !important;
-  text-align: center;
-  margin-top: 10px;
-  max-width: 20vw
-}
-
-.table-responsive {
-  overflow-x: scroll;
-  //max-width: 640px ; 
-  max-height: 30rem;
-  max-width: calc(100% - 65px);
-}
-
 .main-address-table{
   position:fixed;
   top: 64px;
   z-index: 2;
   background-color: white;
 
+
+
+
+  @media screen and (max-width: 620px) {
+    .address-table-heading{
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      height: 20px;
+    }
+    
+    .addressTable{
+      text-align: center;
+      font-size: 11px;
+      overflow: hidden;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
+      height: 40px;
+    }
+  }
+  
+
   .address-table-heading{
-    font-weight: 600 !important;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    height: 20px;
+  }
+  
+  .addressTable{
+    text-align: center;
+    font-size: 11px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    height: 40px;
   }
 }
 
-@media screen and (max-width: 1024px) {
-  .btn-group{
-    display: flex;
-    flex-direction: column;
-  }
+.table-responsive {
+  max-height: 50vh;
+  max-width: 640px ; 
+  position: "absolute";
+  top: 90;
 }
 
+
+.btn-group{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
 
 @media screen and (max-width: 768px) {
   table {
     font-size: 0.75rem;
     overflow-x: auto;
   }
-
   td,
   th {
-    padding: 8px;
-  }
-  .btn-group{
-    display: flex;
-    flex-direction: column;
-    .alignPlusBtn{
-      height: 45px;
-      width: 45px;
-    }
-    .alignMinusBtn{
-      height: 45px;
-      width: 45px;
-    }
+    padding: 8px;h: 100%;
   }
   .address-table-heading{
-    font-weight: 600 !important;
-    font-size: 15px !important;
+    font-size: 11px;
   }
   .totalTimeSubContent{
     font-size: 11px
   }
-  .addressTable{
-    font-size: 11px;
-  }
 }
 
 .gps_overlay {
@@ -200,27 +192,6 @@ th {
   align-items: flex-start;
 }
 
-.table-responsive {
-  overflow-x: scroll;
-  //max-width: 640px ; 
-  max-height: 30rem;
-  max-width: calc(100% - 65px);
-}
-@media screen and (max-width: 786px) {
-  .gps_page {
-    flex-wrap: wrap;
-  }
-
-  .gps_tables,
-  .gps_map {
-    flex-basis: auto;
-  }
-}
-.table-responsive {
-  overflow-x: hidden;
-  max-height: 50vh;
-  max-width: 640px ; 
-}
 
 .gps_overlay {
   width: 40%;
@@ -241,16 +212,7 @@ th {
   // justify-content: flex-end;
   align-items: flex-start;
 }
-@media screen and (max-width: 786px) {
-  .table-responsive {
-    overflow-x: auto;
-    max-width: 640px ; 
-    max-height: 50vh;
-  }
-  .changeTopGpsTable{
-    top: 95px !important;
-  }
-}
+
 .mapContainer {
   height: 100vh;
   display: flex;
@@ -288,16 +250,6 @@ th {
   // justify-content: flex-end;
   align-items: flex-start;
 }
-@media only screen and (max-width: 552px) {
-  .table-responsive {
-    overflow-x: auto;
-    max-width: calc(100vw - 6px); 
-    max-height: 50vh;
-  }
-  .gps_page {
-    padding-top: 107px;
-  }
-}
 
 .gps_overlay {
   width: 40%;
@@ -319,11 +271,6 @@ th {
   align-items: flex-start;
 }
 @media only screen and (max-width: 440px) {
-  .table-responsive {
-    overflow-x: auto;
-    max-width: calc(100vw - 6px);
-    max-height: 50vh;
-  }
   .gps_overlay {
     width: 40%;
     position: absolute;

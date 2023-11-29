@@ -66,18 +66,22 @@ const AddressTable = ({ tripData, emulator }) => {
   }
 
   return (
-    <div
-      className="container-fluid main-address-table">
-      <div className="row">
+    <div className="container-fluid main-address-table">
+      <div className="row"
+          style={{
+            height: "35px !important",
+            background: "white"
+          }}>
         {/* CURRENT ADDRESS*/}
         <div
-          class="col-3 d-flex flex-column"
+          class="col d-flex flex-column"
           style={{
             border: "2px solid",
             color: "black",
             alignItems: "center",
-            justifyContent: "center",
-          }}>
+            padding: "0",
+          }}
+        >
           <div className="address-table-heading">Current location</div>
           <div className="addressTable">
             {emulator && emulator.address ? emulator.address : "N/A"}
@@ -86,12 +90,13 @@ const AddressTable = ({ tripData, emulator }) => {
 
         {/* FROM ADDRESS*/}
         <div
-          class="col-3 d-flex flex-column"
+          class="col d-flex flex-column"
           style={{
             border: "2px solid",
             alignItems: "center",
-            justifyContent: "center",
-          }}>
+            padding: "0",
+          }}
+        >
           <div className="address-table-heading">From address</div>
           <div className="addressTable">
             {fromAddress ? fromAddress : "N/A"}
@@ -100,75 +105,90 @@ const AddressTable = ({ tripData, emulator }) => {
 
         {/* TO ADDRESS*/}
         <div
-          class="col-3 d-flex flex-column"
+          class="col d-flex flex-column"
           style={{
             border: "2px solid",
             alignItems: "center",
-            justifyContent: "center",
-          }}>
+            padding: "0",
+          }}
+        >
           <div className="address-table-heading">To address</div>
           <div className="addressTable">{toAddress ? toAddress : "N/A"}</div>
         </div>
 
         {/* TIME */}
         <div
-          class="col-2 d-flex flex-column"
+          class="col d-flex flex-column"
           style={{
             border: "2px solid",
             alignItems: "center",
-            justifyContent: "center",
-          }}>
+            padding: "0px !important",
+          }}
+        >
           <div className="address-table-heading">Total Time </div>
-          <div
-            style={{
-              marginTop: "5px !important",
-              height: "15vh",
-              textAlign: "center",
-              maxWidth: "20vw",
-            }}
-            className="totalTimeSubContent">
-            <div className="addressTable" style={{ wordWrap: "break-word" }}>
-              {totalTime}
+          {tripData && emulator ? (
+            <div
+              style={{
+                marginTop: "5px !important",
+                height: "30px",
+                textAlign: "center",
+                maxWidth: "20vw",
+              }}
+              className="totalTimeSubContent"
+            >
+              <div className="addressTable" style={{ wordWrap: "break-word" }}>
+                {totalTime}
+              </div>
+              {tripData &&
+                emulator &&
+                emulator.tripStatus === "RESTING" &&
+                currentStop && (
+                  <div
+                    className="addressTable"
+                    style={{ wordWrap: "break-word" }}
+                  >
+                    <p>{stopReachedTime}</p>
+                    <p>{stopWaitingTillTime}</p>
+                    <p>{stopRemainingTime}</p>
+                  </div>
+                )}
             </div>
-            {tripData &&
-              emulator &&
-              emulator.tripStatus === "RESTING" &&
-              currentStop && (
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}>
-                  <p>{stopReachedTime}</p>
-                  <p>{stopWaitingTillTime}</p>
-                  <p>{stopRemainingTime}</p>
-                </div>
-              )}
-          </div>
+          ) : (
+            <div className="addressTable">N/A</div>
+          )}
         </div>
 
         {/* PLUS MINUS ICONS */}
         <div
           class="col-1 d-flex flex-column"
           style={{
-            border: "2px solid",
-            alignItems: "center",
-            justifyContent: "center",
-          }}>
+            padding: "0",
+          }}
+        >
           <div class="btn-group">
             <button
               type="button"
-              class="btn btn-number border border-dark border-2 rounded-0 alignPlusBtn"
-              data-type="plus"
-              data-field="quant[2]"
-              style={{ backgroundColor: "#ff0000", margin: 0}}>
-              <i class="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
+              className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "#ff0000",
+                margin: 0,
+                width: "50%",
+                height: "100%",
+              }}
+            >
+              <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
             </button>
             <button
               type="button"
-              class="btn btn-success btn-number border border-dark border-2 rounded-0 alignMinusBtn"
-              data-type="minus"
-              data-field="quant[2]"
-              style={{ backgroundColor: "#39e600", margin: 0 }}>
-              <i class="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
+              className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
+              style={{
+                backgroundColor: "#39e600",
+                margin: 0,
+                width: "50%",
+                height: "100%",
+              }}
+            >
+              <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
             </button>
           </div>
         </div>

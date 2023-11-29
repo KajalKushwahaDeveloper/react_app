@@ -16,17 +16,13 @@ const GPS = () => {
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
-      <div className="gps_page">
-        <div className="gps_map">
-          <WrappedMap
-            showToast={showToast}
-            googleMapURL={mapURL}
-            loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div className="mapContainer" />}
-            mapElement={<div style={{ height: `100%` }} />}
-          />
-        </div>
-      </div>
+      <WrappedMap
+        showToast={showToast}
+        googleMapURL={mapURL}
+        loadingElement={<div style={{ height: `100%` }} />}
+        containerElement={<div className="mapContainer" />}
+        mapElement={<div style={{ height: `100%` }} />}
+      />
     </>
   );
 };
