@@ -1,9 +1,6 @@
 import "./scss/map.scss";
 import { ToastContainer, toast } from "react-toastify";
 import WrappedMap from "./components/location/Map";
-import GpsTable from "./components/location/map-components/gps_page_table";
-import MyTable from "./components/MyTable";
-import React, { useState } from "react";
 
 const showToast = (message, type) => {
   console.log("Showing toast...");

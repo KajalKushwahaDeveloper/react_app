@@ -17,11 +17,24 @@ import ApiService from "./ApiService";
 import { CLIENT_CURRENT } from "./constants";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * React component representing the main application.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered React element for the application.
+ */
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
+   /**
+   * Checks the token stored in local storage and performs actions based on the token's validity.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>} A promise that resolves once the token is checked and actions are performed.
+   */
   const checkToken = async () => {
     const token = localStorage.getItem("token");
     if (token != null) {
@@ -77,11 +90,23 @@ function App() {
     }
   };
 
+  /**
+   * React lifecycle hook that runs the `checkToken` function when the component mounts or the pathname changes.
+   *
+   * @useEffect
+   * @effect
+   */
   useEffect(() => {
     checkToken();
   }, [location.pathname]);
   // TODO: When checkToken is running, we need to show a redirecting page....
 
+  /**
+   * React component representing the application's routes.
+   *
+   * @component
+   * @returns {JSX.Element} The rendered React element for the application routes.
+   */
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
@@ -96,6 +121,12 @@ function App() {
   );
 }
 
+/**
+ * Renders the authenticated layout.
+ *
+ * @param {boolean} isAdmin - Indicates if the user is an admin.
+ * @return {ReactNode} The rendered authenticated layout.
+ */
 const AuthenticatedLayout = ({ isAdmin }) => {
   return (
     <>

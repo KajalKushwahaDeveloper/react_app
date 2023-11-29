@@ -6,24 +6,52 @@ import "./scss/home.scss";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+/**
+ * React functional component representing the reset password page.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered React element for the reset password page.
+ */
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-
+  // Extracts the token from the URL query parameters
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
 
+
+  /**
+   * Handles changes in the password input field.
+   *
+   * @param {Object} e - The event object.
+   * @returns {void} No return value.
+   */
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
+
+  /**
+   * Handles changes in the confirm password input field.
+   *
+   * @param {Object} e - The event object.
+   * @returns {void} No return value.
+   */
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
   };
 
+
+  /**
+   * Handles the form submission for password reset.
+   *
+   * @function
+   * @param {Object} e - The event object.
+   * @returns {void} No return value.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
@@ -60,6 +88,7 @@ const ResetPasswordPage = () => {
     }
   };
 
+  // JSX rendering and other details...
   return (
     <div className="reset_password">
       <h1>Reset Password</h1>

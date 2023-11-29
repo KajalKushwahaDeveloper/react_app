@@ -4,7 +4,6 @@ import GpsTable from "./gps_page_table";
 import AddressTable from "./address_table";
 import { useState } from "react";
 import "../../../scss/map.scss";
-import MyTable from "../../MyTable";
 
 
 const GpsOverlay = ({

@@ -5,6 +5,12 @@ import ApiService from "./ApiService";
 import { CLIENT_LOGIN } from "./constants";
 import ForgotPasswordModal from "./components/location/map-components/ForgotPasswordModal";
 
+/**
+ * React functional component representing the login page.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered React element for the login page.
+ */
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -13,14 +19,35 @@ const LoginPage = () => {
   const [passwordError, setPasswordError] = useState("");
   const [responseError, setResponseError] = useState("");
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
+  
+    /**
+   * Handles changes in the email input field.
+   *
+   * @param {Object} e - The event object.
+   * @returns {void} No return value.
+   */
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
+  /**
+   * Handles changes in the password input field.
+   *
+   * @param {Object} e - The event object.
+   * @returns {void} No return value.
+   */
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
 
+  /**
+   * Handles the form submission for login.
+   *
+   * @async
+   * @function
+   * @param {Object} e - The event object.
+   * @returns {Promise<void>} A promise that resolves once the login submission is processed.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setResponseError("");
@@ -53,18 +80,28 @@ const LoginPage = () => {
       }
     }
   };
-  const handleForgotPasswordClickChange = () => {
-    setIsForgotPasswordModalOpen(true); // Open the "Forgot Password" modal when clicked
-  };
-
+  /**
+   * Closes the "Forgot Password" modal when called.
+   *
+   * @function
+   * @returns {void} No return value.
+   */
   const closeForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(false); // Close the "Forgot Password" modal
   };
-  
+
+    /**
+   * Opens the "Forgot Password" modal when called.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>} A promise that resolves once the "Forgot Password" modal is opened.
+   */
   const handleForgotPasswordClick = async () => {
         setIsForgotPasswordModalOpen(true);
   };
 
+  // JSX rendering and other details...
   return (
     <>
       <div className="authScreen">

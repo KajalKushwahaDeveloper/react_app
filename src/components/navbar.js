@@ -5,6 +5,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { CLIENT_CURRENT } from "../constants";
 
+/**
+ * Renders the Navbar component.
+ *
+ * @param {object} props - The props object containing the isAdmin property.
+ * @return {JSX.Element} The rendered Navbar component.
+ */
 const Navbar = ({ isAdmin }) => {
   const [menuIcon, setMenuIcon] = useState(false);
   const [data, setData] = useState();
@@ -12,11 +18,21 @@ const Navbar = ({ isAdmin }) => {
 
   const navigate = useNavigate();
   
+  /**
+   * A function to handle user logout.
+   *
+   * @return {void} This function does not return anything.
+   */
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
+  /**
+   * Fetches client data.
+   *
+   * @return {Promise<Object>} An object indicating the success or failure of the operation.
+   */
   const fetchClientData = async () => {
     console.log("fetchClientData isAdmin : "  + isAdmin);
     const token = localStorage.getItem("token");
@@ -45,9 +61,10 @@ const Navbar = ({ isAdmin }) => {
   };
 
   useEffect(() => {
-    const { success, error } = fetchClientData();
+    fetchClientData();
   }, []);
 
+  // JSX rendering and other details...
   return (
     <>
       <div className="header">
