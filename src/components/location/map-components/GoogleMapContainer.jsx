@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { GoogleMap, Polyline, Marker, InfoWindow, Circle } from "react-google-maps";
+import {
+  GoogleMap,
+  Polyline,
+  Marker,
+  InfoWindow,
+  Circle,
+} from "react-google-maps";
 import {
   Dialog,
   DialogActions,
@@ -45,14 +51,13 @@ const GoogleMapContainer = ({
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
 
-
   const circleIcon = {
     path: window.google.maps.SymbolPath.CIRCLE,
     fillColor: "transparent", // Set the color you want for the circle
     fillOpacity: 0.5, // Adjust the opacity as needed
     scale: 10, // Adjust the scale to make it larger or smaller
-    strokeColor: "black", // Set the border color
-    strokeWeight: 2, // Adjust the border thickness
+    strokeColor: "#c2c7ce", // Set the border color
+    strokeWeight: 4, // Adjust the border thickness
   };
 
   useEffect(() => {
@@ -208,21 +213,31 @@ const GoogleMapContainer = ({
                 console.log("rotationAngle Error : ", e);
               }
 
+              const isHovered = hoveredMarker === emulator;
+
               const emulatorIcon = {
                 url: emulator
                   ? `images/${emulator.tripStatus}_truck_icon_${
-                      isActiveUser ? "green" : "red"
+                      isActiveUser ? "green" : "blue"
                     }.png`
                   : "images/blue_truck.png",
-                scaledSize: new window.google.maps.Size(20, 20),
-                anchor: new window.google.maps.Point(10, 10),
-                scale: 0.7,
+                // scaledSize: new window.google.maps.Size(24, 24),
+                scaledSize: new window.google.maps.Size(
+                  isHovered ? 30 : 24, // Adjust the size for hover
+                  isHovered ? 30 : 24
+                ),
+                anchor: new window.google.maps.Point(15, 15),
+                scale: isHovered ? 2 : 1,
+                strokeWeight: 10,
+                labelStyle: {
+                  borderRadius: "50%",
+                  border: "3px solid #c2c7ce !important",
+                  transition: "all 3s ease",
+                },
               };
 
-              const isHovered = hoveredMarker === emulator;
-
-              if(isHovered) {
-                // create a slightly larger circle icon and show behind the emulatorIcon.
+              if (isHovered) {
+                circleIcon.scale = 14;
               }
 
               return (
@@ -235,6 +250,10 @@ const GoogleMapContainer = ({
                       }}
                       icon={circleIcon}
                       clickable={false}
+                      animation={4}
+                      labelStyle={{
+                        transition: "all 3s ease",
+                      }}
                     />
                   )}
                   <MarkerWithLabel
@@ -256,7 +275,7 @@ const GoogleMapContainer = ({
                     onClick={() => handleEmulatorMarkerClick(emulator)}
                     onMouseOver={() => handleMarkerMouseOver(emulator)}
                     onMouseOut={handleMarkerMouseOut}
-                    draggable = {true}
+                    draggable={true}
                     onDragEnd={(event) =>
                       handleEmulatorMarkerDragEnd(emulator, event)
                     }
