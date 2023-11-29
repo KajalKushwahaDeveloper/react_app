@@ -118,7 +118,7 @@ const AddressTable = ({ tripData, emulator }) => {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <div className="address-table-heading">Total Time</div>
+          <div className="address-table-heading">Total Time </div>
           <div
             style={{
               marginTop: "5px !important",
