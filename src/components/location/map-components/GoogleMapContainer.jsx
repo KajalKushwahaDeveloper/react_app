@@ -51,15 +51,7 @@ const GoogleMapContainer = ({
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
 
-  const circleIcon = {
-    path: window.google.maps.SymbolPath.CIRCLE,
-    fillColor: "transparent", // Set the color you want for the circle
-    fillOpacity: 0.5, // Adjust the opacity as needed
-    scale: 10, // Adjust the scale to make it larger or smaller
-    strokeColor: "#c2c7ce", // Set the border color
-    strokeWeight: 4, // Adjust the border thickness
-  };
-
+ 
   useEffect(() => {
     if (selectedEmulator != null && stops != null) {
       let selectedEmulatorNearestStopPoint = stops.find(
@@ -218,16 +210,16 @@ const GoogleMapContainer = ({
               const emulatorIcon = {
                 url: emulator
                   ? `images/${emulator.tripStatus}_truck_icon_${
-                      isActiveUser ? "green" : "blue"
+                      isActiveUser ? "blue" : "red"
                     }.png`
                   : "images/blue_truck.png",
                 // scaledSize: new window.google.maps.Size(24, 24),
                 scaledSize: new window.google.maps.Size(
-                  isHovered ? 30 : 24, // Adjust the size for hover
-                  isHovered ? 30 : 24
+                  isHovered ? 16 : 20, // Adjust the size for hover
+                  isHovered ? 16 : 20
                 ),
-                anchor: new window.google.maps.Point(15, 15),
-                scale: isHovered ? 2 : 1,
+                anchor: new window.google.maps.Point(isHovered ? 8 : 10, isHovered ? 8 : 10),
+                // scale: isHovered ? 2 : 1,
                 strokeWeight: 10,
                 labelStyle: {
                   borderRadius: "50%",
@@ -236,8 +228,18 @@ const GoogleMapContainer = ({
                 },
               };
 
+              const circleIcon = {
+                path: window.google.maps.SymbolPath.CIRCLE,
+                fillColor: "transparent", // Set the color you want for the circle
+                fillOpacity: 0.5, // Adjust the opacity as needed
+                scale: 3, // Adjust the scale to make it larger or smaller
+                strokeColor: isActiveUser? "#c2c7ce" : "black", // Set the border color
+                strokeWeight: 3, // Adjust the border thickness
+              };
+            
+
               if (isHovered) {
-                circleIcon.scale = 14;
+                circleIcon.scale = 10;
               }
 
               return (
@@ -250,7 +252,7 @@ const GoogleMapContainer = ({
                       }}
                       icon={circleIcon}
                       clickable={false}
-                      animation={4}
+                      // animation={4}
                       labelStyle={{
                         transition: "all 3s ease",
                       }}
