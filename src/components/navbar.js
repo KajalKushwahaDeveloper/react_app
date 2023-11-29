@@ -95,7 +95,6 @@ const Navbar = ({ isAdmin }) => {
               <li>
                 <NavLink
                   to="/"
-                  className="navbar-link-btn"
                   onClick={() => handleLogout()}
                 >
                   Logout

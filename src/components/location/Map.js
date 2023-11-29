@@ -28,6 +28,7 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 
 import { useViewPort } from "../../ViewportProvider.js";
+import "../../css/mapbottomsheet.css";
 
 const Map = ({ showToast }) => {
   const { width, height } = useViewPort();
@@ -169,7 +170,7 @@ const Map = ({ showToast }) => {
       selectedEmulatorToValidate = newEmulatorsData.find(
         (item) => item.id === selectedEmId
       );
-      const updatedEmulators = emulators.map((oldEmulator) => {
+      const updatedEmulators = emulators?.map((oldEmulator) => {
         const newEmulatorData = newEmulatorsData.find(
           (item) => item.id === oldEmulator.id
         );
@@ -579,16 +580,19 @@ const Map = ({ showToast }) => {
       />
       {isMobile && (
         <BottomSheet
+          className="bottom_sheet"
+          zIndex = {0}
           open={true}
           blocking={false}
           header={
             <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
-              {" "}
-              INFO{" "}
+              INFO
             </div>
           }
           snapPoints={({ maxHeight }) => [maxHeight / 10, maxHeight * 0.7]}
         >
+          <div>
+          ‎ 
           <CreateTripButton
             onClick={handleCreateTripButton}
             tripData={tripData}
@@ -616,7 +620,7 @@ const Map = ({ showToast }) => {
             AssignedTelephoneNumber={AssignedTelephoneNumber}
             setAssignedTelephoneNumber={setAssignedTelephoneNumber}
           />
-          HI
+          </div>
         </BottomSheet>
       )}
     </CardComponent>

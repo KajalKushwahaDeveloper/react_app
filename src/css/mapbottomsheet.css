@@ -1,0 +1,3 @@
+.bottom_sheet > div {
+    z-index: 2 !important;
+}

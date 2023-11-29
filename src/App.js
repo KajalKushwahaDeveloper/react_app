@@ -101,7 +101,7 @@ function App() {
 const AuthenticatedLayout = ({ isAdmin }) => {
   return (
     <>
-      <Navbar isAdmin={isAdmin} />
+      <Navbar isAdmin={isAdmin} style={{ zIndex: 9998 }} />
       <Outlet />
     </>
   );

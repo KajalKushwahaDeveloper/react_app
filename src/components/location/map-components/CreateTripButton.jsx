@@ -16,7 +16,10 @@ const CreateTripButton = ({ onClick, tripData, emulator }) => {
   };
 
   useEffect(() => {
-    if ((tripData !== null && emulator !== null) || (tripData !== null && emulator === null)) {
+    if (
+      (tripData !== null && emulator !== null) ||
+      (tripData !== null && emulator === null)
+    ) {
       setHideCancel(true);
     } else {
       setHideCancel(false);
@@ -30,10 +33,11 @@ const CreateTripButton = ({ onClick, tripData, emulator }) => {
           height: "38px",
           zIndex: 2,
           position: "absolute",
-          top: 90,
+          top: "135px",
           right: !hideCancel ? 110 : 230,
           padding: ".65rem",
-          marginTop: "40px",
+          display: "flex",
+          alignItems: "center",
         }}
         onClick={onClick}
       >
@@ -46,28 +50,26 @@ const CreateTripButton = ({ onClick, tripData, emulator }) => {
             height: "38px",
             zIndex: 2,
             position: "absolute",
-            top: 90,
+            top: "135px",
             right: 110,
             padding: ".65rem",
-            marginTop: "40px",
+            display: "flex",
+            alignItems: "center",
           }}
           // onClick={onClick}
         >
           Cancel Trip
         </button>
-      ) : (
-        null
-      )}
+      ) : null}
 
       <button
         style={{
           height: "38px",
           zIndex: 2,
           position: "absolute",
-          top: 90,
+          top: "135px",
           right: 50,
           padding: ".65rem",
-          marginTop: "40px",
           display: "flex",
           alignItems: "center",
         }}
