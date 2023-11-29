@@ -36,6 +36,8 @@ const CreateTripButton = ({ onClick, tripData, emulator }) => {
           top: "135px",
           right: !hideCancel ? 110 : 230,
           padding: ".65rem",
+          display: "flex",
+          alignItems: "center",
         }}
         onClick={onClick}
       >
@@ -51,6 +53,8 @@ const CreateTripButton = ({ onClick, tripData, emulator }) => {
             top: "135px",
             right: 110,
             padding: ".65rem",
+            display: "flex",
+            alignItems: "center",
           }}
           // onClick={onClick}
         >
