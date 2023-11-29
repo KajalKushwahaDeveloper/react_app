@@ -24,7 +24,21 @@ import CreateTripOverlay from "./map-components/CreateTripOverlay";
 import GoogleMapContainer from "./map-components/GoogleMapContainer";
 import ApiService from "../../ApiService";
 
+import { BottomSheet } from "react-spring-bottom-sheet";
+import "react-spring-bottom-sheet/dist/style.css";
+
+import { useViewPort } from "../../ViewportProvider.js";
+
 const Map = ({ showToast }) => {
+  const { width, height } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
+
+  useEffect(() => {
+    console.log("VIEWPORT Width : ", width);
+    console.log("VIEWPORT isMobile : ", isMobile);
+  }, [width, isMobile]);
+
   const [selectedEmId, setSelectedEmId] = useState(null);
   const [createTrip, setCreateTrip] = useState(false);
   const [showEmulatorNotSelectedToast, setShowEmulatorNotSelectedToast] =
@@ -71,7 +85,7 @@ const Map = ({ showToast }) => {
   const { data: emulator, setData: setEmulator } = useFetch(
     EMULATOR_URL + `/${selectedEmId}`
   );
-  
+
   const [selectedStop, setSelectedStop] = useState(null);
 
   const [hoveredMarker, setHoveredMarker] = useState(null);
@@ -501,29 +515,40 @@ const Map = ({ showToast }) => {
 
   return (
     <CardComponent>
-      <CreateTripButton onClick={handleCreateTripButton} tripData={tripData}  emulator={emulator}/>
-      <CreateTripOverlay
-        isTableVisible={isTableVisible}
-        selectedEmId={selectedEmId}
-        selectedEmulator={selectedEmulator}
-        showToast={showToast}
-        setIsTableVisible={setIsTableVisible}
-        setSelectedEmId={setSelectedEmId}
-        setCreateTripInfo={setCreateTripInfo}
-      />
-      <GpsOverlay
-        showToast={showToast}
-        setSelectedEmId={setSelectedEmId}
-        setSelectedEmulator={setSelectedEmulator}
-        selectedEmId={selectedEmId}
-        hoveredMarker={hoveredMarker}
-        emulators={emulators}
-        tripData={tripData}
-        selectedEmulator={selectedEmulator}
-        emulator={emulator}
-        AssignedTelephoneNumber={AssignedTelephoneNumber}
-        setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-      />
+      {!isMobile && (
+        <CreateTripButton
+          onClick={handleCreateTripButton}
+          tripData={tripData}
+          emulator={emulator}
+        />
+      )}
+      {!isMobile && (
+        <CreateTripOverlay
+          isTableVisible={isTableVisible}
+          selectedEmId={selectedEmId}
+          selectedEmulator={selectedEmulator}
+          showToast={showToast}
+          setIsTableVisible={setIsTableVisible}
+          setSelectedEmId={setSelectedEmId}
+          setCreateTripInfo={setCreateTripInfo}
+        />
+      )}
+      {!isMobile && (
+        <GpsOverlay
+          showToast={showToast}
+          setSelectedEmId={setSelectedEmId}
+          setSelectedEmulator={setSelectedEmulator}
+          selectedEmId={selectedEmId}
+          hoveredMarker={hoveredMarker}
+          emulators={emulators}
+          tripData={tripData}
+          selectedEmulator={selectedEmulator}
+          emulator={emulator}
+          AssignedTelephoneNumber={AssignedTelephoneNumber}
+          setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+        />
+      )}
+
       <GoogleMapContainer
         mapRef={mapRef}
         pathsRoute={pathsRoute}
@@ -532,7 +557,7 @@ const Map = ({ showToast }) => {
         selectedStop={selectedStop}
         handleMarkerClick={handleMarkerClick}
         hoveredMarker={hoveredMarker}
-        handleMarkerMouseOver ={handleMarkerMouseOver}
+        handleMarkerMouseOver={handleMarkerMouseOver}
         handleMarkerMouseOut={handleMarkerMouseOut}
         handleInfoWindowClose={handleInfoWindowClose}
         selectedEmulator={selectedEmulator}
@@ -552,6 +577,48 @@ const Map = ({ showToast }) => {
           calculateTimeFromTripPointIndexToStopPoint
         }
       />
+      {isMobile && (
+        <BottomSheet
+          open={true}
+          blocking={false}
+          header={
+            <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
+              {" "}
+              INFO{" "}
+            </div>
+          }
+          snapPoints={({ maxHeight }) => [maxHeight / 10, maxHeight * 0.7]}
+        >
+          <CreateTripButton
+            onClick={handleCreateTripButton}
+            tripData={tripData}
+            emulator={emulator}
+          />
+          <CreateTripOverlay
+            isTableVisible={isTableVisible}
+            selectedEmId={selectedEmId}
+            selectedEmulator={selectedEmulator}
+            showToast={showToast}
+            setIsTableVisible={setIsTableVisible}
+            setSelectedEmId={setSelectedEmId}
+            setCreateTripInfo={setCreateTripInfo}
+          />
+          <GpsOverlay
+            showToast={showToast}
+            setSelectedEmId={setSelectedEmId}
+            setSelectedEmulator={setSelectedEmulator}
+            selectedEmId={selectedEmId}
+            hoveredMarker={hoveredMarker}
+            emulators={emulators}
+            tripData={tripData}
+            selectedEmulator={selectedEmulator}
+            emulator={emulator}
+            AssignedTelephoneNumber={AssignedTelephoneNumber}
+            setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+          />
+          HI
+        </BottomSheet>
+      )}
     </CardComponent>
   );
 };
