@@ -234,35 +234,6 @@ const GpsTable = ({
             <table
               aria-label="custom pagination table"
               className=" shadow mb-0 n=">
-              {/* <thead>
-                <tr> */}
-                  {/* <th>Status</th> */}
-                  {/* <th>ID / History</th>
-                  <ColumnResize
-                    id={1}
-                    resizeEnd={(width) => console.log("resize end", width)}
-                    resizeStart={() => console.log("resize start")}
-                    className="columnResizer"
-                  /> */}
-                  {/* <th>Number</th>
-                  <ColumnResize
-                    id={2}
-                    resizeEnd={(width) => console.log("resize end", width)}
-                    resizeStart={() => console.log("resize start")}
-                    className="columnResizer"
-                  /> */}
-                  {/* <th>Address</th>
-                  <ColumnResize
-                    id={3}
-                    resizeEnd={(width) => console.log("resize end", width)}
-                    resizeStart={() => console.log("resize start")}
-                    className="columnResizer"
-                  /> */}
-                  {/* <th>Select</th>
-                  <th>Trip/Action</th> */}
-                {/* </tr>
-              </thead> */}
-
               <tbody>
                 {(rowsPerPage > 0
                   ? emulators.slice(
@@ -286,14 +257,7 @@ const GpsTable = ({
                             ? "#FFA500"
                             : "#ff4d4d",
                             textAlign: 'center'
-                        // display: "flex",
-                        // alignItems: "center",
-                        // justifyContent: "center",
-                        // width: 36,
-                        // padding: "8px 0px 10px 0px"
-                        // padding: "0.7rem 0.1rem",
                       }}>
-                      {/* {row.status || "N/A"} */}
                       {/* Restart/Reset Button */}
                       <RestartAltIcon
                         fontSize="small"
@@ -301,35 +265,8 @@ const GpsTable = ({
                       />
                     </td>
 
-                    {/* ID/HISTORY */}
-                    {/* <td style={{ maxWidth: "120px" }}>
-                      <Tooltip
-                        style={{ display: "flex", alignItems: "center" }}
-                        title={row.emulatorSsid || "N/A"}
-                        placement="top"
-                        alignItems="center"
-                        display="flex">
-                        <div
-                          style={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                          }}>
-                          {row.emulatorSsid || "N/A"}
-                        </div> */}
-                        {/* Show History */}
-                        {/* <IconButton size="small">
-                          <HistoryIcon
-                            fontSize="small"
-                            onClick={() => handleHistoryButtonClick(row)}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                    </td> */}
-                    {/* <td className="column_resizer_body" /> */}
-
                     {/* TELEPHONE */}
-                    <td style={{ maxWidth: "120px" }}>
+                    <td>
                       <Tooltip
                         style={{ display: "flex", alignItems: "center" }}
                         title={row.telephone || "N/A"}
@@ -345,7 +282,7 @@ const GpsTable = ({
                         </div>
 
                         {/* Icons */}
-                        <div style={{ display: "flex", maxWidth: "100px" }}>
+                        <div style={{ display: "flex"}}>
                           {/* calling icon */}
                           <IconButton
                             size="small"
@@ -366,25 +303,8 @@ const GpsTable = ({
                         </div>
                       </Tooltip>
                     </td>
-                    {/* <td className="column_resizer_body" /> */}
 
-                    {/* ADDRESS */}
-
-                    {/* <td style={{ maxWidth: "100px" }}>
-                      <Tooltip title={row.address || "N/A"} placement="top">
-                        <div
-                          style={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                          }}>
-                          {row.address || "N/A"}
-                        </div>
-                      </Tooltip>
-                    </td> */}
-                    {/* <td className="column_resizer_body" /> */}
-
-                    <td style={{ width: "30px" }} align="right">
+                    <td align="right">
                       <Checkbox
                         size="small"
                         checked={selectedEmulator?.id === row.id}
@@ -393,7 +313,7 @@ const GpsTable = ({
                         }
                       />
                     </td>
-                    <td style={{ width: "auto" }} align="right">
+                    <td align="right">
                       <div
                         style={{
                           display: "flex",
@@ -440,7 +360,6 @@ const GpsTable = ({
                   </tr>
                 ))}
               </tbody>
-
               <tfoot className="table_footer">
                 <tr>
                   <CustomTablePagination
