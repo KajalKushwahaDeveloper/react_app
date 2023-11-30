@@ -52,10 +52,11 @@ const GpsTable = ({
 
   const { width, height } = useViewPort();
   const breakpoint = 620;
-  const isMobile = width < breakpoint;
 
+  const isMobile = width < breakpoint;
+  
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [emptyRows, setEmptyRows] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(3); // Number of items to display per page
@@ -134,7 +135,7 @@ const GpsTable = ({
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 20));
     setPage(0);
   };
 
@@ -221,15 +222,15 @@ const GpsTable = ({
   }
 
   return (
-    <div style={{display:"flex", flexDirection:"column", position: "absolute",top: isMobile ? "178px" : "128px"}}>
-      <div className="table-responsive tableBox" gps_table_container>
+    <div style={{ display: "flex", flexDirection: "column", position: "absolute", top: isMobile ? "190px" : "128px" }}>
+      <div className={isMobile === true ? "table-responsive-mobile tableBox" : "table-responsive"} >
         {/* Collapse table */}
-        {showHideTable === true ? (
+        {/* {showHideTable === true ? (
           <ArrowCircleRightIcon
             style={{ cursor: "pointer" , marginTop:"1vh"}}
             onClick={() => setShowHideTable(false)}
           />
-        ) : (
+        ) : ( */}
           <>
             <table
               aria-label="custom pagination table"
@@ -444,7 +445,7 @@ const GpsTable = ({
               <tfoot className="table_footer">
                 <tr>
                   <CustomTablePagination
-                    rowsPerPageOptions={[10, 20, 30, { label: "All", value: -1 }]}
+                    rowsPerPageOptions={[20, 40, 60, { label: "All", value: -1 }]}
                     colSpan={6}
                     count={emulators.length}
                     rowsPerPage={rowsPerPage}
@@ -473,15 +474,15 @@ const GpsTable = ({
               showToast={showToast}
             />
           </>
-        )}
-        </div>
+        {/* )} */}
+      </div>
         <div>
-      {showHideTable === false &&
+      {/* {showHideTable === false &&
           <CancelIcon
           style={{ float: "right", cursor: "pointer", marginBottom: "5px" }}
           onClick={() => setShowHideTable(true)}
         />
-        }
+        } */}
       </div>
     </div>
   );
