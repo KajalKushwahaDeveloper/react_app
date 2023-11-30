@@ -2,9 +2,6 @@
 import React, { useEffect } from "react";
 import GpsTable from "./gps_page_table";
 import AddressTable from "./address_table";
-import { useState } from "react";
-import "../../../scss/map.scss";
-import MyTable from "../../MyTable";
 
 const GpsOverlay = ({
   showToast,
@@ -20,20 +17,18 @@ const GpsOverlay = ({
   setAssignedTelephoneNumber,
 }) => {
   return (
-    <div style={{ position: "absolute", top: "128px" }}>
-      <div>
-        <GpsTable
-          showToast={showToast}
-          setSelectedEmId={setSelectedEmId}
-          selectedEmId={selectedEmId}
-          hoveredMarker={hoveredMarker}
-          emulators={emulators}
-          setSelectedEmulator={setSelectedEmulator}
-          selectedEmulator={selectedEmulator}
-          AssignedTelephoneNumber={AssignedTelephoneNumber}
-          setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-        />
-      </div>
+    <div>
+      <GpsTable 
+        showToast={showToast}
+        setSelectedEmId={setSelectedEmId}
+        selectedEmId={selectedEmId}
+        hoveredMarker={hoveredMarker}
+        emulators={emulators}
+        setSelectedEmulator={setSelectedEmulator}
+        selectedEmulator={selectedEmulator}
+        AssignedTelephoneNumber={AssignedTelephoneNumber}
+        setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+      />
       <div>
         <AddressTable tripData={tripData} emulator={emulator} />
       </div>

@@ -35,11 +35,6 @@ const Map = ({ showToast }) => {
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
-  useEffect(() => {
-    console.log("VIEWPORT Width : ", width);
-    console.log("VIEWPORT isMobile : ", isMobile);
-  }, [width, isMobile]);
-
   const [selectedEmId, setSelectedEmId] = useState(null);
   const [createTrip, setCreateTrip] = useState(false);
   const [showEmulatorNotSelectedToast, setShowEmulatorNotSelectedToast] =
@@ -521,6 +516,7 @@ const Map = ({ showToast }) => {
           onClick={handleCreateTripButton}
           tripData={tripData}
           emulator={emulator}
+          validateEmulatorsData={validateEmulatorsData}
         />
       )}
       {!isMobile && (
@@ -589,7 +585,7 @@ const Map = ({ showToast }) => {
               INFO
             </div>
           }
-          snapPoints={({ maxHeight }) => [maxHeight / 10, maxHeight * 0.7]}
+          snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.6]}
         >
           <div>
           ‎ 
@@ -597,6 +593,7 @@ const Map = ({ showToast }) => {
             onClick={handleCreateTripButton}
             tripData={tripData}
             emulator={emulator}
+            validateEmulatorsData={validateEmulatorsData}
           />
           <CreateTripOverlay
             isTableVisible={isTableVisible}

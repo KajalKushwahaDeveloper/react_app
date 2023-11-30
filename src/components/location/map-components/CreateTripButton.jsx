@@ -1,8 +1,10 @@
 // CreateTripButton.jsx
 import React, { useEffect, useState } from "react";
 import SyncIcon from "@mui/icons-material/Sync";
+import ApiService from "../../../ApiService";
+import { EMULATOR_DRAG_URL, TRIP_URL } from "../../../constants";
 
-const CreateTripButton = ({ onClick, tripData, emulator }) => {
+const CreateTripButton = ({ onClick, tripData, emulator , validateEmulatorsData }) => {
   console.log("tripData", tripData);
   console.log("emulator", emulator);
   const [isSpinning, setSpinning] = useState(false);
@@ -13,6 +15,36 @@ const CreateTripButton = ({ onClick, tripData, emulator }) => {
     setTimeout(() => {
       window.location.reload();
     }, 1000);
+  };
+
+  const handleCancelTripClick = async () => {
+    const confirmed = window.confirm(
+      "Delete this trip?"
+    );
+    if (confirmed) {
+      const token = localStorage.getItem("token");
+
+      let payload = {
+        emulatorId: emulator.id,
+        cancelTrip: true,
+        latitude: emulator.latitude,
+        longitude: emulator.longitude,
+        newTripIndex: null,
+      };
+
+      const { success, data, error } = await ApiService.makeApiCall(
+        EMULATOR_DRAG_URL,
+        "POST",
+        payload,
+        token,
+        null
+      );
+
+      if (success) {
+          validateEmulatorsData(null, data);
+      } else {
+      }
+    }
   };
 
   useEffect(() => {
@@ -56,7 +88,7 @@ const CreateTripButton = ({ onClick, tripData, emulator }) => {
             display: "flex",
             alignItems: "center",
           }}
-          // onClick={onClick}
+          onClick={handleCancelTripClick}
         >
           Cancel Trip
         </button>

@@ -5,17 +5,6 @@ body {
   @include main;
 }
 
-.gps_overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  // justify-content: flex-end;
-  align-items: flex-start;
-  padding: 0 2px;
-  z-index: 2;
-}
 .gps_createTrip_overlay {
   position: absolute;
   top: 0;
@@ -70,35 +59,11 @@ th {
   color: $background-color;
 }
 
-
-.gps_overlay {
-  width: 40%;
-  position: absolute;
-  top: 55px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0 2px;
-  z-index: 2;
-  // top: 0;
-  right: 0;
-  // margin-top: 3rem;
-  width: 40%;
-  display: flex;
-  // justify-content: flex-end;
-  align-items: flex-start;
-}
-
 .main-address-table{
   position:fixed;
   top: 64px;
   z-index: 2;
   background-color: white;
-
-
-
 
   @media screen and (max-width: 620px) {
     .address-table-heading{
@@ -172,47 +137,6 @@ th {
   }
 }
 
-.gps_overlay {
-  width: 40%;
-  position: absolute;
-  top: 55px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0 2px;
-  z-index: 2;
-  // top: 0;
-  right: 0;
-  // margin-top: 3rem;
-  width: 40%;
-  display: flex;
-  // justify-content: flex-end;
-  align-items: flex-start;
-}
-
-
-.gps_overlay {
-  width: 40%;
-  position: absolute;
-  top: 55px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0 2px;
-  z-index: 2;
-  // top: 0;
-  right: 0;
-  // margin-top: 3rem;
-  width: 40%;
-  display: flex;
-  // justify-content: flex-end;
-  align-items: flex-start;
-}
-
 .mapContainer {
   height: 100vh;
   display: flex;
@@ -230,66 +154,3 @@ th {
   align-items: center;
   background: $background-color;
 }
-
-.gps_overlay {
-  width: 40%;
-  position: absolute;
-  top: 55px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0 2px;
-  z-index: 2;
-  // top: 0;
-  right: 0;
-  // margin-top: 3rem;
-  width: 40%;
-  display: flex;
-  // justify-content: flex-end;
-  align-items: flex-start;
-}
-
-.gps_overlay {
-  width: 40%;
-  position: absolute;
-  top: 10px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0 2px;
-  z-index: 2;
-  // top: 0;
-  right: 0;
-  // margin-top: 3rem;
-  width: 40%;
-  display: flex;
-  // justify-content: flex-end;
-  align-items: flex-start;
-}
-@media only screen and (max-width: 440px) {
-  .gps_overlay {
-    width: 40%;
-    position: absolute;
-    // top: 10px;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 0 2px;
-    z-index: 2;
-    top: 10px;
-    // right: 0;
-    // margin-top: 3rem;
-    width: 40%;
-    display: flex;
-    // justify-content: flex-end;
-    align-items: flex-start;
-  }
-  
-}
-
