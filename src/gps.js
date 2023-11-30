@@ -65,8 +65,8 @@ const GPS = () => {
             <div>
               <AddressTable tripData={tripData} emulator={emulator} />
             </div>
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <div style={{ flex: "1" }}>
+              <div style={{ display: "flex", flexDirection: "row", flexWrap : "wrap"}}>
+                <div style={{ minWidth: "399px"}}>
                   <GpsTable
                     showToast={showToast}
                     setSelectedEmId={setSelectedEmId}

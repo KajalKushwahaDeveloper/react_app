@@ -224,13 +224,6 @@ const GpsTable = ({
   return (
     <div style={{ display: "flex", flexDirection: "column", position: "absolute", top: isMobile ? "190px" : "128px" }}>
       <div className={isMobile === true ? "table-responsive-mobile tableBox" : "table-responsive"} >
-        {/* Collapse table */}
-        {/* {showHideTable === true ? (
-          <ArrowCircleRightIcon
-            style={{ cursor: "pointer" , marginTop:"1vh"}}
-            onClick={() => setShowHideTable(false)}
-          />
-        ) : ( */}
           <>
             <table
               aria-label="custom pagination table"
@@ -393,15 +386,8 @@ const GpsTable = ({
               showToast={showToast}
             />
           </>
-        {/* )} */}
       </div>
         <div>
-      {/* {showHideTable === false &&
-          <CancelIcon
-          style={{ float: "right", cursor: "pointer", marginBottom: "5px" }}
-          onClick={() => setShowHideTable(true)}
-        />
-        } */}
       </div>
     </div>
   );
