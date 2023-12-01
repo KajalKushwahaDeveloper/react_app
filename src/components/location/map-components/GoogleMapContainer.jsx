@@ -205,13 +205,26 @@ const GoogleMapContainer = ({
             }
 
             const isHovered = hoveredMarker === emulator;
-
+            const isSelected = selectedEmulator === emulator;
+            //PAUSED RESTING RUNNING STOP
+            var icon_url = `images/${emulator.tripStatus}_`;
+            //ONLINE OFFLINE
+            if (isActiveUser) {
+              icon_url = icon_url + "ONLINE_";
+            } else {
+              icon_url = icon_url + "OFFLINE_";
+            }
+            if (isHovered) {
+              icon_url = icon_url + "HOVER.svg";
+            } else if (isSelected) {
+              icon_url = icon_url + "SELECT.svg";
+            } else {
+              icon_url = icon_url + ".svg";
+            } 
+            console.log("icon_url", icon_url);
+            
             const emulatorIcon = {
-              url: emulator
-                ? `images/${emulator.tripStatus}_truck_icon_${
-                    isActiveUser ? "blue" : "red"
-                  }.png`
-                : "images/blue_truck.png",
+              url: icon_url,
               // scaledSize: new window.google.maps.Size(24, 24),
               scaledSize: new window.google.maps.Size(
                 isHovered ? 16 : 20, // Adjust the size for hover

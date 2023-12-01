@@ -1,0 +1,34 @@
+<svg width="20px" height="20px" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+    <style>
+        circle {
+            fill: #FF0000;
+            stroke: #FF0000;
+            stroke-width: 1px;
+            stroke-opacity: 1;
+        }
+        .pulse {
+            fill: #7F40E2;
+            fill-opacity: 0;
+            transform-origin: 50% 50%;
+            animation-duration: 2s;
+            animation-name: pulse;
+            animation-iteration-count: infinite;
+        }
+        @keyframes pulse {
+            from {
+                stroke-width: 10px;
+                stroke-opacity: 1;
+                transform: scale(0.3);
+            }
+            to {
+                stroke-width: 0;
+                stroke-opacity: 0;
+                transform: scale(2);
+            }
+        }
+    </style>
+    </defs>
+    <circle cx="50%" cy="50%" r="5px"></circle>
+    <circle class="pulse" cx="50%" cy="50%" r="8px"></circle>
+</svg>
