@@ -1,9 +1,15 @@
 import React from "react";
 import "../../../scss/map.scss";
+import { useViewPort } from "../../../ViewportProvider.js";
+
 const AddressTable = ({ tripData, emulator }) => {
   var fromAddress = null;
   var toAddress = null;
   var timeInHours = null;
+
+  const { width, height } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
 
   if (tripData !== null && tripData !== undefined) {
     fromAddress =
@@ -67,11 +73,132 @@ const AddressTable = ({ tripData, emulator }) => {
 
   return (
     <div className="container-fluid main-address-table">
-      <div className="row"
+      {isMobile ? (
+        <div
+          className="row"
           style={{
             height: "35px !important",
-            background: "white"
+            background: "white",
           }}>
+          {/* CURRENT ADDRESS*/}
+          <div
+            class="col-6 d-flex flex-column"
+            style={{
+              border: "2px solid",
+              color: "black",
+              alignItems: "center",
+              padding: "0",
+            }}>
+            <div className="address-table-heading">Current location</div>
+            <div className="addressTable" style={{height:"auto", fontSize:"10px", width:"calc(100% - 5px)"}}>
+              {emulator && emulator.address ? emulator.address : "N/A"}
+            </div>
+          </div>
+
+          {/* FROM ADDRESS*/}
+          <div
+            class="col-6 d-flex flex-column"
+            style={{
+              border: "2px solid",
+              alignItems: "center",
+              padding: "0",
+            }}>
+            <div className="address-table-heading">From address</div>
+            <div className="addressTable" style={{height:"auto", fontSize:"10px", width:"calc(100% - 5px)"}}>
+              {fromAddress ? fromAddress : "N/A"}
+            </div>
+          </div>
+
+          {/* TO ADDRESS*/}
+          <div
+            class="col-5 d-flex flex-column"
+            style={{
+              border: "2px solid",
+              alignItems: "center",
+              padding: "0",
+            }}>
+            <div className="address-table-heading">To address</div>
+            <div className="addressTable" style={{height:"auto", fontSize:"10px", width:"calc(100% - 5px)"}}>{toAddress ? toAddress : "N/A"}</div>
+          </div>
+
+          {/* TIME */}
+          <div
+            class="col-5 d-flex flex-column"
+            style={{
+              border: "2px solid",
+              alignItems: "center",
+              padding: "0px !important",
+            }}>
+            <div className="address-table-heading">Total Time </div>
+            {tripData && emulator ? (
+              <div
+                style={{
+                  marginTop: "5px !important",
+               
+                }}
+                className="totalTimeSubContent">
+                <div
+                  className="addressTable"
+                  style={{ wordWrap: "break-word", height:"auto", fontSize:"10px", width:"calc(100% - 5px)"}}>
+                  {totalTime}
+                </div>
+                {tripData &&
+                  emulator &&
+                  emulator.tripStatus === "RESTING" &&
+                  currentStop && (
+                    <div
+                      className="addressTable"
+                      style={{ wordWrap: "break-word" }}>
+                      <p>{stopReachedTime}</p>
+                      <p>{stopWaitingTillTime}</p>
+                      <p>{stopRemainingTime}</p>
+                    </div>
+                  )}
+              </div>
+            ) : (
+              <div className="addressTable" style={{height:"50px"}}>N/A</div>
+            )}
+          </div>
+
+          {/* PLUS MINUS ICONS */}
+          <div
+            class="col-2 d-flex flex-column"
+            style={{
+              padding: "0",
+            }}>
+            <div class="btn-group">
+              <button
+                type="button"
+                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
+                style={{
+                  backgroundColor: "#ff0000",
+                  margin: 0,
+                  width: "50%",
+                  height: "100%",
+                }}>
+                <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
+              </button>
+              <button
+                type="button"
+                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
+                style={{
+                  backgroundColor: "#39e600",
+                  margin: 0,
+                  width: "50%",
+                  height: "100%",
+                }}>
+                <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+      <div
+        className="row"
+        style={{
+          height: "35px !important",
+          background: "white",
+        }}>
         {/* CURRENT ADDRESS*/}
         <div
           class="col d-flex flex-column"
@@ -80,8 +207,7 @@ const AddressTable = ({ tripData, emulator }) => {
             color: "black",
             alignItems: "center",
             padding: "0",
-          }}
-        >
+          }}>
           <div className="address-table-heading">Current location</div>
           <div className="addressTable">
             {emulator && emulator.address ? emulator.address : "N/A"}
@@ -95,8 +221,7 @@ const AddressTable = ({ tripData, emulator }) => {
             border: "2px solid",
             alignItems: "center",
             padding: "0",
-          }}
-        >
+          }}>
           <div className="address-table-heading">From address</div>
           <div className="addressTable">
             {fromAddress ? fromAddress : "N/A"}
@@ -110,8 +235,7 @@ const AddressTable = ({ tripData, emulator }) => {
             border: "2px solid",
             alignItems: "center",
             padding: "0",
-          }}
-        >
+          }}>
           <div className="address-table-heading">To address</div>
           <div className="addressTable">{toAddress ? toAddress : "N/A"}</div>
         </div>
@@ -123,8 +247,7 @@ const AddressTable = ({ tripData, emulator }) => {
             border: "2px solid",
             alignItems: "center",
             padding: "0px !important",
-          }}
-        >
+          }}>
           <div className="address-table-heading">Total Time </div>
           {tripData && emulator ? (
             <div
@@ -134,9 +257,10 @@ const AddressTable = ({ tripData, emulator }) => {
                 textAlign: "center",
                 maxWidth: "20vw",
               }}
-              className="totalTimeSubContent"
-            >
-              <div className="addressTable" style={{ wordWrap: "break-word" }}>
+              className="totalTimeSubContent">
+              <div
+                className="addressTable"
+                style={{ wordWrap: "break-word" }}>
                 {totalTime}
               </div>
               {tripData &&
@@ -145,8 +269,7 @@ const AddressTable = ({ tripData, emulator }) => {
                 currentStop && (
                   <div
                     className="addressTable"
-                    style={{ wordWrap: "break-word" }}
-                  >
+                    style={{ wordWrap: "break-word" }}>
                     <p>{stopReachedTime}</p>
                     <p>{stopWaitingTillTime}</p>
                     <p>{stopRemainingTime}</p>
@@ -163,8 +286,7 @@ const AddressTable = ({ tripData, emulator }) => {
           class="col-1 d-flex flex-column"
           style={{
             padding: "0",
-          }}
-        >
+          }}>
           <div class="btn-group">
             <button
               type="button"
@@ -174,8 +296,7 @@ const AddressTable = ({ tripData, emulator }) => {
                 margin: 0,
                 width: "50%",
                 height: "100%",
-              }}
-            >
+              }}>
               <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
             </button>
             <button
@@ -186,13 +307,13 @@ const AddressTable = ({ tripData, emulator }) => {
                 margin: 0,
                 width: "50%",
                 height: "100%",
-              }}
-            >
+              }}>
               <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
             </button>
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };

@@ -222,7 +222,7 @@ const GpsTable = ({
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", position: "absolute", top: isMobile ? "190px" : "128px" }}>
+    <div style={{ display: "flex", flexDirection: "column", position: "absolute", top: isMobile ? "45vh" : "128px" }}>
       <div className={isMobile === true ? "table-responsive-mobile tableBox" : "table-responsive"} >
           <>
             <table
