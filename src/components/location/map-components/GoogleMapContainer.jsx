@@ -4,7 +4,6 @@ import {
   Polyline,
   Marker,
   InfoWindow,
-  Circle,
 } from "react-google-maps";
 import {
   Dialog,
@@ -222,17 +221,11 @@ const GoogleMapContainer = ({
               icon_url = icon_url + ".svg";
             } 
             console.log("icon_url", icon_url);
-            
+
             const emulatorIcon = {
               url: icon_url,
-              // scaledSize: new window.google.maps.Size(24, 24),
-              scaledSize: new window.google.maps.Size(
-                isHovered ? 16 : 20, // Adjust the size for hover
-                isHovered ? 16 : 20
-              ),
-              anchor: new window.google.maps.Point(isHovered ? 8 : 10, isHovered ? 8 : 10),
-              // scale: isHovered ? 2 : 1,
-              strokeWeight: 10,
+              scaledSize: new window.google.maps.Size(isSelected ? 40 : 20, isSelected ? 40 : 20),
+              anchor: new window.google.maps.Point(isSelected ? 20 :10, isSelected ? 20 :10),
               labelStyle: {
                 borderRadius: "50%",
                 border: "3px solid #c2c7ce !important",
@@ -240,36 +233,8 @@ const GoogleMapContainer = ({
               },
             };
 
-            const circleIcon = {
-              path: window.google.maps.SymbolPath.CIRCLE,
-              fillColor: "transparent", // Set the color you want for the circle
-              fillOpacity: 0.5, // Adjust the opacity as needed
-              scale: 3, // Adjust the scale to make it larger or smaller
-              strokeColor: isActiveUser? "#c2c7ce" : "black", // Set the border color
-              strokeWeight: 3, // Adjust the border thickness
-            };
-          
-
-            if (isHovered) {
-              circleIcon.scale = 10;
-            }
-
             return (
               <React.Fragment key={index}>
-                {isHovered && (
-                  <Marker
-                    position={{
-                      lat: emulator.latitude,
-                      lng: emulator.longitude,
-                    }}
-                    icon={circleIcon}
-                    clickable={false}
-                    // animation={4}
-                    labelStyle={{
-                      transition: "all 3s ease",
-                    }}
-                  />
-                )}
                 <MarkerWithLabel
                   icon={emulatorIcon}
                   position={{

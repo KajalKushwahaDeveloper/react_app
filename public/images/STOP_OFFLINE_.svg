@@ -1,11 +1,9 @@
 <svg 
-  version="1.1" id="Layer_1" 
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink" 
-  x="0px" y="0px" width="100%" 
-  viewBox="0 0 512 512"
-  enable-background="new 0 0 512 512"
-  xml:space="preserve">
+version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink" 
+ x="0px" y="0px" width="100%" 
+ viewBox="0 0 512 512"
+  enable-background="new 0 0 512 512" xml:space="preserve">
 
   <style>
     @keyframes pulse {
@@ -21,7 +19,7 @@
     }
 
     .pulse-animation {
-      	animation: pulse 0.5s infinite; /* You can adjust the duration as needed */
+      	animation: pulse 2s infinite; /* You can adjust the duration as needed */
 		transform-origin: center center;
     }
   </style>
@@ -54,5 +52,4 @@
     C129.997574,316.493225 130.000946,286.996613 130.000946,257.000000 
     z"
   />
-
 </svg>
