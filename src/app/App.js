@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import LoginPage from "./login_page";
-import Home from "./home";
-import GPS from "./gps";
-import Logout from "./logout.js";
-import Navbar from "./components/navbar";
-import ResetPasswordPage from "./resetPassword";
+import LoginPage from "../login_page.js";
+import Home from "../home.js";
+import GPS from "../gps.js";
+import Logout from "../logout.js";
+import Navbar from "../components/navbar.js";
+import ResetPasswordPage from "../resetPassword.js";
 
 import {
   Routes,
@@ -13,8 +13,8 @@ import {
   useLocation,
   Outlet,
 } from "react-router-dom";
-import ApiService from "./ApiService";
-import { CLIENT_CURRENT } from "./constants";
+import ApiService from "../ApiService.js";
+import { CLIENT_CURRENT } from "../constants.js";
 import { useNavigate } from "react-router-dom";
 
 

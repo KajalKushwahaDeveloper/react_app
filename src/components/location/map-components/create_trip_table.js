@@ -15,7 +15,6 @@ const CreateTripTable = ({
   setIsTableVisible,
   setUpdatedTripPath,
   setSelectedEmId,
-  setCreateTripInfo,
 }) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
@@ -82,7 +81,6 @@ const CreateTripTable = ({
         showToast("Added successfully", "success");
         setSelectedEmId(0);
         setSelectedEmId(selectedEmId);
-        setCreateTripInfo(data);
       } else {
         showToast(error, "error");
       }

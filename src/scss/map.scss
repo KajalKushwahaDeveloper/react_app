@@ -9,7 +9,6 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 2;
   margin-top: 3rem;
   width: 40%;
   display: flex;
@@ -156,7 +155,6 @@ th {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  width: 100vw;
   box-sizing: border-box;
   flex-shrink: 0;
   position: static;

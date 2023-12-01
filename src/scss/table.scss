@@ -17,22 +17,6 @@
   padding-left: 1%;
 }
 
-
-
-/* RESPONSIVE EXAMPLE */
-
-.stacktable.large-only { display: table; }
-.stacktable.small-only { display: none; }
-
-@media (max-width: 800px) {
-.stacktable.large-only { display: none; }
-.stacktable.small-only { display: table; }
-}
-@media (max-width: 400px) {
-  .stacktable.large-only { display: none; }
-  .stacktable.small-only { display: table; }
-}
-
 h2 {
 text-align: center;
 padding-top: 10px;
