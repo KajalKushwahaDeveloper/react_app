@@ -156,12 +156,6 @@ const GPS = () => {
                 setSelectedEmId={setSelectedEmId}
               />
               <div>
-                  {/* <CreateTripButton
-                    onClick={handleCreateTripButton}
-                    tripData={tripData}
-                    emulator={emulator}
-                    validateEmulatorsData={validateEmulatorsData}
-                  /> */}
                   <GpsTable
                     showToast={showToast}
                     setSelectedEmId={setSelectedEmId}
