@@ -71,12 +71,12 @@ const GoogleMapContainer = ({
     if (selectedEmulator !== null && selectedEmulator !== undefined) {
       if (pathsRoute !== null && pathsRoute !== undefined) {
         setPathTraveled(
-          pathsRoute.filter(
+          pathsRoute?.filter(
             (item, index) => index <= selectedEmulator.currentTripPointIndex
           )
         );
         setPathNotTraveled(
-          pathsRoute.filter(
+          pathsRoute?.filter(
             (item, index) => index >= selectedEmulator.currentTripPointIndex
           )
         );
@@ -186,7 +186,7 @@ const GoogleMapContainer = ({
 
       {emulators !== null &&
         emulators
-          .filter(
+          ?.filter(
             (emulator) =>
               emulator.latitude !== null && emulator.longitude !== null
           )

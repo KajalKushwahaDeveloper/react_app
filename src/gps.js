@@ -167,7 +167,7 @@ const GPS = () => {
                     setSelectedEmId={setSelectedEmId}
                     selectedEmId={selectedEmId}
                     hoveredMarker={hoveredMarker}
-                    emulators={emulators}
+                    emulators={emulatorData}
                     setSelectedEmulator={setSelectedEmulator}
                     selectedEmulator={selectedEmulator}
                     AssignedTelephoneNumber={AssignedTelephoneNumber}
