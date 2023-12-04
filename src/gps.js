@@ -1,7 +1,7 @@
 import "./scss/map.scss";
 import { ToastContainer, toast } from "react-toastify";
 import WrappedMap from "./components/location/Map";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CreateTripButton from "./components/location/map-components/CreateTripButton.jsx";
 import CreateTripOverlay from "./components/location/map-components/CreateTripOverlay";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -10,6 +10,7 @@ import { useViewPort } from "./ViewportProvider.js";
 import { useStates } from "./StateProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
+import { GetEmulatorApi } from "./components/api/emulator.js";
 
 const showToast = (message, type) => {
   console.log("Showing toast...");
@@ -40,6 +41,8 @@ const GPS = () => {
     hoveredMarker,
     setHoveredMarker,
   } = useStates();
+  const [emulatorData, setEmulatorData] = useState();
+
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
@@ -55,6 +58,18 @@ const GPS = () => {
       setIsTableVisible(!isTableVisible);
     }
   };
+
+  useEffect(() => {
+    const getEmulatorData = async () => {
+      const { success, data, error } = await GetEmulatorApi();
+      if (success) {
+        setEmulatorData(data);
+      } else {
+        console.log("Error:", error);
+      }
+    }
+    getEmulatorData();
+  }, []);
 
   return (
     <>
@@ -77,7 +92,7 @@ const GPS = () => {
                   setSelectedEmId={setSelectedEmId}
                   selectedEmId={selectedEmId}
                   hoveredMarker={hoveredMarker}
-                  emulators={emulators}
+                  emulators={emulatorData}
                   setSelectedEmulator={setSelectedEmulator}
                   selectedEmulator={selectedEmulator}
                   AssignedTelephoneNumber={AssignedTelephoneNumber}
