@@ -281,7 +281,8 @@ const GpsTable = ({
                               textOverflow: "ellipsis",
                               overflow: "hidden",
                               whiteSpace: "nowrap",
-                              flexGrow: 1,
+                                flexGrow: 1,
+                                maxWidth: 80
                             }
                             }>
                           {row.telephone || "N/A"}
