@@ -52,8 +52,10 @@ const GpsTable = ({
 
   const { width, height } = useViewPort();
   const breakpoint = 620;
+  const breakpointThreeTwenty = 320;
 
   const isMobile = width < breakpoint;
+  const isMobileThreeTwenty = width < breakpointThreeTwenty
   
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -271,6 +273,7 @@ const GpsTable = ({
                             overflow: "hidden",
                             whiteSpace: "nowrap",
                             flexGrow: 1,
+                            maxWidth:26
                           }}>
                           {row.telephone || "N/A"}
                         </div>
