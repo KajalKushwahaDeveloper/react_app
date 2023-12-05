@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import useFetch from "./hooks/useFetch";
 import {
   TRIP_STOPS_URL,
@@ -8,7 +14,7 @@ import {
 } from "./constants";
 import ApiService from "./ApiService";
 
-export const statesContext = React.createContext({});
+export const StatesContext = React.createContext({});
 
 const useStates = () => {
   const {
@@ -27,12 +33,12 @@ const useStates = () => {
     setSelectedEmulator,
     AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
-    isTableVisible, 
+    isTableVisible,
     setIsTableVisible,
     validateEmulatorsData,
     hoveredMarker,
-    setHoveredMarker
-  } = React.useContext(statesContext);
+    setHoveredMarker,
+  } = React.useContext(StatesContext);
   return {
     selectedEmId,
     paths,
@@ -49,11 +55,11 @@ const useStates = () => {
     setSelectedEmulator,
     AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
-    isTableVisible, 
+    isTableVisible,
     setIsTableVisible,
     validateEmulatorsData,
     hoveredMarker,
-    setHoveredMarker
+    setHoveredMarker,
   };
 };
 
@@ -73,11 +79,10 @@ export const StateProvider = ({ children }) => {
   const [selectedEmulator, setSelectedEmulator] = useState(null);
   const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
 
-
-
   const [isTableVisible, setIsTableVisible] = useState(false);
 
   const [hoveredMarker, setHoveredMarker] = useState(null);
+  let emulatorInterval;
 
   const validateEmulatorsData = (newEmulatorsData, newEmulatorData) => {
     var selectedEmulatorToValidate = null;
@@ -172,29 +177,27 @@ export const StateProvider = ({ children }) => {
     }
   };
 
+  const startEmulatorInterval = () => {
+    const token = localStorage.getItem("token");
+    emulatorInterval = setInterval(async () => {
+      // Manually trigger the fetch to get the latest emulator data
+      const { success, data, error } = await ApiService.makeApiCall(
+        EMULATOR_URL,
+        "GET",
+        null,
+        token
+      );
+      if (success) {
+        validateEmulatorsData(data, null);
+      } else {
+        console.log("old Emulator ERROR : ", error);
+      }
+    }, 5000);
+  };
 
   const emulatorIntervalRef = useRef(null);
   // Auto refresh emulators
   useEffect(() => {
-    let emulatorInterval;
-    const startEmulatorInterval = () => {
-      const token = localStorage.getItem("token");
-      emulatorInterval = setInterval(async () => {
-        // Manually trigger the fetch to get the latest emulator data
-        const { success, data, error } = await ApiService.makeApiCall(
-          EMULATOR_URL,
-          "GET",
-          null,
-          token
-        );
-        if (success) {
-          validateEmulatorsData(data, null);
-        } else {
-          console.log("old Emulator ERROR : ", error);
-        }
-      }, 5000);
-    };
-
     const stopEmulatorInterval = () => {
       clearInterval(emulatorInterval);
     };
@@ -203,7 +206,6 @@ export const StateProvider = ({ children }) => {
       start: startEmulatorInterval,
       stop: stopEmulatorInterval,
     };
-
     // Start the emulator interval
     emulatorIntervalRef.current.start();
 
@@ -213,7 +215,7 @@ export const StateProvider = ({ children }) => {
   }, [emulator, emulators, setEmulator, setEmulators]);
 
   return (
-    <statesContext.Provider
+    <StatesContext.Provider
       value={{
         selectedEmId,
         paths,
@@ -230,14 +232,14 @@ export const StateProvider = ({ children }) => {
         setSelectedEmulator,
         AssignedTelephoneNumber,
         setAssignedTelephoneNumber,
-        isTableVisible, 
+        isTableVisible,
         setIsTableVisible,
         validateEmulatorsData,
         hoveredMarker,
-        setHoveredMarker
+        setHoveredMarker,
       }}
     >
       {children}
-    </statesContext.Provider>
+    </StatesContext.Provider>
   );
 };
