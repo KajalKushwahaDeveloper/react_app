@@ -4,7 +4,6 @@ import {
   Polyline,
   Marker,
   InfoWindow,
-  Circle,
 } from "react-google-maps";
 import {
   Dialog,
@@ -205,21 +204,28 @@ const GoogleMapContainer = ({
             }
 
             const isHovered = hoveredMarker === emulator;
+            const isSelected = selectedEmulator === emulator;
+            //PAUSED RESTING RUNNING STOP
+            var icon_url = `images/${emulator.tripStatus}_`;
+            //ONLINE OFFLINE
+            if (isActiveUser) {
+              icon_url = icon_url + "ONLINE_";
+            } else {
+              icon_url = icon_url + "OFFLINE_";
+            }
+            if (isHovered) {
+              icon_url = icon_url + "HOVER.svg";
+            } else if (isSelected) {
+              icon_url = icon_url + "SELECT.svg";
+            } else {
+              icon_url = icon_url + ".svg";
+            } 
+            console.log("icon_url", icon_url);
 
             const emulatorIcon = {
-              url: emulator
-                ? `images/${emulator.tripStatus}_truck_icon_${
-                    isActiveUser ? "blue" : "red"
-                  }.png`
-                : "images/blue_truck.png",
-              // scaledSize: new window.google.maps.Size(24, 24),
-              scaledSize: new window.google.maps.Size(
-                isHovered ? 16 : 20, // Adjust the size for hover
-                isHovered ? 16 : 20
-              ),
-              anchor: new window.google.maps.Point(isHovered ? 8 : 10, isHovered ? 8 : 10),
-              // scale: isHovered ? 2 : 1,
-              strokeWeight: 10,
+              url: icon_url,
+              scaledSize: new window.google.maps.Size(isSelected ? 40 : 20, isSelected ? 40 : 20),
+              anchor: new window.google.maps.Point(isSelected ? 20 :10, isSelected ? 20 :10),
               labelStyle: {
                 borderRadius: "50%",
                 border: "3px solid #c2c7ce !important",
@@ -227,36 +233,8 @@ const GoogleMapContainer = ({
               },
             };
 
-            const circleIcon = {
-              path: window.google.maps.SymbolPath.CIRCLE,
-              fillColor: "transparent", // Set the color you want for the circle
-              fillOpacity: 0.5, // Adjust the opacity as needed
-              scale: 3, // Adjust the scale to make it larger or smaller
-              strokeColor: isActiveUser? "#c2c7ce" : "black", // Set the border color
-              strokeWeight: 3, // Adjust the border thickness
-            };
-          
-
-            if (isHovered) {
-              circleIcon.scale = 10;
-            }
-
             return (
               <React.Fragment key={index}>
-                {isHovered && (
-                  <Marker
-                    position={{
-                      lat: emulator.latitude,
-                      lng: emulator.longitude,
-                    }}
-                    icon={circleIcon}
-                    clickable={false}
-                    // animation={4}
-                    labelStyle={{
-                      transition: "all 3s ease",
-                    }}
-                  />
-                )}
                 <MarkerWithLabel
                   icon={emulatorIcon}
                   position={{
