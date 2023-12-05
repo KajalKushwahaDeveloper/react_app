@@ -1,7 +1,7 @@
 import "./scss/map.scss";
 import { ToastContainer, toast } from "react-toastify";
 import WrappedMap from "./components/location/Map";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CreateTripButton from "./components/location/map-components/CreateTripButton.jsx";
 import CreateTripOverlay from "./components/location/map-components/CreateTripOverlay";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -10,6 +10,7 @@ import { useViewPort } from "./ViewportProvider.js";
 import { useStates } from "./StateProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
+import { GetEmulatorApi } from "./components/api/emulator.js";
 
 const showToast = (message, type) => {
   console.log("Showing toast...");
@@ -40,6 +41,8 @@ const GPS = () => {
     hoveredMarker,
     setHoveredMarker,
   } = useStates();
+  const [emulatorData, setEmulatorData] = useState();
+
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
@@ -56,6 +59,18 @@ const GPS = () => {
     }
   };
 
+  useEffect(() => {
+    const getEmulatorData = async () => {
+      const { success, data, error } = await GetEmulatorApi();
+      if (success) {
+        setEmulatorData(data);
+      } else {
+        console.log("Error:", error);
+      }
+    }
+    getEmulatorData();
+  }, []);
+
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
@@ -65,30 +80,35 @@ const GPS = () => {
             <div>
               <AddressTable tripData={tripData} emulator={emulator} />
             </div>
-              <div style={{ display: "flex", flexDirection: "row", flexWrap : "wrap"}}>
-                <div style={{ minWidth: "399px"}}>
-                  <GpsTable
-                    showToast={showToast}
-                    setSelectedEmId={setSelectedEmId}
-                    selectedEmId={selectedEmId}
-                    hoveredMarker={hoveredMarker}
-                    emulators={emulators}
-                    setSelectedEmulator={setSelectedEmulator}
-                    selectedEmulator={selectedEmulator}
-                    AssignedTelephoneNumber={AssignedTelephoneNumber}
-                    setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-                  />
-                </div>
-                <div style={{ flex: "1" }}>
-                  <WrappedMap
-                    showToast={showToast}
-                    googleMapURL={mapURL}
-                    loadingElement={<div style={{ height: `100%` }} />}
-                    containerElement={<div className="mapContainer" />}
-                    mapElement={<div style={{ height: `100%` }} />}
-                  />
-                </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+              }}>
+              <div style={{ minWidth: "399px" }}>
+                <GpsTable
+                  showToast={showToast}
+                  setSelectedEmId={setSelectedEmId}
+                  selectedEmId={selectedEmId}
+                  hoveredMarker={hoveredMarker}
+                  emulators={emulatorData}
+                  setSelectedEmulator={setSelectedEmulator}
+                  selectedEmulator={selectedEmulator}
+                  AssignedTelephoneNumber={AssignedTelephoneNumber}
+                  setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+                />
               </div>
+              <div style={{ flex: "1" }}>
+                <WrappedMap
+                  showToast={showToast}
+                  googleMapURL={mapURL}
+                  loadingElement={<div style={{ height: `100%` }} />}
+                  containerElement={<div className="mapContainer" />}
+                  mapElement={<div style={{ height: `100%` }} />}
+                />
+              </div>
+            </div>
           </div>
           <CreateTripButton
             onClick={handleCreateTripButton}
@@ -124,16 +144,9 @@ const GPS = () => {
                 INFO
               </div>
             }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.6]}
-          >
+            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.7]}>
             <div>
               ‎
-              <CreateTripButton
-                onClick={handleCreateTripButton}
-                tripData={tripData}
-                emulator={emulator}
-                validateEmulatorsData={validateEmulatorsData}
-              />
               <CreateTripOverlay
                 isTableVisible={isTableVisible}
                 selectedEmId={selectedEmId}
@@ -143,19 +156,28 @@ const GPS = () => {
                 setSelectedEmId={setSelectedEmId}
               />
               <div>
-                <GpsTable
-                  showToast={showToast}
-                  setSelectedEmId={setSelectedEmId}
-                  selectedEmId={selectedEmId}
-                  hoveredMarker={hoveredMarker}
-                  emulators={emulators}
-                  setSelectedEmulator={setSelectedEmulator}
-                  selectedEmulator={selectedEmulator}
-                  AssignedTelephoneNumber={AssignedTelephoneNumber}
-                  setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-                />
+                  {/* <CreateTripButton
+                    onClick={handleCreateTripButton}
+                    tripData={tripData}
+                    emulator={emulator}
+                    validateEmulatorsData={validateEmulatorsData}
+                  /> */}
+                  <GpsTable
+                    showToast={showToast}
+                    setSelectedEmId={setSelectedEmId}
+                    selectedEmId={selectedEmId}
+                    hoveredMarker={hoveredMarker}
+                    emulators={emulatorData}
+                    setSelectedEmulator={setSelectedEmulator}
+                    selectedEmulator={selectedEmulator}
+                    AssignedTelephoneNumber={AssignedTelephoneNumber}
+                    setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+                  />
                 <div>
-                  <AddressTable tripData={tripData} emulator={emulator} />
+                  <AddressTable tripData={tripData} emulator={emulator}
+                    validateEmulatorsData={validateEmulatorsData}
+                    handleCreateTripButton={handleCreateTripButton}
+                    />
                 </div>
               </div>
             </div>
