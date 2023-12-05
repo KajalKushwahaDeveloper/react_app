@@ -50,7 +50,7 @@ const GoogleMapContainer = ({
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
-
+  const [borderState, setBorderState] = useState(false);
  
   useEffect(() => {
     if (selectedEmulator != null && stops != null) {
@@ -232,7 +232,8 @@ const GoogleMapContainer = ({
               fillColor: "transparent", // Set the color you want for the circle
               fillOpacity: 0.5, // Adjust the opacity as needed
               scale: 3, // Adjust the scale to make it larger or smaller
-              strokeColor: isActiveUser? "#c2c7ce" : "black", // Set the border color
+              // strokeColor: isActiveUser? "#c2c7ce" : "black", // Set the border color
+              strokeColor: !isActiveUser ? (borderState === true ? "transparent": "black") : "#c2c7ce", // Set the border color
               strokeWeight: 3, // Adjust the border thickness
             };
           
@@ -241,8 +242,10 @@ const GoogleMapContainer = ({
               circleIcon.scale = 10;
             }
 
+            // console.log(emulator);
+
             return (
-              <React.Fragment key={index}>
+              <React.Fragment key={emulator.id}>
                 {isHovered && (
                   <Marker
                     position={{
@@ -251,19 +254,20 @@ const GoogleMapContainer = ({
                     }}
                     icon={circleIcon}
                     clickable={false}
-                    // animation={4}
+                    animation={0}
+                    labelAnchor={{ x: "auto", y: "auto" }}
                     labelStyle={{
                       transition: "all 3s ease",
                     }}
                   />
                 )}
-                <MarkerWithLabel
+                <Marker
                   icon={emulatorIcon}
                   position={{
                     lat: emulator.latitude,
                     lng: emulator.longitude,
                   }}
-                  animation={2}
+                  animation={0}
                   title={`${emulator.telephone} ${emulator.tripStatus}(${emulator.status})`}
                   labelStyle={{
                     textAlign: "center",
@@ -277,12 +281,17 @@ const GoogleMapContainer = ({
                   onMouseOver={() => handleMarkerMouseOver(emulator)}
                   onMouseOut={handleMarkerMouseOut}
                   draggable={true}
-                  onDragEnd={(event) =>
+                  onDragStart={() => setBorderState(true)}
+                  onDragEnd={(event) => {
                     handleEmulatorMarkerDragEnd(emulator, event)
+                    setBorderState(false)
                   }
+                }
+                  // onDragEnd={(event) =>
+                  //   handleEmulatorMarkerDragEnd(emulator, event)
+                  // }
                 >
-                  <span>{`Em.${emulator.id}`}</span>
-                </MarkerWithLabel>
+                </Marker>
               </React.Fragment>
             );
           })}

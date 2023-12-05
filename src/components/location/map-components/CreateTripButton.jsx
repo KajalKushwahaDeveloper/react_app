@@ -16,9 +16,6 @@ const CreateTripButton = ({
 
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
-
-  console.log("tripData", tripData);
-  console.log("emulator", emulator);
   const [isSpinning, setSpinning] = useState(false);
   const [hideCancel, setHideCancel] = useState(false);
 
