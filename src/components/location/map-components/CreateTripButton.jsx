@@ -16,9 +16,6 @@ const CreateTripButton = ({
 
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
-
-  console.log("tripData", tripData);
-  console.log("emulator", emulator);
   const [isSpinning, setSpinning] = useState(false);
   const [hideCancel, setHideCancel] = useState(false);
 
@@ -69,14 +66,17 @@ const CreateTripButton = ({
   }, [tripData, emulator]);
 
   return (
-    <div>
+    <div style={{
+      display: "flex",
+      justifyContent: "space-around",
+      marginTop:"7px"
+    }}>
       <button
         style={
           isMobileBelowSixTwenty
             ? {
                 height: "25px",
                 zIndex: 2,
-                position: "absolute",
                 bottom: "-35px",
                 right: !hideCancel ? 110 : 210,
                 padding: ".65rem",
@@ -106,7 +106,6 @@ const CreateTripButton = ({
               ? {
                   height: "25px",
                   zIndex: 2,
-                  position: "absolute",
                   bottom: "-35px",
                   right: 110,
                   padding: ".65rem",
@@ -136,7 +135,6 @@ const CreateTripButton = ({
             ? {
                 height: "25px",
                 zIndex: 2,
-                position: "absolute",
                 bottom: "-35px",
                 right: 50,
                 padding: ".65rem",

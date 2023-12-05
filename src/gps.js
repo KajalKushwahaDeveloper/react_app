@@ -156,13 +156,10 @@ const GPS = () => {
                 setSelectedEmId={setSelectedEmId}
               />
               <div>
-                  {/* <CreateTripButton
-                    onClick={handleCreateTripButton}
-                    tripData={tripData}
-                    emulator={emulator}
+                <div>
+                  <AddressTable tripData={tripData} emulator={emulator}
                     validateEmulatorsData={validateEmulatorsData}
-                  /> */}
-                  <GpsTable
+                    handleCreateTripButton={handleCreateTripButton}
                     showToast={showToast}
                     setSelectedEmId={setSelectedEmId}
                     selectedEmId={selectedEmId}
@@ -172,11 +169,6 @@ const GPS = () => {
                     selectedEmulator={selectedEmulator}
                     AssignedTelephoneNumber={AssignedTelephoneNumber}
                     setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-                  />
-                <div>
-                  <AddressTable tripData={tripData} emulator={emulator}
-                    validateEmulatorsData={validateEmulatorsData}
-                    handleCreateTripButton={handleCreateTripButton}
                     />
                 </div>
               </div>

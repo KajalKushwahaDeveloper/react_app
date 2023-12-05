@@ -2,12 +2,22 @@ import React from "react";
 import "../../../scss/map.scss";
 import { useViewPort } from "../../../ViewportProvider.js";
 import CreateTripButton from "../map-components/CreateTripButton.jsx";
+import GpsTable from "./gps_page_table.js";
 
 const AddressTable = ({
   tripData,
   emulator,
   validateEmulatorsData,
   handleCreateTripButton,
+  showToast,
+  setSelectedEmId,
+  selectedEmId,
+  hoveredMarker,
+  emulators,
+  setSelectedEmulator,
+  selectedEmulator,
+  AssignedTelephoneNumber,
+  setAssignedTelephoneNumber
 }) => {
   var fromAddress = null;
   var toAddress = null;
@@ -219,12 +229,24 @@ const AddressTable = ({
               </button>
             </div>
           </div>
-          
+
           <CreateTripButton
             onClick={handleCreateTripButton}
             tripData={tripData}
             emulator={emulator}
             validateEmulatorsData={validateEmulatorsData}
+          />
+
+          <GpsTable
+            showToast={showToast}
+            setSelectedEmId={setSelectedEmId}
+            selectedEmId={selectedEmId}
+            hoveredMarker={hoveredMarker}
+            emulators={emulators}
+            setSelectedEmulator={setSelectedEmulator}
+            selectedEmulator={selectedEmulator}
+            AssignedTelephoneNumber={AssignedTelephoneNumber}
+            setAssignedTelephoneNumber={setAssignedTelephoneNumber}
           />
         </div>
       ) : (
