@@ -5,6 +5,7 @@ import {
   TRIP_POINTS_URL,
   EMULATOR_URL,
   TRIP_URL,
+  WEBHOOK_CONNECTED_EMULATORS_URL,
 } from "./constants";
 import ApiService from "./ApiService";
 
@@ -191,6 +192,19 @@ export const StateProvider = ({ children }) => {
           validateEmulatorsData(data, null);
         } else {
           console.log("old Emulator ERROR : ", error);
+        }
+        // Manually trigger the Update web Hook Connected Emulators
+        const payload = { emulators };
+        const { success2, data2, error2 } = await ApiService.makeApiCall(
+          WEBHOOK_CONNECTED_EMULATORS_URL,
+          "POST",
+          payload,
+          token
+        );
+        if (success2) {
+          console.log("Successfully Updated web Hook Connected Emulators", data2);
+        } else {
+          console.log("ERROR during web Hook Connected Emulators Update : ", error2);
         }
       }, 5000);
     };

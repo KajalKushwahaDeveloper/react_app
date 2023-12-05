@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import "../scss/login.scss";
@@ -24,24 +23,22 @@ const style = {
 const PopUpEmulatorTelephone = ({
   showToast,
   handleClose,
-  handleOpen,
   open,
   userToEdit,
 }) => {
-  const navigate = useNavigate();
   const [id, setId] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [twilioUpdatedPhone, setTwilioUpdatedPhone] = useState("");
+  const [twilioNumber, setTwilioUpdatedPhone] = useState("");
+  const [alternateNumber, setAlternateNumber] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (userToEdit) {
+      setAlternateNumber(userToEdit.alternateTelephone);
       setId(userToEdit.id);
       console.log("userToEdit::", userToEdit);
-      setTelephone(userToEdit.telephone);
     }
   }, [userToEdit]);
-  console.log("twilioUpdatedPhone", twilioUpdatedPhone);
+  console.log("twilioUpdatedPhone", twilioNumber);
 
 
   const handleSubmit = async (e) => {
@@ -69,9 +66,10 @@ const PopUpEmulatorTelephone = ({
   };
 
   const addUser = async () => {
-    const user = {
+    const user = {  
       id:id,
-      telephone:twilioUpdatedPhone,
+      telephone:twilioNumber,
+      alternateTelephone:alternateNumber,
     };
 
     const token = localStorage.getItem("token");
@@ -122,7 +120,11 @@ const PopUpEmulatorTelephone = ({
           <form onSubmit={handleSubmit}>
             <h1 style={{ marginBottom: "2rem" ,fontSize:"1.5rem", fontWeight:"600"}}> Assign Phone Number</h1>
 
-            <DropDown setTwilioUpdatedPhone = {setTwilioUpdatedPhone}/>
+            <DropDown 
+              setTwilioUpdatedPhone = {setTwilioUpdatedPhone} 
+              alternateNumber = {alternateNumber}
+              setAlternateNumber = {setAlternateNumber}
+            />
 
             <button type="submit" style={{width:"6rem",float:"right",marginRight:"0px",padding:".5rem 0"}}>
               Add
