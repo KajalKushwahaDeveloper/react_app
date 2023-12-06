@@ -47,6 +47,7 @@ const GpsTable = ({
   selectedEmulator,
   setAssignedTelephoneNumber,
   AssignedTelephoneNumber,
+  emuAPI
 }) => {
   // State variables
 
@@ -209,6 +210,7 @@ const GpsTable = ({
     if (success) {
       console.log(`CHANGED TRIP STATUS : ${data.tripStatus}`);
       showToast("CHANGED TRIP STATUS", "success");
+      emuAPI();
     } else {
       console.log(`Error CHANGING TRIP STATUS : ${error}`);
       showToast("Error CHANGING TRIP STATUS", "error");

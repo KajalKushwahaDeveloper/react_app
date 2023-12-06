@@ -42,6 +42,8 @@ const GPS = () => {
     setHoveredMarker,
   } = useStates();
   const [emulatorData, setEmulatorData] = useState();
+  const [runEmuAPI, setRunEmuApi] = useState(false);
+
 
   const breakpoint = 620;
   const isMobile = width < breakpoint;
@@ -59,6 +61,10 @@ const GPS = () => {
     }
   };
 
+  const emuAPI = () => {
+    setRunEmuApi(!runEmuAPI)
+  }
+
   useEffect(() => {
     const getEmulatorData = async () => {
       const { success, data, error } = await GetEmulatorApi();
@@ -69,7 +75,7 @@ const GPS = () => {
       }
     }
     getEmulatorData();
-  }, []);
+  }, [runEmuAPI]);
 
   return (
     <>
@@ -97,6 +103,7 @@ const GPS = () => {
                   selectedEmulator={selectedEmulator}
                   AssignedTelephoneNumber={AssignedTelephoneNumber}
                   setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+                  emuAPI={emuAPI}
                 />
               </div>
               <div style={{ flex: "1" }}>
@@ -169,6 +176,7 @@ const GPS = () => {
                     selectedEmulator={selectedEmulator}
                     AssignedTelephoneNumber={AssignedTelephoneNumber}
                     setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+                    emuAPI={emuAPI}
                     />
                 </div>
               </div>

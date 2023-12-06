@@ -106,7 +106,7 @@ const Map = ({ showToast }) => {
       return;
     }
     const center = parseInt(paths?.length / 2);
-    setCenter({ lat: paths[center].lat, lng: paths[center + 5].lng });
+    setCenter({ lat: paths[center]?.lat, lng: paths[center + 5]?.lng });
     calculatePath();
     return () => {
       clearInterval(intervalRef.current);

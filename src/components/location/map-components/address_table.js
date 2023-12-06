@@ -17,7 +17,8 @@ const AddressTable = ({
   setSelectedEmulator,
   selectedEmulator,
   AssignedTelephoneNumber,
-  setAssignedTelephoneNumber
+  setAssignedTelephoneNumber,
+  emuAPI
 }) => {
   var fromAddress = null;
   var toAddress = null;
@@ -247,6 +248,7 @@ const AddressTable = ({
             selectedEmulator={selectedEmulator}
             AssignedTelephoneNumber={AssignedTelephoneNumber}
             setAssignedTelephoneNumber={setAssignedTelephoneNumber}
+            emuAPI={emuAPI}
           />
         </div>
       ) : (

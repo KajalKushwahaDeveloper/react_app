@@ -3,5 +3,5 @@
         "Assinged",
         "Ssid"
     ],
-    "editor.inlineSuggest.showToolbar": "onHover"
+    "editor.inlineSuggest.showToolbar": "always"
 }

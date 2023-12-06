@@ -28,6 +28,7 @@ const CreateTripTable = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClose = () => {
+    setIsTableVisible(false);
     setOpen(false);
   };
 
