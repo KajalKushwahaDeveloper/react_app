@@ -11,6 +11,7 @@ import { useStates } from "./StateProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
 import { GetEmulatorApi } from "./components/api/emulator.js";
+import { Hidden } from "@mui/material";
 
 const showToast = (message, type) => {
   console.log("Showing toast...");
@@ -29,8 +30,6 @@ const GPS = () => {
     emulator,
     setEmulator,
     setSelectedEmId,
-    pathsRoute,
-    setPathsRoute,
     selectedEmulator,
     setSelectedEmulator,
     AssignedTelephoneNumber,
@@ -43,7 +42,6 @@ const GPS = () => {
   } = useStates();
   const [emulatorData, setEmulatorData] = useState();
   const [runEmuAPI, setRunEmuApi] = useState(false);
-
 
   const breakpoint = 620;
   const isMobile = width < breakpoint;
@@ -62,8 +60,8 @@ const GPS = () => {
   };
 
   const emuAPI = () => {
-    setRunEmuApi(!runEmuAPI)
-  }
+    setRunEmuApi(!runEmuAPI);
+  };
 
   useEffect(() => {
     const getEmulatorData = async () => {
@@ -73,7 +71,7 @@ const GPS = () => {
       } else {
         console.log("Error:", error);
       }
-    }
+    };
     getEmulatorData();
   }, [runEmuAPI]);
 
@@ -82,7 +80,7 @@ const GPS = () => {
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
       {!isMobile && (
         <>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", flexDirection: "column",  height: "100%" }}>
             <div>
               <AddressTable tripData={tripData} emulator={emulator} />
             </div>
@@ -91,8 +89,13 @@ const GPS = () => {
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "wrap",
-              }}>
-              <div style={{ minWidth: "399px" }}>
+                position: "absolute",
+                zIndex: 0,
+                width: "100%", // or you can use width: '100vw'
+                height: "100%" // or you can use height: '100vh'
+              }}
+            >
+              <div style={{ minWidth: "399px", flex: "0 0 auto", zIndex:"1" }}>
                 <GpsTable
                   showToast={showToast}
                   setSelectedEmId={setSelectedEmId}
@@ -106,15 +109,8 @@ const GPS = () => {
                   emuAPI={emuAPI}
                 />
               </div>
-              <div style={{ flex: "1" }}>
-                <WrappedMap
-                  showToast={showToast}
-                  googleMapURL={mapURL}
-                  loadingElement={<div style={{ height: `100%` }} />}
-                  containerElement={<div className="mapContainer" />}
-                  mapElement={<div style={{ height: `100%` }} />}
-                />
-              </div>
+              {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
+              <WrappedMap showToast={showToast} />
             </div>
           </div>
           <CreateTripButton
@@ -135,13 +131,7 @@ const GPS = () => {
       )}
       {isMobile && (
         <>
-          <WrappedMap
-            showToast={showToast}
-            googleMapURL={mapURL}
-            loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div className="mapContainer" />}
-            mapElement={<div style={{ height: `100%` }} />}
-          />
+          <WrappedMap showToast={showToast} />
           <BottomSheet
             className="bottom_sheet"
             open={true}
@@ -151,7 +141,8 @@ const GPS = () => {
                 INFO
               </div>
             }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.7]}>
+            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.7]}
+          >
             <div>
               ‎
               <CreateTripOverlay
@@ -164,7 +155,9 @@ const GPS = () => {
               />
               <div>
                 <div>
-                  <AddressTable tripData={tripData} emulator={emulator}
+                  <AddressTable
+                    tripData={tripData}
+                    emulator={emulator}
                     validateEmulatorsData={validateEmulatorsData}
                     handleCreateTripButton={handleCreateTripButton}
                     showToast={showToast}
@@ -177,7 +170,7 @@ const GPS = () => {
                     AssignedTelephoneNumber={AssignedTelephoneNumber}
                     setAssignedTelephoneNumber={setAssignedTelephoneNumber}
                     emuAPI={emuAPI}
-                    />
+                  />
                 </div>
               </div>
             </div>
