@@ -106,7 +106,14 @@ const Map = ({ showToast }) => {
       return;
     }
     const center = parseInt(paths?.length / 2);
-    setCenter({ lat: paths[center].lat, lng: paths[center + 5].lng });
+    console.log("Center: ", center);
+    // Check if paths does have a center + 5 index
+    if (paths[center + 5] === undefined) {
+      // take the last index of paths
+      setCenter({ lat: paths[paths.length - 1].lat, lng: paths[paths.length - 1].lng });
+    } else {
+      setCenter({ lat: paths[center].lat, lng: paths[center + 5].lng });
+    }
     calculatePath();
     return () => {
       clearInterval(intervalRef.current);

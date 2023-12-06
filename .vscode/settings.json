@@ -3,5 +3,6 @@
         "Assinged",
         "Ssid"
     ],
-    "editor.inlineSuggest.showToolbar": "onHover"
+    "editor.inlineSuggest.showToolbar": "onHover",
+    "console-ninja.outputMode": "In View"
 }
