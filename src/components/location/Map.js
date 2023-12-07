@@ -1,26 +1,12 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import {
-  GoogleMap,
-  withScriptjs,
-  withGoogleMap,
-  Marker,
-  Polyline,
-  InfoWindow,
-} from "react-google-maps";
 
 import {
-  TRIP_STOPS_URL,
-  TRIP_POINTS_URL,
-  EMULATOR_URL,
-  TRIP_URL,
   EMULATOR_DRAG_URL,
-  BASE_URL,
 } from "../../constants";
-import CardComponent from "./map-components/CardComponent";
+
 import GoogleMapContainer from "./map-components/GoogleMapContainer";
 import ApiService from "../../ApiService";
 
-import { useViewPort } from "../../ViewportProvider.js";
 import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
 
@@ -35,8 +21,6 @@ const Map = ({ showToast }) => {
     emulator,
     setEmulator,
     setSelectedEmId,
-    pathsRoute,
-    setPathsRoute,
     selectedEmulator,
     setSelectedEmulator,
     AssignedTelephoneNumber,
@@ -62,63 +46,10 @@ const Map = ({ showToast }) => {
     lat: defaultLat,
     lng: defaultLng,
   });
-  const mapRef = useRef(null);
-  const intervalRef = useRef(null);
 
   const [selectedStop, setSelectedStop] = useState(null);
 
 
-  useEffect(() => {
-    const calculatePath = () => {
-      if (mapRef.current === null) {
-        return;
-      }
-      const bounds = new window.google.maps.LatLngBounds();
-      setPathsRoute(
-        paths.map((coordinates, i, array) => {
-          bounds.extend(
-            new window.google.maps.LatLng(coordinates.lat, coordinates.lng)
-          );
-          if (i === 0) {
-            return { ...coordinates, distance: 0 }; // it begins here!
-          }
-          const { lat: lat1, lng: lng1 } = coordinates;
-          const latLong1 = new window.google.maps.LatLng(lat1, lng1);
-
-          const { lat: lat2, lng: lng2 } = array[0];
-          const latLong2 = new window.google.maps.LatLng(lat2, lng2);
-          const distance =
-            window.google.maps.geometry.spherical.computeDistanceBetween(
-              latLong1,
-              latLong2
-            );
-
-          return { ...coordinates, distance };
-        })
-      );
-
-      mapRef.current.fitBounds(bounds);
-    };
-
-    if (paths === null) {
-      clearInterval(intervalRef.current);
-      setPathsRoute(null);
-      return;
-    }
-    const center = parseInt(paths?.length / 2);
-    console.log("Center: ", center);
-    // Check if paths does have a center + 5 index
-    if (paths[center + 5] === undefined) {
-      // take the last index of paths
-      setCenter({ lat: paths[paths.length - 1].lat, lng: paths[paths.length - 1].lng });
-    } else {
-      setCenter({ lat: paths[center].lat, lng: paths[center + 5].lng });
-    }
-    calculatePath();
-    return () => {
-      clearInterval(intervalRef.current);
-    };
-  }, [paths]);
 
   useEffect(() => {
     if (selectedEmId != null && emulators != null) {
@@ -188,11 +119,11 @@ const Map = ({ showToast }) => {
     return distance;
   }
 
-  function findNearestMarker(pathsRoute, targetLat, targetLng) {
+  function findNearestMarker(path, targetLat, targetLng) {
     let nearestDistance = Infinity;
     let nearestTripPoint = null;
 
-    for (const point of pathsRoute) {
+    for (const point of path) {
       const { lat, lng } = point;
       const distance = haversine(lat, lng, targetLat, targetLng);
       if (distance < nearestDistance) {
@@ -265,7 +196,7 @@ const Map = ({ showToast }) => {
     }
 
     const { nearestDistance, nearestTripPoint } = findNearestMarker(
-      pathsRoute,
+      paths,
       lat,
       lng
     );
@@ -361,15 +292,14 @@ const Map = ({ showToast }) => {
     setNearestTripPoint(null);
   };
 
-  const startLat = pathsRoute ? pathsRoute[0].lat : null;
-  const startLng = pathsRoute ? pathsRoute[0].lng : null;
-  const endLat = pathsRoute ? pathsRoute[pathsRoute?.length - 1].lat : null;
-  const endLng = pathsRoute ? pathsRoute[pathsRoute?.length - 1].lng : null;
+  const startLat = paths ? paths[0].lat : null;
+  const startLng = paths ? paths[0].lng : null;
+  const endLat = paths ? paths[paths?.length - 1].lat : null;
+  const endLng = paths ? paths[paths?.length - 1].lng : null;
 
   return (
     <GoogleMapContainer
-      mapRef={mapRef}
-      pathsRoute={pathsRoute}
+      paths={paths}
       center={center}
       stops={stops}
       selectedStop={selectedStop}
@@ -398,4 +328,4 @@ const Map = ({ showToast }) => {
   );
 };
 
-export default withScriptjs(withGoogleMap(Map));
+export default Map;

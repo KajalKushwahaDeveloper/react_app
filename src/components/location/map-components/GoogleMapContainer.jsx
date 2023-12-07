@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import {
   GoogleMap,
   Polyline,
   Marker,
   InfoWindow,
-} from "react-google-maps";
+  useJsApiLoader,
+} from "@react-google-maps/api";
+
 import {
   Dialog,
   DialogActions,
@@ -12,16 +15,12 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  setRef,
 } from "@mui/material";
 import "../../../scss/map.scss";
 
-const {
-  MarkerWithLabel,
-} = require("react-google-maps/lib/components/addons/MarkerWithLabel");
-
 const GoogleMapContainer = ({
-  mapRef,
-  pathsRoute,
+  paths,
   center,
   stops,
   selectedStop,
@@ -45,12 +44,20 @@ const GoogleMapContainer = ({
   confirmNewLocation,
   calculateTimeFromTripPointIndexToStopPoint,
 }) => {
+  const mapRef = useRef(null);
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E",
+    libraries: ["drawing", "places", "autocomplete"]
+  });
+
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
   const [borderState, setBorderState] = useState(false);
- 
+
   useEffect(() => {
     if (selectedEmulator != null && stops != null) {
       let selectedEmulatorNearestStopPoint = stops.find(
@@ -68,14 +75,14 @@ const GoogleMapContainer = ({
 
   useEffect(() => {
     if (selectedEmulator !== null && selectedEmulator !== undefined) {
-      if (pathsRoute !== null && pathsRoute !== undefined) {
+      if (paths !== null && paths !== undefined) {
         setPathTraveled(
-          pathsRoute?.filter(
+          paths?.filter(
             (item, index) => index <= selectedEmulator.currentTripPointIndex
           )
         );
         setPathNotTraveled(
-          pathsRoute?.filter(
+          paths?.filter(
             (item, index) => index >= selectedEmulator.currentTripPointIndex
           )
         );
@@ -92,16 +99,63 @@ const GoogleMapContainer = ({
       "selectedEmId changed at Map.js so pathNotTraveled also nulled",
       pathNotTraveled
     );
-  }, [selectedEmulator, pathsRoute]);
+  }, [selectedEmulator, paths]);
 
-  return (
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    const calculatePath = () => {
+      console.log("calculatePath");
+      if (mapRef.current === null) {
+        console.log("calculatePath ERROR mapRef null");
+        return;
+      }
+      const bounds = new window.google.maps.LatLngBounds();
+      paths.forEach(element => {
+        bounds.extend(
+          new window.google.maps.LatLng(element.lat, element.lng)
+        );
+      });
+      console.log("bounds", bounds);
+      mapRef.current.fitBounds(bounds);
+    };
+
+    if (paths === null) {
+      clearInterval(intervalRef.current);
+      return;
+    }
+
+    calculatePath();
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [mapRef, paths]);
+
+  const containerStyle = {
+   position: "unset !important",
+    width: "100%",
+    height: "100%",
+  };
+
+  const onLoad = React.useCallback(function callback(map) {
+    mapRef.current = map
+  }, [])
+
+  const onUnmount = React.useCallback(function callback(map) {
+    mapRef.current = null
+  }, [])
+
+  return isLoaded ? (
     <GoogleMap
-      ref={mapRef}
-      defaultZoom={7}
+      mapContainerStyle={containerStyle}
+      zoom={7}
       center={center}
       gestureHandling="none"
       zoomControl={false}
       options={{ scrollwheel: true }}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
     >
       {pathTraveled != null && (
         <Polyline
@@ -176,9 +230,7 @@ const GoogleMapContainer = ({
             </p>
 
             <h3 style={{ color: "black" }}>Time To Reach: </h3>
-            <p style={{ color: "black" }}>
-              {emulatorTimeLeftToReachNextStop}
-            </p>
+            <p style={{ color: "black" }}>{emulatorTimeLeftToReachNextStop}</p>
           </div>
         </InfoWindow>
       )}
@@ -195,9 +247,9 @@ const GoogleMapContainer = ({
 
             var rotationAngle = 0;
             try {
-              if (pathsRoute != null && emulator.currentTripPointIndex > -1) {
+              if (paths != null && emulator.currentTripPointIndex > -1) {
                 rotationAngle =
-                  pathsRoute[emulator.currentTripPointIndex].bearing;
+                  paths[emulator.currentTripPointIndex].bearing;
               }
             } catch (e) {
               console.log("rotationAngle Error : ", e);
@@ -219,13 +271,18 @@ const GoogleMapContainer = ({
               icon_url = icon_url + "SELECT.svg";
             } else {
               icon_url = icon_url + ".svg";
-            } 
-            console.log("icon_url", icon_url);
+            }
 
             const emulatorIcon = {
               url: icon_url,
-              scaledSize: new window.google.maps.Size(isSelected ? 40 : 20, isSelected ? 40 : 20),
-              anchor: new window.google.maps.Point(isSelected ? 20 :10, isSelected ? 20 :10),
+              scaledSize: new window.google.maps.Size(
+                isSelected ? 40 : 20,
+                isSelected ? 40 : 20
+              ),
+              anchor: new window.google.maps.Point(
+                isSelected ? 20 : 10,
+                isSelected ? 20 : 10
+              ),
               labelStyle: {
                 borderRadius: "50%",
                 border: "3px solid #c2c7ce !important",
@@ -257,15 +314,13 @@ const GoogleMapContainer = ({
                   draggable={true}
                   onDragStart={() => setBorderState(true)}
                   onDragEnd={(event) => {
-                    handleEmulatorMarkerDragEnd(emulator, event)
-                    setBorderState(false)
-                  }
-                }
+                    handleEmulatorMarkerDragEnd(emulator, event);
+                    setBorderState(false);
+                  }}
                   // onDragEnd={(event) =>
                   //   handleEmulatorMarkerDragEnd(emulator, event)
                   // }
-                >
-                </Marker>
+                ></Marker>
               </React.Fragment>
             );
           })}
@@ -310,7 +365,9 @@ const GoogleMapContainer = ({
         </DialogActions>
       </Dialog>
     </GoogleMap>
+  ) : (
+    <>Loading...</>
   );
 };
 
-export default GoogleMapContainer;
+export default React.memo(GoogleMapContainer);
