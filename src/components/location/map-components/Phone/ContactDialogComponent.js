@@ -27,8 +27,9 @@ function ContactDialogComponent({
   const [devices, setDevicesData] = useState([]);
 
   const token = localStorage.getItem("token");
-
+  const callerName= localStorage.getItem("callerName");
   const [phoneState, setPhoneState] = useState(states.READY);
+  const [close, setClose] = useState(false);
 
   useEffect(() => {
     const handleContactData = async (id) => {
@@ -210,6 +211,7 @@ function ContactDialogComponent({
             number: emulator.telephone,
           };
           updateDeviceState(deviceDataModel);
+          setPhoneState(states.READY)
         });
         device.on("reject", () => {
           state = states.READY;
@@ -229,7 +231,7 @@ function ContactDialogComponent({
         return null;
       }
     });
-  }, [deviceLoader, emulators, selectedDevice, setSelectedDevice, token]);
+  }, [deviceLoader, emulators, selectedDevice, setSelectedDevice, token, close, setClose]);
 
   const updateDeviceState = (updatedDevice) => {
     setDevicesData((prevDevices) => {
@@ -248,7 +250,10 @@ function ContactDialogComponent({
         <div>
           <CloseIcon
             style={{ float: "right", cursor: "pointer" }}
-            onClick={() => handleContactDialog(selectedDevice.dialogType)}
+            onClick={() => {
+              setClose(true);
+              handleContactDialog(selectedDevice.dialogType);
+            }}
           />
         </div>
         {selectedDevice && selectedDevice.emulatorId && (
