@@ -87,6 +87,7 @@ const GpsTable = ({
     console.log("handleContactDetails", dialogType);
     console.log("handleContactDetails", emulator);
     console.log("handleContactDetails", emulatorIndex);
+    setOpenEmulatorHistoryPopUp(false);
     setSelectedDevice((prevState) => ({
       ...prevState,
       open: !prevState.open,
