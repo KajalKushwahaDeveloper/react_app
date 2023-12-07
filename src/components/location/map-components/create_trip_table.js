@@ -7,14 +7,11 @@ import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import "../../../scss/button.scss";
+import { useStates } from "../../../StateProvider.js";
 
 const CreateTripTable = ({
   showToast,
-  selectedEmId,
-  selectedEmulator,
   setIsTableVisible,
-  setUpdatedTripPath,
-  setSelectedEmId,
 }) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
@@ -26,6 +23,7 @@ const CreateTripTable = ({
   const [error, setError] = useState("");
   const [open, setOpen] = useState(true); // Automatically open the modal
   const [isLoading, setIsLoading] = useState(false);
+  const { setSelectedEmId, selectedEmId, selectedEmulator } = useStates();
 
   const handleClose = () => {
     setIsTableVisible(false);
@@ -78,10 +76,13 @@ const CreateTripTable = ({
         token
       );
       if (success) {
+        console.log("data : ", selectedEmulator);
+        console.log("data : ", selectedEmId);
+        console.log("data : ", data.emulatorDetailsId);
         setIsLoading(true);
         showToast("Added successfully", "success");
-        setSelectedEmId(0);
-        setSelectedEmId(selectedEmId);
+        setSelectedEmId(null);
+        setSelectedEmId(data.emulatorDetailsId);
       } else {
         showToast(error, "error");
       }
