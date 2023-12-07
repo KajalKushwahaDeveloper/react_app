@@ -143,17 +143,18 @@ const GpsTable = ({
     setPage(0);
   };
 
-  const handleEmulatorCheckboxChange = (id, telephone) => {
-    setAssignedTelephoneNumber(telephone);
+  const handleEmulatorCheckboxChange = (emulatorRow) => {
+    console.log("handleEmulatorCheckboxChange", emulatorRow);
+    setAssignedTelephoneNumber(emulatorRow.telephone);
 
-    if (selectedEmulator?.id === id) {
+    if (selectedEmulator?.id === emulatorRow.id) {
       // If the clicked checkbox is already selected, unselect it
       setSelectedEmulator(null);
       setSelectedEmId(null);
     } else {
       // Otherwise, select the clicked checkbox
-      setSelectedEmulator(id);
-      setSelectedEmId(id);
+      setSelectedEmulator(emulatorRow);
+      setSelectedEmId(emulatorRow.id);
     }
   };
 
@@ -322,7 +323,7 @@ const GpsTable = ({
                         size="small"
                         checked={selectedEmulator?.id === row.id}
                         onChange={() =>
-                          handleEmulatorCheckboxChange(row.id, row.telephone)
+                          handleEmulatorCheckboxChange(row)
                         }
                       />
                     </td>
