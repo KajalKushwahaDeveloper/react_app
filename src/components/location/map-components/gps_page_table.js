@@ -36,28 +36,28 @@ import { Tooltip } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { useViewPort } from "../../../ViewportProvider";
+import { useStates } from "../../../StateProvider";
 
 const GpsTable = ({
   showToast,
-  setSelectedEmId,
-  selectedEmId,
   hoveredMarker,
   emulators,
   setSelectedEmulator,
   selectedEmulator,
   setAssignedTelephoneNumber,
   AssignedTelephoneNumber,
-  emuAPI
+  emuAPI,
 }) => {
   // State variables
 
+  const { setSelectedEmId, selectedEmId } = useStates();
   const { width, height } = useViewPort();
   const breakpoint = 620;
   const breakpointThreeTwenty = 320;
 
   const isMobile = width < breakpoint;
-  const isMobileThreeTwenty = width <= breakpointThreeTwenty
-  
+  const isMobileThreeTwenty = width <= breakpointThreeTwenty;
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [emptyRows, setEmptyRows] = useState(null);
@@ -144,17 +144,14 @@ const GpsTable = ({
   };
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
-    console.log("handleEmulatorCheckboxChange", emulatorRow);
     setAssignedTelephoneNumber(emulatorRow.telephone);
 
-    if (selectedEmulator?.id === emulatorRow.id) {
-      // If the clicked checkbox is already selected, unselect it
-      setSelectedEmulator(null);
-      setSelectedEmId(null);
-    } else {
-      // Otherwise, select the clicked checkbox
+    if (selectedEmulator?.id !== emulatorRow.id) {
       setSelectedEmulator(emulatorRow);
       setSelectedEmId(emulatorRow.id);
+    } else {
+      setSelectedEmulator(null);
+      setSelectedEmId(null);
     }
   };
 
@@ -228,187 +225,209 @@ const GpsTable = ({
   }
 
   return (
-    <div style={{
-      display: "flex", flexDirection: "column", position: isMobile ? "static" : "absolute", marginTop: isMobile? "10px": "0",
-      top: isMobile ? "0px" : "128px", paddingRight: isMobile && "0px", paddingLeft: isMobile && "0px"
-    }}>
-      <div className={isMobile === true ? "table-responsive-mobile tableBox" : "table-responsive"} >
-          <>
-            <table
-              aria-label="custom pagination table"
-              className=" shadow mb-0 n=">
-              <tbody>
-                {(rowsPerPage > 0
-                  ? emulators.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : emulators
-                )?.map((row, index) => (
-                  <tr
-                    key={row.id || "N/A"}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        position: isMobile ? "static" : "absolute",
+        marginTop: isMobile ? "10px" : "0",
+        top: isMobile ? "0px" : "128px",
+        paddingRight: isMobile && "0px",
+        paddingLeft: isMobile && "0px",
+      }}
+    >
+      <div
+        className={
+          isMobile === true
+            ? "table-responsive-mobile tableBox"
+            : "table-responsive"
+        }
+      >
+        <>
+          <table
+            aria-label="custom pagination table"
+            className=" shadow mb-0 n="
+          >
+            <tbody>
+              {(rowsPerPage > 0
+                ? emulators.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : emulators
+              )?.map((row, index) => (
+                <tr
+                  key={row.id || "N/A"}
+                  style={{
+                    background:
+                      selectedEmulator?.id === row.id
+                        ? "lightblue"
+                        : hoveredMarker?.id === row.id
+                        ? "lightpink"
+                        : "white",
+                  }}
+                >
+                  <td
                     style={{
                       background:
-                        selectedEmulator?.id === row.id ? "lightblue" : hoveredMarker?.id === row.id ? "lightpink" : "white",
-                    }}>
-                    <td
-                      style={{
-                        background:
-                          row.status === "ACTIVE"
-                            ? "#16BA00"
-                            : row.status === "INACTIVE"
-                            ? "#FFA500"
-                            : "#ff4d4d",
-                            textAlign: 'center'
-                      }}>
-                      {/* Restart/Reset Button */}
-                      <RestartAltIcon
-                        fontSize="small"
-                        onClick={() => handleRestartButtonClick(row)}
-                      />
-                    </td>
+                        row.status === "ACTIVE"
+                          ? "#16BA00"
+                          : row.status === "INACTIVE"
+                          ? "#FFA500"
+                          : "#ff4d4d",
+                      textAlign: "center",
+                    }}
+                  >
+                    {/* Restart/Reset Button */}
+                    <RestartAltIcon
+                      fontSize="small"
+                      onClick={() => handleRestartButtonClick(row)}
+                    />
+                  </td>
 
-                    {/* TELEPHONE */}
-                    <td>
-                      <Tooltip
-                        style={{ display: "flex", alignItems: "center" }}
-                        title={row.telephone || "N/A"}
-                        placement="top">
-                        <div
-                          style={
-                            isMobileThreeTwenty ? 
-                            {
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            flexGrow: 1,
-                            maxWidth: 26
-                            }
-                            : {
-                              textOverflow: "ellipsis",
-                              overflow: "hidden",
-                              whiteSpace: "nowrap",
-                                flexGrow: 1,
-                                maxWidth: 80
-                            }
-                            }>
-                          {row.telephone || "N/A"}
-                        </div>
-
-                        {/* Icons */}
-                        <div style={{ display: "flex"}}>
-                          {/* calling icon */}
-                          <IconButton
-                            size="small"
-                            onClick={() =>
-                              handleContactDetails("call", row, index)
-                            }>
-                            <CallRoundedIcon fontSize="small" />
-                          </IconButton>
-
-                          {/* message icon */}
-                          <IconButton
-                            size="small"
-                            onClick={() =>
-                              handleContactDetails("messages", row, index)
-                            }>
-                            <MessageRoundedIcon fontSize="small" />
-                          </IconButton>
-                        </div>
-                      </Tooltip>
-                    </td>
-
-                    <td align="right">
-                      <Checkbox
-                        size="small"
-                        checked={selectedEmulator?.id === row.id}
-                        onChange={() =>
-                          handleEmulatorCheckboxChange(row)
-                        }
-                      />
-                    </td>
-                    <td align="right">
+                  {/* TELEPHONE */}
+                  <td>
+                    <Tooltip
+                      style={{ display: "flex", alignItems: "center" }}
+                      title={row.telephone || "N/A"}
+                      placement="top"
+                    >
                       <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          maxWidth: 85
-                        }}>
-                        {/* Trip Status */}
-                        <p style={{ marginTop: "0", marginBottom: "0" }}>
-                          {row.tripStatus}
-                        </p>
-                        {/* Trip Status Action */}
-                        <IconButton size="small">
-                          {row.tripStatus === "RUNNING" && (
-                            <PauseCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "PAUSED" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "STOP" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "RESTING" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "FINISHED" && (
-                            <CheckCircleOutlineIcon fontSize="small" />
-                          )}
+                        style={
+                          isMobileThreeTwenty
+                            ? {
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                flexGrow: 1,
+                                maxWidth: 26,
+                              }
+                            : {
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                                whiteSpace: "nowrap",
+                                flexGrow: 1,
+                                maxWidth: 80,
+                              }
+                        }
+                      >
+                        {row.telephone || "N/A"}
+                      </div>
+
+                      {/* Icons */}
+                      <div style={{ display: "flex" }}>
+                        {/* calling icon */}
+                        <IconButton
+                          size="small"
+                          onClick={() =>
+                            handleContactDetails("call", row, index)
+                          }
+                        >
+                          <CallRoundedIcon fontSize="small" />
+                        </IconButton>
+
+                        {/* message icon */}
+                        <IconButton
+                          size="small"
+                          onClick={() =>
+                            handleContactDetails("messages", row, index)
+                          }
+                        >
+                          <MessageRoundedIcon fontSize="small" />
                         </IconButton>
                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot className="table_footer">
-                <tr>
-                  <CustomTablePagination
-                    rowsPerPageOptions={[20, 40, 60, { label: "All", value: -1 }]}
-                    colSpan={6}
-                    count={emulators.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    SelectProps={{
-                      inputProps: { "aria-label": "rows per page" },
-                      native: true,
-                    }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
+                    </Tooltip>
+                  </td>
+
+                  <td align="right">
+                    <Checkbox
+                      size="small"
+                      checked={selectedEmulator?.id === row.id}
+                      onChange={() => handleEmulatorCheckboxChange(row)}
+                    />
+                  </td>
+                  <td align="right">
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        maxWidth: 85,
+                      }}
+                    >
+                      {/* Trip Status */}
+                      <p style={{ marginTop: "0", marginBottom: "0" }}>
+                        {row.tripStatus}
+                      </p>
+                      {/* Trip Status Action */}
+                      <IconButton size="small">
+                        {row.tripStatus === "RUNNING" && (
+                          <PauseCircleOutlineIcon
+                            fontSize="small"
+                            onClick={() => handleActionButtonClick(row)}
+                          />
+                        )}
+                        {row.tripStatus === "PAUSED" && (
+                          <PlayCircleOutlineIcon
+                            fontSize="small"
+                            onClick={() => handleActionButtonClick(row)}
+                          />
+                        )}
+                        {row.tripStatus === "STOP" && (
+                          <PlayCircleOutlineIcon
+                            fontSize="small"
+                            onClick={() => handleActionButtonClick(row)}
+                          />
+                        )}
+                        {row.tripStatus === "RESTING" && (
+                          <PlayCircleOutlineIcon
+                            fontSize="small"
+                            onClick={() => handleActionButtonClick(row)}
+                          />
+                        )}
+                        {row.tripStatus === "FINISHED" && (
+                          <CheckCircleOutlineIcon fontSize="small" />
+                        )}
+                      </IconButton>
+                    </div>
+                  </td>
                 </tr>
-              </tfoot>
-            </table>
-            <PopUpEmulatorHistory
-              showToast={showToast}
-              handleClose={handleClose}
-              open={openEmulatorHistoryPopUp}
-              emulatorHistory={selectedEmulatorForHistoryData}
-            />
-            <ContactDialogComponent
-              emulators={emulators}
-              selectedDevice={selectedDevice}
-              setSelectedDevice={setSelectedDevice}
-              handleContactDialog={handleContactDetails}
-              showToast={showToast}
-            />
-          </>
+              ))}
+            </tbody>
+            <tfoot className="table_footer">
+              <tr>
+                <CustomTablePagination
+                  rowsPerPageOptions={[20, 40, 60, { label: "All", value: -1 }]}
+                  colSpan={6}
+                  count={emulators.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: { "aria-label": "rows per page" },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </tr>
+            </tfoot>
+          </table>
+          <PopUpEmulatorHistory
+            showToast={showToast}
+            handleClose={handleClose}
+            open={openEmulatorHistoryPopUp}
+            emulatorHistory={selectedEmulatorForHistoryData}
+          />
+          <ContactDialogComponent
+            emulators={emulators}
+            selectedDevice={selectedDevice}
+            setSelectedDevice={setSelectedDevice}
+            handleContactDialog={handleContactDetails}
+            showToast={showToast}
+          />
+        </>
       </div>
-        <div>
-      </div>
+      <div></div>
     </div>
   );
 };
