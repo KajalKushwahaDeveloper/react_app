@@ -80,7 +80,7 @@ const GPS = () => {
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
       {!isMobile && (
         <>
-          <div style={{ display: "flex", flexDirection: "column",  height: "100%" }}>
+          <div style={{ display: "flex", flexDirection: "column" }}>
             <div>
               <AddressTable tripData={tripData} emulator={emulator} />
             </div>
@@ -89,13 +89,9 @@ const GPS = () => {
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "wrap",
-                position: "absolute",
-                zIndex: 0,
-                width: "100%", // or you can use width: '100vw'
-                height: "100%" // or you can use height: '100vh'
               }}
             >
-              <div style={{ minWidth: "399px", flex: "0 0 auto", zIndex:"1" }}>
+              <div style={{ minWidth: "400px", height: "100vh" }}>
                 <GpsTable
                   showToast={showToast}
                   setSelectedEmId={setSelectedEmId}
@@ -110,9 +106,12 @@ const GPS = () => {
                 />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
-              <WrappedMap showToast={showToast} />
+              <div style={{ flex: "1" }}>
+                <WrappedMap showToast={showToast} />
+              </div>
             </div>
           </div>
+
           <CreateTripButton
             onClick={handleCreateTripButton}
             tripData={tripData}
@@ -131,7 +130,9 @@ const GPS = () => {
       )}
       {isMobile && (
         <>
-          <WrappedMap showToast={showToast} />
+          <div  style={{ flex: "1", height:"100vh" }}>
+            <WrappedMap showToast={showToast} />
+          </div>
           <BottomSheet
             className="bottom_sheet"
             open={true}
@@ -141,7 +142,7 @@ const GPS = () => {
                 INFO
               </div>
             }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.7]}
+            snapPoints = {({ maxHeight }) => [maxHeight / 15, maxHeight * 0.7]}
           >
             <div>
               ‎
