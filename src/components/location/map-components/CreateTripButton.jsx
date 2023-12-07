@@ -12,6 +12,7 @@ const CreateTripButton = ({
   tripData,
   emulator,
   validateEmulatorsData,
+  emuAPI
 }) => {
   const { width, height } = useViewPort();
   const { setSelectedEmId } = useStates();
@@ -52,6 +53,7 @@ const CreateTripButton = ({
       if (success) {
         setSelectedEmId(null);
         setSelectedEmId(emulator.id);
+        emuAPI();
       } else {
       }
     }
