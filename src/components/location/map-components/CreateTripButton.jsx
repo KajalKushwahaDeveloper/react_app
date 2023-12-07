@@ -4,6 +4,7 @@ import SyncIcon from "@mui/icons-material/Sync";
 import ApiService from "../../../ApiService";
 import { EMULATOR_DRAG_URL, TRIP_URL } from "../../../constants";
 import { useViewPort } from "../../../ViewportProvider.js";
+import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
 
 const CreateTripButton = ({
@@ -13,6 +14,7 @@ const CreateTripButton = ({
   validateEmulatorsData,
 }) => {
   const { width, height } = useViewPort();
+  const { setSelectedEmId } = useStates();
 
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
@@ -48,7 +50,8 @@ const CreateTripButton = ({
       );
 
       if (success) {
-        validateEmulatorsData(null, data);
+        setSelectedEmId(null);
+        setSelectedEmId(emulator.id);
       } else {
       }
     }
