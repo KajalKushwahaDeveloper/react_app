@@ -255,8 +255,12 @@ const GoogleMapContainer = ({
               console.log("rotationAngle Error : ", e);
             }
 
-            const isHovered = hoveredMarker === emulator;
-            const isSelected = selectedEmulator === emulator;
+            const isHovered = hoveredMarker?.id === emulator?.id;
+            const isSelected = selectedEmulator?.id === emulator?.id;
+
+            if(emulator.telephone === "+18884311835") {
+              console.log("isSelected ", isSelected);
+            }
             //PAUSED RESTING RUNNING STOP //ONLINE OFFLINE INACTIVE //HOVER SELECT DEFAULT
             var icon_url = `images/${emulator.tripStatus}/`;
             if (isHovered) {
