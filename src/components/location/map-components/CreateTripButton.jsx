@@ -6,6 +6,7 @@ import { EMULATOR_DRAG_URL, TRIP_URL } from "../../../constants";
 import { useViewPort } from "../../../ViewportProvider.js";
 import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
+import { ToastContainer, toast } from "react-toastify";
 
 const CreateTripButton = ({
   onClick,
@@ -53,8 +54,10 @@ const CreateTripButton = ({
       if (success) {
         setSelectedEmId(null);
         setSelectedEmId(emulator.id);
+        toast["success"]("Trip has been cancelled");
         emuAPI();
       } else {
+        toast["error"]("Trip is not cancelled");
       }
     }
   };
