@@ -81,14 +81,14 @@ const CreateTripTable = ({
         console.log("data : ", selectedEmId);
         console.log("data : ", data.emulatorDetailsId);
         setIsLoading(true);
-        showToast("Added successfully", "success");
+        showToast("Trip Added successfully", "success");
         setSelectedEmId(null);
         setSelectedEmId(data.emulatorDetailsId);
         emuAPI();
       } else {
         showToast(error, "error");
       }
-setIsLoading(false);
+      setIsLoading(false);
       handleClose();
     }
   };
