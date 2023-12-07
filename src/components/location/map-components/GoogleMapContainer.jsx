@@ -257,32 +257,21 @@ const GoogleMapContainer = ({
 
             const isHovered = hoveredMarker === emulator;
             const isSelected = selectedEmulator === emulator;
-            //PAUSED RESTING RUNNING STOP
-            var icon_url = `images/${emulator.tripStatus}_`;
-            //ONLINE OFFLINE
-            if (isActiveUser) {
-              icon_url = icon_url + "ONLINE_";
-            } else {
-              icon_url = icon_url + "OFFLINE_";
-            }
+            //PAUSED RESTING RUNNING STOP //ONLINE OFFLINE INACTIVE //HOVER SELECT DEFAULT
+            var icon_url = `images/${emulator.tripStatus}/`;
             if (isHovered) {
-              icon_url = icon_url + "HOVER.svg";
+              icon_url = icon_url + "HOVER";
             } else if (isSelected) {
-              icon_url = icon_url + "SELECT.svg";
+              icon_url = icon_url + "SELECT";
             } else {
-              icon_url = icon_url + ".svg";
+              icon_url = icon_url + "DEFAULT";
             }
-
+            icon_url = `${icon_url}/${emulator.status}.svg`;
+            console.log("icon_url : ", icon_url);
             const emulatorIcon = {
               url: icon_url,
-              scaledSize: new window.google.maps.Size(
-                isSelected ? 40 : 20,
-                isSelected ? 40 : 20
-              ),
-              anchor: new window.google.maps.Point(
-                isSelected ? 20 : 10,
-                isSelected ? 20 : 10
-              ),
+              scaledSize: new window.google.maps.Size(20, 20),
+              anchor: new window.google.maps.Point(10, 10),
               labelStyle: {
                 borderRadius: "50%",
                 border: "3px solid #c2c7ce !important",

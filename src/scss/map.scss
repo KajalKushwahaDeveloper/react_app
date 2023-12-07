@@ -110,12 +110,13 @@ th {
 }
 
 .table-responsive-mobile {
-  max-height: 25vh;
+  max-height: 32vh;
   max-width: 640px;
   position: "absolute";
   overflow-y: auto;
   overflow-x: hidden;
   top: 90;
+  margin-top: 0.5rem;
 }
 
 .table-responsive-laptop {
