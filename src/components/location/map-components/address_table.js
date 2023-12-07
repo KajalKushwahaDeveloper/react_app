@@ -1,29 +1,29 @@
 import React from "react";
 import "../../../scss/map.scss";
 import { useViewPort } from "../../../ViewportProvider.js";
-import CreateTripButton from "../map-components/CreateTripButton.jsx";
 import GpsTable from "./gps_page_table.js";
+import { useStates } from "../../../StateProvider";
 
 const AddressTable = ({
-  tripData,
-  emulator,
-  validateEmulatorsData,
-  handleCreateTripButton,
-  showToast,
-  setSelectedEmId,
-  selectedEmId,
-  hoveredMarker,
-  emulators,
-  setSelectedEmulator,
-  selectedEmulator,
-  AssignedTelephoneNumber,
-  setAssignedTelephoneNumber,
-  emuAPI
 }) => {
   var fromAddress = null;
   var toAddress = null;
   var timeInHours = null;
 
+  const { 
+    tripData,
+    emulator,
+    setSelectedEmId,
+    selectedEmId,
+    hoveredMarker,
+    emulators,
+    setSelectedEmulator,
+    selectedEmulator, 
+    showToast,
+    AssignedTelephoneNumber,
+    setAssignedTelephoneNumber
+  } = useStates();
+    
   const { width, height } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
@@ -231,13 +231,6 @@ const AddressTable = ({
             </div>
           </div>
 
-          <CreateTripButton
-            onClick={handleCreateTripButton}
-            tripData={tripData}
-            emulator={emulator}
-            validateEmulatorsData={validateEmulatorsData}
-          />
-
           <GpsTable
             showToast={showToast}
             setSelectedEmId={setSelectedEmId}
@@ -248,7 +241,6 @@ const AddressTable = ({
             selectedEmulator={selectedEmulator}
             AssignedTelephoneNumber={AssignedTelephoneNumber}
             setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-            emuAPI={emuAPI}
           />
         </div>
       ) : (

@@ -258,10 +258,7 @@ const GoogleMapContainer = ({
             const isHovered = hoveredMarker?.id === emulator?.id;
             const isSelected = selectedEmulator?.id === emulator?.id;
 
-            if(emulator.telephone === "+18884311835") {
-              console.log("isSelected ", isSelected);
-            }
-            //PAUSED RESTING RUNNING STOP //ONLINE OFFLINE INACTIVE //HOVER SELECT DEFAULT
+            //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE 
             var icon_url = `images/${emulator.tripStatus}/`;
             if (isHovered) {
               icon_url = icon_url + "HOVER";

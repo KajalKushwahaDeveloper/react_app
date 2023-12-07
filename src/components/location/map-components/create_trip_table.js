@@ -9,11 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "../../../scss/button.scss";
 import { useStates } from "../../../StateProvider.js";
 
-const CreateTripTable = ({
-  showToast,
-  setIsTableVisible,
-  emuAPI
-}) => {
+const CreateTripTable = () => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
@@ -24,7 +20,13 @@ const CreateTripTable = ({
   const [error, setError] = useState("");
   const [open, setOpen] = useState(true); // Automatically open the modal
   const [isLoading, setIsLoading] = useState(false);
-  const { setSelectedEmId, selectedEmId, selectedEmulator } = useStates();
+  const {
+    setSelectedEmId,
+    selectedEmId,
+    selectedEmulator,
+    setIsTableVisible,
+    showToast,
+  } = useStates();
 
   const handleClose = () => {
     setIsTableVisible(false);
@@ -36,14 +38,12 @@ const CreateTripTable = ({
   };
 
   const handleAddClick = async () => {
- 
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
       setError("Please fill both locations.");
       return;
     }
 
     setError("");
-
 
     const token = localStorage.getItem("token");
     let confirmed = false;
@@ -84,7 +84,6 @@ const CreateTripTable = ({
         showToast("Trip Added successfully", "success");
         setSelectedEmId(null);
         setSelectedEmId(data.emulatorDetailsId);
-        emuAPI();
       } else {
         showToast(error, "error");
       }
@@ -182,24 +181,22 @@ const CreateTripTable = ({
               </div>
             </div>
           </div>
-          <div style={{display: 'flex', justifyContent: 'center'}}>
-
-          <Button
-            onClick={handleAddClick}
-            style={{
-              cursor: "pointer",
-              width: "auto",
-              textAlign: "center",
-              float: "right",
-              backgroundColor: "#1976d2",
-              color: "white",
-              marginRight: "0.7rem",
-            }}
-            disabled={isLoading ? true: false}
-          >
-            Add
-          </Button>
-          
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              onClick={handleAddClick}
+              style={{
+                cursor: "pointer",
+                width: "auto",
+                textAlign: "center",
+                float: "right",
+                backgroundColor: "#1976d2",
+                color: "white",
+                marginRight: "0.7rem",
+              }}
+              disabled={isLoading ? true : false}
+            >
+              Add
+            </Button>
           </div>
         </Box>
       </Modal>

@@ -33,25 +33,23 @@ import ContactDialogComponent from "./Phone/ContactDialogComponent";
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Tooltip } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { useViewPort } from "../../../ViewportProvider";
 import { useStates } from "../../../StateProvider";
 
-const GpsTable = ({
-  showToast,
-  hoveredMarker,
-  emulators,
-  setSelectedEmulator,
-  selectedEmulator,
-  setAssignedTelephoneNumber,
-  AssignedTelephoneNumber,
-  emuAPI,
-}) => {
+const GpsTable = () => {
   // State variables
+  const {
+    setSelectedEmId,
+    selectedEmId,
+    hoveredMarker,
+    emulators,
+    setSelectedEmulator,
+    selectedEmulator,
+    setAssignedTelephoneNumber,
+    showToast
+  } = useStates();
 
-  const { setSelectedEmId, selectedEmId } = useStates();
-  const { width, height } = useViewPort();
+  const { width } = useViewPort();
   const breakpoint = 620;
   const breakpointThreeTwenty = 320;
 
@@ -209,7 +207,6 @@ const GpsTable = ({
     if (success) {
       console.log(`CHANGED TRIP STATUS : ${data.tripStatus}`);
       showToast("CHANGED TRIP STATUS", "success");
-      emuAPI();
     } else {
       console.log(`Error CHANGING TRIP STATUS : ${error}`);
       showToast("Error CHANGING TRIP STATUS", "error");

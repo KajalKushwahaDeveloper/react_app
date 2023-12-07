@@ -8,20 +8,34 @@ import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
 import { ToastContainer, toast } from "react-toastify";
 
-const CreateTripButton = ({
-  onClick,
-  tripData,
-  emulator,
-  validateEmulatorsData,
-  emuAPI
-}) => {
+const CreateTripButton = ( ) => {
   const { width, height } = useViewPort();
-  const { setSelectedEmId } = useStates();
+  const {
+    setSelectedEmId,
+    selectedEmulator,
+    showToast,
+    AssignedTelephoneNumber,
+    setIsTableVisible,
+    isTableVisible,
+    tripData,
+    emulator,
+  } = useStates();
 
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
   const [isSpinning, setSpinning] = useState(false);
   const [hideCancel, setHideCancel] = useState(false);
+
+  const handleCreateTripButton = () => {
+    if (selectedEmulator === null) {
+      showToast("Emulator is not selected", "error"); //Emulator is not selected error
+    } else if (AssignedTelephoneNumber === null) {
+      console.log("Assigned number", AssignedTelephoneNumber);
+      showToast("Telephone Number is not Assigned", "error"); //Telephone Number is not Assigned
+    } else {
+      setIsTableVisible(!isTableVisible);
+    }
+  };
 
   const handleButtonClick = () => {
     setSpinning(true);
@@ -55,7 +69,6 @@ const CreateTripButton = ({
         setSelectedEmId(null);
         setSelectedEmId(emulator.id);
         toast["success"]("Trip has been cancelled");
-        emuAPI();
       } else {
         toast["error"]("Trip is not cancelled");
       }
@@ -74,11 +87,13 @@ const CreateTripButton = ({
   }, [tripData, emulator]);
 
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "space-around",
-      marginTop:"7px"
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-around",
+        marginTop: "7px",
+      }}
+    >
       <button
         style={
           isMobileBelowSixTwenty
@@ -103,7 +118,8 @@ const CreateTripButton = ({
                 alignItems: "center",
               }
         }
-        onClick={onClick}>
+        onClick={handleCreateTripButton}
+      >
         Create Trip
       </button>
 
@@ -120,8 +136,8 @@ const CreateTripButton = ({
                   display: "flex",
                   alignItems: "center",
                   fontSize: "11px",
-              }
-              :{
+                }
+              : {
                   height: "38px",
                   zIndex: 2,
                   position: "absolute",
@@ -132,7 +148,8 @@ const CreateTripButton = ({
                   alignItems: "center",
                 }
           }
-          onClick={handleCancelTripClick}>
+          onClick={handleCancelTripClick}
+        >
           Cancel Trip
         </button>
       ) : null}
@@ -160,7 +177,8 @@ const CreateTripButton = ({
                 alignItems: "center",
               }
         }
-        onClick={handleButtonClick}>
+        onClick={handleButtonClick}
+      >
         <SyncIcon
           sx={{
             transition: "transform 1s ease-in-out", // CSS transition for smooth animation
