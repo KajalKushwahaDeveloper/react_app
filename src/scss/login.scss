@@ -1,7 +1,7 @@
 @import "./variables";
 @import "./mixins";
 @import url("https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap");
-$accent-color: rgb(47, 99, 117)0, 97%, 38%, 0.485;
+$accent-color: rgb(47, 99, 117) 0, 97%, 38%, 0.485;
 $secondary-color: #e6f7d1;
 $main-color: hsla(180, 97%, 38%, 0.485);
 
@@ -16,7 +16,6 @@ body {
   position: relative;
 
   .container_div {
-
     .row {
       text-align: center;
       display: flex;
@@ -82,7 +81,7 @@ body {
         border-radius: 15px 15px 0 0;
 
         img {
-          width: 200px;
+          width: 50px;
           display: block;
           margin: auto;
           padding-top: 15px;
@@ -115,7 +114,6 @@ body {
   }
 }
 
-
 @media only screen and (max-width: 768px) {
   .authScreen {
     .container_div {
@@ -131,10 +129,8 @@ body {
     }
 
     .authScreen {
-
       .authCard {
         form {
-
           h1 {
             text-align: center;
             font-size: 25px;
@@ -143,10 +139,7 @@ body {
           .btns {
             text-align: center;
           }
-
-
         }
-
       }
 
       .Left_content {
@@ -193,11 +186,9 @@ body {
   .right {
     width: 50%;
 
-
     .map_img {
       width: 50%;
       position: relative;
-
 
       .center_div {
         position: absolute;
@@ -237,8 +228,6 @@ body {
     }
   }
 }
-
-
 
 @mixin default-view {
   padding: 0 15px;
@@ -306,5 +295,19 @@ a {
 
   &:hover {
     opacity: 0.9;
+  }
+}
+
+@media (max-width: 996px) {
+  .FrontImg {
+    width: 280px;
+    padding-left: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .FrontImg {
+    width: 300px;
+    padding-left: 50px;
   }
 }
