@@ -10,6 +10,7 @@ const CreateTripOverlay = ({
   showToast,
   setIsTableVisible,
   setSelectedEmId,
+  emuAPI
 }) => {
   return (
     <div className="gps_createTrip_overlay">
@@ -20,6 +21,7 @@ const CreateTripOverlay = ({
           showToast={showToast}
           setIsTableVisible={setIsTableVisible}
           setSelectedEmId={setSelectedEmId}
+          emuAPI={emuAPI}
         />
       )}
     </div>

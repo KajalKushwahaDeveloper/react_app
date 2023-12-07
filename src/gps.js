@@ -117,6 +117,7 @@ const GPS = () => {
             tripData={tripData}
             emulator={emulator}
             validateEmulatorsData={validateEmulatorsData}
+            emuAPI={emuAPI}
           />
           <CreateTripOverlay
             isTableVisible={isTableVisible}
@@ -125,6 +126,7 @@ const GPS = () => {
             showToast={showToast}
             setIsTableVisible={setIsTableVisible}
             setSelectedEmId={setSelectedEmId}
+            emuAPI={emuAPI}
           />
         </>
       )}
@@ -153,6 +155,7 @@ const GPS = () => {
                 showToast={showToast}
                 setIsTableVisible={setIsTableVisible}
                 setSelectedEmId={setSelectedEmId}
+                emuAPI={emuAPI}
               />
               <div>
                 <div>

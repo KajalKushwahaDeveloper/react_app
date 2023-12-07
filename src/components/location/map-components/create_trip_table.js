@@ -12,6 +12,7 @@ import { useStates } from "../../../StateProvider.js";
 const CreateTripTable = ({
   showToast,
   setIsTableVisible,
+  emuAPI
 }) => {
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
@@ -83,6 +84,7 @@ const CreateTripTable = ({
         showToast("Added successfully", "success");
         setSelectedEmId(null);
         setSelectedEmId(data.emulatorDetailsId);
+        emuAPI();
       } else {
         showToast(error, "error");
       }
