@@ -27,8 +27,6 @@ const useStates = () => {
     emulator,
     setEmulator,
     setSelectedEmId,
-    pathsRoute,
-    setPathsRoute,
     selectedEmulator,
     setSelectedEmulator,
     AssignedTelephoneNumber,
@@ -49,8 +47,6 @@ const useStates = () => {
     emulator,
     setEmulator,
     setSelectedEmId,
-    pathsRoute,
-    setPathsRoute,
     selectedEmulator,
     setSelectedEmulator,
     AssignedTelephoneNumber,
@@ -75,7 +71,6 @@ export const StateProvider = ({ children }) => {
     EMULATOR_URL + `/${selectedEmId}`
   );
 
-  const [pathsRoute, setPathsRoute] = useState(null);
   const [selectedEmulator, setSelectedEmulator] = useState(null);
   const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
 
@@ -245,8 +240,6 @@ export const StateProvider = ({ children }) => {
         emulator,
         setEmulator,
         setSelectedEmId,
-        pathsRoute,
-        setPathsRoute,
         selectedEmulator,
         setSelectedEmulator,
         AssignedTelephoneNumber,

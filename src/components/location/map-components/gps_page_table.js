@@ -10,12 +10,12 @@ import {
   TRIP_HISTORY,
   TRIP_TOGGLE,
 } from "../../../constants";
+
 //scss
 import "../../../scss/map.scss";
 import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 import "../../../scss/global.scss";
-import ColumnResize from "react-table-column-resizer";
 
 //icons
 import IconButton from "@mui/material/IconButton";
