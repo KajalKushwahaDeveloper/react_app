@@ -269,7 +269,9 @@ const GoogleMapContainer = ({
               icon_url = icon_url + "DEFAULT";
             }
             icon_url = `${icon_url}/${emulator.status}.svg`;
-            console.log("icon_url : ", icon_url);
+            if (emulator.telephone === "+19712514608") {
+              console.log("icon_url : ", icon_url);
+            }
             const emulatorIcon = {
               url: icon_url,
               scaledSize: new window.google.maps.Size(20, 20),

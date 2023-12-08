@@ -7,6 +7,7 @@ import { useViewPort } from "../../../ViewportProvider.js";
 import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
 import { ToastContainer, toast } from "react-toastify";
+import { useEmulatorStore } from "../../../store.tsx";
 
 const CreateTripButton = ( ) => {
   const { width, height } = useViewPort();
@@ -20,6 +21,10 @@ const CreateTripButton = ( ) => {
     tripData,
     emulator,
   } = useStates();
+
+  
+  //Initiate fetchEmulators from store
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
@@ -69,6 +74,7 @@ const CreateTripButton = ( ) => {
         setSelectedEmId(null);
         setSelectedEmId(emulator.id);
         toast["success"]("Trip has been cancelled");
+        fetchEmulators();
       } else {
         toast["error"]("Trip is not cancelled");
       }

@@ -22,10 +22,10 @@ export const useEmulatorStore = create<EmulatorStore>((set, get) => ({
             const response = await fetch(EMULATOR_URL, {
                 method: "GET",
                 headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
-              });
+            });
             const emulators = await response.json();
             console.log("V2", emulators);
             set({ emulators });

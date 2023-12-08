@@ -8,8 +8,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import "../../../scss/button.scss";
 import { useStates } from "../../../StateProvider.js";
+import { useEmulatorStore } from "../../../store.tsx";
 
 const CreateTripTable = () => {
+  
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
   const [toLat, setToLat] = useState();
@@ -84,6 +88,7 @@ const CreateTripTable = () => {
         showToast("Trip Added successfully", "success");
         setSelectedEmId(null);
         setSelectedEmId(data.emulatorDetailsId);
+        fetchEmulators()
       } else {
         showToast(error, "error");
       }

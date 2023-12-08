@@ -18,15 +18,9 @@ const GPS = () => {
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
-  const emulatorsV2 = useEmulatorStore((state) => state.emulators);
-
   useEffect(() => {
     fetchEmulators();
   }, [fetchEmulators]);
-
-  useEffect(() => {
-    console.log("V2 emulators", emulatorsV2);
-  }, [emulatorsV2]);
 
   const { width } = useViewPort();
 

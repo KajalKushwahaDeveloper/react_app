@@ -35,8 +35,13 @@ import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Tooltip } from "@mui/material";
 import { useViewPort } from "../../../ViewportProvider";
 import { useStates } from "../../../StateProvider";
+import { useEmulatorStore } from "../../../store.tsx";
 
 const GpsTable = () => {
+  
+  //Initiate fetchEmulators from store
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  
   // State variables
   const {
     setSelectedEmId,
@@ -207,6 +212,7 @@ const GpsTable = () => {
     if (success) {
       console.log(`CHANGED TRIP STATUS : ${data.tripStatus}`);
       showToast("CHANGED TRIP STATUS", "success");
+      fetchEmulators();
     } else {
       console.log(`Error CHANGING TRIP STATUS : ${error}`);
       showToast("Error CHANGING TRIP STATUS", "error");
