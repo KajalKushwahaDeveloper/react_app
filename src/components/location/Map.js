@@ -10,26 +10,21 @@ import ApiService from "../../ApiService";
 import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
 
-const Map = ({ showToast }) => {
+const Map = () => {
   const {
     selectedEmId,
     paths,
     stops,
-    tripData,
     emulators,
-    setEmulators,
     emulator,
-    setEmulator,
     setSelectedEmId,
     selectedEmulator,
     setSelectedEmulator,
-    AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
-    isTableVisible, 
-    setIsTableVisible,
     validateEmulatorsData,
     hoveredMarker,
-    setHoveredMarker
+    setHoveredMarker,
+    showToast,
   } = useStates();
 
   const [openDialog, setOpenDialog] = useState(false);

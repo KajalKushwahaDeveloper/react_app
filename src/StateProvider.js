@@ -14,6 +14,8 @@ import {
 } from "./constants";
 import ApiService from "./ApiService";
 
+import { toast } from "react-toastify";
+
 export const StatesContext = React.createContext({});
 
 const useStates = () => {
@@ -36,6 +38,7 @@ const useStates = () => {
     validateEmulatorsData,
     hoveredMarker,
     setHoveredMarker,
+    showToast,
   } = React.useContext(StatesContext);
   return {
     selectedEmId,
@@ -56,6 +59,7 @@ const useStates = () => {
     validateEmulatorsData,
     hoveredMarker,
     setHoveredMarker,
+    showToast,
   };
 };
 
@@ -78,6 +82,11 @@ export const StateProvider = ({ children }) => {
 
   const [hoveredMarker, setHoveredMarker] = useState(null);
   let emulatorInterval;
+
+  const showToast = (message, type) => {
+    console.log("Showing toast...");
+    toast[type](message); // Use the 'type' argument to determine the toast type
+  };
 
   const validateEmulatorsData = (newEmulatorsData, newEmulatorData) => {
     var selectedEmulatorToValidate = null;
@@ -249,6 +258,7 @@ export const StateProvider = ({ children }) => {
         validateEmulatorsData,
         hoveredMarker,
         setHoveredMarker,
+        showToast,
       }}
     >
       {children}

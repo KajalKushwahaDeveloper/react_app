@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import LoginPage from "../login_page.js";
 import Home from "../home.js";
 import GPS from "../gps.js";
-import Logout from "../logout.js";
 import Navbar from "../components/navbar.js";
 import ResetPasswordPage from "../resetPassword.js";
 
@@ -92,7 +91,7 @@ function App() {
       <Route element={<AuthenticatedLayout isAdmin={isAdmin} />}>
       <Route path="/home" element={<Home />} />
       <Route path="/gps" element={<GPS />} />
-      <Route path="/logout" element={<Logout />} />
+      <Route path="/logout"/>
       </Route>
     </Routes>
   );

@@ -2,16 +2,18 @@
 import React from "react";
 import CreateTripTable from "./create_trip_table";
 import "../../../scss/map.scss";
+import { useStates } from "../../../StateProvider";
 
-const CreateTripOverlay = ({
-  isTableVisible,
-  selectedEmId,
-  selectedEmulator,
-  showToast,
-  setIsTableVisible,
-  setSelectedEmId,
-  emuAPI
-}) => {
+const CreateTripOverlay = () => {
+  const {
+    isTableVisible,
+    selectedEmId,
+    selectedEmulator,
+    showToast,
+    setIsTableVisible,
+    setSelectedEmId,
+  } = useStates();
+
   return (
     <div className="gps_createTrip_overlay">
       {isTableVisible && (
@@ -21,7 +23,6 @@ const CreateTripOverlay = ({
           showToast={showToast}
           setIsTableVisible={setIsTableVisible}
           setSelectedEmId={setSelectedEmId}
-          emuAPI={emuAPI}
         />
       )}
     </div>

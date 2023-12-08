@@ -243,10 +243,6 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
               count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}
-              SelectProps={{
-                inputProps: { "aria-label": "rows per page" },
-                native: true,
-              }}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />

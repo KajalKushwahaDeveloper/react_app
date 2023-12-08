@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 import "../../../scss/map.scss";
 
+const libraries = ["drawing", "places", "autocomplete"]
+
 const GoogleMapContainer = ({
   paths,
   center,
@@ -49,14 +51,13 @@ const GoogleMapContainer = ({
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E",
-    libraries: ["drawing", "places", "autocomplete"]
+    libraries: libraries
   });
 
   const [pathTraveled, setPathTraveled] = useState(null);
   const [pathNotTraveled, setPathNotTraveled] = useState(null);
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
-  const [borderState, setBorderState] = useState(false);
 
   useEffect(() => {
     if (selectedEmulator != null && stops != null) {
@@ -258,10 +259,7 @@ const GoogleMapContainer = ({
             const isHovered = hoveredMarker?.id === emulator?.id;
             const isSelected = selectedEmulator?.id === emulator?.id;
 
-            if(emulator.telephone === "+18884311835") {
-              console.log("isSelected ", isSelected);
-            }
-            //PAUSED RESTING RUNNING STOP //ONLINE OFFLINE INACTIVE //HOVER SELECT DEFAULT
+            //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE 
             var icon_url = `images/${emulator.tripStatus}/`;
             if (isHovered) {
               icon_url = icon_url + "HOVER";
@@ -284,7 +282,7 @@ const GoogleMapContainer = ({
             };
 
             return (
-              <React.Fragment key={index}>
+              <React.Fragment key={emulator.id}>
                 <Marker
                   icon={emulatorIcon}
                   position={{
@@ -305,10 +303,8 @@ const GoogleMapContainer = ({
                   onMouseOver={() => handleMarkerMouseOver(emulator)}
                   onMouseOut={handleMarkerMouseOut}
                   draggable={true}
-                  onDragStart={() => setBorderState(true)}
                   onDragEnd={(event) => {
                     handleEmulatorMarkerDragEnd(emulator, event);
-                    setBorderState(false);
                   }}
                   // onDragEnd={(event) =>
                   //   handleEmulatorMarkerDragEnd(emulator, event)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import TablePagination, {
   tablePaginationClasses as classes,
@@ -33,25 +33,23 @@ import ContactDialogComponent from "./Phone/ContactDialogComponent";
 import ApiService from "../../../ApiService";
 import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Tooltip } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
-import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import { useViewPort } from "../../../ViewportProvider";
 import { useStates } from "../../../StateProvider";
 
-const GpsTable = ({
-  showToast,
-  hoveredMarker,
-  emulators,
-  setSelectedEmulator,
-  selectedEmulator,
-  setAssignedTelephoneNumber,
-  AssignedTelephoneNumber,
-  emuAPI,
-}) => {
+const GpsTable = () => {
   // State variables
+  const {
+    setSelectedEmId,
+    selectedEmId,
+    hoveredMarker,
+    emulators,
+    setSelectedEmulator,
+    selectedEmulator,
+    setAssignedTelephoneNumber,
+    showToast
+  } = useStates();
 
-  const { setSelectedEmId, selectedEmId } = useStates();
-  const { width, height } = useViewPort();
+  const { width } = useViewPort();
   const breakpoint = 620;
   const breakpointThreeTwenty = 320;
 
@@ -209,7 +207,6 @@ const GpsTable = ({
     if (success) {
       console.log(`CHANGED TRIP STATUS : ${data.tripStatus}`);
       showToast("CHANGED TRIP STATUS", "success");
-      emuAPI();
     } else {
       console.log(`Error CHANGING TRIP STATUS : ${error}`);
       showToast("Error CHANGING TRIP STATUS", "error");
@@ -287,56 +284,59 @@ const GpsTable = ({
 
                   {/* TELEPHONE */}
                   <td>
+                    <Fragment>
+
                     <Tooltip
-                      style={{ display: "flex", alignItems: "center" }}
-                      title={row.telephone || "N/A"}
-                      placement="top"
-                    >
-                      <div
-                        style={
-                          isMobileThreeTwenty
-                            ? {
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                flexGrow: 1,
-                                maxWidth: 26,
-                              }
-                            : {
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                flexGrow: 1,
-                                maxWidth: 80,
-                              }
-                        }
+                        style={{ display: "flex", alignItems: "center" }}
+                        title={row.telephone || "N/A"}
+                        placement="top"
                       >
-                        {row.telephone || "N/A"}
-                      </div>
-
-                      {/* Icons */}
-                      <div style={{ display: "flex" }}>
-                        {/* calling icon */}
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            handleContactDetails("call", row, index)
+                        <div
+                          style={
+                            isMobileThreeTwenty
+                              ? {
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  flexGrow: 1,
+                                  maxWidth: 26,
+                                }
+                              : {
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  flexGrow: 1,
+                                  maxWidth: 80,
+                                }
                           }
                         >
-                          <CallRoundedIcon fontSize="small" />
-                        </IconButton>
+                          {row.telephone || "N/A"}
+                        </div>
 
-                        {/* message icon */}
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            handleContactDetails("messages", row, index)
-                          }
-                        >
-                          <MessageRoundedIcon fontSize="small" />
-                        </IconButton>
-                      </div>
-                    </Tooltip>
+                        {/* Icons */}
+                        <div style={{ display: "flex" }}>
+                          {/* calling icon */}
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              handleContactDetails("call", row, index)
+                            }
+                          >
+                            <CallRoundedIcon fontSize="small" />
+                          </IconButton>
+
+                          {/* message icon */}
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              handleContactDetails("messages", row, index)
+                            }
+                          >
+                            <MessageRoundedIcon fontSize="small" />
+                          </IconButton>
+                        </div>
+                      </Tooltip>
+                    </Fragment>
                   </td>
 
                   <td align="right">
@@ -402,10 +402,6 @@ const GpsTable = ({
                   count={emulators.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  SelectProps={{
-                    inputProps: { "aria-label": "rows per page" },
-                    native: true,
-                  }}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
