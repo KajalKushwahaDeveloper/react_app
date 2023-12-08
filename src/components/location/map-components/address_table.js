@@ -3,6 +3,7 @@ import "../../../scss/map.scss";
 import { useViewPort } from "../../../ViewportProvider.js";
 import GpsTable from "./gps_page_table.js";
 import { useStates } from "../../../StateProvider";
+import CreateTripButton from "./CreateTripButton";
 
 const AddressTable = ({
 }) => {
@@ -21,7 +22,10 @@ const AddressTable = ({
     selectedEmulator, 
     showToast,
     AssignedTelephoneNumber,
-    setAssignedTelephoneNumber
+    setAssignedTelephoneNumber,
+    validateEmulatorsData,
+    handleCreateTripButton
+
   } = useStates();
     
   const { width, height } = useViewPort();
@@ -230,6 +234,14 @@ const AddressTable = ({
               </button>
             </div>
           </div>
+
+          <CreateTripButton
+            onClick={handleCreateTripButton}
+            tripData={tripData}
+            emulator={emulator}
+            validateEmulatorsData={validateEmulatorsData}
+          />
+
 
           <GpsTable
             showToast={showToast}

@@ -94,11 +94,17 @@ const CreateTripButton = ( ) => {
 
   return (
     <div
-      style={{
+      style={
+        isMobileBelowSixTwenty ?{
         display: "flex",
         justifyContent: "space-around",
-        // marginTop: "7px",
-      }}
+        marginTop: "1rem",
+      }:{
+        display: "flex",
+        justifyContent: "space-around",
+  
+      }
+    }
     >
       <button
         style={
