@@ -13,6 +13,7 @@ import { useEmulatorStore } from "../../../store.tsx";
 const CreateTripTable = () => {
   
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
 
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
@@ -24,10 +25,8 @@ const CreateTripTable = () => {
   const [error, setError] = useState("");
   const [open, setOpen] = useState(true); // Automatically open the modal
   const [isLoading, setIsLoading] = useState(false);
+
   const {
-    setSelectedEmId,
-    selectedEmId,
-    selectedEmulator,
     setIsTableVisible,
     showToast,
   } = useStates();
@@ -71,7 +70,7 @@ const CreateTripTable = () => {
         fromAddress: fromAddress,
         toAddress: toAddress,
         speed: 60,
-        emulatorDetailsId: selectedEmId,
+        emulatorDetailsId: selectedEmulator.id,
       };
 
       const { success, data, error } = await ApiService.makeApiCall(
@@ -82,12 +81,9 @@ const CreateTripTable = () => {
       );
       if (success) {
         console.log("data : ", selectedEmulator);
-        console.log("data : ", selectedEmId);
         console.log("data : ", data.emulatorDetailsId);
         setIsLoading(true);
         showToast("Trip Added successfully", "success");
-        setSelectedEmId(null);
-        setSelectedEmId(data.emulatorDetailsId);
         fetchEmulators()
       } else {
         showToast(error, "error");

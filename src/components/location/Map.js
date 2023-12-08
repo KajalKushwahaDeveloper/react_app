@@ -12,18 +12,12 @@ import { useStates } from "../../StateProvider.js";
 import { useEmulatorStore } from "../../store.tsx";
 
 const Map = () => {
-  
-  const emulators = useEmulatorStore((state) => state.emulators);
   const refreshEmulators = useEmulatorStore((state) => state.refreshEmulators);
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
+  const tripData = useEmulatorStore((state) => state.tripData);
 
   const {
-    selectedEmId,
-    paths,
-    stops,
-    emulator,
-    setSelectedEmId,
-    selectedEmulator,
-    setSelectedEmulator,
     setAssignedTelephoneNumber,
     hoveredMarker,
     setHoveredMarker,
@@ -50,16 +44,13 @@ const Map = () => {
 
 
   useEffect(() => {
-    if (selectedEmId != null && emulators != null) {
-      const findEmulator = emulators.filter((e) => e.id === selectedEmId);
-      if (findEmulator.length > 0 && findEmulator[0].startlat == null) {
-        setCenter({
-          lat: findEmulator[0].latitude,
-          lng: findEmulator[0].longitude,
-        });
-      }
+    if (selectedEmulator != null) {
+      setCenter({
+        lat: selectedEmulator.latitude,
+        lng: selectedEmulator.longitude,
+      });
     }
-  }, [selectedEmId]);
+  }, [selectedEmulator]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -79,14 +70,7 @@ const Map = () => {
 
   const handleEmulatorMarkerClick = (emulator) => {
     setAssignedTelephoneNumber(emulator.telephone);
-    if (selectedEmulator?.id !== emulator.id) {
-      setSelectedEmulator(emulator);
-      setSelectedEmId(emulator.id);
-    } else {
-      // Otherwise, un-select the selected emulator
-    }
-    // clearInterval(intervalRef.current); // Clear any existing interval
-    // setStartEmulation(emulator); // Set the selected emulation as the start emulation
+    selectEmulator(emulator)
   };
 
   const handleDialog = (text) => {
@@ -137,7 +121,7 @@ const Map = () => {
   }
 
   function calculateNextStopPointIndex(currentIndex) {
-    let nextStopPoint = stops.find(
+    let nextStopPoint = tripData?.stops?.find(
       (stop) => currentIndex < stop.tripPointIndex
     );
     return nextStopPoint;
@@ -152,12 +136,12 @@ const Map = () => {
       startIndex == null ||
       stop == null ||
       velocity == null ||
-      paths == null
+      tripData?.tripPoints == null
     ) {
       return `N/A`;
     }
     let distance = 0;
-    paths.forEach((path) => {
+    tripData?.tripPoints.forEach((path) => {
       if (
         path.tripPointIndex >= startIndex &&
         path.tripPointIndex <= stop.tripPointIndex
@@ -188,16 +172,17 @@ const Map = () => {
       return
     }
 
-    if (emulator.id !== selectedEmId) {
+    if (emulator.id !== selectedEmulator.id) {
       showToast("Please select this emulator first as a trip already exists.", "error")
       return
     }
 
     const { nearestDistance, nearestTripPoint } = findNearestMarker(
-      paths,
+      tripData?.tripPoints,
       lat,
       lng
     );
+
     if (nearestDistance <= 10) {
       setDragOutRange();
       setNearestTripPoint(nearestTripPoint);
@@ -290,25 +275,20 @@ const Map = () => {
     setNearestTripPoint(null);
   };
 
-  const startLat = paths ? paths[0].lat : null;
-  const startLng = paths ? paths[0].lng : null;
-  const endLat = paths ? paths[paths?.length - 1].lat : null;
-  const endLng = paths ? paths[paths?.length - 1].lng : null;
+  const startLat = tripData?.tripPoints ? tripData?.tripPoints[0].lat : null;
+  const startLng = tripData?.tripPoints ? tripData?.tripPoints[0].lng : null;
+  const endLat = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lat : null;
+  const endLng = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lng : null;
 
   return (
     <GoogleMapContainer
-      paths={paths}
       center={center}
-      stops={stops}
       selectedStop={selectedStop}
       handleMarkerClick={handleMarkerClick}
       hoveredMarker={hoveredMarker}
       handleMarkerMouseOver={handleMarkerMouseOver}
       handleMarkerMouseOut={handleMarkerMouseOut}
       handleInfoWindowClose={handleInfoWindowClose}
-      selectedEmulator={selectedEmulator}
-      emulator={emulator}
-      emulators={emulators}
       endLat={endLat}
       endLng={endLng}
       startLat={startLat}

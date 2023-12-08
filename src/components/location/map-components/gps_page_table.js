@@ -40,16 +40,14 @@ import { useEmulatorStore } from "../../../store.tsx";
 const GpsTable = () => {
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
 
   const emulators = useEmulatorStore((state) => state.emulators);
 
   // State variables
   const {
-    setSelectedEmId,
-    selectedEmId,
     hoveredMarker,
-    setSelectedEmulator,
-    selectedEmulator,
     setAssignedTelephoneNumber,
     showToast,
   } = useStates();
@@ -108,36 +106,21 @@ const GpsTable = () => {
         rowsPerPage -
           Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
       );
-      if (selectedEmulator == null && selectedEmId != null) {
-        setSelectedEmulator(emulators[0]);
-        setSelectedEmId(emulators[0]?.id);
-      }
       setLoading(false);
     } else {
       setLoading(true);
     }
-    if (selectedEmId != null && selectedEmulator != null) {
-      if (selectedEmId !== selectedEmulator.id) {
-        const selectedEmIndex = emulators.findIndex(
-          (item) => item.id === selectedEmId
-        );
-        setSelectedEmulator(emulators[selectedEmIndex]);
-        // Calculate the new active page based on the selected checkbox index and rowsPerPage
-        if (selectedEmIndex !== -1) {
-          const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
-          setPage(newActivePage);
-        }
+    if (selectedEmulator != null) {
+      const selectedEmIndex = emulators.findIndex(
+        (emulator) => emulator === selectedEmulator
+      );
+      // Calculate the new active page based on the selected checkbox index and rowsPerPage
+      if (selectedEmIndex !== -1) {
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
+        setPage(newActivePage);
       }
     }
-  }, [
-    emulators,
-    page,
-    rowsPerPage,
-    selectedEmId,
-    selectedEmulator,
-    setSelectedEmId,
-    setSelectedEmulator,
-  ]);
+  }, [emulators, page, rowsPerPage, selectedEmulator]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -150,13 +133,10 @@ const GpsTable = () => {
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
     setAssignedTelephoneNumber(emulatorRow.telephone);
-
     if (selectedEmulator?.id !== emulatorRow.id) {
-      setSelectedEmulator(emulatorRow);
-      setSelectedEmId(emulatorRow.id);
+      selectEmulator(emulatorRow);
     } else {
-      setSelectedEmulator(null);
-      setSelectedEmId(null);
+      selectEmulator(null);
     }
   };
 

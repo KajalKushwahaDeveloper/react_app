@@ -17,17 +17,6 @@ export const StatesContext = React.createContext({});
 
 const useStates = () => {
   const {
-    selectedEmId,
-    paths,
-    stops,
-    tripData,
-    emulators,
-    setEmulators,
-    emulator,
-    setEmulator,
-    setSelectedEmId,
-    selectedEmulator,
-    setSelectedEmulator,
     AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
     isTableVisible,
@@ -37,17 +26,6 @@ const useStates = () => {
     showToast,
   } = React.useContext(StatesContext);
   return {
-    selectedEmId,
-    paths,
-    stops,
-    tripData,
-    emulators,
-    setEmulators,
-    emulator,
-    setEmulator,
-    setSelectedEmId,
-    selectedEmulator,
-    setSelectedEmulator,
     AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
     isTableVisible,
@@ -61,22 +39,13 @@ const useStates = () => {
 export { useStates };
 
 export const StateProvider = ({ children }) => {
-  const [selectedEmId, setSelectedEmId] = useState(null);
-  const { data: paths } = useFetch(TRIP_POINTS_URL + `/${selectedEmId}`);
-  const { data: stops } = useFetch(TRIP_STOPS_URL + `/${selectedEmId}`);
-  const { data: tripData } = useFetch(TRIP_URL + `/${selectedEmId}`);
-  const { data: emulators_deprecated, setData: setEmulators } = useState(null);
-  const { data: emulator, setData: setEmulator } = useState(null);
+  const refreshEmulators = useEmulatorStore((state) => state.refreshEmulators);
 
-  const [selectedEmulator, setSelectedEmulator] = useState(null);
   const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
 
   const [isTableVisible, setIsTableVisible] = useState(false);
 
   const [hoveredMarker, setHoveredMarker] = useState(null);
-
-  const refreshEmulators = useEmulatorStore((state) => state.refreshEmulators);
-  const emulators = useEmulatorStore((state) => state.emulators);
 
   const showToast = (message, type) => {
     console.log("Showing toast...");
@@ -113,22 +82,11 @@ export const StateProvider = ({ children }) => {
     return () => {
       stopEmulatorInterval();
     };
-  }, [emulator, emulators, setEmulator, setEmulators]);
+  }, [refreshEmulators]);
 
   return (
     <StatesContext.Provider
       value={{
-        selectedEmId,
-        paths,
-        stops,
-        tripData,
-        emulators,
-        setEmulators,
-        emulator,
-        setEmulator,
-        setSelectedEmId,
-        selectedEmulator,
-        setSelectedEmulator,
         AssignedTelephoneNumber,
         setAssignedTelephoneNumber,
         isTableVisible,

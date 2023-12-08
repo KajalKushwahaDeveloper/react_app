@@ -14,10 +14,7 @@ const AddressTable = ({
   const { 
     tripData,
     emulator,
-    setSelectedEmId,
-    selectedEmId,
     hoveredMarker,
-    emulators,
     setSelectedEmulator,
     selectedEmulator, 
     showToast,
@@ -234,24 +231,8 @@ const AddressTable = ({
             </div>
           </div>
 
-          <CreateTripButton
-            onClick={handleCreateTripButton}
-            tripData={tripData}
-            emulator={emulator}
-          />
-
-
-          <GpsTable
-            showToast={showToast}
-            setSelectedEmId={setSelectedEmId}
-            selectedEmId={selectedEmId}
-            hoveredMarker={hoveredMarker}
-            emulators={emulators}
-            setSelectedEmulator={setSelectedEmulator}
-            selectedEmulator={selectedEmulator}
-            AssignedTelephoneNumber={AssignedTelephoneNumber}
-            setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-          />
+          <CreateTripButton />
+          <GpsTable />
         </div>
       ) : (
         <div

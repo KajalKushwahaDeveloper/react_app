@@ -18,22 +18,18 @@ import {
   setRef,
 } from "@mui/material";
 import "../../../scss/map.scss";
+import { useEmulatorStore } from "../../../store.tsx";
 
 const libraries = ["drawing", "places", "autocomplete"]
 
 const GoogleMapContainer = ({
-  paths,
   center,
-  stops,
   selectedStop,
   handleMarkerClick,
   hoveredMarker,
   handleMarkerMouseOver,
   handleMarkerMouseOut,
   handleInfoWindowClose,
-  selectedEmulator,
-  emulator,
-  emulators,
   endLat,
   endLng,
   startLat,
@@ -46,6 +42,13 @@ const GoogleMapContainer = ({
   confirmNewLocation,
   calculateTimeFromTripPointIndexToStopPoint,
 }) => {
+  
+  const emulators = useEmulatorStore((state) => state.emulators);
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  const tripData = useEmulatorStore((state) => state.tripData);
+  const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
+  const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
+
   const mapRef = useRef(null);
 
   const { isLoaded } = useJsApiLoader({
@@ -54,14 +57,12 @@ const GoogleMapContainer = ({
     libraries: libraries
   });
 
-  const [pathTraveled, setPathTraveled] = useState(null);
-  const [pathNotTraveled, setPathNotTraveled] = useState(null);
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
 
   useEffect(() => {
-    if (selectedEmulator != null && stops != null) {
-      let selectedEmulatorNearestStopPoint = stops.find(
+    if (selectedEmulator != null && tripData?.stops != null) {
+      let selectedEmulatorNearestStopPoint = tripData?.stops.find(
         (stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex
       );
       const selectedEmulatorTimeToReachStop =
@@ -72,35 +73,7 @@ const GoogleMapContainer = ({
         );
       setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
     }
-  }, [selectedEmulator, stops, calculateTimeFromTripPointIndexToStopPoint]);
-
-  useEffect(() => {
-    if (selectedEmulator !== null && selectedEmulator !== undefined) {
-      if (paths !== null && paths !== undefined) {
-        setPathTraveled(
-          paths?.filter(
-            (item, index) => index <= selectedEmulator.currentTripPointIndex
-          )
-        );
-        setPathNotTraveled(
-          paths?.filter(
-            (item, index) => index >= selectedEmulator.currentTripPointIndex
-          )
-        );
-        return;
-      }
-    }
-    setPathTraveled();
-    setPathNotTraveled();
-    console.log(
-      "selectedEmId changed at Map.js so pathTraveled also nulled",
-      pathTraveled
-    );
-    console.log(
-      "selectedEmId changed at Map.js so pathNotTraveled also nulled",
-      pathNotTraveled
-    );
-  }, [selectedEmulator, paths]);
+  }, [selectedEmulator, calculateTimeFromTripPointIndexToStopPoint, tripData?.stops]);
 
   const intervalRef = useRef(null);
 
@@ -112,7 +85,7 @@ const GoogleMapContainer = ({
         return;
       }
       const bounds = new window.google.maps.LatLngBounds();
-      paths.forEach(element => {
+      tripData?.tripPoints?.forEach(element => {
         bounds.extend(
           new window.google.maps.LatLng(element.lat, element.lng)
         );
@@ -121,7 +94,7 @@ const GoogleMapContainer = ({
       mapRef.current.fitBounds(bounds);
     };
 
-    if (paths === null) {
+    if (tripData?.tripPoints === null) {
       clearInterval(intervalRef.current);
       return;
     }
@@ -131,7 +104,7 @@ const GoogleMapContainer = ({
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, [mapRef, paths]);
+  }, [mapRef, tripData?.tripPoints]);
 
   const containerStyle = {
    position: "unset !important",
@@ -180,8 +153,8 @@ const GoogleMapContainer = ({
           }}
         />
       )}
-      {stops != null &&
-        stops.map((stop, index) => (
+      {tripData?.stops != null &&
+        tripData?.stops.map((stop, index) => (
           <React.Fragment key={index}>
             <Marker
               position={{
@@ -258,21 +231,17 @@ const GoogleMapContainer = ({
             }
             icon_url = `${icon_url}/${emulator.status}.svg`;
 
-            if (emulator.telephone === "+19712514608") {
-              console.log("icon_url : ", icon_url);
-            }
-
             if(isSelected) {
               var rotationAngle = null;
               try {
-                if (paths != null && paths.length > 0) {
+                if (tripData?.tripPoints != null && tripData?.tripPoints.length > 0) {
                   if(emulator.currentTripPointIndex < 0) {
-                    rotationAngle = paths[0].bearing;
-                  } else if(emulator.currentTripPointIndex > paths.length) {
-                    rotationAngle = paths[paths.length - 1].bearing;
+                    rotationAngle = tripData?.tripPoints[0].bearing;
+                  } else if(emulator.currentTripPointIndex > tripData?.tripPoints.length) {
+                    rotationAngle = tripData?.tripPoints[tripData?.tripPoints.length - 1].bearing;
                   } else {
                     rotationAngle =
-                    paths[emulator.currentTripPointIndex].bearing;
+                    tripData?.tripPoints[emulator.currentTripPointIndex].bearing;
                   }
                   console.log("rotationAngle : ", rotationAngle);
                 }
