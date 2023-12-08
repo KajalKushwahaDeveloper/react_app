@@ -44,7 +44,7 @@ const GPS = () => {
                 flexWrap: "wrap",
               }}
             >
-              <div style={{ minWidth: "400px", height: "100vh" }}>
+              <div style={{ minWidth: "390px", height: "100vh" }}>
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
