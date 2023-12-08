@@ -9,19 +9,22 @@ import ApiService from "../../ApiService";
 
 import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
+import { useEmulatorStore } from "../../store.tsx";
 
 const Map = () => {
+  
+  const emulators = useEmulatorStore((state) => state.emulators);
+  const refreshEmulators = useEmulatorStore((state) => state.refreshEmulators);
+
   const {
     selectedEmId,
     paths,
     stops,
-    emulators,
     emulator,
     setSelectedEmId,
     selectedEmulator,
     setSelectedEmulator,
     setAssignedTelephoneNumber,
-    validateEmulatorsData,
     hoveredMarker,
     setHoveredMarker,
     showToast,
@@ -276,7 +279,7 @@ const Map = () => {
     );
     console.log("LOG 1 - updated Emulator: ", data);
     if (success) {
-      validateEmulatorsData(null, data);
+      refreshEmulators();
       setOpenDialog(false);
     } else if (error) {
       // setOpenDialog(false);

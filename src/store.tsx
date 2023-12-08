@@ -2,7 +2,6 @@ import create from 'zustand';
 import { Emulator, TripData } from './types';
 import { EMULATOR_URL, TRIP_URL } from './constants';
 
-const token = localStorage.getItem("token");
 
 interface EmulatorStore {
     emulators: Emulator[];
@@ -11,6 +10,7 @@ interface EmulatorStore {
     fetchEmulators: () => Promise<void>;
     selectEmulator: (emulator: Emulator) => void;
     fetchTripData: () => Promise<void>;
+    refreshEmulators: () => Promise<void>;
 }
 
 export const useEmulatorStore = create<EmulatorStore>((set, get) => ({
@@ -18,6 +18,8 @@ export const useEmulatorStore = create<EmulatorStore>((set, get) => ({
     selectedEmulator: null,
     tripData: null,
     fetchEmulators: async () => {
+        const token = localStorage.getItem("token");
+        console.log("V2", token);
         try {
             const response = await fetch(EMULATOR_URL, {
                 method: "GET",
@@ -52,6 +54,24 @@ export const useEmulatorStore = create<EmulatorStore>((set, get) => ({
             } catch (error) {
                 console.error('Failed to fetch trip data:', error);
             }
+        }
+    },
+    refreshEmulators: async () => {
+        const token = localStorage.getItem("token");
+        console.log("V2", token);
+        try {
+            const response = await fetch(EMULATOR_URL, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const emulators = await response.json();
+            console.log("V2", emulators);
+            set({ emulators });
+        } catch (error) {
+            console.error('V2 Failed to fetch emulators:', error);
         }
     },
 }));

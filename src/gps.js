@@ -7,11 +7,8 @@ import CreateTripOverlay from "./components/location/map-components/CreateTripOv
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
-import { useStates } from "./StateProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
-import { GetEmulatorApi } from "./components/api/emulator.js";
-import { Hidden } from "@mui/material";
 import { useEmulatorStore } from "./store.tsx";
 
 const GPS = () => {

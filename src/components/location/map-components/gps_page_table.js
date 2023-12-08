@@ -38,20 +38,20 @@ import { useStates } from "../../../StateProvider";
 import { useEmulatorStore } from "../../../store.tsx";
 
 const GpsTable = () => {
-  
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  
+
+  const emulators = useEmulatorStore((state) => state.emulators);
+
   // State variables
   const {
     setSelectedEmId,
     selectedEmId,
     hoveredMarker,
-    emulators,
     setSelectedEmulator,
     selectedEmulator,
     setAssignedTelephoneNumber,
-    showToast
+    showToast,
   } = useStates();
 
   const { width } = useViewPort();
@@ -77,8 +77,10 @@ const GpsTable = () => {
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false);
+
   const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] =
     useState(null);
+    
   const [showHideTable, setShowHideTable] = useState(false);
 
   const handleClose = (id) => {
@@ -291,8 +293,7 @@ const GpsTable = () => {
                   {/* TELEPHONE */}
                   <td>
                     <Fragment>
-
-                    <Tooltip
+                      <Tooltip
                         style={{ display: "flex", alignItems: "center" }}
                         title={row.telephone || "N/A"}
                         placement="top"
@@ -339,6 +340,16 @@ const GpsTable = () => {
                             }
                           >
                             <MessageRoundedIcon fontSize="small" />
+                          </IconButton>
+
+                          {/* message icon */}
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              handleHistoryButtonClick(row)
+                            }
+                          >
+                            <HistoryIcon fontSize="small" />
                           </IconButton>
                         </div>
                       </Tooltip>

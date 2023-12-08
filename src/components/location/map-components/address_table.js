@@ -23,7 +23,6 @@ const AddressTable = ({
     showToast,
     AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
-    validateEmulatorsData,
     handleCreateTripButton
 
   } = useStates();
@@ -239,7 +238,6 @@ const AddressTable = ({
             onClick={handleCreateTripButton}
             tripData={tripData}
             emulator={emulator}
-            validateEmulatorsData={validateEmulatorsData}
           />
 
 
