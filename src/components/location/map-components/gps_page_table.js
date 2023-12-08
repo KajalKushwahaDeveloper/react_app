@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import TablePagination, {
   tablePaginationClasses as classes,
@@ -284,56 +284,59 @@ const GpsTable = () => {
 
                   {/* TELEPHONE */}
                   <td>
+                    <Fragment>
+
                     <Tooltip
-                      style={{ display: "flex", alignItems: "center" }}
-                      title={row.telephone || "N/A"}
-                      placement="top"
-                    >
-                      <div
-                        style={
-                          isMobileThreeTwenty
-                            ? {
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                flexGrow: 1,
-                                maxWidth: 26,
-                              }
-                            : {
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                flexGrow: 1,
-                                maxWidth: 80,
-                              }
-                        }
+                        style={{ display: "flex", alignItems: "center" }}
+                        title={row.telephone || "N/A"}
+                        placement="top"
                       >
-                        {row.telephone || "N/A"}
-                      </div>
-
-                      {/* Icons */}
-                      <div style={{ display: "flex" }}>
-                        {/* calling icon */}
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            handleContactDetails("call", row, index)
+                        <div
+                          style={
+                            isMobileThreeTwenty
+                              ? {
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  flexGrow: 1,
+                                  maxWidth: 26,
+                                }
+                              : {
+                                  textOverflow: "ellipsis",
+                                  overflow: "hidden",
+                                  whiteSpace: "nowrap",
+                                  flexGrow: 1,
+                                  maxWidth: 80,
+                                }
                           }
                         >
-                          <CallRoundedIcon fontSize="small" />
-                        </IconButton>
+                          {row.telephone || "N/A"}
+                        </div>
 
-                        {/* message icon */}
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            handleContactDetails("messages", row, index)
-                          }
-                        >
-                          <MessageRoundedIcon fontSize="small" />
-                        </IconButton>
-                      </div>
-                    </Tooltip>
+                        {/* Icons */}
+                        <div style={{ display: "flex" }}>
+                          {/* calling icon */}
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              handleContactDetails("call", row, index)
+                            }
+                          >
+                            <CallRoundedIcon fontSize="small" />
+                          </IconButton>
+
+                          {/* message icon */}
+                          <IconButton
+                            size="small"
+                            onClick={() =>
+                              handleContactDetails("messages", row, index)
+                            }
+                          >
+                            <MessageRoundedIcon fontSize="small" />
+                          </IconButton>
+                        </div>
+                      </Tooltip>
+                    </Fragment>
                   </td>
 
                   <td align="right">
@@ -399,10 +402,6 @@ const GpsTable = () => {
                   count={emulators.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  SelectProps={{
-                    inputProps: { "aria-label": "rows per page" },
-                    native: true,
-                  }}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />

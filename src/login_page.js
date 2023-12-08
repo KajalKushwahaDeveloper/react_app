@@ -69,16 +69,16 @@ const LoginPage = () => {
     <>
       <div className="authScreen">
         <div className="container_div container-fluid h-100">
-          <div class="row h-100">
+          <div className="row h-100">
             <div
-              class="col-md-6 centerMid d-none d-md-flex"
+              className="col-md-6 centerMid d-none d-md-flex"
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <div class="Left_content">
+              <div className="Left_content">
                 <img src="images/logo/logbookgps_logo.png" className="FrontImg"/>
                 <hr className="hr"></hr>
                 {/* <p className="para">
@@ -95,7 +95,7 @@ const LoginPage = () => {
               }}
             >
               <div className="authCard shadow">
-                <div class="Left_content d-block d-md-none">
+                <div className="Left_content d-block d-md-none">
                   {/* <img src="images/logo/logbookgps_logo.png" /> */}
                   <img src="images/logo/logbookgps_logo.svg"  />
                   {/* <p className="para">

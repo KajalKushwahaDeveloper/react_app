@@ -99,7 +99,7 @@ const DownloadApk = () => {
           </Button>
 
           <button className="btn btn-green" onClick={handleCopyUrl}>
-            <i class="fa-solid fa-copy"></i> COPY DOWNLOAD LINK
+            <i className="fa-solid fa-copy"></i> COPY DOWNLOAD LINK
           </button>
         </div>
       </CardContent>

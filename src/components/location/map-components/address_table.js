@@ -99,7 +99,7 @@ const AddressTable = ({
           }}>
           {/* CURRENT ADDRESS*/}
           <div
-            class="col-6 d-flex flex-column"
+            className="col-6 d-flex flex-column"
             style={{
               border: "2px solid",
               color: "black",
@@ -119,7 +119,7 @@ const AddressTable = ({
           </div>
           {/* FROM ADDRESS*/}
           <div
-            class="col-6 d-flex flex-column"
+            className="col-6 d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
@@ -138,7 +138,7 @@ const AddressTable = ({
           </div>
           {/* TO ADDRESS*/}
           <div
-            class="col-5 d-flex flex-column"
+            className="col-5 d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
@@ -157,7 +157,7 @@ const AddressTable = ({
           </div>
           {/* TIME */}
           <div
-            class="col-5 d-flex flex-column"
+            className="col-5 d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
@@ -201,11 +201,11 @@ const AddressTable = ({
           </div>
           {/* PLUS MINUS ICONS */}
           <div
-            class="col-2 d-flex flex-column"
+            className="col-2 d-flex flex-column"
             style={{
               padding: "0",
             }}>
-            <div class="btn-group">
+            <div className="btn-group">
               <button
                 type="button"
                 className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
@@ -252,7 +252,7 @@ const AddressTable = ({
           }}>
           {/* CURRENT ADDRESS*/}
           <div
-            class="col d-flex flex-column"
+            className="col d-flex flex-column"
             style={{
               border: "2px solid",
               color: "black",
@@ -267,7 +267,7 @@ const AddressTable = ({
 
           {/* FROM ADDRESS*/}
           <div
-            class="col d-flex flex-column"
+            className="col d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
@@ -281,7 +281,7 @@ const AddressTable = ({
 
           {/* TO ADDRESS*/}
           <div
-            class="col d-flex flex-column"
+            className="col d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
@@ -293,7 +293,7 @@ const AddressTable = ({
 
           {/* TIME */}
           <div
-            class="col d-flex flex-column"
+            className="col d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
@@ -334,11 +334,11 @@ const AddressTable = ({
 
           {/* PLUS MINUS ICONS */}
           <div
-            class="col-1 d-flex flex-column"
+            className="col-1 d-flex flex-column"
             style={{
               padding: "0",
             }}>
-            <div class="btn-group">
+            <div className="btn-group">
               <button
                 type="button"
                 className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
