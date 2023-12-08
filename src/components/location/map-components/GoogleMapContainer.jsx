@@ -242,24 +242,12 @@ const GoogleMapContainer = ({
             (emulator) =>
               emulator.latitude !== null && emulator.longitude !== null
           )
-          .map((emulator, index) => {
-            const isActiveUser =
-              emulator.status === "ACTIVE" && emulator.user !== null;
-
-            var rotationAngle = 0;
-            try {
-              if (paths != null && emulator.currentTripPointIndex > -1) {
-                rotationAngle =
-                  paths[emulator.currentTripPointIndex].bearing;
-              }
-            } catch (e) {
-              console.log("rotationAngle Error : ", e);
-            }
-
+          .map((emulator, _ ) => {
             const isHovered = hoveredMarker?.id === emulator?.id;
             const isSelected = selectedEmulator?.id === emulator?.id;
 
             //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE 
+            var arrowSymbol = null;
             var icon_url = `images/${emulator.tripStatus}/`;
             if (isHovered) {
               icon_url = icon_url + "HOVER";
@@ -269,18 +257,48 @@ const GoogleMapContainer = ({
               icon_url = icon_url + "DEFAULT";
             }
             icon_url = `${icon_url}/${emulator.status}.svg`;
+
             if (emulator.telephone === "+19712514608") {
               console.log("icon_url : ", icon_url);
             }
+
+            if(isSelected) {
+              var rotationAngle = null;
+              try {
+                if (paths != null && paths.length > 0) {
+                  if(emulator.currentTripPointIndex < 0) {
+                    rotationAngle = paths[0].bearing;
+                  } else if(emulator.currentTripPointIndex > paths.length) {
+                    rotationAngle = paths[paths.length - 1].bearing;
+                  } else {
+                    rotationAngle =
+                    paths[emulator.currentTripPointIndex].bearing;
+                  }
+                  console.log("rotationAngle : ", rotationAngle);
+                }
+              } catch (e) {
+                console.log("rotationAngle Error : ", e);
+              }
+              console.log("rotationAngle : ", rotationAngle);
+              if(rotationAngle != null) {
+                // PAUSED RESTING RUNNING STOP
+                const arrowPath2 = `M50 10 L58 28 L42 28 Z`;
+                arrowSymbol = {
+                  path: arrowPath2,
+                  fillColor: '#FFFFFF',
+                  fillOpacity: 1,
+                  strokeColor: 'black',
+                  strokeWeight: 2,
+                  anchor: new window.google.maps.Point(50, 50),
+                  rotation: rotationAngle,
+                }
+              }
+            }
+
             const emulatorIcon = {
               url: icon_url,
               scaledSize: new window.google.maps.Size(20, 20),
               anchor: new window.google.maps.Point(10, 10),
-              labelStyle: {
-                borderRadius: "50%",
-                border: "3px solid #c2c7ce !important",
-                transition: "all 3s ease",
-              },
             };
 
             return (
@@ -291,7 +309,6 @@ const GoogleMapContainer = ({
                     lat: emulator.latitude,
                     lng: emulator.longitude,
                   }}
-                  animation={0}
                   title={`${emulator.telephone} ${emulator.tripStatus}(${emulator.status})`}
                   labelStyle={{
                     textAlign: "center",
@@ -308,10 +325,17 @@ const GoogleMapContainer = ({
                   onDragEnd={(event) => {
                     handleEmulatorMarkerDragEnd(emulator, event);
                   }}
-                  // onDragEnd={(event) =>
-                  //   handleEmulatorMarkerDragEnd(emulator, event)
-                  // }
+                  zIndex={2}
                 ></Marker>
+                {isSelected && rotationAngle !== null && 
+                <Marker
+                  icon={arrowSymbol}
+                  position={{
+                    lat: emulator.latitude,
+                    lng: emulator.longitude,
+                  }}
+                  zIndex={1}
+                />}
               </React.Fragment>
             );
           })}
