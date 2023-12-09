@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 
 import {
   GoogleMap,
@@ -20,7 +20,7 @@ import {
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../store.tsx";
 
-const libraries = ["drawing", "places", "autocomplete"]
+const libraries = ["drawing", "places", "autocomplete"];
 
 const GoogleMapContainer = ({
   center,
@@ -42,7 +42,6 @@ const GoogleMapContainer = ({
   confirmNewLocation,
   calculateTimeFromTripPointIndexToStopPoint,
 }) => {
-  
   const emulators = useEmulatorStore((state) => state.emulators);
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
   const tripData = useEmulatorStore((state) => state.tripData);
@@ -54,7 +53,7 @@ const GoogleMapContainer = ({
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E",
-    libraries: libraries
+    libraries: libraries,
   });
 
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
@@ -73,52 +72,39 @@ const GoogleMapContainer = ({
         );
       setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
     }
-  }, [selectedEmulator, calculateTimeFromTripPointIndexToStopPoint, tripData?.stops]);
+  }, [
+    selectedEmulator,
+    calculateTimeFromTripPointIndexToStopPoint,
+    tripData?.stops,
+  ]);
 
-  const intervalRef = useRef(null);
-
-  useEffect(() => {
-    const calculatePath = () => {
-      console.log("calculatePath");
-      if (mapRef.current === null) {
-        console.log("calculatePath ERROR mapRef null");
-        return;
-      }
-      const bounds = new window.google.maps.LatLngBounds();
-      tripData?.tripPoints?.forEach(element => {
-        bounds.extend(
-          new window.google.maps.LatLng(element.lat, element.lng)
-        );
-      });
-      console.log("bounds", bounds);
-      mapRef.current.fitBounds(bounds);
-    };
-
-    if (tripData?.tripPoints === null) {
-      clearInterval(intervalRef.current);
+  useMemo(() => {
+    console.log("calculatePath", tripData?.tripPoints);
+    if (mapRef.current === null) {
+      console.log("calculatePath ERROR mapRef null");
       return;
     }
-
-    calculatePath();
-
-    return () => {
-      clearInterval(intervalRef.current);
-    };
+    const bounds = new window.google.maps.LatLngBounds();
+    tripData?.tripPoints?.forEach((element) => {
+      bounds.extend(new window.google.maps.LatLng(element.lat, element.lng));
+    });
+    console.log("bounds", bounds);
+    mapRef.current.fitBounds(bounds);
   }, [mapRef, tripData?.tripPoints]);
 
   const containerStyle = {
-   position: "unset !important",
+    position: "unset !important",
     width: "100%",
     height: "100%",
   };
 
   const onLoad = React.useCallback(function callback(map) {
-    mapRef.current = map
-  }, [])
+    mapRef.current = map;
+  }, []);
 
   const onUnmount = React.useCallback(function callback(map) {
-    mapRef.current = null
-  }, [])
+    mapRef.current = null;
+  }, []);
 
   return isLoaded ? (
     <GoogleMap
@@ -215,11 +201,11 @@ const GoogleMapContainer = ({
             (emulator) =>
               emulator.latitude !== null && emulator.longitude !== null
           )
-          .map((emulator, _ ) => {
+          .map((emulator, _) => {
             const isHovered = hoveredMarker?.id === emulator?.id;
             const isSelected = selectedEmulator?.id === emulator?.id;
 
-            //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE 
+            //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
             var arrowSymbol = null;
             var icon_url = `images/${emulator.tripStatus}/`;
             if (isHovered) {
@@ -231,17 +217,25 @@ const GoogleMapContainer = ({
             }
             icon_url = `${icon_url}/${emulator.status}.svg`;
 
-            if(isSelected) {
+            if (isSelected) {
               var rotationAngle = null;
               try {
-                if (tripData?.tripPoints != null && tripData?.tripPoints.length > 0) {
-                  if(emulator.currentTripPointIndex < 0) {
+                if (
+                  tripData?.tripPoints != null &&
+                  tripData?.tripPoints.length > 0
+                ) {
+                  if (emulator.currentTripPointIndex < 0) {
                     rotationAngle = tripData?.tripPoints[0].bearing;
-                  } else if(emulator.currentTripPointIndex > tripData?.tripPoints.length) {
-                    rotationAngle = tripData?.tripPoints[tripData?.tripPoints.length - 1].bearing;
+                  } else if (
+                    emulator.currentTripPointIndex > tripData?.tripPoints.length
+                  ) {
+                    rotationAngle =
+                      tripData?.tripPoints[tripData?.tripPoints.length - 1]
+                        .bearing;
                   } else {
                     rotationAngle =
-                    tripData?.tripPoints[emulator.currentTripPointIndex].bearing;
+                      tripData?.tripPoints[emulator.currentTripPointIndex]
+                        .bearing;
                   }
                   console.log("rotationAngle : ", rotationAngle);
                 }
@@ -249,18 +243,18 @@ const GoogleMapContainer = ({
                 console.log("rotationAngle Error : ", e);
               }
               console.log("rotationAngle : ", rotationAngle);
-              if(rotationAngle != null) {
+              if (rotationAngle != null) {
                 // PAUSED RESTING RUNNING STOP
                 const arrowPath2 = `M50 10 L58 28 L42 28 Z`;
                 arrowSymbol = {
                   path: arrowPath2,
-                  fillColor: '#FFFFFF',
+                  fillColor: "#FFFFFF",
                   fillOpacity: 1,
-                  strokeColor: 'black',
+                  strokeColor: "black",
                   strokeWeight: 2,
                   anchor: new window.google.maps.Point(50, 50),
                   rotation: rotationAngle,
-                }
+                };
               }
             }
 
@@ -296,15 +290,16 @@ const GoogleMapContainer = ({
                   }}
                   zIndex={2}
                 ></Marker>
-                {isSelected && rotationAngle !== null && 
-                <Marker
-                  icon={arrowSymbol}
-                  position={{
-                    lat: emulator.latitude,
-                    lng: emulator.longitude,
-                  }}
-                  zIndex={1}
-                />}
+                {isSelected && rotationAngle !== null && (
+                  <Marker
+                    icon={arrowSymbol}
+                    position={{
+                      lat: emulator.latitude,
+                      lng: emulator.longitude,
+                    }}
+                    zIndex={1}
+                  />
+                )}
               </React.Fragment>
             );
           })}

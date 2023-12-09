@@ -3,12 +3,6 @@ import React, {
   useState,
   useRef,
 } from "react";
-import useFetch from "./hooks/useFetch";
-import {
-  TRIP_STOPS_URL,
-  TRIP_POINTS_URL,
-  TRIP_URL,
-} from "./constants";
 
 import { toast } from "react-toastify";
 import { useEmulatorStore } from "./store.tsx";
@@ -39,7 +33,7 @@ const useStates = () => {
 export { useStates };
 
 export const StateProvider = ({ children }) => {
-  const refreshEmulators = useEmulatorStore((state) => state.refreshEmulators);
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
   const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
 
@@ -64,7 +58,7 @@ export const StateProvider = ({ children }) => {
       }
       emulatorInterval = setInterval(async () => {
         // Manually trigger the fetch to get the latest emulator data
-        refreshEmulators();
+        fetchEmulators();
       }, 5000);
     };
 
@@ -82,7 +76,7 @@ export const StateProvider = ({ children }) => {
     return () => {
       stopEmulatorInterval();
     };
-  }, [refreshEmulators]);
+  }, [fetchEmulators]);
 
   return (
     <StatesContext.Provider

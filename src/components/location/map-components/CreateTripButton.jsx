@@ -53,10 +53,10 @@ const CreateTripButton = ( ) => {
       const token = localStorage.getItem("token");
 
       let payload = {
-        emulatorId: selectedEmulator.id,
+        emulatorId: selectedEmulator?.id,
         cancelTrip: true,
-        latitude: selectedEmulator.latitude,
-        longitude: selectedEmulator.longitude,
+        latitude: selectedEmulator?.latitude,
+        longitude: selectedEmulator?.longitude,
         newTripIndex: null,
       };
 

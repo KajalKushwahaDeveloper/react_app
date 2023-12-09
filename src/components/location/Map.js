@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 
 import {
   EMULATOR_DRAG_URL,
@@ -12,7 +12,7 @@ import { useStates } from "../../StateProvider.js";
 import { useEmulatorStore } from "../../store.tsx";
 
 const Map = () => {
-  const refreshEmulators = useEmulatorStore((state) => state.refreshEmulators);
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
   const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
   const tripData = useEmulatorStore((state) => state.tripData);
@@ -41,16 +41,13 @@ const Map = () => {
 
   const [selectedStop, setSelectedStop] = useState(null);
 
-
-
-  useEffect(() => {
-    if (selectedEmulator != null) {
-      setCenter({
-        lat: selectedEmulator.latitude,
-        lng: selectedEmulator.longitude,
-      });
-    }
-  }, [selectedEmulator]);
+  useMemo(() => {
+    console.log("Center Rerendered");
+    setCenter({
+      lat: selectedEmulator?.latitude || defaultLat,
+      lng: selectedEmulator?.longitude || defaultLng,
+    });
+  }, [defaultLng, selectedEmulator?.latitude, selectedEmulator?.longitude]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -264,7 +261,7 @@ const Map = () => {
     );
     console.log("LOG 1 - updated Emulator: ", data);
     if (success) {
-      refreshEmulators();
+      fetchEmulators();
       setOpenDialog(false);
     } else if (error) {
       // setOpenDialog(false);
