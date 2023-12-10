@@ -9,11 +9,23 @@ import CircularProgress from "@mui/material/CircularProgress";
 import "../../../scss/button.scss";
 import { useStates } from "../../../StateProvider.js";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
 const CreateTripTable = () => {
   
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  
+  const selectedEmulator = useEmulatorStore(
+    (state) => state.selectedEmulator,
+    (oldSelectedEmulator, newSelectedEmulator) => {
+      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
+      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      if(diff === true) {
+        console.log("selectedEmulator changed (CreateTrip)", );
+      }
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+    }
+  );
 
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();

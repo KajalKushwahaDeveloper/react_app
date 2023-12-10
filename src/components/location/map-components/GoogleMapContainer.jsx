@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { compareSelectedEmulator , compareEmulators } from "../../../stores/emulator/types_maps.tsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
@@ -42,8 +43,28 @@ const GoogleMapContainer = ({
   confirmNewLocation,
   calculateTimeFromTripPointIndexToStopPoint,
 }) => {
-  const emulators = useEmulatorStore((state) => state.emulators);
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  const emulators = useEmulatorStore((state) => state.emulators,
+    (oldEmulators, newEmulators) => {
+      // TODO Check if compareEmulators is working as intented (Updating emulators only on shallow change)
+      const diff = compareEmulators(oldEmulators, newEmulators);
+      if(diff === true) {
+        console.log("emulators changed ", );
+      }
+      compareEmulators(oldEmulators, newEmulators)
+    }
+  );
+  const selectedEmulator = useEmulatorStore(
+    (state) => state.selectedEmulator,
+    (oldSelectedEmulator, newSelectedEmulator) => {
+      // TODO  Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
+      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      if(diff === true) {
+        console.log("selectedEmulator changed ", );
+      }
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+    }
+  );
+
   const tripData = useEmulatorStore((state) => state.tripData);
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
@@ -80,7 +101,7 @@ const GoogleMapContainer = ({
 
   useMemo(() => {
     console.log("calculatePath", tripData?.tripPoints);
-    if (mapRef.current === null) {
+    if (mapRef.current === null || tripData?.tripPoints === undefined) {
       console.log("calculatePath ERROR mapRef null");
       return;
     }
@@ -109,7 +130,7 @@ const GoogleMapContainer = ({
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      zoom={7}
+      zoom={4}
       center={center}
       gestureHandling="none"
       zoomControl={false}

@@ -17,15 +17,8 @@ function ContactDialogComponent({
 }) {
   const devices = useEmulatorStore((state) => state.devices);
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
-  const createDevices = useEmulatorStore((state) => state.createDevices);
 
-  const { staticEmulators, showToast } = useStates();
-
-  useEffect(() => {
-    if(staticEmulators !== null) {
-      createDevices(staticEmulators);
-    }
-  }, [createDevices, staticEmulators]);
+  const {  showToast } = useStates();
 
   useEffect(() => {
     console.log("devices", devices);
