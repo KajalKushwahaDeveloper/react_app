@@ -3,9 +3,10 @@ import "../../../scss/map.scss";
 import { useViewPort } from "../../../ViewportProvider.js";
 import GpsTable from "./gps_page_table.js";
 import { useStates } from "../../../StateProvider";
+import CreateTripButton from "./CreateTripButton";
+import AppStomp from "./AppStomp.tsx";
 
-const AddressTable = ({
-}) => {
+const AddressTable = () => {
   var fromAddress = null;
   var toAddress = null;
   var timeInHours = null;
@@ -13,15 +14,6 @@ const AddressTable = ({
   const { 
     tripData,
     emulator,
-    setSelectedEmId,
-    selectedEmId,
-    hoveredMarker,
-    emulators,
-    setSelectedEmulator,
-    selectedEmulator, 
-    showToast,
-    AssignedTelephoneNumber,
-    setAssignedTelephoneNumber
   } = useStates();
     
   const { width, height } = useViewPort();
@@ -231,17 +223,8 @@ const AddressTable = ({
             </div>
           </div>
 
-          <GpsTable
-            showToast={showToast}
-            setSelectedEmId={setSelectedEmId}
-            selectedEmId={selectedEmId}
-            hoveredMarker={hoveredMarker}
-            emulators={emulators}
-            setSelectedEmulator={setSelectedEmulator}
-            selectedEmulator={selectedEmulator}
-            AssignedTelephoneNumber={AssignedTelephoneNumber}
-            setAssignedTelephoneNumber={setAssignedTelephoneNumber}
-          />
+          <CreateTripButton />
+          <GpsTable />
         </div>
       ) : (
         <div
@@ -261,7 +244,8 @@ const AddressTable = ({
             }}>
             <div className="address-table-heading">Current location</div>
             <div className="addressTable">
-              {emulator && emulator.address ? emulator.address : "N/A"}
+              {/* {emulator && emulator.address ? emulator.address : "N/A"} */}
+              <AppStomp />
             </div>
           </div>
 

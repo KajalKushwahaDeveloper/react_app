@@ -7,19 +7,22 @@ import { useViewPort } from "../../../ViewportProvider.js";
 import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
 import { ToastContainer, toast } from "react-toastify";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 
 const CreateTripButton = ( ) => {
   const { width, height } = useViewPort();
   const {
-    setSelectedEmId,
-    selectedEmulator,
     showToast,
     AssignedTelephoneNumber,
     setIsTableVisible,
     isTableVisible,
     tripData,
-    emulator,
   } = useStates();
+
+  
+  //Initiate fetchEmulators from store
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
 
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
@@ -50,10 +53,10 @@ const CreateTripButton = ( ) => {
       const token = localStorage.getItem("token");
 
       let payload = {
-        emulatorId: emulator.id,
+        emulatorId: selectedEmulator?.id,
         cancelTrip: true,
-        latitude: emulator.latitude,
-        longitude: emulator.longitude,
+        latitude: selectedEmulator?.latitude,
+        longitude: selectedEmulator?.longitude,
         newTripIndex: null,
       };
 
@@ -66,9 +69,8 @@ const CreateTripButton = ( ) => {
       );
 
       if (success) {
-        setSelectedEmId(null);
-        setSelectedEmId(emulator.id);
         toast["success"]("Trip has been cancelled");
+        fetchEmulators();
       } else {
         toast["error"]("Trip is not cancelled");
       }
@@ -76,23 +78,26 @@ const CreateTripButton = ( ) => {
   };
 
   useEffect(() => {
-    if (
-      (tripData !== null && emulator !== null) ||
-      (tripData !== null && emulator === null)
-    ) {
+    if ( tripData !== null || selectedEmulator !== null ) {
       setHideCancel(true);
     } else {
       setHideCancel(false);
     }
-  }, [tripData, emulator]);
+  }, [tripData, selectedEmulator]);
 
   return (
     <div
-      style={{
+      style={
+        isMobileBelowSixTwenty ?{
         display: "flex",
         justifyContent: "space-around",
-        marginTop: "7px",
-      }}
+        marginTop: "1rem",
+      }:{
+        display: "flex",
+        justifyContent: "space-around",
+  
+      }
+    }
     >
       <button
         style={

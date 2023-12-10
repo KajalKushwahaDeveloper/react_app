@@ -12,7 +12,11 @@ function useFetch(url) {
         setData(null);
         setError(null);
         const token = localStorage.getItem("token");
-
+        if(token === null) {
+            console.log("Not Logged In");
+            setError('Not Logged In');
+            return;
+        }
         const source = axios.CancelToken.source();
         axios.get(url, { cancelToken: source.token, headers: {
             Authorization: `Bearer ${token}`,
