@@ -4,13 +4,16 @@ import React, {
   useRef,
 } from "react";
 
+import useFetch from "./hooks/useFetch";
 import { toast } from "react-toastify";
 import { useEmulatorStore } from "./store.tsx";
+import { EMULATOR_URL } from "./constants.js";
 
 export const StatesContext = React.createContext({});
 
 const useStates = () => {
   const {
+    staticEmulators,
     AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
     isTableVisible,
@@ -20,6 +23,7 @@ const useStates = () => {
     showToast,
   } = React.useContext(StatesContext);
   return {
+    staticEmulators,
     AssignedTelephoneNumber,
     setAssignedTelephoneNumber,
     isTableVisible,
@@ -34,6 +38,9 @@ export { useStates };
 
 export const StateProvider = ({ children }) => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
+
+  const { data: staticEmulators, setData: setStaticEmulators } = useFetch(EMULATOR_URL);
 
   const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
 
@@ -81,6 +88,7 @@ export const StateProvider = ({ children }) => {
   return (
     <StatesContext.Provider
       value={{
+        staticEmulators,
         AssignedTelephoneNumber,
         setAssignedTelephoneNumber,
         isTableVisible,

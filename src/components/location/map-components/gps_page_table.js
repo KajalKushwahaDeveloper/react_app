@@ -47,6 +47,7 @@ const GpsTable = () => {
 
   // State variables
   const {
+    staticEmulators,
     hoveredMarker,
     setAssignedTelephoneNumber,
     showToast,
@@ -405,14 +406,16 @@ const GpsTable = () => {
               </tr>
             </tfoot>
           </table>
+
           <PopUpEmulatorHistory
             showToast={showToast}
             handleClose={handleClose}
             open={openEmulatorHistoryPopUp}
             emulatorHistory={selectedEmulatorForHistoryData}
           />
+
           <ContactDialogComponent
-            emulators={emulators}
+            emulators={staticEmulators}
             selectedDevice={selectedDevice}
             setSelectedDevice={setSelectedDevice}
             handleContactDialog={handleContactDetails}
