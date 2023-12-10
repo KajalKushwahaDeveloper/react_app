@@ -5,11 +5,26 @@ import "../../../scss/map.scss";
 import { useStates } from "../../../StateProvider";
 
 const CreateTripOverlay = () => {
-  const { isTableVisible } = useStates();
+  const {
+    isTableVisible,
+    selectedEmId,
+    selectedEmulator,
+    showToast,
+    setIsTableVisible,
+    setSelectedEmId,
+  } = useStates();
 
   return (
     <div className="gps_createTrip_overlay">
-      {isTableVisible && <CreateTripTable />}
+      {isTableVisible && (
+        <CreateTripTable
+          selectedEmId={selectedEmId}
+          selectedEmulator={selectedEmulator}
+          showToast={showToast}
+          setIsTableVisible={setIsTableVisible}
+          setSelectedEmId={setSelectedEmId}
+        />
+      )}
     </div>
   );
 };
