@@ -10,12 +10,35 @@ import ApiService from "../../ApiService";
 import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
 import { useEmulatorStore } from "../../stores/emulator/store.tsx";
+import { compareSelectedEmulator } from "../../stores/emulator/types_maps.tsx";
 
 const Map = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  
+  const selectedEmulator = useEmulatorStore(
+    (state) => state.selectedEmulator,
+    (oldSelectedEmulator, newSelectedEmulator) => {
+      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
+      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      if(diff === true) {
+        console.log("selectedEmulator changed (Map)", );
+      }
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+    }
+  );
+
   const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
   const tripData = useEmulatorStore((state) => state.tripData);
+  const center = useEmulatorStore((state) => state.center);
+  
+  const { staticEmulators } = useStates();
+  const createDevices = useEmulatorStore((state) => state.createDevices);
+
+  useEffect(() => {
+    if(staticEmulators !== null) {
+      createDevices(staticEmulators);
+    }
+  }, [createDevices, staticEmulators]);
 
   const {
     setAssignedTelephoneNumber,
@@ -31,23 +54,7 @@ const Map = () => {
   const [draggOutRange, setDragOutRange] = useState();
   const [draggWithoutTrip, setDragWithoutTrip] = useState();
 
-  const defaultLat = 37.7749; // Default latitude
-  const defaultLng = -122.4194; // Default longitude
-
-  const [center, setCenter] = useState({
-    lat: defaultLat,
-    lng: defaultLng,
-  });
-
   const [selectedStop, setSelectedStop] = useState(null);
-
-  useMemo(() => {
-    console.log("Center Rerendered");
-    setCenter({
-      lat: selectedEmulator?.latitude || defaultLat,
-      lng: selectedEmulator?.longitude || defaultLng,
-    });
-  }, [defaultLng, selectedEmulator?.latitude, selectedEmulator?.longitude]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -169,7 +176,7 @@ const Map = () => {
       return
     }
 
-    if (emulator.id !== selectedEmulator.id) {
+    if (emulator.id !== selectedEmulator?.id) {
       showToast("Please select this emulator first as a trip already exists.", "error")
       return
     }

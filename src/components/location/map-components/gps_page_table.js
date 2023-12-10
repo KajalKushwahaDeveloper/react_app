@@ -36,12 +36,32 @@ import { Tooltip } from "@mui/material";
 import { useViewPort } from "../../../ViewportProvider";
 import { useStates } from "../../../StateProvider";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { compareEmulators, compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
 const GpsTable = () => {
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  const emulators = useEmulatorStore((state) => state.emulators);
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  const emulators = useEmulatorStore((state) => state.emulators,
+    (oldEmulators, newEmulators) => {
+      // TODO Check if compareEmulators is working as intented (Updating emulators only on shallow change)
+      const diff = compareEmulators(oldEmulators, newEmulators);
+      if(diff === true) {
+        console.log("emulators changed ", );
+      }
+      compareEmulators(oldEmulators, newEmulators)
+    }
+    );
+    
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator,
+  (oldEmulators, newEmulators) => {
+    // Check if compareEmulators is working as intented (Updating emulators only on shallow change)
+    const val = compareSelectedEmulator(oldEmulators, newEmulators)
+    if(val === true) {
+      console.log("emulators changed (GPS)", val);
+    }
+    compareSelectedEmulator(oldEmulators, newEmulators)
+  });
+
   const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
 
   const selectDevice = useEmulatorStore((state) => state.selectDevice);
