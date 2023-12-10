@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 
 import {
   EMULATOR_DRAG_URL,
@@ -9,39 +9,19 @@ import ApiService from "../../ApiService";
 
 import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
-import { useEmulatorStore } from "../../stores/emulator/store.tsx";
-import { compareSelectedEmulator } from "../../stores/emulator/types_maps.tsx";
 
 const Map = () => {
-  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  
-  const selectedEmulator = useEmulatorStore(
-    (state) => state.selectedEmulator,
-    (oldSelectedEmulator, newSelectedEmulator) => {
-      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
-      if(diff === true) {
-        console.log("selectedEmulator changed (Map)", );
-      }
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
-    }
-  );
-
-  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
-  const tripData = useEmulatorStore((state) => state.tripData);
-  const center = useEmulatorStore((state) => state.center);
-  
-  const { staticEmulators } = useStates();
-  const createDevices = useEmulatorStore((state) => state.createDevices);
-
-  useEffect(() => {
-    if(staticEmulators !== null) {
-      createDevices(staticEmulators);
-    }
-  }, [createDevices, staticEmulators]);
-
   const {
+    selectedEmId,
+    paths,
+    stops,
+    emulators,
+    emulator,
+    setSelectedEmId,
+    selectedEmulator,
+    setSelectedEmulator,
     setAssignedTelephoneNumber,
+    validateEmulatorsData,
     hoveredMarker,
     setHoveredMarker,
     showToast,
@@ -54,7 +34,29 @@ const Map = () => {
   const [draggOutRange, setDragOutRange] = useState();
   const [draggWithoutTrip, setDragWithoutTrip] = useState();
 
+  const defaultLat = 37.7749; // Default latitude
+  const defaultLng = -122.4194; // Default longitude
+
+  const [center, setCenter] = useState({
+    lat: defaultLat,
+    lng: defaultLng,
+  });
+
   const [selectedStop, setSelectedStop] = useState(null);
+
+
+
+  useEffect(() => {
+    if (selectedEmId != null && emulators != null) {
+      const findEmulator = emulators.filter((e) => e.id === selectedEmId);
+      if (findEmulator.length > 0 && findEmulator[0].startlat == null) {
+        setCenter({
+          lat: findEmulator[0].latitude,
+          lng: findEmulator[0].longitude,
+        });
+      }
+    }
+  }, [selectedEmId]);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -74,7 +76,14 @@ const Map = () => {
 
   const handleEmulatorMarkerClick = (emulator) => {
     setAssignedTelephoneNumber(emulator.telephone);
-    selectEmulator(emulator)
+    if (selectedEmulator?.id !== emulator.id) {
+      setSelectedEmulator(emulator);
+      setSelectedEmId(emulator.id);
+    } else {
+      // Otherwise, un-select the selected emulator
+    }
+    // clearInterval(intervalRef.current); // Clear any existing interval
+    // setStartEmulation(emulator); // Set the selected emulation as the start emulation
   };
 
   const handleDialog = (text) => {
@@ -125,7 +134,7 @@ const Map = () => {
   }
 
   function calculateNextStopPointIndex(currentIndex) {
-    let nextStopPoint = tripData?.stops?.find(
+    let nextStopPoint = stops.find(
       (stop) => currentIndex < stop.tripPointIndex
     );
     return nextStopPoint;
@@ -140,12 +149,12 @@ const Map = () => {
       startIndex == null ||
       stop == null ||
       velocity == null ||
-      tripData?.tripPoints == null
+      paths == null
     ) {
       return `N/A`;
     }
     let distance = 0;
-    tripData?.tripPoints.forEach((path) => {
+    paths.forEach((path) => {
       if (
         path.tripPointIndex >= startIndex &&
         path.tripPointIndex <= stop.tripPointIndex
@@ -176,17 +185,16 @@ const Map = () => {
       return
     }
 
-    if (emulator.id !== selectedEmulator?.id) {
+    if (emulator.id !== selectedEmId) {
       showToast("Please select this emulator first as a trip already exists.", "error")
       return
     }
 
     const { nearestDistance, nearestTripPoint } = findNearestMarker(
-      tripData?.tripPoints,
+      paths,
       lat,
       lng
     );
-
     if (nearestDistance <= 10) {
       setDragOutRange();
       setNearestTripPoint(nearestTripPoint);
@@ -268,7 +276,7 @@ const Map = () => {
     );
     console.log("LOG 1 - updated Emulator: ", data);
     if (success) {
-      fetchEmulators();
+      validateEmulatorsData(null, data);
       setOpenDialog(false);
     } else if (error) {
       // setOpenDialog(false);
@@ -279,20 +287,25 @@ const Map = () => {
     setNearestTripPoint(null);
   };
 
-  const startLat = tripData?.tripPoints ? tripData?.tripPoints[0].lat : null;
-  const startLng = tripData?.tripPoints ? tripData?.tripPoints[0].lng : null;
-  const endLat = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lat : null;
-  const endLng = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lng : null;
+  const startLat = paths ? paths[0].lat : null;
+  const startLng = paths ? paths[0].lng : null;
+  const endLat = paths ? paths[paths?.length - 1].lat : null;
+  const endLng = paths ? paths[paths?.length - 1].lng : null;
 
   return (
     <GoogleMapContainer
+      paths={paths}
       center={center}
+      stops={stops}
       selectedStop={selectedStop}
       handleMarkerClick={handleMarkerClick}
       hoveredMarker={hoveredMarker}
       handleMarkerMouseOver={handleMarkerMouseOver}
       handleMarkerMouseOut={handleMarkerMouseOut}
       handleInfoWindowClose={handleInfoWindowClose}
+      selectedEmulator={selectedEmulator}
+      emulator={emulator}
+      emulators={emulators}
       endLat={endLat}
       endLng={endLng}
       startLat={startLat}

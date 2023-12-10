@@ -7,22 +7,24 @@ import { useViewPort } from "../../../ViewportProvider.js";
 import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
 import { ToastContainer, toast } from "react-toastify";
-import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { useEmulatorStore } from "../../../store.tsx";
 
 const CreateTripButton = ( ) => {
   const { width, height } = useViewPort();
   const {
+    setSelectedEmId,
+    selectedEmulator,
     showToast,
     AssignedTelephoneNumber,
     setIsTableVisible,
     isTableVisible,
     tripData,
+    emulator,
   } = useStates();
 
   
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
 
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
@@ -53,10 +55,10 @@ const CreateTripButton = ( ) => {
       const token = localStorage.getItem("token");
 
       let payload = {
-        emulatorId: selectedEmulator?.id,
+        emulatorId: emulator.id,
         cancelTrip: true,
-        latitude: selectedEmulator?.latitude,
-        longitude: selectedEmulator?.longitude,
+        latitude: emulator.latitude,
+        longitude: emulator.longitude,
         newTripIndex: null,
       };
 
@@ -69,6 +71,8 @@ const CreateTripButton = ( ) => {
       );
 
       if (success) {
+        setSelectedEmId(null);
+        setSelectedEmId(emulator.id);
         toast["success"]("Trip has been cancelled");
         fetchEmulators();
       } else {
@@ -78,12 +82,15 @@ const CreateTripButton = ( ) => {
   };
 
   useEffect(() => {
-    if ( tripData !== null || selectedEmulator !== null ) {
+    if (
+      (tripData !== null && emulator !== null) ||
+      (tripData !== null && emulator === null)
+    ) {
       setHideCancel(true);
     } else {
       setHideCancel(false);
     }
-  }, [tripData, selectedEmulator]);
+  }, [tripData, emulator]);
 
   return (
     <div

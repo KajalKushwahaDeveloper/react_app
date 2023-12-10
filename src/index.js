@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import ErrorBoundary from "./ErrorBoundary";
 import { BrowserRouter } from "react-router-dom";
@@ -9,16 +9,14 @@ import { ViewportProvider } from "./ViewportProvider.js";
 import { StateProvider } from "./StateProvider.js";
 
 ReactDOM.render(
-  <StrictMode>
-    <BrowserRouter>
-      <ErrorBoundary>
-        <ViewportProvider>
-          <StateProvider>
-            <App />
-          </StateProvider>
-        </ViewportProvider>
-      </ErrorBoundary>
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <ErrorBoundary>
+      <ViewportProvider>
+        <StateProvider>
+          <App />
+        </StateProvider>
+      </ViewportProvider>
+    </ErrorBoundary>
+  </BrowserRouter>,
   document.getElementById("root")
 );
