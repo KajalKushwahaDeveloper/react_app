@@ -3,7 +3,9 @@ import "./scss/home.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
+  CLIENT_CURRENT,
   EMULATOR_CREATE_RANDOM_URL,
+  EMULATOR_URL,
 } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";

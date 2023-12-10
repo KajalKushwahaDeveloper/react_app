@@ -1,73 +1,81 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Dialler from "./Dialler";
 import KeypadButton from "./KeypadButton";
 import Incoming from "./Incoming";
 import OnCall from "./OnCall";
 import "./Phone.css";
 import states from "./states";
-import { useEmulatorStore } from "../../../../../stores/emulator/store.tsx";
-import { useStates } from "../../../../../StateProvider.js";
+import FakeState from "./FakeState";
 
-const Phone = () => {
-  const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
-  const {showToast} = useStates();
+const Phone = ({ devices, selectedDevice, phoneState, setPhoneState , showToast }) => {
+
+
+  useEffect(() => {
+    console.log("phoneState" ,phoneState);
+  }, [phoneState]);
+
 
   const [number, setNumber] = useState("");
   const acceptConnection = () => {
     if (
+      devices !== null &&
       selectedDevice !== null &&
       selectedDevice.index !== null
     ) {
-      selectedDevice.conn.accept();
+      devices[selectedDevice.index].conn.accept();
+      setPhoneState(states.ON_CALL);
     }
   };
 
   const rejectConnection = () => {
     if (
+      devices !== null &&
       selectedDevice !== null &&
       selectedDevice.index !== null
     ) {
-      selectedDevice.conn.reject();
+      devices[selectedDevice.index].conn.reject();
+      setPhoneState(states.READY);
     }
   };
 
   const handleHangup = () => {
     if (
+      devices !== null &&
       selectedDevice !== null &&
       selectedDevice.index !== null
     ) {
-      selectedDevice.device.disconnectAll();
+      devices[selectedDevice.index].device.disconnectAll();
+      setPhoneState(states.READY);
     }
   };
 
   const handleCall = () => {
     if (
+      devices !== null &&
       selectedDevice !== null &&
       selectedDevice.index !== null
     ) {
-      selectedDevice.device.connect({ To: number });
+      devices[selectedDevice.index].device.connect({ To: number });
+      setPhoneState(states.ON_CALL);
     }
   };
 
   let render;
 
-  if (selectedDevice === null) {
-    render = <p>Something went wrong</p>;
-  }
-  else if (selectedDevice?.state === states.INCOMING) {
+  if (phoneState === states.INCOMING) {
     render = (
       <Incoming
-        callerName={selectedDevice.conn}
+        callerName={devices[selectedDevice.index].conn}
         acceptConnection={acceptConnection}
         rejectConnection={rejectConnection}
       ></Incoming>
     );
-  } else if (selectedDevice?.state === states.ON_CALL) {
+  } else if (phoneState === states.ON_CALL) {
     render = (
       <OnCall
         handleHangup={handleHangup}
-        device={selectedDevice.device}
-        conn={selectedDevice.conn}
+        device={devices[selectedDevice.index].device}
+        conn={devices[selectedDevice.index].conn}
         showToast={showToast}
       ></OnCall>
     );
@@ -86,7 +94,6 @@ const Phone = () => {
       </>
     );
   }
-
   return (
     <>
       {/* <FakeState
@@ -94,7 +101,7 @@ const Phone = () => {
         setState={setState}
         setConn={setConn}
       ></FakeState> */}
-      <p className="status">{selectedDevice?.number + ' : ' + selectedDevice?.state}</p>
+      <p className="status">{devices[selectedDevice.index].number + ' : ' + phoneState}</p>
       {render}
     </>
   );
