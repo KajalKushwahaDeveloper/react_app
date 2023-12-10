@@ -8,11 +8,24 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import "../../../scss/button.scss";
 import { useStates } from "../../../StateProvider.js";
-import { useEmulatorStore } from "../../../store.tsx";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
 const CreateTripTable = () => {
   
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  
+  const selectedEmulator = useEmulatorStore(
+    (state) => state.selectedEmulator,
+    (oldSelectedEmulator, newSelectedEmulator) => {
+      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
+      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      if(diff === true) {
+        console.log("selectedEmulator changed (CreateTrip)", );
+      }
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+    }
+  );
 
   const [fromLat, setFromLat] = useState();
   const [fromLong, setFromLong] = useState();
@@ -24,10 +37,8 @@ const CreateTripTable = () => {
   const [error, setError] = useState("");
   const [open, setOpen] = useState(true); // Automatically open the modal
   const [isLoading, setIsLoading] = useState(false);
+
   const {
-    setSelectedEmId,
-    selectedEmId,
-    selectedEmulator,
     setIsTableVisible,
     showToast,
   } = useStates();
@@ -71,7 +82,7 @@ const CreateTripTable = () => {
         fromAddress: fromAddress,
         toAddress: toAddress,
         speed: 60,
-        emulatorDetailsId: selectedEmId,
+        emulatorDetailsId: selectedEmulator.id,
       };
 
       const { success, data, error } = await ApiService.makeApiCall(
@@ -82,12 +93,9 @@ const CreateTripTable = () => {
       );
       if (success) {
         console.log("data : ", selectedEmulator);
-        console.log("data : ", selectedEmId);
         console.log("data : ", data.emulatorDetailsId);
         setIsLoading(true);
         showToast("Trip Added successfully", "success");
-        setSelectedEmId(null);
-        setSelectedEmId(data.emulatorDetailsId);
         fetchEmulators()
       } else {
         showToast(error, "error");
