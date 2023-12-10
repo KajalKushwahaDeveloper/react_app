@@ -6,8 +6,8 @@ import React, {
 
 import useFetch from "./hooks/useFetch";
 import { toast } from "react-toastify";
-import { useEmulatorStore } from "./store.tsx";
 import { EMULATOR_URL } from "./constants.js";
+import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 export const StatesContext = React.createContext({});
 
@@ -37,10 +37,8 @@ const useStates = () => {
 export { useStates };
 
 export const StateProvider = ({ children }) => {
-  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
 
-  const { data: staticEmulators, setData: setStaticEmulators } = useFetch(EMULATOR_URL);
+  const { data: staticEmulators } = useFetch(EMULATOR_URL);
 
   const [AssignedTelephoneNumber, setAssignedTelephoneNumber] = useState(0);
 
@@ -53,37 +51,37 @@ export const StateProvider = ({ children }) => {
     toast[type](message); // Use the 'type' argument to determine the toast type
   };
 
-  const emulatorIntervalRef = useRef(null);
-  // Auto refresh emulators
-  useEffect(() => {
-    let emulatorInterval;
-    const startEmulatorInterval = () => {
-      const token = localStorage.getItem("token");
-      if(token===null) {
-        console.log("Auto refresh emulators -> Token is null");
-        return;
-      }
-      emulatorInterval = setInterval(async () => {
-        // Manually trigger the fetch to get the latest emulator data
-        fetchEmulators();
-      }, 5000);
-    };
+  // const emulatorIntervalRef = useRef(null);
+  // // Auto refresh emulators
+  // useEffect(() => {
+  //   let emulatorInterval;
+  //   const startEmulatorInterval = () => {
+  //     const token = localStorage.getItem("token");
+  //     if(token===null) {
+  //       console.log("Auto refresh emulators -> Token is null");
+  //       return;
+  //     }
+  //     emulatorInterval = setInterval(async () => {
+  //       // Manually trigger the fetch to get the latest emulator data
+  //       fetchEmulators();
+  //     }, 5000);
+  //   };
 
-    const stopEmulatorInterval = () => {
-      clearInterval(emulatorInterval);
-    };
+  //   const stopEmulatorInterval = () => {
+  //     clearInterval(emulatorInterval);
+  //   };
 
-    emulatorIntervalRef.current = {
-      start: startEmulatorInterval,
-      stop: stopEmulatorInterval,
-    };
-    // Start the emulator interval
-    emulatorIntervalRef.current.start();
+  //   emulatorIntervalRef.current = {
+  //     start: startEmulatorInterval,
+  //     stop: stopEmulatorInterval,
+  //   };
+  //   // Start the emulator interval
+  //   emulatorIntervalRef.current.start();
 
-    return () => {
-      stopEmulatorInterval();
-    };
-  }, [fetchEmulators]);
+  //   return () => {
+  //     stopEmulatorInterval();
+  //   };
+  // }, [fetchEmulators]);
 
   return (
     <StatesContext.Provider

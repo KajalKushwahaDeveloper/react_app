@@ -18,7 +18,7 @@ import {
   setRef,
 } from "@mui/material";
 import "../../../scss/map.scss";
-import { useEmulatorStore } from "../../../store.tsx";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
 

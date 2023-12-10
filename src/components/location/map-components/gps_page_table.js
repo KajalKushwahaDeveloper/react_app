@@ -35,15 +35,17 @@ import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Tooltip } from "@mui/material";
 import { useViewPort } from "../../../ViewportProvider";
 import { useStates } from "../../../StateProvider";
-import { useEmulatorStore } from "../../../store.tsx";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 
 const GpsTable = () => {
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  const emulators = useEmulatorStore((state) => state.emulators);
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
   const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
 
-  const emulators = useEmulatorStore((state) => state.emulators);
+  const selectDevice = useEmulatorStore((state) => state.selectDevice);
+  const devices = useEmulatorStore((state) => state.devices);
 
   // State variables
   const {
@@ -67,13 +69,7 @@ const GpsTable = () => {
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedDevice, setSelectedDevice] = useState({
-    open: false,
-    dialogType: "",
-    emulatorId: null,
-    index: null,
-  });
-
+  
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false);
 
@@ -82,23 +78,35 @@ const GpsTable = () => {
     
   const [showHideTable, setShowHideTable] = useState(false);
 
-  const handleClose = (id) => {
+  const handleHistoryClose = () => {
     setOpenEmulatorHistoryPopUp(false);
     setSelectedEmulatorForHistoryData(null);
   };
 
-  const handleContactDetails = (dialogType, emulator, emulatorIndex) => {
-    console.log("handleContactDetails", dialogType);
-    console.log("handleContactDetails", emulator);
-    console.log("handleContactDetails", emulatorIndex);
-    setOpenEmulatorHistoryPopUp(false);
-    setSelectedDevice((prevState) => ({
-      ...prevState,
-      open: !prevState.open,
-      dialogType: dialogType,
-      emulatorId: emulator && emulator.id !== undefined ? emulator.id : null,
-      index: emulatorIndex,
-    }));
+  const [contactDialogOptions, setContactDialogOptions] = useState({
+    open: false,
+    dialogType: "",
+    emulatorId: -1
+  });
+
+  const handleCallIconClicked = (emulator) => {
+    console.log("emulator", emulator);
+    console.log("devices", devices);
+    const device = devices.find((device) => device.number === emulator.telephone);
+    selectDevice(device)
+    setContactDialogOptions({
+      open: true,
+      dialogType: "call",
+      emulatorId: -1
+    });
+  };
+
+  const handleMessageIconClicked = (row) => {
+    setContactDialogOptions({
+      open: true,
+      dialogType: "message",
+      emulatorId: row.id
+    });
   };
 
   useEffect(() => {
@@ -307,7 +315,7 @@ const GpsTable = () => {
                           <IconButton
                             size="small"
                             onClick={() =>
-                              handleContactDetails("call", row, index)
+                              handleCallIconClicked(row)
                             }
                           >
                             <CallRoundedIcon fontSize="small" />
@@ -317,7 +325,7 @@ const GpsTable = () => {
                           <IconButton
                             size="small"
                             onClick={() =>
-                              handleContactDetails("messages", row, index)
+                              handleMessageIconClicked(row)
                             }
                           >
                             <MessageRoundedIcon fontSize="small" />
@@ -409,16 +417,15 @@ const GpsTable = () => {
 
           <PopUpEmulatorHistory
             showToast={showToast}
-            handleClose={handleClose}
+            handleClose={handleHistoryClose}
             open={openEmulatorHistoryPopUp}
             emulatorHistory={selectedEmulatorForHistoryData}
           />
 
           <ContactDialogComponent
+            contactDialogOptions={contactDialogOptions}
+            setIsContactDialogOpen={setContactDialogOptions}
             emulators={staticEmulators}
-            selectedDevice={selectedDevice}
-            setSelectedDevice={setSelectedDevice}
-            handleContactDialog={handleContactDetails}
             showToast={showToast}
           />
         </>

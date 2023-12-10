@@ -1,16 +1,17 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 import { Emulator, TripData, TripPoint } from "./types";
-import { EMULATOR_URL, TRIP_URL } from "./constants";
+import { EMULATOR_URL, TRIP_URL } from "../../constants";
+import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 
-interface EmulatorsSlice {
+export interface EmulatorsSlice {
   emulators: Emulator[] | [];
   selectedEmulator: Emulator | null;
   fetchEmulators: () => Promise<void>;
   selectEmulator: (selectedEmulator: Emulator | null) => void;
 }
 
-interface TripDataSlice {
+export interface TripDataSlice {
   // latitude: number | null;
   // longitude: number | null;
   tripData: TripData | null;
@@ -121,11 +122,12 @@ const createSharedSlice: StateCreator<
 });
 
 export const useEmulatorStore = create<
-  EmulatorsSlice & TripDataSlice & SharedSlice
+  EmulatorsSlice & TripDataSlice & SharedSlice & deviceStore
 >()(
   devtools((...args) => ({
     ...createEmulatorsSlice(...args),
     ...createTripDataSlice(...args),
     ...createSharedSlice(...args),
+    ...createDeviceSlice(...args),
   }))
 );

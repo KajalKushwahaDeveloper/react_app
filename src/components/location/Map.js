@@ -9,7 +9,7 @@ import ApiService from "../../ApiService";
 
 import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
-import { useEmulatorStore } from "../../store.tsx";
+import { useEmulatorStore } from "../../stores/emulator/store.tsx";
 
 const Map = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);

@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import "../../../scss/button.scss";
 import { useStates } from "../../../StateProvider.js";
-import { useEmulatorStore } from "../../../store.tsx";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 
 const CreateTripTable = () => {
   

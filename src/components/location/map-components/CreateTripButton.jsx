@@ -7,7 +7,7 @@ import { useViewPort } from "../../../ViewportProvider.js";
 import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
 import { ToastContainer, toast } from "react-toastify";
-import { useEmulatorStore } from "../../../store.tsx";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 
 const CreateTripButton = ( ) => {
   const { width, height } = useViewPort();
