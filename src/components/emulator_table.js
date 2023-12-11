@@ -24,6 +24,7 @@ const EmulatorTable = ({
   handleEmulatorTelephonePopup,
   handleGeneratedIdButtonClick,
   emulatorEditedId,
+  emulatorData
 }) => {
   // State variables
   const [emulators, setEmulators] = useState([]);
@@ -33,6 +34,12 @@ const EmulatorTable = ({
   const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
+  useEffect(() =>{
+    setEmulators(emulatorData);
+  },[emulatorData]);
+
 
   useEffect(() => {
     if (emulatorEditedId != null) {
