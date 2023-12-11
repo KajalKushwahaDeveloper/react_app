@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./scss/login.scss";
 import ApiService from "./ApiService";
 import { CLIENT_LOGIN } from "./constants";
 import ForgotPasswordModal from "./components/location/map-components/ForgotPasswordModal";
+import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -16,6 +17,16 @@ const LoginPage = () => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
+
+  const devices = useEmulatorStore((state) => state.devices);
+
+  useEffect(() => {
+    if(devices.length > 0) {
+      devices.forEach((twillioDevice) => {
+        twillioDevice.device.destroy();
+      });
+    }
+  }, [devices]);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);

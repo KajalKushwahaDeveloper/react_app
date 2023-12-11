@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dialler from "./Dialler";
 import KeypadButton from "./KeypadButton";
 import Incoming from "./Incoming";
@@ -8,8 +8,19 @@ import states from "./states";
 import { useEmulatorStore } from "../../../../../stores/emulator/store.tsx";
 import { useStates } from "../../../../../StateProvider.js";
 
-const Phone = () => {
+const Phone = ({setContactDialogOptions}) => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
+
+
+  useEffect(() => {
+    if (selectedDevice === null) {
+      setContactDialogOptions({
+        open: false,
+        dialogType: "",
+        emulatorId: null,
+      });
+    }}, [selectedDevice, setContactDialogOptions]);
+
   const { showToast } = useStates();
 
   const [number, setNumber] = useState("");

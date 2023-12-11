@@ -100,7 +100,7 @@ function ContactDialogComponent({
           </Tabs>
           <TabPanel value={tabIndexValue} index={0} style={{ height: "63%" }}>
             {contactDialogOptions.dialogType === "call" ? (
-              <Phone />
+              <Phone setContactDialogOptions = {setContactDialogOptions} />
             ) : (
               <ContactForm
                 emulatorId={contactDialogOptions.emulatorId}

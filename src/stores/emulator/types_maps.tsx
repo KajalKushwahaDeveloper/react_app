@@ -1,3 +1,5 @@
+import { Emulator } from "./types";
+
 export interface Center {
   lat: number;
   lng: number;
@@ -7,8 +9,8 @@ export const defaultLng = -95.7129; // Default longitude (center of US)
 
 //custom equality function for selectedEmulator
 export function compareSelectedEmulator(
-  oldSelectedEmulator,
-  newSelectedEmulator
+  oldSelectedEmulator : Emulator | null,
+  newSelectedEmulator: Emulator | null
 ) {
   // both were null
   if (oldSelectedEmulator === null && newSelectedEmulator === null) {
@@ -40,20 +42,7 @@ export function compareSelectedEmulator(
 }
 
 // custom equality function for Emulators
-export function compareEmulators(oldEmulators, newEmulators) {
-  // if both were null
-  if (oldEmulators === null && newEmulators === null) {
-    return false;
-  }
-
-  // if one of them was null
-  if (
-    (oldEmulators === null && newEmulators !== null) ||
-    (oldEmulators !== null && newEmulators === null)
-  ) {
-    return true;
-  }
-
+export function compareEmulators(oldEmulators: Emulator[] | [], newEmulators: Emulator[] | []) {
   // if the size of the arrays are different
   if (oldEmulators.length !== newEmulators.length) {
     return true;

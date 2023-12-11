@@ -4,8 +4,10 @@ import { Emulator } from "../emulator/types";
 
 import { Device, Connection } from "twilio-client";
 import ApiService from "../../ApiService.js";
-import { VOICE_GET_TOKEN_URL } from "../../constants.js";
+import { EMULATOR_URL, VOICE_GET_TOKEN_URL } from "../../constants.js";
 import states from "../../components/location/map-components/Phone/twilio/states.js";
+import useFetch from "../../hooks/useFetch.js";
+import { useEmulatorStore } from "../emulator/store.js";
 
 export interface deviceStore {
   devices: TwillioDevice[] | [];
@@ -13,6 +15,7 @@ export interface deviceStore {
   createDevices: (emulators: Emulator[]) => Promise<void>;
   selectDevice: (selectedDevice: TwillioDevice | null) => void;
   updateDeviceState: (updatedDevice: TwillioDevice) => void;
+  deleteAllDevices: () => void;
 }
 
 export const createDeviceSlice: StateCreator<
@@ -184,12 +187,19 @@ export const createDeviceSlice: StateCreator<
     });
     set({ devices: updatedDevices });
   },
+  deleteAllDevices: () => {
+    get().devices.forEach((twillioDevice) => {
+      twillioDevice.device.destroy();
+    });
+    set({ devices: [] });
+    get().selectDevice(null);
+  }
 });
 
 // NOTE:: SPECIFICALLY FOR GPS_PAGE_TABLE to open/close dialog incoming/disconnect calls
 export function compareSelectedDeviceForDialog(
-  newSelectedDevice: TwillioDevice | null,
-  oldSelectedDevice: TwillioDevice | null
+  oldSelectedDevice: TwillioDevice | null,
+  newSelectedDevice: TwillioDevice | null
 ) {
   //INCOMING
   if (
