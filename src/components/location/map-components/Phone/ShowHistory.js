@@ -1,15 +1,10 @@
 import React from "react";
-import {
-  Typography,
-  List,
-  Grid,
-  Card
-} from "@mui/material";
+import { Typography, List, Grid, Card } from "@mui/material";
 
 export function ShowHistory({ dialogType, data }) {
   return (
     <div>
-      {data.length ? (
+      {data && data.length ? (
         dialogType === "call" ? (
           data.map((callData) => {
             return (
@@ -142,7 +137,7 @@ export function ShowHistory({ dialogType, data }) {
                       <Typography fontWeight={800}>Caller Name:</Typography>
                       <Typography fontWeight={400}>
                         {callData.callerName === null ||
-                          callData.callerName === ""
+                        callData.callerName === ""
                           ? "N/A"
                           : callData.callerName}
                       </Typography>
@@ -152,8 +147,8 @@ export function ShowHistory({ dialogType, data }) {
               </List>
             );
           })
-        ) : dialogType === "messages" ? (
-          data.map((msgData) => {
+        ) : dialogType === "message" ? (
+          data.map((msgData, index) => {
             return (
               <List style={{ paddingTop: "5px", paddingBottom: "5px" }}>
                 <Card

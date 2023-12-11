@@ -35,23 +35,52 @@ import PopUpEmulatorHistory from "./popup_emulator_history";
 import { Tooltip } from "@mui/material";
 import { useViewPort } from "../../../ViewportProvider";
 import { useStates } from "../../../StateProvider";
-import { useEmulatorStore } from "../../../store.tsx";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import {
+  compareEmulators,
+  compareSelectedEmulator,
+} from "../../../stores/emulator/types_maps.tsx";
+import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 
 const GpsTable = () => {
-  
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  
+  const emulators = useEmulatorStore(
+    (state) => state.emulators,
+    (oldEmulators, newEmulators) => {
+      // TODO Check if compareEmulators is working as intented (Updating emulators only on shallow change)
+      const diff = compareEmulators(oldEmulators, newEmulators);
+      if (diff === true) {
+        console.log("emulators changed ");
+      }
+      compareEmulators(oldEmulators, newEmulators);
+    }
+  );
+
+  const selectedEmulator = useEmulatorStore(
+    (state) => state.selectedEmulator,
+    (oldEmulators, newEmulators) => {
+      // Check if compareEmulators is working as intented (Updating emulators only on shallow change)
+      const val = compareSelectedEmulator(oldEmulators, newEmulators);
+      if (val === true) {
+        console.log("emulators changed (GPS)", val);
+      }
+      compareSelectedEmulator(oldEmulators, newEmulators);
+    }
+  );
+
+  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
+
+  const selectDevice = useEmulatorStore((state) => state.selectDevice);
+
+  const devices = useEmulatorStore((state) => state.devices);
+
   // State variables
   const {
-    setSelectedEmId,
-    selectedEmId,
+    staticEmulators,
     hoveredMarker,
-    emulators,
-    setSelectedEmulator,
-    selectedEmulator,
     setAssignedTelephoneNumber,
-    showToast
+    showToast,
   } = useStates();
 
   const { width } = useViewPort();
@@ -64,40 +93,76 @@ const GpsTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [emptyRows, setEmptyRows] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedDevice, setSelectedDevice] = useState({
-    open: false,
-    dialogType: "",
-    emulatorId: null,
-    index: null,
-  });
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false);
+
   const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] =
     useState(null);
-  const [showHideTable, setShowHideTable] = useState(false);
 
-  const handleClose = (id) => {
+  const handleHistoryClose = () => {
     setOpenEmulatorHistoryPopUp(false);
     setSelectedEmulatorForHistoryData(null);
   };
 
-  const handleContactDetails = (dialogType, emulator, emulatorIndex) => {
-    console.log("handleContactDetails", dialogType);
-    console.log("handleContactDetails", emulator);
-    console.log("handleContactDetails", emulatorIndex);
-    setOpenEmulatorHistoryPopUp(false);
-    setSelectedDevice((prevState) => ({
-      ...prevState,
-      open: !prevState.open,
-      dialogType: dialogType,
-      emulatorId: emulator && emulator.id !== undefined ? emulator.id : null,
-      index: emulatorIndex,
-    }));
+  const [contactDialogOptions, setContactDialogOptions] = useState({
+    open: false,
+    dialogType: "",
+    emulatorId: null,
+  });
+
+  const selectedDevice = useEmulatorStore(
+    (state) => state.selectedDevice,
+    (oldSelectedDevice, newSelectedDevice) =>
+      compareSelectedDeviceForDialog(oldSelectedDevice, newSelectedDevice)
+  );
+
+  useEffect(() => {
+    // When call comes/ ends.
+    if (selectedDevice === null || selectedDevice.state === null) {
+      return;
+    } else if (selectedDevice.state === "Incoming") {
+      setContactDialogOptions({
+        open: true,
+        dialogType: "call",
+        emulatorId: -1,
+      });
+    } else if (selectedDevice.state === "On call") {
+      setContactDialogOptions({
+        open: true,
+        dialogType: "call",
+        emulatorId: -1,
+      });
+    } else if (
+      selectedDevice.state === "Offline" ||
+      selectedDevice.state === "Ready"
+    ) {
+      setContactDialogOptions({
+        open: false,
+        dialogType: "",
+        emulatorId: -1,
+      });
+    }
+  }, [selectedDevice]);
+
+  const handleCallIconClicked = (emulator) => {
+    const device = devices.find((device) => device.emulatorId === emulator.id);
+    selectDevice(device);
+    setContactDialogOptions({
+      open: true,
+      dialogType: "call",
+      emulatorId: null,
+    });
+  };
+
+  const handleMessageIconClicked = (row) => {
+    setContactDialogOptions({
+      open: true,
+      dialogType: "message",
+      emulatorId: row.id,
+    });
   };
 
   useEffect(() => {
@@ -106,36 +171,21 @@ const GpsTable = () => {
         rowsPerPage -
           Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
       );
-      if (selectedEmulator == null && selectedEmId != null) {
-        setSelectedEmulator(emulators[0]);
-        setSelectedEmId(emulators[0]?.id);
-      }
       setLoading(false);
     } else {
       setLoading(true);
     }
-    if (selectedEmId != null && selectedEmulator != null) {
-      if (selectedEmId !== selectedEmulator.id) {
-        const selectedEmIndex = emulators.findIndex(
-          (item) => item.id === selectedEmId
-        );
-        setSelectedEmulator(emulators[selectedEmIndex]);
-        // Calculate the new active page based on the selected checkbox index and rowsPerPage
-        if (selectedEmIndex !== -1) {
-          const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
-          setPage(newActivePage);
-        }
+    if (selectedEmulator != null) {
+      const selectedEmIndex = emulators.findIndex(
+        (emulator) => emulator === selectedEmulator
+      );
+      // Calculate the new active page based on the selected checkbox index and rowsPerPage
+      if (selectedEmIndex !== -1) {
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
+        setPage(newActivePage);
       }
     }
-  }, [
-    emulators,
-    page,
-    rowsPerPage,
-    selectedEmId,
-    selectedEmulator,
-    setSelectedEmId,
-    setSelectedEmulator,
-  ]);
+  }, [emulators, page, rowsPerPage, selectedEmulator]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -148,13 +198,10 @@ const GpsTable = () => {
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
     setAssignedTelephoneNumber(emulatorRow.telephone);
-
     if (selectedEmulator?.id !== emulatorRow.id) {
-      setSelectedEmulator(emulatorRow);
-      setSelectedEmId(emulatorRow.id);
+      selectEmulator(emulatorRow);
     } else {
-      setSelectedEmulator(null);
-      setSelectedEmId(null);
+      selectEmulator(null);
     }
   };
 
@@ -291,8 +338,7 @@ const GpsTable = () => {
                   {/* TELEPHONE */}
                   <td>
                     <Fragment>
-
-                    <Tooltip
+                      <Tooltip
                         style={{ display: "flex", alignItems: "center" }}
                         title={row.telephone || "N/A"}
                         placement="top"
@@ -324,9 +370,7 @@ const GpsTable = () => {
                           {/* calling icon */}
                           <IconButton
                             size="small"
-                            onClick={() =>
-                              handleContactDetails("call", row, index)
-                            }
+                            onClick={() => handleCallIconClicked(row)}
                           >
                             <CallRoundedIcon fontSize="small" />
                           </IconButton>
@@ -334,11 +378,17 @@ const GpsTable = () => {
                           {/* message icon */}
                           <IconButton
                             size="small"
-                            onClick={() =>
-                              handleContactDetails("messages", row, index)
-                            }
+                            onClick={() => handleMessageIconClicked(row)}
                           >
                             <MessageRoundedIcon fontSize="small" />
+                          </IconButton>
+
+                          {/* message icon */}
+                          <IconButton
+                            size="small"
+                            onClick={() => handleHistoryButtonClick(row)}
+                          >
+                            <HistoryIcon fontSize="small" />
                           </IconButton>
                         </div>
                       </Tooltip>
@@ -414,17 +464,18 @@ const GpsTable = () => {
               </tr>
             </tfoot>
           </table>
+
           <PopUpEmulatorHistory
             showToast={showToast}
-            handleClose={handleClose}
+            handleClose={handleHistoryClose}
             open={openEmulatorHistoryPopUp}
             emulatorHistory={selectedEmulatorForHistoryData}
           />
+
           <ContactDialogComponent
-            emulators={emulators}
-            selectedDevice={selectedDevice}
-            setSelectedDevice={setSelectedDevice}
-            handleContactDialog={handleContactDetails}
+            contactDialogOptions={contactDialogOptions}
+            setContactDialogOptions={setContactDialogOptions}
+            emulators={staticEmulators}
             showToast={showToast}
           />
         </>

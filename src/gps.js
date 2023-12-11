@@ -7,12 +7,9 @@ import CreateTripOverlay from "./components/location/map-components/CreateTripOv
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
-import { useStates } from "./StateProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
-import { GetEmulatorApi } from "./components/api/emulator.js";
-import { Hidden } from "@mui/material";
-import { useEmulatorStore } from "./store.tsx";
+import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const GPS = () => {
   //Initiate fetchEmulators from store
@@ -48,7 +45,7 @@ const GPS = () => {
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
-              <div style={{ flex: "1" }}>
+              <div style={{ flex: "1" , top : "128px" }}>
                 <WrappedMap />
               </div>
             </div>

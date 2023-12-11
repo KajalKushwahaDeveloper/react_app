@@ -1,91 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Dialler from "./Dialler";
 import KeypadButton from "./KeypadButton";
 import Incoming from "./Incoming";
 import OnCall from "./OnCall";
 import "./Phone.css";
 import states from "./states";
-import FakeState from "./FakeState";
+import { useEmulatorStore } from "../../../../../stores/emulator/store.tsx";
+import { useStates } from "../../../../../StateProvider.js";
 
-const Phone = ({ devices, selectedDevice, phoneState, setPhoneState , showToast }) => {
-
-
-  useEffect(() => {
-    console.log("phoneState" ,phoneState);
-  }, [phoneState]);
-
+const Phone = () => {
+  const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
+  const { showToast } = useStates();
 
   const [number, setNumber] = useState("");
   const acceptConnection = () => {
-    if (
-      devices !== null &&
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
-      devices[selectedDevice.index].conn.accept();
-      setPhoneState(states.ON_CALL);
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.conn.accept();
     }
   };
 
   const rejectConnection = () => {
-    if (
-      devices !== null &&
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
-      devices[selectedDevice.index].conn.reject();
-      setPhoneState(states.READY);
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.conn.reject();
     }
   };
 
   const handleHangup = () => {
-    if (
-      devices !== null &&
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
-      devices[selectedDevice.index].device.disconnectAll();
-      setPhoneState(states.READY);
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.device.disconnectAll();
     }
   };
 
   const handleCall = () => {
-    if (
-      devices !== null &&
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
-      devices[selectedDevice.index].device.connect({ To: number });
-      setPhoneState(states.ON_CALL);
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.device.connect({ To: number });
     }
   };
 
   let render;
 
-  if (phoneState === states.INCOMING) {
+  if (selectedDevice === null) {
+    render = <p>Something went wrong</p>;
+  } else if (selectedDevice?.state === states.INCOMING) {
     render = (
       <Incoming
-        callerName={devices[selectedDevice.index].conn}
+        callerName={selectedDevice.conn}
         acceptConnection={acceptConnection}
         rejectConnection={rejectConnection}
       ></Incoming>
     );
-  } else if (phoneState === states.ON_CALL) {
+  } else if (selectedDevice?.state === states.ON_CALL) {
     render = (
       <OnCall
         handleHangup={handleHangup}
-        device={devices[selectedDevice.index].device}
-        conn={devices[selectedDevice.index].conn}
+        device={selectedDevice.device}
+        conn={selectedDevice.conn}
         showToast={showToast}
       ></OnCall>
     );
   } else {
     render = (
       <>
-        <Dialler 
-          number={number} 
-          setNumber={setNumber}
-        ></Dialler>
+        <Dialler number={number} setNumber={setNumber} />
         <div className="call">
           <KeypadButton handleClick={handleCall} color="green">
             Call
@@ -94,6 +70,7 @@ const Phone = ({ devices, selectedDevice, phoneState, setPhoneState , showToast 
       </>
     );
   }
+
   return (
     <>
       {/* <FakeState
@@ -101,7 +78,9 @@ const Phone = ({ devices, selectedDevice, phoneState, setPhoneState , showToast 
         setState={setState}
         setConn={setConn}
       ></FakeState> */}
-      <p className="status">{devices[selectedDevice.index].number + ' : ' + phoneState}</p>
+      <p className="status">
+        {selectedDevice?.number + " : " + selectedDevice?.state}
+      </p>
       {render}
     </>
   );
