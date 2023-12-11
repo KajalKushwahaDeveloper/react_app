@@ -14,6 +14,7 @@ import PopUpAssignUser from "./components/popup_assign_user.js";
 import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone.js";
 import ChangeEmulatorSsidPopup from "./components/generated_id_popup.js";
 import ApiService from "./ApiService.js";
+import { GetEmulatorApi } from "./components/api/emulator.js";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
@@ -27,6 +28,7 @@ const Home = () => {
 
   const [openChangeSsidPopup, setOpenChangeSsidPopup] = useState(false);
   const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
+  const [emulatorData, setEmulatorData] = useState([]);
 
   const showToast = (message, type) => {
     console.log("Showing toast...");
@@ -36,6 +38,11 @@ const Home = () => {
   const handleOpen = () => {
     setOpenUserPopup(true);
     setUserToEdit(null);
+  };
+
+  const updatedEmulator = async () => {
+    const { success, data, error } = await GetEmulatorApi();
+    setEmulatorData(data);
   };
 
   const handleCreateEmulator = async () => {
@@ -48,6 +55,7 @@ const Home = () => {
     );
     if (success) {
       showToast(" Emulator Created ", "success");
+      updatedEmulator();
     } else {
       showToast(" Failed to create Emulator ", "error");
     }
@@ -141,6 +149,7 @@ const Home = () => {
                 handleEmulatorTelephonePopup={handleEmulatorTelephonePopup}
                 emulatorEditedId={emulatorEditedId}
                 handleGeneratedIdButtonClick={handleGeneratedIdButtonClick}
+                emulatorData={emulatorData}
               />
             </div>
             <div className="col-lg-6 mt-4 mt-lg-0">
