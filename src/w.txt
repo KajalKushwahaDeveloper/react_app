@@ -1,0 +1,354 @@
+{
+    "id": "90",
+    "velocity": 60.0,
+    "distance": 1733.1895792854086,
+    "fromAddress": [
+        {
+            "types": [
+                "LOCALITY",
+                "POLITICAL"
+            ],
+            "long_name": "New York",
+            "short_name": "New York"
+        },
+        {
+            "types": [
+                "ADMINISTRATIVE_AREA_LEVEL_1",
+                "POLITICAL"
+            ],
+            "long_name": "New York",
+            "short_name": "NY"
+        },
+        {
+            "types": [
+                "COUNTRY",
+                "POLITICAL"
+            ],
+            "long_name": "United States",
+            "short_name": "US"
+        }
+    ],
+    "toAddress": [
+        {
+            "types": [
+                "LOCALITY",
+                "POLITICAL"
+            ],
+            "long_name": "Denver",
+            "short_name": "Denver"
+        },
+        {
+            "types": [
+                "ADMINISTRATIVE_AREA_LEVEL_2",
+                "POLITICAL"
+            ],
+            "long_name": "Denver County",
+            "short_name": "Denver County"
+        },
+        {
+            "types": [
+                "ADMINISTRATIVE_AREA_LEVEL_1",
+                "POLITICAL"
+            ],
+            "long_name": "Colorado",
+            "short_name": "CO"
+        },
+        {
+            "types": [
+                "COUNTRY",
+                "POLITICAL"
+            ],
+            "long_name": "United States",
+            "short_name": "US"
+        }
+    ],
+    "tripPoints": [
+        {
+            "tripPointIndex": 0,
+            "lat": 40.712727650000005,
+            "lng": -74.00627639999999,
+            "bearing": 258.3016994576796,
+            "distance": 1.0
+        },
+        {
+            "tripPointIndex": 1,
+            "lat": 40.712680000000006,
+            "lng": -74.00658,
+            "bearing": 258.3018025419974,
+            "distance": -0.967447458911288
+        }
+    ],
+    "stops": [
+        {
+            "tripPointIndex": 733,
+            "lat": 41.7229,
+            "lng": -84.96383,
+            "bearing": 309.0318853423276,
+            "distance": 604.1302462199505,
+            "address": [
+                {
+                    "types": [
+                        "ROUTE"
+                    ],
+                    "long_name": "Indiana Toll Road",
+                    "short_name": "Interstate 80"
+                },
+                {
+                    "types": [
+                        "LOCALITY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Fremont",
+                    "short_name": "Fremont"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_3",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Fremont Township",
+                    "short_name": "Fremont Township"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_2",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Steuben County",
+                    "short_name": "Steuben County"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_1",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Indiana",
+                    "short_name": "IN"
+                },
+                {
+                    "types": [
+                        "COUNTRY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "United States",
+                    "short_name": "US"
+                },
+                {
+                    "types": [
+                        "POSTAL_CODE"
+                    ],
+                    "long_name": "46737",
+                    "short_name": "46737"
+                }
+            ],
+            "gasStation": [
+                {
+                    "types": [
+                        "STREET_NUMBER"
+                    ],
+                    "long_name": "201",
+                    "short_name": "201"
+                },
+                {
+                    "types": [
+                        "ROUTE"
+                    ],
+                    "long_name": "Toledo Street",
+                    "short_name": "Toledo St"
+                },
+                {
+                    "types": [
+                        "LOCALITY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Fremont",
+                    "short_name": "Fremont"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_3",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Fremont Township",
+                    "short_name": "Fremont Township"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_2",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Steuben County",
+                    "short_name": "Steuben County"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_1",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Indiana",
+                    "short_name": "IN"
+                },
+                {
+                    "types": [
+                        "COUNTRY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "United States",
+                    "short_name": "US"
+                },
+                {
+                    "types": [
+                        "POSTAL_CODE"
+                    ],
+                    "long_name": "46737",
+                    "short_name": "46737"
+                }
+            ],
+            "tripPoints": [
+                {
+                    "tripPointIndex": 0,
+                    "lat": 41.7229,
+                    "lng": -84.96383,
+                    "bearing": 0.0,
+                    "distance": 0.0
+                },
+                {
+                    "tripPointIndex": 1,
+                    "lat": 41.73111,
+                    "lng": -84.97151000000001,
+                    "bearing": 325.0819189320699,
+                    "distance": 0.6918846626941692
+                }
+            ],
+            "reachedTime": null
+        },
+        {
+            "tripPointIndex": 1447,
+            "lat": 41.223960000000005,
+            "lng": -96.02551000000001,
+            "bearing": 264.77848967784394,
+            "distance": 602.9539666299338,
+            "address": [
+                {
+                    "types": [
+                        "PLUS_CODE"
+                    ],
+                    "long_name": "6XFF+HQ",
+                    "short_name": "6XFF+HQ"
+                },
+                {
+                    "types": [
+                        "LOCALITY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Omaha",
+                    "short_name": "Omaha"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_2",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Douglas County",
+                    "short_name": "Douglas County"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_1",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Nebraska",
+                    "short_name": "NE"
+                },
+                {
+                    "types": [
+                        "COUNTRY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "United States",
+                    "short_name": "US"
+                }
+            ],
+            "gasStation": [
+                {
+                    "types": [
+                        "STREET_NUMBER"
+                    ],
+                    "long_name": "5001",
+                    "short_name": "5001"
+                },
+                {
+                    "types": [
+                        "ROUTE"
+                    ],
+                    "long_name": "Dodge Street",
+                    "short_name": "Dodge St"
+                },
+                {
+                    "types": [
+                        "NEIGHBORHOOD",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Dundee-Happy Hollow Historic District",
+                    "short_name": "Dundee-Happy Hollow Historic District"
+                },
+                {
+                    "types": [
+                        "LOCALITY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Omaha",
+                    "short_name": "Omaha"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_2",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Douglas County",
+                    "short_name": "Douglas County"
+                },
+                {
+                    "types": [
+                        "ADMINISTRATIVE_AREA_LEVEL_1",
+                        "POLITICAL"
+                    ],
+                    "long_name": "Nebraska",
+                    "short_name": "NE"
+                },
+                {
+                    "types": [
+                        "COUNTRY",
+                        "POLITICAL"
+                    ],
+                    "long_name": "United States",
+                    "short_name": "US"
+                },
+                {
+                    "types": [
+                        "POSTAL_CODE"
+                    ],
+                    "long_name": "68132",
+                    "short_name": "68132"
+                }
+            ],
+            "tripPoints": [
+                {
+                    "tripPointIndex": 0,
+                    "lat": 41.223960000000005,
+                    "lng": -96.02551000000001,
+                    "bearing": 0.0,
+                    "distance": 0.0
+                },
+                {
+                    "tripPointIndex": 1,
+                    "lat": 41.22402,
+                    "lng": -96.03669000000001,
+                    "bearing": 270.4124985995718,
+                    "distance": 0.5825142350983257
+                }
+            ],
+            "reachedTime": null
+        }
+    ]
+}
