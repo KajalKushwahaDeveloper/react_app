@@ -13,30 +13,27 @@ import { useStates } from "../../../../StateProvider.js";
 
 function ContactDialogComponent({
   contactDialogOptions,
-  setIsContactDialogOpen
+  setContactDialogOptions,
 }) {
-  const devices = useEmulatorStore((state) => state.devices);
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
-
-  const {  showToast } = useStates();
-
-  useEffect(() => {
-    console.log("devices", devices);
-    console.log("selectedDevice", selectedDevice);
-  }, [devices, selectedDevice]);
-
+  const selectDevice = useEmulatorStore((state) => state.selectDevice);
+  const { showToast } = useStates();
   const [tabIndexValue, setTabIndexSelected] = useState(0);
   const [historyData, SetHistoryData] = useState([]);
   const [loader, setLoading] = useState(false);
 
   useEffect(() => {
-    const handleContactData = async (id) => {
-      console.log("selectedDevice", selectedDevice);
+    const handleHistory = async () => {
+      let id = contactDialogOptions.emulatorId;
+      let url = MESSAGE_URL;
+      if (contactDialogOptions.dialogType === "call") {
+        id = selectedDevice?.emulatorId;
+        url = CALL_URL;
+      }
       setLoading(true);
-      SetHistoryData([]);
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
-        selectedDevice.dialogType === "messages" ? MESSAGE_URL : CALL_URL,
+        url,
         "GET",
         null,
         token,
@@ -44,21 +41,19 @@ function ContactDialogComponent({
       );
       if (success) {
         setLoading(false);
+        console.log("emulatorId", url);
+        console.log("emulatorId", data);
         SetHistoryData(data);
       } else {
         setLoading(false);
-        console.log("Error In getting data", "error");
+        console.log("Error In getting data", error);
       }
     };
-
-    if (
-      selectedDevice &&
-      selectedDevice.emulatorId &&
-      selectedDevice.emulatorId !== undefined
-    ) {
-      handleContactData(selectedDevice.emulatorId);
+    console.log("contactDialogOptions", contactDialogOptions);
+    if (contactDialogOptions && contactDialogOptions.open === true) {
+      handleHistory();
     }
-  }, [selectedDevice]);
+  }, [contactDialogOptions, selectedDevice?.emulatorId]);
 
   const handleTabChange = (event, newValue) => {
     setTabIndexSelected(newValue);
@@ -71,9 +66,13 @@ function ContactDialogComponent({
           <CloseIcon
             style={{ float: "right", cursor: "pointer" }}
             onClick={() => {
-              setIsContactDialogOpen({
+              setTabIndexSelected(0);
+              selectDevice(null);
+              SetHistoryData(null);
+              setContactDialogOptions({
                 open: false,
-                dialogType: ""
+                dialogType: "",
+                emulatorId: null,
               });
             }}
           />
@@ -86,9 +85,7 @@ function ContactDialogComponent({
           >
             <Tab
               label={
-                contactDialogOptions.dialogType === "call"
-                  ? "Call"
-                  : "Message"
+                contactDialogOptions.dialogType === "call" ? "Call" : "Message"
               }
               {...a11yProps(0)}
             />
@@ -102,21 +99,16 @@ function ContactDialogComponent({
             />
           </Tabs>
           <TabPanel value={tabIndexValue} index={0} style={{ height: "63%" }}>
-          { contactDialogOptions.dialogType === "call" ? (
-            <Phone />
-          ) : (
-            <ContactForm
-              emulatorId = {contactDialogOptions.emulatorId}
-              showToast = { showToast }
-            />
-          )}
-
+            {contactDialogOptions.dialogType === "call" ? (
+              <Phone />
+            ) : (
+              <ContactForm
+                emulatorId={contactDialogOptions.emulatorId}
+                showToast={showToast}
+              />
+            )}
           </TabPanel>
-          <TabPanel
-            value={tabIndexValue}
-            index={1}
-            style={{ height: "63%" }}
-          >
+          <TabPanel value={tabIndexValue} index={1} style={{ height: "63%" }}>
             <ShowHistory
               dialogType={contactDialogOptions.dialogType}
               data={historyData}

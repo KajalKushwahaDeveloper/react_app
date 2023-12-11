@@ -15,11 +15,13 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  setRef,
 } from "@mui/material";
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
-import { compareSelectedEmulator , compareEmulators } from "../../../stores/emulator/types_maps.tsx";
+import {
+  compareSelectedEmulator,
+  compareEmulators,
+} from "../../../stores/emulator/types_maps.tsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
@@ -43,25 +45,29 @@ const GoogleMapContainer = ({
   confirmNewLocation,
   calculateTimeFromTripPointIndexToStopPoint,
 }) => {
-  const emulators = useEmulatorStore((state) => state.emulators,
+  const emulators = useEmulatorStore(
+    (state) => state.emulators,
     (oldEmulators, newEmulators) => {
       // TODO Check if compareEmulators is working as intented (Updating emulators only on shallow change)
       const diff = compareEmulators(oldEmulators, newEmulators);
-      if(diff === true) {
-        console.log("emulators changed ", );
+      if (diff === true) {
+        console.log("emulators changed ");
       }
-      compareEmulators(oldEmulators, newEmulators)
+      compareEmulators(oldEmulators, newEmulators);
     }
   );
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
       // TODO  Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
-      if(diff === true) {
-        console.log("selectedEmulator changed ", );
+      const diff = compareSelectedEmulator(
+        oldSelectedEmulator,
+        newSelectedEmulator
+      );
+      if (diff === true) {
+        console.log("selectedEmulator changed ");
       }
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
     }
   );
 

@@ -10,41 +10,29 @@ import { useStates } from "../../../../../StateProvider.js";
 
 const Phone = () => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
-  const {showToast} = useStates();
+  const { showToast } = useStates();
 
   const [number, setNumber] = useState("");
   const acceptConnection = () => {
-    if (
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
+    if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.conn.accept();
     }
   };
 
   const rejectConnection = () => {
-    if (
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
+    if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.conn.reject();
     }
   };
 
   const handleHangup = () => {
-    if (
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
+    if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.device.disconnectAll();
     }
   };
 
   const handleCall = () => {
-    if (
-      selectedDevice !== null &&
-      selectedDevice.index !== null
-    ) {
+    if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.device.connect({ To: number });
     }
   };
@@ -53,8 +41,7 @@ const Phone = () => {
 
   if (selectedDevice === null) {
     render = <p>Something went wrong</p>;
-  }
-  else if (selectedDevice?.state === states.INCOMING) {
+  } else if (selectedDevice?.state === states.INCOMING) {
     render = (
       <Incoming
         callerName={selectedDevice.conn}
@@ -74,10 +61,7 @@ const Phone = () => {
   } else {
     render = (
       <>
-        <Dialler 
-          number={number} 
-          setNumber={setNumber}
-        ></Dialler>
+        <Dialler number={number} setNumber={setNumber} />
         <div className="call">
           <KeypadButton handleClick={handleCall} color="green">
             Call
@@ -94,7 +78,9 @@ const Phone = () => {
         setState={setState}
         setConn={setConn}
       ></FakeState> */}
-      <p className="status">{selectedDevice?.number + ' : ' + selectedDevice?.state}</p>
+      <p className="status">
+        {selectedDevice?.number + " : " + selectedDevice?.state}
+      </p>
       {render}
     </>
   );
