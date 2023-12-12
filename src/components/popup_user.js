@@ -37,7 +37,6 @@ const PopUpUser = ({
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
 
-  console.log("userToEdit1234:", userToEdit);
   useEffect(() => {
     if (userToEdit) {
       setId(userToEdit.id);
@@ -67,11 +66,27 @@ const PopUpUser = ({
     }
   };
   const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
+    const FirstNameInput = e.target.value;
+
+    // Check if the input contains only alphabet characters
+    if (/^[A-Za-z]+$/.test(FirstNameInput) || FirstNameInput === '') {
+      setFirstName(FirstNameInput);
+      setError('');
+    } else {
+      setError('First name can only contain alphabet characters');
+    }
   };
 
   const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
+    const LastNameInput = e.target.value;
+
+    // Check if the input contains only alphabet characters
+    if (/^[A-Za-z]+$/.test(LastNameInput) || LastNameInput === '') {
+      setLastName(LastNameInput);
+      setError('');
+    } else {
+      setError('Last name can only contain alphabet characters');
+    }
   };
 
   const handleEditPassword = (e) => {
@@ -197,7 +212,7 @@ const PopUpUser = ({
               placeholder="Enter your first name"
               value={firstName}
               onChange={handleFirstNameChange}
-              maxLength="25"
+              maxLength="30"
             />
             <input
               type="text"
@@ -205,7 +220,7 @@ const PopUpUser = ({
               placeholder="Enter your last name"
               value={lastName}
               onChange={handleLastNameChange}
-              maxLength="20"
+              maxLength="30"
             />
             <input
               type="email"
