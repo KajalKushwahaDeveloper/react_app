@@ -51,11 +51,21 @@ const PopUpUser = ({
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-
   const handleTelephoneChange = (e) => {
-    setTelephone(e.target.value);
-  };
 
+    const telephoneInputValue = e.target.value;
+    
+    // Remove non-digit characters
+    const regexInputValue = telephoneInputValue.replace(/\D/g, '');
+
+    // Limit the input to 12 characters
+    if (regexInputValue.length <= 12) {
+      setTelephone(regexInputValue);
+      setError('');
+    } else {
+      setError('Phone number cannot be more than 12 digit');
+    }
+  };
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value);
   };
@@ -80,6 +90,13 @@ const PopUpUser = ({
     } else if (!firstName) {
       setError("Please enter your firstName");
     } else {
+      // Email format check
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        setError("Please enter a valid email address");
+        return;
+      }
+
       try {
         console.log("User Add/Edit triggered : " + userToEdit);
         const { success, error } = await addOrUpdate();
@@ -119,9 +136,9 @@ const PopUpUser = ({
     const token = localStorage.getItem("token");
     console.log("token : ", token);
     try {
-      var requestType = "POST"
+      var requestType = "POST";
       if (userToEdit) {
-        requestType = "PUT"
+        requestType = "PUT";
       }
       const { success, data, error } = await ApiService.makeApiCall(
         USER_URL,
@@ -131,8 +148,8 @@ const PopUpUser = ({
       );
       if (success) {
         console.log("addUser response:", data);
-        return { success: true};
-      }else {
+        return { success: true };
+      } else {
         return { success: false, error: error };
       }
     } catch (e) {
@@ -180,6 +197,7 @@ const PopUpUser = ({
               placeholder="Enter your first name"
               value={firstName}
               onChange={handleFirstNameChange}
+              maxLength="25"
             />
             <input
               type="text"
@@ -187,9 +205,10 @@ const PopUpUser = ({
               placeholder="Enter your last name"
               value={lastName}
               onChange={handleLastNameChange}
+              maxLength="20"
             />
             <input
-              type="text"
+              type="email"
               id="content_input"
               placeholder="Enter your email"
               value={email}
@@ -201,6 +220,7 @@ const PopUpUser = ({
               placeholder="Enter your telephone number"
               value={telephone}
               onChange={handleTelephoneChange}
+              maxLength="12"
             />
             {userToEdit && (
               <input
