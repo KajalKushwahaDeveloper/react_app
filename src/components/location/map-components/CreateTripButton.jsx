@@ -8,6 +8,7 @@ import { useStates } from "../../../StateProvider.js";
 import { border } from "@material-ui/system";
 import { ToastContainer, toast } from "react-toastify";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
 const CreateTripButton = ( ) => {
   const { width, height } = useViewPort();
@@ -18,12 +19,21 @@ const CreateTripButton = ( ) => {
     isTableVisible,
     tripData,
   } = useStates();
-
   
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
 
+  const selectedEmulator = useEmulatorStore(
+    (state) => state.selectedEmulator,
+    (oldSelectedEmulator, newSelectedEmulator) => {
+      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
+      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      if(diff === true) {
+        console.log("selectedEmulator changed (CreateTripButton)", );
+      }
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+    }
+  );
   const breakpoint = 620;
   const isMobileBelowSixTwenty = width < breakpoint;
   const [isSpinning, setSpinning] = useState(false);

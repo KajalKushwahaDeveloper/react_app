@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   EMULATOR_DRAG_URL, EMULATOR_URL,
@@ -54,8 +54,8 @@ const Map = () => {
   const [DialogText, setDialogText] = useState("");
   const [dragId, setDragId] = useState();
   const [nearestTripPoint, setNearestTripPoint] = useState();
-  const [draggOutRange, setDragOutRange] = useState();
-  const [draggWithoutTrip, setDragWithoutTrip] = useState();
+  const [dragOutRange, setDragOutRange] = useState();
+  const [dragWithoutTrip, setDragWithoutTrip] = useState();
 
   const [selectedStop, setSelectedStop] = useState(null);
 
@@ -229,9 +229,9 @@ const Map = () => {
   };
 
   useEffect(() => {
-    if(draggWithoutTrip !== null && draggWithoutTrip !== undefined)
+    if(dragWithoutTrip !== null && dragWithoutTrip !== undefined)
     confirmNewLocation();
-  }, [draggWithoutTrip]);
+  }, [dragWithoutTrip]);
 
   const confirmNewLocation = async () => {
     if (!dragId) {
@@ -250,13 +250,13 @@ const Map = () => {
       payload.latitude = lat;
       payload.longitude = lng;
       payload.newTripIndex = tripPointIndex;
-    } else if (draggOutRange) {
-      const { lat, lng } = draggOutRange;
+    } else if (dragOutRange) {
+      const { lat, lng } = dragOutRange;
       payload.latitude = lat;
       payload.longitude = lng;
       payload.cancelTrip = true;
-    } else if (draggWithoutTrip) {
-      const { lat, lng } = draggWithoutTrip;
+    } else if (dragWithoutTrip) {
+      const { lat, lng } = dragWithoutTrip;
       payload.latitude = lat;
       payload.longitude = lng;
     }

@@ -1,4 +1,4 @@
-import { Emulator } from "./types";
+import { Emulator, TripData } from "./types";
 
 export interface Center {
   lat: number;
@@ -19,8 +19,8 @@ export function compareSelectedEmulator(
 
   // either one was null
   if (
-    (oldSelectedEmulator == null && newSelectedEmulator != null) ||
-    (oldSelectedEmulator != null && newSelectedEmulator == null)
+    (oldSelectedEmulator === null && newSelectedEmulator !== null) ||
+    (oldSelectedEmulator !== null && newSelectedEmulator === null)
   ) {
     return true;
   }
@@ -38,13 +38,23 @@ export function compareSelectedEmulator(
     return true;
   }
 
+  // neither was null but current lat and lng was different
+  if (
+    oldSelectedEmulator?.latitude !==
+    newSelectedEmulator?.latitude && 
+    oldSelectedEmulator?.longitude !==
+    newSelectedEmulator?.longitude 
+  ) {
+    return true;
+  }
+
   return false;
 }
 
 // custom equality function for Emulators
 export function compareEmulators(oldEmulators: Emulator[] | [], newEmulators: Emulator[] | []) {
   // if the size of the arrays are different
-  if (oldEmulators.length !== newEmulators.length) {
+  if (oldEmulators?.length !== newEmulators?.length) {
     return true;
   }
 
@@ -62,4 +72,26 @@ export function compareEmulators(oldEmulators: Emulator[] | [], newEmulators: Em
   }
 
   return returnVal;
+}
+
+// custom equality function for Emulators
+export function compareTripData(oldTripData : TripData | null, newTripData : TripData | null) {
+  // both were null
+  if (oldTripData === null && newTripData === null) {
+    return true;
+  }
+  // either one was null
+  if (
+    (oldTripData === null && newTripData !== null) ||
+    (oldTripData !== null && newTripData === null)
+  ) {
+    console.log("TRIP newTripData returns false")
+    return false;
+  }
+  // neither was null but id was different
+  if (oldTripData?.id !== newTripData?.id ) {
+    return false;
+  }
+
+  return true;
 }
