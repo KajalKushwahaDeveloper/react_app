@@ -43,12 +43,10 @@ import {
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 
 const GpsTable = () => {
-  //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
-      // TODO Check if compareEmulators is working as intented (Updating emulators only on shallow change)
       const diff = compareEmulators(oldEmulators, newEmulators);
       if (diff === true) {
         console.log("emulators changed ");
