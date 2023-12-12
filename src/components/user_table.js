@@ -203,7 +203,8 @@ const UserTable = ({
         const deserializedData = JSON.parse(responseData);
         setUserData(deserializedData);
         setLoading(false);
-        fetchUsers();
+       
+        // fetchUsers();
         return { success: true, error: null };
       }
     } catch (error) {
