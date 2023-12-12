@@ -85,15 +85,19 @@ const PopUpUser = ({
         const { success, error } = await addOrUpdate();
         if (success) {
           if (userToEdit != null) {
-            handleClose(userToEdit?.id, null);
+            handleClose(userToEdit?.id, null, setFirstName, setLastName, setEmail, setTelephone);
           } else {
-            handleClose(0, null);
+            handleClose(0, null, setFirstName, setLastName, setEmail, setTelephone);
           }
           if (userToEdit) {
             showToast("User Updated", "success"); // Call the showToast method with two arguments
           } else {
             showToast("User Added", "success"); // Call the showToast method with two arguments
           }
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setTelephone("");
           // navigate("/home"); // Redirect to the home page
         } else {
           showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments

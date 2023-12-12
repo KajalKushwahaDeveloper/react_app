@@ -61,7 +61,7 @@ const Home = () => {
     }
   };
 
-  const handleClose = (userEditedId, emulatorEditedId) => {
+  const handleClose = (userEditedId, emulatorEditedId,setFirstName, setLastName, setEmail, setTelephone) => {
     // handle User edit
     setOpenUserPopup(false);
     setUserToEdit(null);
