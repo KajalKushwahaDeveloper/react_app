@@ -203,6 +203,8 @@ const UserTable = ({
         const deserializedData = JSON.parse(responseData);
         setUserData(deserializedData);
         setLoading(false);
+       
+        // fetchUsers();
         return { success: true, error: null };
       }
     } catch (error) {
@@ -337,11 +339,11 @@ const UserTable = ({
             );
           })}
 
-          {emptyRows > 0 && (
+          {/* {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
               <td colSpan={3} />
             </tr>
-          )}
+          )} */}
         </tbody>
 
         <tfoot>

@@ -7,6 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { USER_URL } from "../constants";
 import ApiService from "../ApiService";
+import { useForm } from "react-hook-form";
+import PhoneInput from "react-phone-number-input";
+import 'react-phone-number-input/style.css'
 
 const style = {
   position: "absolute",
@@ -36,14 +39,29 @@ const PopUpUser = ({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
+  const [teleError, setTeleError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    resetField,
+    formState: { errors },
+  } = useForm()
+
 
   useEffect(() => {
     if (userToEdit) {
+      setValue("firstname", userToEdit.firstName);
+    setValue("lastname",userToEdit.lastName);
+    setValue("email", userToEdit.email);
+    setTelephone(userToEdit.telephone);
       setId(userToEdit.id);
-      setEmail(userToEdit.email);
-      setTelephone(userToEdit.telephone);
-      setFirstName(userToEdit.firstName);
-      setLastName(userToEdit.lastName);
+      // setEmail(userToEdit.email);
+      // setTelephone(userToEdit.telephone);
+      // setFirstName(userToEdit.firstName);
+      // setLastName(userToEdit.lastName);
     }
   }, [userToEdit]);
 
@@ -93,28 +111,36 @@ const PopUpUser = ({
     setEditPassword(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmitData = async (e) => {
+    // e.preventDefault();
+    console.log(e);
 
-    if (!email) {
-      setError("Please enter your email");
-    } else if (!telephone) {
-      setError("Please enter your telephone number");
-    } else if (!lastName) {
-      setError("Please enter your lastName");
-    } else if (!firstName) {
-      setError("Please enter your firstName");
-    } else {
-      // Email format check
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        setError("Please enter a valid email address");
-        return;
-      }
+    // if (!email) {
+    //   setError("Please enter your email");
+    // } else if (!telephone) {
+    //   setError("Please enter your telephone number");
+    // } else if (!lastName) {
+    //   setError("Please enter your lastName");
+    // } else if (!firstName) {
+    //   setError("Please enter your firstName");
+    // } else {
 
+    if(!telephone)
+    {
+      setTeleError("Please enter your telephone number");
+    }
+    // else if(telephone.length > 10)
+    // {
+    //   setTeleError("Only 10 digits are allowed!")
+    // }
+    // else if(telephone.length < 10)
+    // {
+    //   setError("Minimum 10 digits!")
+    // }
+    else{
       try {
         console.log("User Add/Edit triggered : " + userToEdit);
-        const { success, error } = await addOrUpdate();
+        const { success, error } = await addOrUpdate(e);
         if (success) {
           if (userToEdit != null) {
             handleClose(userToEdit?.id, null);
@@ -138,13 +164,14 @@ const PopUpUser = ({
     }
   };
 
-  const addOrUpdate = async () => {
+  const addOrUpdate = async (event) => {
+    
     const user = {
       id,
-      firstName,
-      lastName,
-      email,
-      telephone,
+      firstName: event.firstname,
+      lastName: event.lastname,
+      email: event.email,
+      telephone: telephone,
       password,
     };
 
@@ -195,7 +222,7 @@ const PopUpUser = ({
           >
             <ClearIcon />
           </IconButton>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(handleSubmitData)}>
             <h1
               style={{
                 marginBottom: "3rem",
@@ -209,34 +236,96 @@ const PopUpUser = ({
             <input
               type="text"
               id="content_input"
+              name="firstname"
               placeholder="Enter your first name"
-              value={firstName}
-              onChange={handleFirstNameChange}
-              maxLength="30"
+              // value={firstName}
+              // onChange={handleFirstNameChange}
+              {...register("firstname", { required: {
+                value: true,
+                message: "Firstname is required!"
+              },
+            pattern: {
+              value: /^[A-Z]+$/i,
+              message: 'Only alphabets allowed!'
+            }
+            
+            })}
             />
+              {errors.firstname && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{errors.firstname.message}</p>}
             <input
               type="text"
               id="content_input"
+              name="lastname"
               placeholder="Enter your last name"
-              value={lastName}
-              onChange={handleLastNameChange}
-              maxLength="30"
+              // value={lastName}
+              // onChange={handleLastNameChange}
+
+              {...register("lastname", { required: {
+                value: true,
+                message: "Lastname is required!"
+              },
+            pattern: {
+              value: /^[A-Z]+$/i,
+              message: 'Only alphabets allowed!'
+            }
+          })}
             />
+               {errors.lastname && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{errors.lastname.message}</p>}
             <input
               type="email"
               id="content_input"
+              name="email"
               placeholder="Enter your email"
-              value={email}
-              onChange={handleEmailChange}
+              // value={email}
+              // onChange={handleEmailChange}
+
+              {...register("email", { required: {
+                value: true,
+                message: "Email is required!"
+              },
+            pattern: {
+              value: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/,
+              message: 'Please correct email format!'
+            }
+          })}
             />
-            <input
-              type="number"
+              {errors.email && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{errors.email.message}</p>}
+            {/* <input
+              type="text"
               id="content_input"
+              name="telephone"
               placeholder="Enter your telephone number"
-              value={telephone}
-              onChange={handleTelephoneChange}
-              maxLength="12"
-            />
+              // value={telephone}
+              // onChange={handleTelephoneChange}
+
+              {...register("telephone", { required: {
+                value: true,
+                message: "Telephone is required!"
+              },
+            pattern: {
+              value: /^\+[1-9]\d{1,14}$/,
+              message: 'Only required format allowed!'
+            },
+
+          })}
+            /> */}
+
+<PhoneInput
+  international
+  // name="telephone"
+  countryCallingCodeEditable={false}
+  defaultCountry="US"
+  value={telephone}
+  limitMaxLength={10}
+//   {...register("telephone", { required: {
+//     value: true,
+//     message: "Telephone is required!"
+//   }
+
+// })}
+  onChange={setTelephone}
+  />
+             {teleError && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{teleError}</p>}
             {userToEdit && (
               <input
                 type="password"

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 
 import {
-  EMULATOR_DRAG_URL,
+  EMULATOR_DRAG_URL, EMULATOR_URL,
 } from "../../constants";
 
 import GoogleMapContainer from "./map-components/GoogleMapContainer";
@@ -11,6 +11,7 @@ import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
 import { useEmulatorStore } from "../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../stores/emulator/types_maps.tsx";
+import useFetch from "../../hooks/useFetch.js";
 
 const Map = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
@@ -31,14 +32,16 @@ const Map = () => {
   const tripData = useEmulatorStore((state) => state.tripData);
   const center = useEmulatorStore((state) => state.center);
   
-  const { staticEmulators } = useStates();
   const createDevices = useEmulatorStore((state) => state.createDevices);
 
+  const { data } = useFetch(EMULATOR_URL)
+  
   useEffect(() => {
-    if(staticEmulators !== null) {
-      createDevices(staticEmulators);
+    console.log("Map.js - useEffect - data: ", data);
+    if(data !== null) {
+      createDevices(data);
     }
-  }, [createDevices, staticEmulators]);
+  }, [createDevices, data]);
 
   const {
     setAssignedTelephoneNumber,

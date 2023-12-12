@@ -122,18 +122,23 @@ const GpsTable = () => {
   useEffect(() => {
     // When call comes/ ends.
     if (selectedDevice === null || selectedDevice.state === null) {
+      setContactDialogOptions({
+        open: false,
+        dialogType: "",
+        emulatorId: null,
+      });
       return;
     } else if (selectedDevice.state === "Incoming") {
       setContactDialogOptions({
         open: true,
         dialogType: "call",
-        emulatorId: -1,
+        emulatorId: null,
       });
     } else if (selectedDevice.state === "On call") {
       setContactDialogOptions({
         open: true,
         dialogType: "call",
-        emulatorId: -1,
+        emulatorId: null,
       });
     } else if (
       selectedDevice.state === "Offline" ||
@@ -142,7 +147,7 @@ const GpsTable = () => {
       setContactDialogOptions({
         open: false,
         dialogType: "",
-        emulatorId: -1,
+        emulatorId: null,
       });
     }
   }, [selectedDevice]);
