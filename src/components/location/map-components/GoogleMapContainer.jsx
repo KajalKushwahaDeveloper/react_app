@@ -21,6 +21,7 @@ import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import {
   compareSelectedEmulator,
   compareEmulators,
+  compareTripData,
 } from "../../../stores/emulator/types_maps.tsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
@@ -48,7 +49,6 @@ const GoogleMapContainer = ({
   const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
-      // TODO Check if compareEmulators is working as intented (Updating emulators only on shallow change)
       const diff = compareEmulators(oldEmulators, newEmulators);
       if (diff === true) {
         console.log("emulators changed ");
@@ -65,13 +65,16 @@ const GoogleMapContainer = ({
         newSelectedEmulator
       );
       if (diff === true) {
-        console.log("selectedEmulator changed ");
+        console.log("selectedEmulator changed (GoogleMapContainer)");
       }
       compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
     }
   );
 
-  const tripData = useEmulatorStore((state) => state.tripData);
+  const tripData = useEmulatorStore(
+    (state) => state.tripData,
+    (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
+  );
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
 
@@ -106,9 +109,21 @@ const GoogleMapContainer = ({
   ]);
 
   useMemo(() => {
-    console.log("calculatePath", tripData?.tripPoints);
-    if (mapRef.current === null || tripData?.tripPoints === undefined) {
-      console.log("calculatePath ERROR mapRef null");
+    if (
+      tripData === null ||
+      mapRef.current === null ||
+      mapRef.current === null ||
+      mapRef.current === undefined
+    ) {
+      console.log(`fitBounds ERROR: ${tripData} mapRef: ${mapRef.current}`);
+      return;
+    }
+    if (tripData.tripPoints === null || tripData.tripPoints.length <= 0) {
+      console.log(
+        `fitBounds ERROR tripData: ${tripData === null} mapRef: ${
+          mapRef.current === null
+        }`
+      );
       return;
     }
     const bounds = new window.google.maps.LatLngBounds();
@@ -117,7 +132,7 @@ const GoogleMapContainer = ({
     });
     console.log("bounds", bounds);
     mapRef.current.fitBounds(bounds);
-  }, [mapRef, tripData?.tripPoints]);
+  }, [mapRef, tripData]);
 
   const containerStyle = {
     position: "unset !important",

@@ -2,21 +2,30 @@ import React from "react";
 import "../../../scss/map.scss";
 import { useViewPort } from "../../../ViewportProvider.js";
 import GpsTable from "./gps_page_table.js";
-import { useStates } from "../../../StateProvider";
 import CreateTripButton from "./CreateTripButton";
-import AppStomp from "./AppStomp.tsx";
+import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
 const AddressTable = () => {
   var fromAddress = null;
   var toAddress = null;
   var timeInHours = null;
 
-  const { 
-    tripData,
-    emulator,
-  } = useStates();
-    
-  const { width, height } = useViewPort();
+  const tripData = useEmulatorStore((state) => state.tripData);
+
+  const selectedEmulator = useEmulatorStore(
+    (state) => state.selectedEmulator,
+    (oldSelectedEmulator, newSelectedEmulator) => {
+      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
+      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      if(diff === true) {
+        console.log("selectedEmulator changed (Address table)", );
+      }
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+    }
+  );
+
+  const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
@@ -54,7 +63,7 @@ const AddressTable = () => {
   const totalTime = `~${hours} hours and ${minutes} minutes \n(Including ${stopCount} stops)`;
 
   const currentStop = tripData?.stops.find(
-    (stop) => stop.tripPointIndex === emulator?.currentTripPointIndex + 1
+    (stop) => stop.tripPointIndex === selectedEmulator?.currentTripPointIndex + 1
   );
   var stopReachedTime = "N/A";
   var stopWaitingTillTime = "N/A";
@@ -106,7 +115,7 @@ const AddressTable = () => {
                 fontSize: "10px",
                 width: "calc(100% - 5px)",
               }}>
-              {emulator && emulator.address ? emulator.address : "N/A"}
+              {selectedEmulator && selectedEmulator.address ? selectedEmulator.address : "N/A"}
             </div>
           </div>
           {/* FROM ADDRESS*/}
@@ -156,7 +165,7 @@ const AddressTable = () => {
               padding: "0px !important",
             }}>
             <div className="address-table-heading">Total Time </div>
-            {tripData && emulator ? (
+            {tripData && selectedEmulator ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -173,8 +182,8 @@ const AddressTable = () => {
                   {totalTime}
                 </div>
                 {tripData &&
-                  emulator &&
-                  emulator.tripStatus === "RESTING" &&
+                  selectedEmulator &&
+                  selectedEmulator.tripStatus === "RESTING" &&
                   currentStop && (
                     <div
                       className="addressTable"
@@ -244,8 +253,7 @@ const AddressTable = () => {
             }}>
             <div className="address-table-heading">Current location</div>
             <div className="addressTable">
-              {/* {emulator && emulator.address ? emulator.address : "N/A"} */}
-              <AppStomp />
+              {selectedEmulator && selectedEmulator.address ? selectedEmulator.address : "N/A"}
             </div>
           </div>
 
@@ -284,7 +292,7 @@ const AddressTable = () => {
               padding: "0px !important",
             }}>
             <div className="address-table-heading">Total Time </div>
-            {tripData && emulator ? (
+            {tripData && selectedEmulator ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -299,8 +307,8 @@ const AddressTable = () => {
                   {totalTime}
                 </div>
                 {tripData &&
-                  emulator &&
-                  emulator.tripStatus === "RESTING" &&
+                  selectedEmulator &&
+                  selectedEmulator.tripStatus === "RESTING" &&
                   currentStop && (
                     <div
                       className="addressTable"
