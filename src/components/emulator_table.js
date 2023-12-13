@@ -175,22 +175,6 @@ const EmulatorTable = ({
     }
   }, []);
 
-  //Refresh component after 30000 ms/ 30 seconds
-  // useEffect(() => {
-  //   const fetchDataInterval = setInterval(() => {
-  //     setLoading(true);
-  //     const { success, error } = fetchData();
-  //     if (success) {
-  //       showToast("Fetched Emulators successfully", "success");
-  //     } else {
-  //       showToast(error, "error");
-  //     }
-  //   }, 30000);
-
-  //   return () => {
-  //     clearInterval(fetchDataInterval);
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (userAssingedEmulator != null) {

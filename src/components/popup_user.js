@@ -7,6 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { USER_URL } from "../constants";
 import ApiService from "../ApiService";
+import { useForm } from "react-hook-form";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 const style = {
   position: "absolute",
@@ -36,53 +39,46 @@ const PopUpUser = ({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
+  const [teleError, setTeleError] = useState("");
 
-  console.log("userToEdit1234:", userToEdit);
+  const token = localStorage.getItem("token");
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    resetField,
+    formState: { errors },
+  } = useForm();
+
   useEffect(() => {
     if (userToEdit) {
-      setId(userToEdit.id);
-      setEmail(userToEdit.email);
+      setValue("firstname", userToEdit.firstName);
+      setValue("lastname", userToEdit.lastName);
+      setValue("email", userToEdit.email);
       setTelephone(userToEdit.telephone);
-      setFirstName(userToEdit.firstName);
-      setLastName(userToEdit.lastName);
+      setId(userToEdit.id);
+    }
+    else
+    {
+      reset();
+      setTelephone("");
+      resetField();
     }
   }, [userToEdit]);
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleTelephoneChange = (e) => {
-    setTelephone(e.target.value);
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
-  };
 
   const handleEditPassword = (e) => {
     setEditPassword(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!email) {
-      setError("Please enter your email");
-    } else if (!telephone) {
-      setError("Please enter your telephone number");
-    } else if (!lastName) {
-      setError("Please enter your lastName");
-    } else if (!firstName) {
-      setError("Please enter your firstName");
-    } else {
+  const handleSubmitData = async (data) => {
+    if (!telephone) {
+      setTeleError("Please enter your telephone number");
+    }
+    else {
       try {
-        console.log("User Add/Edit triggered : " + userToEdit);
-        const { success, error } = await addOrUpdate();
+        const { success, error } = await addOrUpdate(data);
         if (success) {
           if (userToEdit != null) {
             handleClose(userToEdit?.id, null);
@@ -95,33 +91,34 @@ const PopUpUser = ({
             showToast("User Added", "success"); // Call the showToast method with two arguments
           }
           // navigate("/home"); // Redirect to the home page
-        } else {
+        } else {  
+          handleClose(0, null);
+          reset();
+          setTelephone("");
           showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
           setError(error || "Failed to add user"); // Display appropriate error message
         }
       } catch (error) {
-        console.log("Error occurred while adding user:", error);
         setError("An error occurred while adding user"); // Display a generic error message
       }
     }
   };
 
-  const addOrUpdate = async () => {
+  const addOrUpdate = async (data) => {
     const user = {
-      id,
-      firstName,
-      lastName,
-      email,
-      telephone,
-      password,
+      id: id,
+      firstName: data.firstname,
+      lastName: data.lastname,
+      email: data.email,
+      telephone: telephone,
+      password: password,
     };
 
-    const token = localStorage.getItem("token");
-    console.log("token : ", token);
+
     try {
-      var requestType = "POST"
+      var requestType = "POST";
       if (userToEdit) {
-        requestType = "PUT"
+        requestType = "PUT";
       }
       const { success, data, error } = await ApiService.makeApiCall(
         USER_URL,
@@ -130,13 +127,11 @@ const PopUpUser = ({
         token
       );
       if (success) {
-        console.log("addUser response:", data);
-        return { success: true};
-      }else {
+        return { success: true };
+      } else {
         return { success: false, error: error };
       }
     } catch (e) {
-      console.log("addUser Failed to add/update user:", e);
       showToast(`Failed to add/update User ${e}`, "error");
       return { success: false, error: e };
     }
@@ -163,7 +158,7 @@ const PopUpUser = ({
           >
             <ClearIcon />
           </IconButton>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(handleSubmitData)}>
             <h1
               style={{
                 marginBottom: "3rem",
@@ -176,36 +171,86 @@ const PopUpUser = ({
 
             <input
               type="text"
-              id="content_input"
+              id="firstname"
+              name="firstname"
               placeholder="Enter your first name"
-              value={firstName}
-              onChange={handleFirstNameChange}
+              {...register("firstname", {
+                required: {
+                  value: true,
+                  message: "Firstname is required!",
+                },
+                pattern: {
+                  value: /^[A-Z]+$/i,
+                  message: "Only alphabets allowed!",
+                },
+              })}
             />
+            {errors.firstname && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {errors.firstname.message}
+              </p>
+            )}
             <input
               type="text"
-              id="content_input"
+              id="lastname"
+              name="lastname"
               placeholder="Enter your last name"
-              value={lastName}
-              onChange={handleLastNameChange}
+              {...register("lastname", {
+                required: {
+                  value: true,
+                  message: "Lastname is required!",
+                },
+                pattern: {
+                  value: /^[A-Z]+$/i,
+                  message: "Only alphabets allowed!",
+                },
+              })}
             />
+            {errors.lastname && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {errors.lastname.message}
+              </p>
+            )}
             <input
-              type="text"
-              id="content_input"
+              type="email"
+              id="email"
+              name="email"
               placeholder="Enter your email"
-              value={email}
-              onChange={handleEmailChange}
+              {...register("email", {
+                required: {
+                  value: true,
+                  message: "Email is required!",
+                },
+                pattern: {
+                  value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                  message: "Please correct email format!",
+                },
+              })}
             />
-            <input
-              type="number"
-              id="content_input"
-              placeholder="Enter your telephone number"
+            {errors.email && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {errors.email.message}
+              </p>
+            )}
+
+            <PhoneInput
+              international
+              countryCallingCodeEditable={false}
+              selec
+              defaultCountry="US"
               value={telephone}
-              onChange={handleTelephoneChange}
+              limitMaxLength={10}
+              onChange={setTelephone}
             />
+            {teleError && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {teleError}
+              </p>
+            )}
             {userToEdit && (
               <input
                 type="password"
-                id="content_input"
+                id="password"
                 placeholder="password (empty if unchanged)"
                 value={password}
                 onChange={handleEditPassword}
@@ -214,7 +259,7 @@ const PopUpUser = ({
             <button className="login_button" type="submit">
               {userToEdit === null ? "Add User" : "Edit User"}
             </button>
-            {error && <p className="error">{error}</p>}
+            {/* {error && <p className="error">{error}</p>} */}
           </form>
         </Box>
       </Modal>
