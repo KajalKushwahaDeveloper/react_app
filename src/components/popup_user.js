@@ -81,6 +81,7 @@ const PopUpUser = ({
         const { success, error } = await addOrUpdate(data);
         if (success) {
           if (userToEdit != null) {
+            
             handleClose(userToEdit?.id, null);
           } else {
             handleClose(0, null);
@@ -88,6 +89,8 @@ const PopUpUser = ({
           if (userToEdit) {
             showToast("User Updated", "success"); // Call the showToast method with two arguments
           } else {
+            reset();
+            setTelephone("");
             showToast("User Added", "success"); // Call the showToast method with two arguments
           }
           // navigate("/home"); // Redirect to the home page
