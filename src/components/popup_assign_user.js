@@ -72,7 +72,7 @@ const UserAssignDropDown = (props) => {
     handleAssignedUserToEmulator,
   } = props;
   const theme = useTheme();
-  
+
   const [userName, setuserName] = React.useState([]);
   const [users, setUsers] = useState();
   const [loading, setLoading] = useState(true);
@@ -141,7 +141,7 @@ const UserAssignDropDown = (props) => {
     const {
       target: { value },
     } = event;
-    
+
     SetSelectedUserId(value);
     setuserName(value);
   };
@@ -222,11 +222,11 @@ const UserAssignDropDown = (props) => {
             >
               {console.log("users23:", users)}
               {users?.map((user) => (
-                
+
                 <MenuItem key={user.id} value={user.id}>
-                {user.firstName} {user.lastName}
-                 
+                  {user.status === "ENABLED" &&`${user.firstName} ${user.lastName}`}
                 </MenuItem>
+                
               ))}
             </Select>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -243,5 +243,5 @@ const UserAssignDropDown = (props) => {
       </BootstrapDialog>
     </div>
   );
-}
+};
 export default UserAssignDropDown;
