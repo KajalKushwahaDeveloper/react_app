@@ -231,7 +231,7 @@ body {
 
 @mixin default-view {
   padding: 0 15px;
-  width: -webkit-fill-available;
+  width: 100%;
   margin: 15px;
   height: 35px;
   border-radius: 20px;
@@ -254,7 +254,7 @@ input {
 .login_button {
   @include default-view;
   background: $background-color;
-  margin: 40px 15px 20px 15px;
+  margin: 40px 15px 20px 0px;
   color: $white-color;
   transition: all 500ms ease-out;
   animation: lights 4000ms infinite ease-in;
