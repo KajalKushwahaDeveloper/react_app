@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import  TablePagination,{
+import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
 
@@ -20,6 +20,7 @@ const UserTable = ({
   handleEditButtonClick,
   userEditedId,
   userAssingedEmulator,
+  updatedData,
 }) => {
   // State variables
   const [userData, setUserData] = useState([]);
@@ -38,7 +39,7 @@ const UserTable = ({
         refreshEditedUser(userEditedId);
       }
     }
-  }, [userEditedId]);
+  }, [userEditedId, updatedData]);
 
   useEffect(() => {
     if (userAssingedEmulator != null) {
@@ -203,7 +204,6 @@ const UserTable = ({
         const deserializedData = JSON.parse(responseData);
         setUserData(deserializedData);
         setLoading(false);
-        fetchUsers();
         return { success: true, error: null };
       }
     } catch (error) {
@@ -246,119 +246,119 @@ const UserTable = ({
   return (
     <Root sx={{ width: "auto", maxWidth: "100%" }}>
       <div className="table-responsive">
-      <table aria-label="custom pagination table" className="w-100 shadow">
-        <tbody>
-          {(rowsPerPage > 0
-            ? userData.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
-            : userData
-          ).map((row) => {
-            const createdAtDate = new Date(row.createdAt);
-            const formattedDate = createdAtDate.toISOString().split("T")[0];
+        <table aria-label="custom pagination table" className="w-100 shadow">
+          <tbody>
+            {(rowsPerPage > 0
+              ? userData.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
+              : userData
+            ).map((row) => {
+              const createdAtDate = new Date(row.createdAt);
+              const formattedDate = createdAtDate.toISOString().split("T")[0];
 
-            return (
-              <tr key={row.id}>
-                <div></div>
-                <td align="right">
-                  <div className="spcBetween">
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <h5>{row.firstName + " " + row.lastName || "N/A"}</h5>
-                      <ul>
-                        <li>Email : {row.email || "N/A"}</li>
-                        <li>Tel. # : {row.telephone || "N/A"}</li>
-                        <li>Registration Date : {formattedDate}</li>
-                        <li>
-                          Active Emulators :
-                          {row.emulatorCount?.activeEmulatorsCount !== undefined
-                            ? row.emulatorCount?.activeEmulatorsCount
-                            : "Err"}
-                          /
-                          {row.emulatorCount?.allEmulatorsCount !== undefined
-                            ? row.emulatorCount?.allEmulatorsCount
-                            : "Err"}
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="d-flex align-items-center justify-content-center flex-column">
-                      <div className="d-flex align-items-center justify-content-center flex-sm-row mb-2">
-                      <IconButton
-                      size="small"
-                        className="roundIncon"
-                        style={{
-                          height: "40px",
-                          width: "40px",
-                          marginRight: "10px",
-                          borderRadius: "50%",
-                          backgroundColor: "#007dc6",
-                          color: "#fff",
-                        }}
-                        aria-label="edit"
-                      >
-                        <EditIcon fontSize="small" onClick={() => handleEditButtonClick(row)} />
-                      </IconButton>
-                      <IconButton
-                      size="small"
-                        style={{
-                          height: "40px",
-                          width: "40px",
-                          marginRight: "10px",
-                          borderRadius: "50%",
-                          backgroundColor: "red",
-                          color: "#fff",
-                        }}
-                        aria-label="delete"
-                      >
-                        <DeleteIcon
-                        fontSize="small"
-                          onClick={() => handleDeleteButtonClick(row)}
-                        />
-                      </IconButton>
+              return (
+                <tr key={row.id}>
+                  <div></div>
+                  <td align="right">
+                    <div className="spcBetween">
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <h5>{row.firstName + " " + row.lastName || "N/A"}</h5>
+                        <ul>
+                          <li>Email : {row.email || "N/A"}</li>
+                          <li>Tel. # : {row.telephone || "N/A"}</li>
+                          <li>Registration Date : {formattedDate}</li>
+                          <li>
+                            Active Emulators :
+                            {row.emulatorCount?.activeEmulatorsCount !==
+                            undefined
+                              ? row.emulatorCount?.activeEmulatorsCount
+                              : "Err"}
+                            /
+                            {row.emulatorCount?.allEmulatorsCount !== undefined
+                              ? row.emulatorCount?.allEmulatorsCount
+                              : "Err"}
+                          </li>
+                        </ul>
                       </div>
-                      <button
-                        className="btn btn-sm"
-                        style={{
-                          backgroundColor:
-                            row.status === "ENABLED" ? "green" : "red",
-                          color: "white",
-                          height: "40px",
-                          width: "7rem",
-                        }}
-                        onClick={() =>
-                          handleActionButtonClick(row.id, row.status)
-                        }
-                      >
-                        {row.status}
-                      </button>
+                      <div className="d-flex align-items-center justify-content-center flex-column">
+                        <div className="d-flex align-items-center justify-content-center flex-sm-row mb-2">
+                          <IconButton
+                            size="small"
+                            className="roundIncon"
+                            style={{
+                              height: "40px",
+                              width: "40px",
+                              marginRight: "10px",
+                              borderRadius: "50%",
+                              backgroundColor: "#007dc6",
+                              color: "#fff",
+                            }}
+                            aria-label="edit"
+                            onClick={() => handleEditButtonClick(row)}
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            style={{
+                              height: "40px",
+                              width: "40px",
+                              marginRight: "10px",
+                              borderRadius: "50%",
+                              backgroundColor: "red",
+                              color: "#fff",
+                            }}
+                            aria-label="delete"
+                            onClick={() => handleDeleteButtonClick(row)}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </div>
+                        <button
+                          className="btn btn-sm"
+                          style={{
+                            backgroundColor:
+                              row.status === "ENABLED" ? "green" : "red",
+                            color: "white",
+                            height: "40px",
+                            width: "7rem",
+                          }}
+                          onClick={() =>
+                            handleActionButtonClick(row.id, row.status)
+                          }
+                        >
+                          {row.status}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
+                  </td>
+                </tr>
+              );
+            })}
 
-          {/* {emptyRows > 0 && (
+            {/* {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
               <td colSpan={3} />
             </tr>
           )} */}
-        </tbody>
+          </tbody>
 
-        <tfoot>
-          <tr>
-            <CustomTablePagination
-              rowsPerPageOptions={[10,20, 30, { label: "All", value: -1 }]}
-              colSpan={3}
-              count={userData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </tr>
-        </tfoot>
-      </table>
+          <tfoot>
+            <tr>
+              <CustomTablePagination
+                rowsPerPageOptions={[10, 20, 30, { label: "All", value: -1 }]}
+                colSpan={3}
+                count={userData.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </Root>
   );

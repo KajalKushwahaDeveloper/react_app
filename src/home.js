@@ -3,7 +3,7 @@ import "./scss/home.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  EMULATOR_CREATE_RANDOM_URL,
+  EMULATOR_CREATE_RANDOM_URL, USER_URL,
 } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";
@@ -29,6 +29,7 @@ const Home = () => {
   const [openChangeSsidPopup, setOpenChangeSsidPopup] = useState(false);
   const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
   const [emulatorData, setEmulatorData] = useState([]);
+  const [updatedData, setUpdatedData] = useState([]);
 
   const showToast = (message, type) => {
     console.log("Showing toast...");
@@ -61,9 +62,20 @@ const Home = () => {
     }
   };
 
-  const handleClose = (userEditedId, emulatorEditedId) => {
+  const token = localStorage.getItem("token");
+  const handleClose = async(userEditedId, emulatorEditedId) => {
     // handle User edit
     setOpenUserPopup(false);
+    const response = await fetch(USER_URL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    response.json().then((data) => {
+      setUpdatedData(data)
+    })
     setUserToEdit(null);
 
     // handle user assign
@@ -196,6 +208,7 @@ const Home = () => {
                   handleEditButtonClick={handleEditButtonClick}
                   userEditedId={userEditedId}
                   userAssingedEmulator={userAssingedEmulator}
+                  updatedData={updatedData}
                 />
               </div>
             </div>
