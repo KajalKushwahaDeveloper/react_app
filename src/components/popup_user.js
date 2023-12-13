@@ -9,7 +9,7 @@ import { USER_URL } from "../constants";
 import ApiService from "../ApiService";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
-import 'react-phone-number-input/style.css'
+import "react-phone-number-input/style.css";
 
 const style = {
   position: "absolute",
@@ -41,106 +41,44 @@ const PopUpUser = ({
   const [error, setError] = useState("");
   const [teleError, setTeleError] = useState("");
 
+  const token = localStorage.getItem("token");
+
   const {
     register,
     handleSubmit,
-    watch,
+    reset,
     setValue,
     resetField,
     formState: { errors },
-  } = useForm()
-
+  } = useForm();
 
   useEffect(() => {
     if (userToEdit) {
       setValue("firstname", userToEdit.firstName);
-    setValue("lastname",userToEdit.lastName);
-    setValue("email", userToEdit.email);
-    setTelephone(userToEdit.telephone);
+      setValue("lastname", userToEdit.lastName);
+      setValue("email", userToEdit.email);
+      setTelephone(userToEdit.telephone);
       setId(userToEdit.id);
-      // setEmail(userToEdit.email);
-      // setTelephone(userToEdit.telephone);
-      // setFirstName(userToEdit.firstName);
-      // setLastName(userToEdit.lastName);
+    }
+    else
+    {
+      reset();
+      setTelephone("");
+      resetField();
     }
   }, [userToEdit]);
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-  const handleTelephoneChange = (e) => {
-
-    const telephoneInputValue = e.target.value;
-    
-    // Remove non-digit characters
-    const regexInputValue = telephoneInputValue.replace(/\D/g, '');
-
-    // Limit the input to 12 characters
-    if (regexInputValue.length <= 12) {
-      setTelephone(regexInputValue);
-      setError('');
-    } else {
-      setError('Phone number cannot be more than 12 digit');
-    }
-  };
-  const handleFirstNameChange = (e) => {
-    const FirstNameInput = e.target.value;
-
-    // Check if the input contains only alphabet characters
-    if (/^[A-Za-z]+$/.test(FirstNameInput) || FirstNameInput === '') {
-      setFirstName(FirstNameInput);
-      setError('');
-    } else {
-      setError('First name can only contain alphabet characters');
-    }
-  };
-
-  const handleLastNameChange = (e) => {
-    const LastNameInput = e.target.value;
-
-    // Check if the input contains only alphabet characters
-    if (/^[A-Za-z]+$/.test(LastNameInput) || LastNameInput === '') {
-      setLastName(LastNameInput);
-      setError('');
-    } else {
-      setError('Last name can only contain alphabet characters');
-    }
-  };
 
   const handleEditPassword = (e) => {
     setEditPassword(e.target.value);
   };
 
-  const handleSubmitData = async (e) => {
-    // e.preventDefault();
-    console.log(e);
-
-    // if (!email) {
-    //   setError("Please enter your email");
-    // } else if (!telephone) {
-    //   setError("Please enter your telephone number");
-    // } else if (!lastName) {
-    //   setError("Please enter your lastName");
-    // } else if (!firstName) {
-    //   setError("Please enter your firstName");
-    // } else {
-
-    if(!telephone)
-    {
+  const handleSubmitData = async (data) => {
+    if (!telephone) {
       setTeleError("Please enter your telephone number");
     }
-    // else if(telephone.length > 10)
-    // {
-    //   setTeleError("Only 10 digits are allowed!")
-    // }
-    // else if(telephone.length < 10)
-    // {
-    //   setError("Minimum 10 digits!")
-    // }
-    else{
+    else {
       try {
-        console.log("User Add/Edit triggered : " + userToEdit);
-        const { success, error } = await addOrUpdate(e);
+        const { success, error } = await addOrUpdate(data);
         if (success) {
           if (userToEdit != null) {
             handleClose(userToEdit?.id, null);
@@ -153,30 +91,30 @@ const PopUpUser = ({
             showToast("User Added", "success"); // Call the showToast method with two arguments
           }
           // navigate("/home"); // Redirect to the home page
-        } else {
+        } else {  
+          handleClose(0, null);
+          reset();
+          setTelephone("");
           showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
           setError(error || "Failed to add user"); // Display appropriate error message
         }
       } catch (error) {
-        console.log("Error occurred while adding user:", error);
         setError("An error occurred while adding user"); // Display a generic error message
       }
     }
   };
 
-  const addOrUpdate = async (event) => {
-    
+  const addOrUpdate = async (data) => {
     const user = {
-      id,
-      firstName: event.firstname,
-      lastName: event.lastname,
-      email: event.email,
+      id: id,
+      firstName: data.firstname,
+      lastName: data.lastname,
+      email: data.email,
       telephone: telephone,
-      password,
+      password: password,
     };
 
-    const token = localStorage.getItem("token");
-    console.log("token : ", token);
+
     try {
       var requestType = "POST";
       if (userToEdit) {
@@ -189,13 +127,11 @@ const PopUpUser = ({
         token
       );
       if (success) {
-        console.log("addUser response:", data);
         return { success: true };
       } else {
         return { success: false, error: error };
       }
     } catch (e) {
-      console.log("addUser Failed to add/update user:", e);
       showToast(`Failed to add/update User ${e}`, "error");
       return { success: false, error: e };
     }
@@ -235,101 +171,86 @@ const PopUpUser = ({
 
             <input
               type="text"
-              id="content_input"
+              id="firstname"
               name="firstname"
               placeholder="Enter your first name"
-              // value={firstName}
-              // onChange={handleFirstNameChange}
-              {...register("firstname", { required: {
-                value: true,
-                message: "Firstname is required!"
-              },
-            pattern: {
-              value: /^[A-Z]+$/i,
-              message: 'Only alphabets allowed!'
-            }
-            
-            })}
+              {...register("firstname", {
+                required: {
+                  value: true,
+                  message: "Firstname is required!",
+                },
+                pattern: {
+                  value: /^[A-Z]+$/i,
+                  message: "Only alphabets allowed!",
+                },
+              })}
             />
-              {errors.firstname && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{errors.firstname.message}</p>}
+            {errors.firstname && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {errors.firstname.message}
+              </p>
+            )}
             <input
               type="text"
-              id="content_input"
+              id="lastname"
               name="lastname"
               placeholder="Enter your last name"
-              // value={lastName}
-              // onChange={handleLastNameChange}
-
-              {...register("lastname", { required: {
-                value: true,
-                message: "Lastname is required!"
-              },
-            pattern: {
-              value: /^[A-Z]+$/i,
-              message: 'Only alphabets allowed!'
-            }
-          })}
+              {...register("lastname", {
+                required: {
+                  value: true,
+                  message: "Lastname is required!",
+                },
+                pattern: {
+                  value: /^[A-Z]+$/i,
+                  message: "Only alphabets allowed!",
+                },
+              })}
             />
-               {errors.lastname && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{errors.lastname.message}</p>}
+            {errors.lastname && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {errors.lastname.message}
+              </p>
+            )}
             <input
               type="email"
-              id="content_input"
+              id="email"
               name="email"
               placeholder="Enter your email"
-              // value={email}
-              // onChange={handleEmailChange}
-
-              {...register("email", { required: {
-                value: true,
-                message: "Email is required!"
-              },
-            pattern: {
-              value: /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/,
-              message: 'Please correct email format!'
-            }
-          })}
+              {...register("email", {
+                required: {
+                  value: true,
+                  message: "Email is required!",
+                },
+                pattern: {
+                  value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                  message: "Please correct email format!",
+                },
+              })}
             />
-              {errors.email && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{errors.email.message}</p>}
-            {/* <input
-              type="text"
-              id="content_input"
-              name="telephone"
-              placeholder="Enter your telephone number"
-              // value={telephone}
-              // onChange={handleTelephoneChange}
+            {errors.email && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {errors.email.message}
+              </p>
+            )}
 
-              {...register("telephone", { required: {
-                value: true,
-                message: "Telephone is required!"
-              },
-            pattern: {
-              value: /^\+[1-9]\d{1,14}$/,
-              message: 'Only required format allowed!'
-            },
-
-          })}
-            /> */}
-
-<PhoneInput
-  international
-  // name="telephone"
-  countryCallingCodeEditable={false}
-  defaultCountry="US"
-  value={telephone}
-  limitMaxLength={10}
-//   {...register("telephone", { required: {
-//     value: true,
-//     message: "Telephone is required!"
-//   }
-
-// })}
-  onChange={setTelephone}
-  />
-             {teleError && <p className="ms-4 mb-1" style={{fontSize: 14, color: 'red'}}>{teleError}</p>}
+            <PhoneInput
+              international
+              countryCallingCodeEditable={false}
+              selec
+              defaultCountry="US"
+              value={telephone}
+              limitMaxLength={10}
+              onChange={setTelephone}
+            />
+            {teleError && (
+              <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
+                {teleError}
+              </p>
+            )}
             {userToEdit && (
               <input
                 type="password"
-                id="content_input"
+                id="password"
                 placeholder="password (empty if unchanged)"
                 value={password}
                 onChange={handleEditPassword}
@@ -338,7 +259,7 @@ const PopUpUser = ({
             <button className="login_button" type="submit">
               {userToEdit === null ? "Add User" : "Edit User"}
             </button>
-            {error && <p className="error">{error}</p>}
+            {/* {error && <p className="error">{error}</p>} */}
           </form>
         </Box>
       </Modal>
