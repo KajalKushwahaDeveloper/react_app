@@ -15,12 +15,15 @@ import {
 import ApiService from "../ApiService.js";
 import { CLIENT_CURRENT } from "../constants.js";
 import { useNavigate } from "react-router-dom";
-
+import PrivateRoutes from "../components/utils/privateRoutes.js";
+import PageNotFound from "../view/pageNotFound.js";
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const [baseRoutes, setBaseRoutes] = useState(false);
 
   const checkToken = async () => {
     const token = localStorage.getItem("token");
@@ -66,13 +69,13 @@ function App() {
           }
         } else {
           console.error("CLIENT_CURRENT Error: ", error);
-          localStorage.removeItem("token");
-          navigate("/login");
+          /* localStorage.removeItem("token");
+          navigate("/login"); */
         }
       } catch (error) {
         console.error("CLIENT_CURRENT 2 Error: ", error);
-        localStorage.removeItem("token");
-        navigate("/login");
+        /* localStorage.removeItem("token");
+        navigate("/login"); */
       }
     }
   };
@@ -82,27 +85,38 @@ function App() {
   }, [location.pathname]);
   // TODO: When checkToken is running, we need to show a redirecting page....
 
-  return (
-    <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route element={<AuthenticatedLayout isAdmin={isAdmin} />}>
-      <Route path="/home" element={<Home />} />
-      <Route path="/gps" element={<GPS />} />
-      <Route path="/logout"/>
-      </Route>
-    </Routes>
-  );
-}
+  useEffect(() => {
+    if (localStorage.getItem("token") && window.location.pathname === "/") {
+      navigate(-1);
+    } else if (window.location.pathname === "/") {
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } else if (window.location.pathname === "/login") {
+      navigate(-1);
+    } else {
+      setBaseRoutes(true);
+    }
+  }, []);
 
-const AuthenticatedLayout = ({ isAdmin }) => {
   return (
     <>
-      <Navbar isAdmin={isAdmin} style={{ zIndex: 9998 }} />
-      <Outlet />
+      <Routes>
+        <Route element={<PrivateRoutes isAdmin={isAdmin} />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/gps" element={<GPS />} />
+        </Route>
+        <Route exact path="/login" element={<LoginPage />} />
+        {baseRoutes === true && (
+          <Route>
+            {window.location.pathname === "/" && navigate("/login")}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Route>
+        )}
+      </Routes>
     </>
   );
-};
+}
 
 export default App;
