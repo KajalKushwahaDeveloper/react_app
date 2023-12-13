@@ -30,6 +30,8 @@ const PopUpEmulatorTelephone = ({
   const [twilioNumber, setTwilioUpdatedPhone] = useState("");
   const [alternateNumber, setAlternateNumber] = useState("");
   const [error, setError] = useState("");
+  const [selectedDropdownValue, setSelectedDropdownValue] = useState(null);
+
 
   useEffect(() => {
     if (userToEdit) {
@@ -124,6 +126,7 @@ const PopUpEmulatorTelephone = ({
               setTwilioUpdatedPhone = {setTwilioUpdatedPhone} 
               alternateNumber = {alternateNumber}
               setAlternateNumber = {setAlternateNumber}
+              setSelectedDropdownValue={setSelectedDropdownValue}
             />
 
             <button type="submit" style={{width:"6rem",float:"right",marginRight:"0px",padding:".5rem 0"}}>
@@ -131,6 +134,7 @@ const PopUpEmulatorTelephone = ({
             </button>
             {error && <p className="error">{error}</p>}
           </form>
+          
         </Box>
       </Modal>
     </div>
