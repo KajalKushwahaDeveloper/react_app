@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./scss/home.scss";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  EMULATOR_CREATE_RANDOM_URL, USER_URL,
-} from "./constants.js";
+import { EMULATOR_CREATE_RANDOM_URL, USER_URL } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
 import UserTable from "./components/user_table.js";
 import { Button } from "@mui/material";
@@ -15,6 +13,7 @@ import PopUpEmulatorTelephone from "./components/popup_emulator_update_telephone
 import ChangeEmulatorSsidPopup from "./components/generated_id_popup.js";
 import ApiService from "./ApiService.js";
 import { GetEmulatorApi } from "./components/api/emulator.js";
+import { useForm } from "react-hook-form";
 
 const Home = () => {
   const [openUserPopup, setOpenUserPopup] = useState(false);
@@ -30,6 +29,16 @@ const Home = () => {
   const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
   const [emulatorData, setEmulatorData] = useState([]);
   const [updatedData, setUpdatedData] = useState([]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    resetField,
+    control,
+    formState: { errors },
+  } = useForm();
 
   const showToast = (message, type) => {
     console.log("Showing toast...");
@@ -63,7 +72,9 @@ const Home = () => {
   };
 
   const token = localStorage.getItem("token");
-  const handleClose = async(userEditedId, emulatorEditedId) => {
+  const handleClose = async (userEditedId, emulatorEditedId) => {
+    reset();
+    resetField();
     // handle User edit
     setOpenUserPopup(false);
     const response = await fetch(USER_URL, {
@@ -74,8 +85,8 @@ const Home = () => {
       },
     });
     response.json().then((data) => {
-      setUpdatedData(data)
-    })
+      setUpdatedData(data);
+    });
     setUserToEdit(null);
 
     // handle user assign
@@ -174,6 +185,13 @@ const Home = () => {
                   handleClose={handleClose}
                   open={openUserPopup}
                   userToEdit={userToEdit}
+                  setValue={setValue}
+                  register={register}
+                  reset={reset}
+                  resetField={resetField}
+                  handleSubmit={handleSubmit}
+                  errors={errors}
+                  control={control}
                 />
 
                 {/* emulator telephone number edit popup */}
