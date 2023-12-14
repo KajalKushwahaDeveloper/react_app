@@ -100,7 +100,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route element={<PrivateRoutes isAdmin={isAdmin} />}>
+        <Route element={<PrivateRoutes isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}>
           <Route path="/home" element={<Home />} />
           <Route path="/gps" element={<GPS />} />
           {window.location.pathname === "/" && navigate("/login")}

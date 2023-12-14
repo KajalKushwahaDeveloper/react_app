@@ -5,7 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { CLIENT_CURRENT } from "../constants";
 
-const Navbar = ({ isAdmin }) => {
+const Navbar = ({ isAdmin, setIsAdmin }) => {
   const [menuIcon, setMenuIcon] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState();
@@ -14,6 +14,7 @@ const Navbar = ({ isAdmin }) => {
   
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setIsAdmin(false);
     navigate("/login");
   };
 
