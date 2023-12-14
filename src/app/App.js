@@ -105,6 +105,7 @@ function App() {
         <Route element={<PrivateRoutes isAdmin={isAdmin} />}>
           <Route path="/home" element={<Home />} />
           <Route path="/gps" element={<GPS />} />
+          {window.location.pathname === "/" && navigate("/login")}
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
         {baseRoutes === true && (
