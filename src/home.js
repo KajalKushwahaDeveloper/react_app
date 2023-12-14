@@ -25,6 +25,7 @@ const Home = () => {
   const [userAssingedEmulator, setUserAssingedEmulator] = useState(null);
   const [userEditedId, setUserEditedId] = useState(null);
   const [emulatorEditedId, setEmulatorEditedId] = useState(null);
+  const[generateIdUpdatedEm, setGenerateIdUpdatedEm] = useState(false);
 
   const [openChangeSsidPopup, setOpenChangeSsidPopup] = useState(false);
   const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
@@ -107,6 +108,8 @@ const Home = () => {
     setUserToEdit(data);
     setEmulatorToChangeSsid(data);
     setOpenChangeSsidPopup(true);
+    setGenerateIdUpdatedEm(false);
+    
   };
 
   //telephone update
@@ -162,6 +165,7 @@ const Home = () => {
                 emulatorEditedId={emulatorEditedId}
                 handleGeneratedIdButtonClick={handleGeneratedIdButtonClick}
                 emulatorData={emulatorData}
+                generateIdUpdatedEm={generateIdUpdatedEm}
               />
             </div>
             <div className="col-lg-6 mt-4 mt-lg-0">
@@ -191,6 +195,7 @@ const Home = () => {
                   emulatorToChangeSsid={emulatorToChangeSsid}
                   handleEmulatorSsidChanged={handleEmulatorSsidChanged}
                   handleAssignedUserToEmulator={handleAssignedUserToEmulator}
+                  setGenerateIdUpdatedEm={setGenerateIdUpdatedEm}
                 />
 
                 {/* assign user popup */}

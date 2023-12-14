@@ -16,6 +16,7 @@ import { EMULATOR_DELETE_URL } from "../constants";
 import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator";
 import { display } from "@material-ui/system";
 import { Tooltip } from "@mui/material";
+
 const EmulatorTable = ({
   showToast,
   handleAssignUserButtonClick,
@@ -25,6 +26,7 @@ const EmulatorTable = ({
   handleGeneratedIdButtonClick,
   emulatorEditedId,
   emulatorData,
+  generateIdUpdatedEm,
 }) => {
   // State variables
   const [emulators, setEmulators] = useState([]);
@@ -39,6 +41,12 @@ const EmulatorTable = ({
     setEmulators(emulatorData);
   }, [emulatorData]);
 
+
+  // useEffect(() => {
+  //   console.log("generateIdUpdatedEm", generateIdUpdatedEm)
+  //   fetchData();
+  // }, [generateIdUpdatedEm]);
+
   useEffect(() => {
     if (emulatorEditedId != null) {
       if (emulatorEditedId == 0) {
@@ -46,6 +54,7 @@ const EmulatorTable = ({
       } else {
         refreshEditedEmulator(emulatorEditedId);
       }
+     
     }
   }, [emulatorEditedId]);
 
@@ -208,6 +217,7 @@ const EmulatorTable = ({
 
   return (
     <div className="table-responsive tableBox">
+
       <table
         aria-label="custom pagination table"
         className="table shadow mb-0 n="
