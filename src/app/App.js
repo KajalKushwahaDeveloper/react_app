@@ -89,9 +89,7 @@ function App() {
     if (localStorage.getItem("token") && window.location.pathname === "/") {
       navigate(-1);
     } else if (window.location.pathname === "/") {
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+      navigate("/login");
     } else if (window.location.pathname === "/login") {
       navigate(-1);
     } else {
