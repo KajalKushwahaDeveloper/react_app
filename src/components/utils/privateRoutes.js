@@ -1,13 +1,17 @@
 import { Outlet, Navigate } from "react-router-dom";
 import Navbar from "../../components/navbar.js";
 
+import GPS from "../../gps.js";
 
-const PrivateRoutes = ({ isAdmin }) => {
-      let auth = localStorage.getItem("token");
+const PrivateRoutes = ({ isAdmin, setIsAdmin }) => {
+    let auth = localStorage.getItem("token");
     return(
       auth ? <>
-        <Navbar isAdmin={isAdmin} style={{ zIndex: 9998 }} />
-        <Outlet /> </>
+        <Navbar isAdmin={isAdmin} setIsAdmin={setIsAdmin} style={{ zIndex: 9998 }} />
+        {isAdmin === false ? (
+          <GPS />
+        ):  <Outlet />}
+        </>
         : <Navigate to='/login' />
     )
 }
