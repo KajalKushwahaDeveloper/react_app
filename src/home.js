@@ -25,6 +25,7 @@ const Home = () => {
   const [userEditedId, setUserEditedId] = useState(null);
   const [emulatorEditedId, setEmulatorEditedId] = useState(null);
 
+
   const [openChangeSsidPopup, setOpenChangeSsidPopup] = useState(false);
   const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
   const [emulatorData, setEmulatorData] = useState([]);

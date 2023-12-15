@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import  TablePagination,{
+import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
 
@@ -16,6 +16,7 @@ import { EMULATOR_DELETE_URL } from "../constants";
 import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator";
 import { display } from "@material-ui/system";
 import { Tooltip } from "@mui/material";
+
 const EmulatorTable = ({
   showToast,
   handleAssignUserButtonClick,
@@ -36,11 +37,9 @@ const EmulatorTable = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
-  useEffect(() =>{
+  useEffect(() => {
     setEmulators(emulatorData);
-  },[emulatorData]);
-
+  }, [emulatorData]);
 
   useEffect(() => {
     if (emulatorEditedId != null) {
@@ -49,6 +48,7 @@ const EmulatorTable = ({
       } else {
         refreshEditedEmulator(emulatorEditedId);
       }
+     
     }
   }, [emulatorEditedId]);
 
@@ -221,8 +221,12 @@ const EmulatorTable = ({
 
   return (
     <div className="table-responsive tableBox">
-      <table aria-label="custom pagination table" className="table shadow mb-0 n=">
-        <thead style={{background:"#007dc6"}}>
+
+      <table
+        aria-label="custom pagination table"
+        className="table shadow mb-0 n="
+      >
+        <thead style={{ background: "#007dc6" }}>
           <tr>
             <th>STATUS</th>
             <th>SERIAL NO</th>
@@ -241,14 +245,20 @@ const EmulatorTable = ({
           ).map((row) => (
             <tr key={row.id || "N/A"}>
               <td>{row.status || "N/A"}</td>
-              <td style={{  display: "flex",
-              alignItems:"center",
-              overflow: "hidden",
-              whiteSpace: "nowrap",}}>
+              <td
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  borderTop:"none"
+                }}
+              >
                 <div
                   style={{
                     maxWidth: "60px",
-                    marginTop:".8rem"
+                    margin: "1rem 0rem",
                   }}
                 >
                   <Tooltip
@@ -264,7 +274,7 @@ const EmulatorTable = ({
                         whiteSpace: "nowrap",
                         maxWidth: "150px",
                         textAlign: "center",
-                        fontWeight: "bold"
+                        fontWeight: "bold",
                       }}
                       align="right"
                     >
@@ -273,50 +283,59 @@ const EmulatorTable = ({
                   </Tooltip>
                 </div>
 
-                <IconButton
-                size="small"
-                  style={{
-                    height: "auto",
-                    width: "35px",
-                    float: "right",
-                  }}
-                  aria-label="edit"
-                >
-                  <EditIcon fontSize="small" onClick={() => handleGeneratedIdButtonClick(row)} />
-                </IconButton>
+                <div>
+                  <IconButton
+                    size="small"
+                    style={{
+                      height: "auto",
+                      width: "35px",
+                      float: "right",
+                    }}
+                    aria-label="edit"
+                  >
+                    <EditIcon
+                      fontSize="small"
+                      onClick={() => handleGeneratedIdButtonClick(row)}
+                    />
+                  </IconButton>
+                </div>
               </td>
-              <td  align="right">
-                {row.telephone || "N/A"}
-              </td>
+              <td align="right">{row.telephone || "N/A"}</td>
               <td align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td
-                style={{ display:"flex",width: "auto", padding:".5rem 0"}}
-                align="right"
-              >
+              <td style={{ display:"flex", width: "auto" ,borderBottom:"none"}} align="right">
                 <IconButton size="small" aria-label="delete">
-                  <EditIcon fontSize="small" onClick={() => handleEmulatorTelephonePopup(row)} />
+                  <EditIcon
+                    fontSize="small"
+                    onClick={() => handleEmulatorTelephonePopup(row)}
+                  />
                 </IconButton>
                 <IconButton
-                size="small"
+                  size="small"
                   style={{
                     margin: "2px",
                   }}
                   aria-label="delete"
                 >
-                  <DeleteIcon fontSize="small" onClick={() => handleDeleteButtonClick(row)} />
+                  <DeleteIcon
+                    fontSize="small"
+                    onClick={() => handleDeleteButtonClick(row)}
+                  />
                 </IconButton>
+                <div>
                 <button
                   style={{
                     backgroundColor: row.user === null ? "green" : "red",
                     // width: row.user === null ? "95px" : "",
                     width: "6.5rem",
+                    padding: ".4rem 0",
                   }}
                   onClick={() => handleActionButtonClick(row)}
                 >
                   {row.user === null ? "assign" : "unassign"}
                 </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -324,7 +343,7 @@ const EmulatorTable = ({
 
         <tfoot className="table_footer" style={{ border: "none" }}>
           <tr style={{ textAlign: "center" }}>
-            <td colSpan={5} style={{ textAlign: "right", paddingTop:".5rem"}}>
+            <td colSpan={5} style={{ textAlign: "right", paddingTop: ".5rem" }}>
               <CustomTablePagination
                 rowsPerPageOptions={[10, 20, 30, { label: "All", value: -1 }]}
                 colSpan={5}

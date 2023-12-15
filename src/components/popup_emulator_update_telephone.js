@@ -30,6 +30,7 @@ const PopUpEmulatorTelephone = ({
   const [twilioNumber, setTwilioUpdatedPhone] = useState("");
   const [alternateNumber, setAlternateNumber] = useState("");
   const [error, setError] = useState("");
+  const [selectedDropdownValue, setSelectedDropdownValue] = useState(null);
 
   useEffect(() => {
     if (userToEdit) {
@@ -40,9 +41,13 @@ const PopUpEmulatorTelephone = ({
   }, [userToEdit]);
   console.log("twilioUpdatedPhone", twilioNumber);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("twilioNumber:", twilioNumber);
+    if (!twilioNumber) {
+      alert("Telephone Number is empty, Please select a number.");
+      return;
+    }
 
     try {
       const { success, error } = await addUser();
@@ -63,13 +68,15 @@ const PopUpEmulatorTelephone = ({
       console.log("Error occurred while adding Telephone Number:", error);
       setError("An error occurred while adding Telephone Number");
     }
+    setTwilioUpdatedPhone("");
+    setAlternateNumber("");
   };
 
   const addUser = async () => {
-    const user = {  
-      id:id,
-      telephone:twilioNumber,
-      alternateTelephone:alternateNumber,
+    const user = {
+      id: id,
+      telephone: twilioNumber,
+      alternateTelephone: alternateNumber,
     };
 
     const token = localStorage.getItem("token");
@@ -118,15 +125,33 @@ const PopUpEmulatorTelephone = ({
             <ClearIcon />
           </IconButton>
           <form onSubmit={handleSubmit}>
-            <h1 style={{ marginBottom: "2rem" ,fontSize:"1.5rem", fontWeight:"600"}}> Assign Phone Number</h1>
+            <h1
+              style={{
+                marginBottom: "2rem",
+                fontSize: "1.5rem",
+                fontWeight: "600",
+              }}
+            >
+              {" "}
+              Assign Phone Number
+            </h1>
 
-            <DropDown 
-              setTwilioUpdatedPhone = {setTwilioUpdatedPhone} 
-              alternateNumber = {alternateNumber}
-              setAlternateNumber = {setAlternateNumber}
+            <DropDown
+              setTwilioUpdatedPhone={setTwilioUpdatedPhone}
+              alternateNumber={alternateNumber}
+              setAlternateNumber={setAlternateNumber}
+              setSelectedDropdownValue={setSelectedDropdownValue}
             />
 
-            <button type="submit" style={{width:"6rem",float:"right",marginRight:"0px",padding:".5rem 0"}}>
+            <button
+              type="submit"
+              style={{
+                width: "6rem",
+                float: "right",
+                marginRight: "0px",
+                padding: ".5rem 0",
+              }}
+            >
               Add
             </button>
             {error && <p className="error">{error}</p>}
