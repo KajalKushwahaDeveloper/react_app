@@ -148,8 +148,11 @@ const UserTable = ({
       });
       console.log("refreshUser response:", response);
 
+      // eslint-disable-next-line no-mixed-operators
       if (!response.ok || response.status !== 200) {
-        showToast("Failed to update user table", "error");
+        if (userId !== undefined) {
+          showToast("Failed to update user table1122", "error");
+        }
         return { success: false, error: "Failed to unassign user" };
       }
       const responseData = await response.text();

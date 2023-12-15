@@ -58,6 +58,7 @@ const createEmulatorsSlice: StateCreator<
         get().setTripData(selectedEmulator);
       }
       set({ emulators });
+      return emulators;
     } catch (error) {
       console.error("V2 Failed to fetch emulators:", error);
     }
