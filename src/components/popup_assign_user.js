@@ -220,14 +220,13 @@ const UserAssignDropDown = (props) => {
               input={<OutlinedInput label="Name" />}
               MenuProps={MenuProps}
             >
-              {console.log("users23:", users)}
-              {users?.map((user) => (
-
-                <MenuItem key={user.id} value={user.id}>
-                  {user.status === "ENABLED" &&`${user.firstName} ${user.lastName}`}
-                </MenuItem>
-                
-              ))}
+              {users
+                ?.filter((userData) => userData.status === "ENABLED")
+                .map((user) => (
+                  <MenuItem key={user.id} value={user.id}>
+                    {user.firstName} {user.lastName}
+                  </MenuItem>
+                ))}
             </Select>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
