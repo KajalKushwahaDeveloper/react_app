@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import  TablePagination,{
+import TablePagination, {
   tablePaginationClasses as classes,
 } from "@mui/base/TablePagination";
 import { Modal } from "@mui/material";
@@ -56,8 +56,8 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
     setPage(0);
   };
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+  // const emptyRows =
+  //   rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
   return (
     <div>
@@ -77,7 +77,8 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
                 <ol style={{ maxHeight: "150px", overflowY: "auto" }}>
                   <li>
                     Latitude: {historyRowSelected.cancelDetails.latitude} <br />
-                    Longitude: {historyRowSelected.cancelDetails.longitude}<br />
+                    Longitude: {historyRowSelected.cancelDetails.longitude}
+                    <br />
                     deleteTime: {historyRowSelected.cancelDetails.deleteTime}
                   </li>
                 </ol>
@@ -89,9 +90,12 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
               <ol style={{ maxHeight: "150px", overflowY: "auto" }}>
                 {historyRowSelected.tripPoints.map((point, index) => (
                   <li key={index}>
-                    Latitude: {point.lat}<br />
-                    Longitude: {point.lng}<br />
-                    Bearing:{point.bearing}<br />
+                    Latitude: {point.lat}
+                    <br />
+                    Longitude: {point.lng}
+                    <br />
+                    Bearing:{point.bearing}
+                    <br />
                     Distance: {point.distance}
                   </li>
                 ))}
@@ -154,101 +158,107 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
         </Modal>
       )}
 
-      <table aria-label="custom pagination table">
-        <thead>
-          <tr>
-            <th>FROM</th>
-            <th>TO</th>
-            <th>DISTANCE</th>
-            <th>TIME</th>
-            <th>ACTION</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
-          ).map((row) => {
-            const fromAddress =
-              row?.fromAddress[0]?.long_name +
-                ", " +
-                row?.fromAddress[1]?.long_name +
-                ", " +
-                row?.fromAddress[2]?.long_name +
-                ", " +
-                row?.fromAddress[3]?.long_name || "N/A";
+      {data.length !== 0 ? (
+        <table aria-label="custom pagination table">
+          <thead>
+            <tr>
+              <th>FROM</th>
+              <th>TO</th>
+              <th>DISTANCE</th>
+              <th>TIME</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(rowsPerPage > 0
+              ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : data
+            ).map((row) => {
+              const fromAddress =
+                row?.fromAddress[0]?.long_name +
+                  ", " +
+                  row?.fromAddress[1]?.long_name +
+                  ", " +
+                  row?.fromAddress[2]?.long_name +
+                  ", " +
+                  row?.fromAddress[3]?.long_name || "N/A";
 
-            const toAddress =
-              row?.toAddress[0]?.long_name +
-                ", " +
-                row?.toAddress[1]?.long_name +
-                ", " +
-                row?.toAddress[2]?.long_name +
-                " ," +
-                row?.toAddress[3]?.long_name || "N/A";
+              const toAddress =
+                row?.toAddress[0]?.long_name +
+                  ", " +
+                  row?.toAddress[1]?.long_name +
+                  ", " +
+                  row?.toAddress[2]?.long_name +
+                  " ," +
+                  row?.toAddress[3]?.long_name || "N/A";
 
-            const distance = row.distance
-              ? row.distance.toFixed(2) + " Miles"
-              : "N/A";
-            const time = row.distance
-              ? ((row.distance / row.velocity) * 60).toFixed(2)
-              : null;
-
-            const hours = time ? Math.floor(time / 60) : null;
-            const minutes = time ? (time % 60).toFixed() : null;
-
-            const formattedTime =
-              time && !isNaN(hours) && !isNaN(minutes)
-                ? `${hours} hour${hours !== 1 ? "s" : ""}, ${minutes} minute${
-                    minutes !== "1" ? "s" : ""
-                  }`
+              const distance = row.distance
+                ? row.distance.toFixed(2) + " Miles"
                 : "N/A";
+              const time = row.distance
+                ? ((row.distance / row.velocity) * 60).toFixed(2)
+                : null;
 
-            return (
-              <tr key={row.id || "N/A"}>
-                <td>{fromAddress || "N/A"}</td>
-                <td>{toAddress || "N/A"}</td>
-                <td>{distance}</td>
-                <td>{formattedTime}</td>
-                <td>
-                  <IconButton
-                    style={{
-                      height: "auto",
-                      width: "40px",
-                      margin: "2px",
-                      color: "#ffffff",
-                      backgroundColor: "#666666",
-                    }}
-                    aria-label="delete"
-                  >
-                    <InsightsIcon
+              const hours = time ? Math.floor(time / 60) : null;
+              const minutes = time ? (time % 60).toFixed() : null;
+
+              const formattedTime =
+                time && !isNaN(hours) && !isNaN(minutes)
+                  ? `${hours} hour${hours !== 1 ? "s" : ""}, ${minutes} minute${
+                      minutes !== "1" ? "s" : ""
+                    }`
+                  : "N/A";
+
+              return (
+                <tr key={row.id || "N/A"}>
+                  <td>{fromAddress || "N/A"}</td>
+                  <td>{toAddress || "N/A"}</td>
+                  <td>{distance}</td>
+                  <td>{formattedTime}</td>
+                  <td>
+                    <IconButton
+                      style={{
+                        height: "auto",
+                        width: "40px",
+                        margin: "2px",
+                        color: "#ffffff",
+                        backgroundColor: "#666666",
+                      }}
+                      aria-label="delete"
+                      text
                       onClick={() => handleActionButtonClick(row)}
-                    />
-                  </IconButton>
-                </td>
-              </tr>
-            );
-          })}
-          {emptyRows > 0 && (
+                    >
+                      <InsightsIcon />
+                    </IconButton>
+                  </td>
+                </tr>
+              );
+            })}
+            {/* {emptyRows > 0 && (
             <tr style={{ height: 34 * emptyRows }}>
               <td colSpan={5} />
             </tr>
-          )}
-        </tbody>
-        <tfoot>
-          <tr>
-            <CustomTablePagination
-              rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
-              colSpan={5}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </tr>
-        </tfoot>
-      </table>
+          )} */}
+          </tbody>
+          <tfoot>
+            <tr>
+              <CustomTablePagination
+                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                colSpan={5}
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </tr>
+          </tfoot>
+        </table>
+      ) : (
+        <div style={{display: 'flex'}}>
+          <p style={{margin: '15px 0px -15px auto'}}>No records found!</p>
+        </div>
+      )}
     </div>
   );
 };
@@ -327,6 +337,7 @@ const CustomTablePagination = styled(TablePagination)(
       /* Update the displayed rows styles */
       & .${classes.displayedRows} {
         margin-left: 2rem;
+        margin-bottom: unset;
       }
       `
 );

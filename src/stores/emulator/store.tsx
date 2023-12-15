@@ -6,6 +6,7 @@ import {
   defaultLng,
   defaultLat,
   compareEmulators,
+  compareEmulatorsCompletely,
 } from "./types_maps.tsx";
 import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
@@ -76,7 +77,7 @@ const createEmulatorsSlice: StateCreator<
   },
 
   updateEmulators: (newEmulators) => {
-    const isUpdatedEmulators = compareEmulators(get().emulators, newEmulators);
+    const isUpdatedEmulators = compareEmulatorsCompletely(get().emulators, newEmulators);
 
     if (isUpdatedEmulators === false) {
       return;
@@ -120,6 +121,7 @@ const createTripDataSlice: StateCreator<
       selectedEmulator === undefined ||
       token === null
     ) {
+      //clear trip Data
       set({ tripData: null, pathTraveled: null, pathNotTraveled: null });
     } else {
       try {

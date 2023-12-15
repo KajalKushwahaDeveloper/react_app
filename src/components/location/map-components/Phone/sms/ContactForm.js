@@ -92,7 +92,7 @@ export function ContactForm({
         <UploadFiles setFileNames={setFileNames} showToast={showToast} />
 
         {/*Submit button */}
-        <Button type="submit" variant="contained" color="primary">
+        <Button type="submit" variant="contained" color="primary" sx={{marginTop: '1rem'}}>
           SEND
         </Button>
       </form>
