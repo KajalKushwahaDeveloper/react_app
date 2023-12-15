@@ -305,10 +305,9 @@ const EmulatorTable = ({
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
               <td style={{ display:"flex", width: "auto" ,borderBottom:"none"}} align="right">
-                <IconButton size="small" aria-label="delete">
+                <IconButton size="small" aria-label="delete" onClick={() => handleEmulatorTelephonePopup(row)}>
                   <EditIcon
                     fontSize="small"
-                    onClick={() => handleEmulatorTelephonePopup(row)}
                   />
                 </IconButton>
                 <IconButton
@@ -317,10 +316,10 @@ const EmulatorTable = ({
                     margin: "2px",
                   }}
                   aria-label="delete"
+                  onClick={() => handleDeleteButtonClick(row)}
                 >
                   <DeleteIcon
                     fontSize="small"
-                    onClick={() => handleDeleteButtonClick(row)}
                   />
                 </IconButton>
                 <div>
