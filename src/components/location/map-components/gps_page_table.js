@@ -37,21 +37,22 @@ import { useViewPort } from "../../../ViewportProvider";
 import { useStates } from "../../../StateProvider";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import {
-  compareEmulators,
+  compareEmulatorsCompletely,
   compareSelectedEmulator,
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+
   const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
-      const diff = compareEmulators(oldEmulators, newEmulators);
+      const diff = compareEmulatorsCompletely(oldEmulators, newEmulators);
       if (diff === true) {
         console.log("emulators changed ");
       }
-      compareEmulators(oldEmulators, newEmulators);
+      compareEmulatorsCompletely(oldEmulators, newEmulators);
     }
   );
 
