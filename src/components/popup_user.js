@@ -1,14 +1,12 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import "../scss/login.scss";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import { USER_URL } from "../constants";
 import ApiService from "../ApiService";
-import { useForm } from "react-hook-form";
-import PhoneInput from "react-phone-number-input";
+import PhoneInputWithCountry from "react-phone-number-input/react-hook-form"
 import "react-phone-number-input/style.css";
 
 const style = {
@@ -30,40 +28,34 @@ const PopUpUser = ({
   handleOpen,
   open,
   userToEdit,
+  setValue,
+  reset,
+  resetField,
+  register,
+  handleSubmit,
+  errors,
+  control,
+  setUpdateSerial
 }) => {
-  const navigate = useNavigate();
+
   const [id, setId] = useState("");
-  const [email, setEmail] = useState("");
-  const [telephone, setTelephone] = useState("");
   const [password, setEditPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [error, setError] = useState("");
-  const [teleError, setTeleError] = useState("");
 
   const token = localStorage.getItem("token");
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    resetField,
-    formState: { errors },
-  } = useForm();
-
   useEffect(() => {
+    
     if (userToEdit) {
       setValue("firstname", userToEdit.firstName);
       setValue("lastname", userToEdit.lastName);
       setValue("email", userToEdit.email);
-      setTelephone(userToEdit.telephone);
+      setValue("telephone", userToEdit.telephone);
       setId(userToEdit.id);
     }
     else
     {
       reset();
-      setTelephone("");
       resetField();
     }
   }, [userToEdit]);
@@ -73,38 +65,37 @@ const PopUpUser = ({
   };
 
   const handleSubmitData = async (data) => {
-    if (!telephone) {
-      setTeleError("Please enter your telephone number");
-    }
-    else {
       try {
         const { success, error } = await addOrUpdate(data);
         if (success) {
           if (userToEdit != null) {
-            
+            reset();
+            resetField();
             handleClose(userToEdit?.id, null);
           } else {
             handleClose(0, null);
+            
           }
           if (userToEdit) {
             showToast("User Updated", "success"); // Call the showToast method with two arguments
+            reset();
           } else {
             reset();
-            setTelephone("");
             showToast("User Added", "success"); // Call the showToast method with two arguments
           }
           // navigate("/home"); // Redirect to the home page
         } else {  
-          handleClose(0, null);
           reset();
-          setTelephone("");
+          resetField();
+          handleClose(0, null);
+          
           showToast(error || "Failed to add user", "error"); // Call the showToast method with two arguments
           setError(error || "Failed to add user"); // Display appropriate error message
         }
       } catch (error) {
         setError("An error occurred while adding user"); // Display a generic error message
       }
-    }
+    // }
   };
 
   const addOrUpdate = async (data) => {
@@ -113,10 +104,10 @@ const PopUpUser = ({
       firstName: data.firstname,
       lastName: data.lastname,
       email: data.email,
-      telephone: telephone,
+      telephone: data.telephone,
       password: password,
     };
-
+    
 
     try {
       var requestType = "POST";
@@ -236,18 +227,23 @@ const PopUpUser = ({
               </p>
             )}
 
-            <PhoneInput
+            <PhoneInputWithCountry
+            name="telephone"
+            id="telephone"
+            control={control}
               international
               countryCallingCodeEditable={false}
-              selec
               defaultCountry="US"
-              value={telephone}
               limitMaxLength={10}
-              onChange={setTelephone}
+              rules={{ required: {
+                value: true,
+                message: "Telephone is required!",
+              }}}
             />
-            {teleError && (
+            
+            {errors.telephone && (
               <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
-                {teleError}
+                {errors.telephone.message}
               </p>
             )}
             {userToEdit && (
