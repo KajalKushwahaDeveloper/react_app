@@ -26,7 +26,6 @@ const EmulatorTable = ({
   handleGeneratedIdButtonClick,
   emulatorEditedId,
   emulatorData,
-  generateIdUpdatedEm,
 }) => {
   // State variables
   const [emulators, setEmulators] = useState([]);
@@ -42,10 +41,6 @@ const EmulatorTable = ({
   }, [emulatorData]);
 
 
-  // useEffect(() => {
-  //   console.log("generateIdUpdatedEm", generateIdUpdatedEm)
-  //   fetchData();
-  // }, [generateIdUpdatedEm]);
 
   useEffect(() => {
     if (emulatorEditedId != null) {

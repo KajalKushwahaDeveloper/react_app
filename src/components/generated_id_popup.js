@@ -74,7 +74,6 @@ const ChangeEmulatorSsidPopup = (props) => {
     handleClose,
     emulatorToChangeSsid,
     handleAssignedUserToEmulator,
-    setGenerateIdUpdatedEm,
   } = props;
   const theme = useTheme();
 
@@ -128,7 +127,7 @@ const ChangeEmulatorSsidPopup = (props) => {
       console.log("Error occurred while adding user:", error);
       setError("An error occurred while adding user");
     }
-    setGenerateIdUpdatedEm(true);
+  
   };
 
   const handleChange = (event) => {
