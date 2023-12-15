@@ -74,6 +74,7 @@ const ChangeEmulatorSsidPopup = (props) => {
     handleClose,
     emulatorToChangeSsid,
     handleAssignedUserToEmulator,
+    setUpdateSerial
   } = props;
   const theme = useTheme();
 
@@ -115,9 +116,9 @@ const ChangeEmulatorSsidPopup = (props) => {
       );
       if (success) {
         console.log("Emulator Updated : " + data);
-        showToast("Emulator Updated : ", "success");
+        showToast("Emulator Updated ", "success");
         handleClose(data.id, null)
-        handleAssignedUserToEmulator(true, null, data);
+        //handleAssignedUserToEmulator(true, null, data);
       } else {
         setError(error || "Emulator Not Updated");
         showToast("Emulator Not Updated", "error");
@@ -127,6 +128,7 @@ const ChangeEmulatorSsidPopup = (props) => {
       console.log("Error occurred while adding user:", error);
       setError("An error occurred while adding user");
     }
+    setUpdateSerial(true);
   };
 
   const handleChange = (event) => {

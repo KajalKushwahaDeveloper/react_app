@@ -29,6 +29,8 @@ const Home = () => {
   const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
   const [emulatorData, setEmulatorData] = useState([]);
   const [updatedData, setUpdatedData] = useState([]);
+  const [updateSerial, setUpdateSerial] = useState(false);
+
 
   const {
     register,
@@ -85,7 +87,7 @@ const Home = () => {
       },
     });
     response.json().then((data) => {
-      setUpdatedData(data);
+      //setUpdatedData(data);
     });
     setUserToEdit(null);
 
@@ -118,6 +120,7 @@ const Home = () => {
     setUserToEdit(data);
     setEmulatorToChangeSsid(data);
     setOpenChangeSsidPopup(true);
+    setUpdateSerial(false);
   };
 
   //telephone update
@@ -173,6 +176,7 @@ const Home = () => {
                 emulatorEditedId={emulatorEditedId}
                 handleGeneratedIdButtonClick={handleGeneratedIdButtonClick}
                 emulatorData={emulatorData}
+                updateSerial={updateSerial}
               />
             </div>
             <div className="col-lg-6 mt-4 mt-lg-0">
@@ -209,6 +213,7 @@ const Home = () => {
                   emulatorToChangeSsid={emulatorToChangeSsid}
                   handleEmulatorSsidChanged={handleEmulatorSsidChanged}
                   handleAssignedUserToEmulator={handleAssignedUserToEmulator}
+                  setUpdateSerial={setUpdateSerial}
                 />
 
                 {/* assign user popup */}

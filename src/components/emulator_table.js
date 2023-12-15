@@ -24,7 +24,8 @@ const EmulatorTable = ({
   handleEmulatorTelephonePopup,
   handleGeneratedIdButtonClick,
   emulatorEditedId,
-  emulatorData
+  emulatorData,
+  updateSerial,
 }) => {
   // State variables
   const [emulators, setEmulators] = useState([]);
@@ -50,6 +51,16 @@ const EmulatorTable = ({
       }
     }
   }, [emulatorEditedId]);
+
+  useEffect( () => {
+    const updateSerialEmu = async () => {
+      const { success, data, error } = await GetEmulatorApi();
+      if (success) {
+        setEmulators(data);
+      }
+    }
+    updateSerialEmu();
+  },[updateSerial])
 
   // Fetch data from API
   const refreshEditedEmulator = async (emulatorEditedId) => {

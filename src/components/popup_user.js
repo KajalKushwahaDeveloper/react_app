@@ -34,7 +34,8 @@ const PopUpUser = ({
   register,
   handleSubmit,
   errors,
-  control
+  control,
+  setUpdateSerial
 }) => {
 
   const [id, setId] = useState("");
