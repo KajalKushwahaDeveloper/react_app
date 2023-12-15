@@ -87,7 +87,7 @@ const Home = () => {
       },
     });
     response.json().then((data) => {
-      //setUpdatedData(data);
+    setUpdatedData(data);
     });
     setUserToEdit(null);
 
