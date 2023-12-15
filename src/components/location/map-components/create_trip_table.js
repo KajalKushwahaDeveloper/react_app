@@ -14,7 +14,6 @@ import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx
 const CreateTripTable = () => {
   
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-  
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
@@ -54,7 +53,7 @@ const CreateTripTable = () => {
 
   const handleAddClick = async () => {
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
-      setError("Please fill both locations.");
+      showToast("Please fill both locations!", "error");
       return;
     }
 

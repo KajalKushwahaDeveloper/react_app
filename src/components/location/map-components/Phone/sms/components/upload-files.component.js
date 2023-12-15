@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import UploadService from "../services/upload-files.service";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "../../../../../../scss/ContactForm.scss";
+import { IconButton } from "@mui/material";
 
 export default class UploadFiles extends Component {
   constructor(props) {
@@ -125,7 +126,7 @@ export default class UploadFiles extends Component {
     return (
       <div>
         {currentFile && (
-          <div className="progress">
+          <div className="progress mt-3 mb-3" style={{width: "93%", display: 'block', margin: 'auto'}}>
             <div
               className="progress-bar progress-bar-info progress-bar-striped"
               role="progressbar"
@@ -139,20 +140,20 @@ export default class UploadFiles extends Component {
           </div>
         )}
 
-        <label className="btn btn-default" style={{width:"93%"}}>
-          <input type="file" onChange={this.selectFile} className="smsInput"/>
+        <label className="btn btn-default" style={{width:"100%"}}>
+          <input type="file" onChange={this.selectFile} className="inputField"/>
           
         </label>
 
         <button
-          className="btn btn-success"
+          className="btn btn-success ms-4 align-items-center"
           disabled={!selectedFiles}
           onClick={this.upload}
         >
           Upload
         </button>
 
-        <div className="alert alert-light" role="alert">
+        <div className="alert alert-light pb-2" role="alert">
           {message}
         </div>
 
@@ -162,8 +163,12 @@ export default class UploadFiles extends Component {
             {fileInfos &&
               fileInfos.map((file, index) => (
                 <li className="list-group-item" key={index}>
-                  <a className="card_list" href={file.url}>{file.name}</a>
-                  <DeleteIcon onClick={() => this.handleDeleteButtonClick(index)} />
+                  <div className="d-flex justify-content-between align-items-center">
+                  <a className="card_list" href={file.url} style={{fontSize: 14}}>{file.name}</a>
+                  <IconButton onClick={() => this.handleDeleteButtonClick(index)} size="small">
+                  <DeleteIcon color="error" fontSize="10" />
+                  </IconButton>
+                  </div>
                 </li>
               ))}
           </ul>

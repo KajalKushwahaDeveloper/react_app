@@ -10,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
-const CreateTripButton = ( ) => {
+const CreateTripButton = () => {
   const { width, height } = useViewPort();
   const {
     showToast,
@@ -19,19 +19,22 @@ const CreateTripButton = ( ) => {
     isTableVisible,
     tripData,
   } = useStates();
-  
+
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-
+  const storetripData = useEmulatorStore((state) => state.tripData);
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
       // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
-      if(diff === true) {
-        console.log("selectedEmulator changed (CreateTripButton)", );
+      const diff = compareSelectedEmulator(
+        oldSelectedEmulator,
+        newSelectedEmulator
+      );
+      if (diff === true) {
+        console.log("selectedEmulator changed (CreateTripButton)");
       }
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
     }
   );
   const breakpoint = 620;
@@ -58,7 +61,9 @@ const CreateTripButton = ( ) => {
   };
 
   const handleCancelTripClick = async () => {
-    const confirmed = window.confirm("Delete this trip?");
+    const confirmed = window.confirm(
+      `Are you want to cancel ${storetripData?.fromAddress[0]?.long_name} to ${storetripData?.toAddress[0]?.long_name} trip?`
+    );
     if (confirmed) {
       const token = localStorage.getItem("token");
 
@@ -88,26 +93,27 @@ const CreateTripButton = ( ) => {
   };
 
   useEffect(() => {
-    if ( tripData !== null || selectedEmulator !== null ) {
+    if (storetripData !== null && selectedEmulator !== null) {
       setHideCancel(true);
     } else {
       setHideCancel(false);
     }
-  }, [tripData, selectedEmulator]);
+  }, [storetripData, selectedEmulator]);
 
   return (
     <div
       style={
-        isMobileBelowSixTwenty ?{
-        display: "flex",
-        justifyContent: "space-around",
-        marginTop: "1rem",
-      }:{
-        display: "flex",
-        justifyContent: "space-around",
-  
+        isMobileBelowSixTwenty
+          ? {
+              display: "flex",
+              justifyContent: "space-around",
+              marginTop: "1rem",
+            }
+          : {
+              display: "flex",
+              justifyContent: "space-around",
+            }
       }
-    }
     >
       <button
         style={

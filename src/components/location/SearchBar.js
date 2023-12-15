@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -7,176 +7,144 @@ import TextField from "@material-ui/core/TextField";
 import { classnames } from "../../helpers";
 import "../../css/auto_complete.css";
 
-class SearchBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inputValue:"",
-      address: "",
-      errorMessage: "",
-      latitude: null,
-      longitude: null,
-      addressComponent: null,
-      isGeocoding: false,
-    };
-  }
+const SearchBar = (props) => {
+  const [inputValue, setInputValue] = useState("");
+  const [address, setAddress] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [addressComponent, setAddressComponent] = useState(null);
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
-  handleChange = (address) => {
-    this.setState({
-      address,
-      latitude: null,
-      longitude: null,
-      addressComponent: null,
-      errorMessage: "",
-    });
+  const handleChange = (newAddress) => {
+    setAddress(newAddress);
+    setLatitude(null);
+    setLongitude(null);
+    setAddressComponent(null);
+    setErrorMessage("");
   };
 
-
-  handleSelect = (selected) => {
-    this.setState({ isGeocoding: true, address: selected });
+  const handleSelect = (selected) => {
+    setIsGeocoding(true);
+    setAddress(selected);
     geocodeByAddress(selected)
       .then((res) => {
         console.log(res[0].address_components);
         res[0].address_components &&
-          this.setState({ addressComponent: res[0].address_components }); // Save addressComponent in state
+          setAddressComponent(res[0].address_components);
         return getLatLng(res[0]);
       })
       .then(({ lat, lng }) => {
-        this.setState({
-          latitude: lat,
-          longitude: lng,
-          isGeocoding: false,
-        });
+        setLatitude(lat);
+        setLongitude(lng);
+        setIsGeocoding(false);
       })
       .catch((error) => {
-        this.setState({ isGeocoding: false });
+        setIsGeocoding(false);
         console.log("error", error);
       });
   };
 
-  handleCloseClick = () => {
-    this.setState({
-      address: "",
-      latitude: null,
-      longitude: null,
-      addressComponent: null,
-    });
+  const handleCloseClick = () => {
+    setAddress("");
+    setLatitude(null);
+    setLongitude(null);
+    setAddressComponent(null);
   };
 
-  handleError = (status, clearSuggestions) => {
+  const handleError = (status, clearSuggestions) => {
     console.log("Error from Google Maps API", status);
-    this.setState({ errorMessage: status }, () => {
-      clearSuggestions();
-    });
-  };
-  handleInputChange = (event) => {
-    this.setState({ inputValue: event.target.value });
+    setErrorMessage(status);
+    clearSuggestions();
   };
 
-  render() {
-    const {
-      inputValue,
-      address,
-      errorMessage,
-      latitude,
-      longitude,
-      addressComponent,
-      isGeocoding,
-    } = this.state;
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
 
+  useEffect(() => {
     console.log("CHECK : ", latitude);
-    this.props.setLat(latitude);
-    this.props.setAddress(addressComponent);
-    this.props.setLong(longitude);
-    
-    
-    return (
-      <div>
-        <PlacesAutocomplete
-          onChange={this.handleChange}
-          value={address}
-          onSelect={this.handleSelect}
-          onError={this.handleError}
-          shouldFetchSuggestions={address.length > 2}
-        >
-          {({ getInputProps, suggestions, getSuggestionItemProps }) => {
-            return (
-              <div className="Demo__search-bar-container">
-                <div className="Demo__search-input-container">
-                  <TextField
-                    id="filled-basic"
-                    label="Search Location"
-                    variant="filled"
-                    value={inputValue}
-                    onChange={this.handleInputChange}
-                    {...getInputProps({
-                      placeholder: "Search Places...",
-                      className: "Demo__search-input",
-                    })}
-                  />
-                </div>
-               
-                {/* {this.state.address.length > 0 && (
-                  <div style={{ float: "right" }}>
-                    <button
-                      className="Demo__clear-button"
-                      onClick={this.handleCloseClick}
-                    >
-                      x
-                    </button>
-                  </div>
-                )} */}
-                {suggestions.length > 0 && (
-                  <div
-                    className="Demo__autocomplete-container"
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      overflowY: "scroll",
-                      maxHeight: "70px",
-                      width: "210px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {suggestions.map((suggestion) => {
-                      const className = classnames("Demo__suggestion-item", {
-                        "Demo__suggestion-item--active": suggestion.active,
-                      });
-                      return (
-                        <div
-                          {...getSuggestionItemProps(suggestion, { className })}
-                        >
-                          <strong>
-                            {suggestion.formattedSuggestion.mainText}
-                          </strong>{" "}
-                          <small>
-                            {suggestion.formattedSuggestion.secondaryText}
-                          </small>
-                        </div>
-                      );
-                    })}
+    props.setLat(latitude);
+    props.setAddress(addressComponent);
+    props.setLong(longitude);
+  }, [latitude, longitude, addressComponent, props]);
 
-                    <div className="Demo__dropdown-footer">
-                      <div>
-                        <img
-                          style={{ width: "2rem" }}
-                          src={require("../../images/powered_by_google_default.png")}
-                          className="Demo__dropdown-footer-image"
-                        />
+
+  return (
+    <div>
+      <PlacesAutocomplete
+        onChange={handleChange}
+        value={address}
+        onSelect={handleSelect}
+        onError={handleError}
+        shouldFetchSuggestions={address.length > 2}
+      >
+        {({ getInputProps, suggestions, getSuggestionItemProps }) => {
+          return (
+            <div className="Demo__search-bar-container">
+              <div className="Demo__search-input-container">
+                <TextField
+                  id="filled-basic"
+                  label="Search Location"
+                  variant="filled"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  {...getInputProps({
+                    placeholder: "Search Places...",
+                    className: "Demo__search-input",
+                  })}
+                />
+              </div>
+              {suggestions.length > 0 && (
+                <div
+                  className="Demo__autocomplete-container"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    overflowY: "scroll",
+                    maxHeight: "70px",
+                    width: "210px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {suggestions.map((suggestion) => {
+                    const className = classnames("Demo__suggestion-item", {
+                      "Demo__suggestion-item--active": suggestion.active,
+                    });
+                    return (
+                      <div
+                        {...getSuggestionItemProps(suggestion, { className })}
+                      >
+                        <strong>
+                          {suggestion.formattedSuggestion.mainText}
+                        </strong>{" "}
+                        <small>
+                          {suggestion.formattedSuggestion.secondaryText}
+                        </small>
                       </div>
+                    );
+                  })}
+
+                  <div className="Demo__dropdown-footer">
+                    <div>
+                      <img
+                        style={{ width: "2rem" }}
+                        src={require("../../images/powered_by_google_default.png")}
+                        className="Demo__dropdown-footer-image"
+                      />
                     </div>
                   </div>
-                )}
-              </div>
-            );
-          }}
-        </PlacesAutocomplete>
-        {errorMessage.length > 0 && (
-          <div className="Demo__error-message">{this.state.errorMessage}</div>
-        )}
-      </div>
-    );
-  }
-}
+                </div>
+              )}
+            </div>
+          );
+        }}
+      </PlacesAutocomplete>
+      {errorMessage.length > 0 && (
+        <div className="Demo__error-message">{errorMessage}</div>
+      )}
+    </div>
+  );
+};
 
 export default SearchBar;
