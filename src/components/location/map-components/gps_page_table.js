@@ -44,11 +44,9 @@ import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.t
 
 const GpsTable = () => {
 
-  const [emulators, setEmulators] = useState();
-
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
-  /* const emulators = useEmulatorStore(
+  const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
       const diff = compareEmulatorsCompletely(oldEmulators, newEmulators);
@@ -57,12 +55,7 @@ const GpsTable = () => {
       }
       compareEmulatorsCompletely(oldEmulators, newEmulators);
     }
-  ); */
-  
-  useEffect(async () => {
-    const responseFetchData = await fetchEmulators();
-    setEmulators(responseFetchData);
-  }, []);
+  );
 
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
