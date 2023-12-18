@@ -110,8 +110,8 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/gps" element={<GPS />} />
           <Route path="/redirect" element={<RedirectPage />} />
-          <Route exact path="/login" element={<LoginPage />} />
         </Route>
+          <Route exact path="/login" element={<LoginPage />} />
       </Routes>
     </>
   );
