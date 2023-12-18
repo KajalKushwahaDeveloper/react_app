@@ -35,6 +35,9 @@ font-size: 14px;
 height: 100vh;
 // overflow-y: auto;
 }
+.table>:not(:last-child)>:last-child>* {
+  border-bottom-color:#CCFFFF !important;
+}
 
 
 

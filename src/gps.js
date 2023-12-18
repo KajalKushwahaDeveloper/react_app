@@ -9,15 +9,8 @@ import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
-import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const GPS = () => {
-  //Initiate fetchEmulators from store
-  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
-
-  useEffect(() => {
-    fetchEmulators();
-  }, [fetchEmulators]);
 
   const { width } = useViewPort();
 

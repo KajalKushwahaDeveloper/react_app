@@ -51,38 +51,6 @@ export const StateProvider = ({ children }) => {
     toast[type](message); // Use the 'type' argument to determine the toast type
   };
 
-  // const emulatorIntervalRef = useRef(null);
-  // // Auto refresh emulators
-  // useEffect(() => {
-  //   let emulatorInterval;
-  //   const startEmulatorInterval = () => {
-  //     const token = localStorage.getItem("token");
-  //     if(token===null) {
-  //       console.log("Auto refresh emulators -> Token is null");
-  //       return;
-  //     }
-  //     emulatorInterval = setInterval(async () => {
-  //       // Manually trigger the fetch to get the latest emulator data
-  //       fetchEmulators();
-  //     }, 5000);
-  //   };
-
-  //   const stopEmulatorInterval = () => {
-  //     clearInterval(emulatorInterval);
-  //   };
-
-  //   emulatorIntervalRef.current = {
-  //     start: startEmulatorInterval,
-  //     stop: stopEmulatorInterval,
-  //   };
-  //   // Start the emulator interval
-  //   emulatorIntervalRef.current.start();
-
-  //   return () => {
-  //     stopEmulatorInterval();
-  //   };
-  // }, [fetchEmulators]);
-
   return (
     <StatesContext.Provider
       value={{

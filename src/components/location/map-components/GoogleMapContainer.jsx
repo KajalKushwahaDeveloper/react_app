@@ -75,6 +75,7 @@ const GoogleMapContainer = ({
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
+
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
 
@@ -90,7 +91,7 @@ const GoogleMapContainer = ({
     useState("N/A");
 
   useEffect(() => {
-    if (selectedEmulator != null && tripData?.stops != null) {
+    if (selectedEmulator !== null && tripData !== null && tripData?.stops != null) {
       let selectedEmulatorNearestStopPoint = tripData?.stops.find(
         (stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex
       );
@@ -105,7 +106,7 @@ const GoogleMapContainer = ({
   }, [
     selectedEmulator,
     calculateTimeFromTripPointIndexToStopPoint,
-    tripData?.stops,
+    tripData,
   ]);
 
   useMemo(() => {
