@@ -62,7 +62,7 @@ const CreateTripButton = () => {
 
   const handleCancelTripClick = async () => {
     const confirmed = window.confirm(
-      `Are you want to cancel ${storetripData?.fromAddress[0]?.long_name} to ${storetripData?.toAddress[0]?.long_name} trip?`
+      `Are you want to cancel ${storetripData?.fromAddress[0]?.long_name} to ${storetripData?.toAddress[0].long_name} trip?`
     );
     if (confirmed) {
       const token = localStorage.getItem("token");
