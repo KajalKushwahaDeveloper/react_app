@@ -5,16 +5,19 @@ import {
   Center,
   defaultLng,
   defaultLat,
-  compareEmulators,
   compareEmulatorsCompletely,
 } from "./types_maps.tsx";
 import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
-import { fetchEventSource } from "@microsoft/fetch-event-source";
+import {
+  fetchEventSource,
+  FetchEventSourceInit,
+} from "@microsoft/fetch-event-source";
 
 export interface EmulatorsSlice {
-  emulators: Emulator[] | [];
+  eventSource: AbortController | null;
   selectedEmulator: Emulator | null;
+  emulators: Emulator[] | [];
   updateEmulators: (emulators: Emulator[]) => void;
   fetchEmulators: () => Promise<void>;
   selectEmulator: (emulator: Emulator | null) => void;
@@ -30,7 +33,8 @@ export interface TripDataSlice {
 }
 
 interface SharedSlice {
-  addBoth: () => void;
+  connectSse: () => void;
+  logout: () => void;
   getBoth: () => void;
 }
 
@@ -40,6 +44,7 @@ const createEmulatorsSlice: StateCreator<
   [],
   EmulatorsSlice
 > = (set, get) => ({
+  eventSource: null,
   emulators: [],
   selectedEmulator: null,
   fetchEmulators: async () => {
@@ -76,7 +81,10 @@ const createEmulatorsSlice: StateCreator<
   },
 
   updateEmulators: (newEmulators) => {
-    const isUpdatedEmulators = compareEmulatorsCompletely(get().emulators, newEmulators);
+    const isUpdatedEmulators = compareEmulatorsCompletely(
+      get().emulators,
+      newEmulators
+    );
 
     if (isUpdatedEmulators === false) {
       return;
@@ -155,17 +163,65 @@ const createTripDataSlice: StateCreator<
 });
 
 const createSharedSlice: StateCreator<
-  EmulatorsSlice & TripDataSlice,
+  EmulatorsSlice & TripDataSlice & deviceStore,
   [],
   [],
   SharedSlice
 > = (set, get) => ({
-  addBoth: () => {
-    // you can reuse previous methods
-    // get().fetchEmulators()
-    // get().setTripData(0)
-    // or do them from scratch
-    // set((state) => ({ bears: state.bears + 1, fishes: state.fishes + 1 })
+  connectSse: () => {
+    // Run this when we are logged in. i.e. when we have a token
+    const token = localStorage.getItem("token");
+    console.log("fetchEventSource TRIGGERED");
+    const ctrl = new AbortController();
+
+    fetchEventSource(`${BASE_URL}/sse`, {
+      method: "GET",
+      headers: {
+        Accept: "text/event-stream",
+        Authorization: `Bearer ${token}`,
+      },
+      onopen: async (res: Response) => {
+        if (res.ok && res.status === 200) {
+          console.log("Connection made ", res);
+        } else if (
+          res.status >= 400 &&
+          res.status < 500 &&
+          res.status !== 429
+        ) {
+          console.log("Client side error ", res);
+        }
+      },
+      onmessage(event) {
+        const parsedData: Emulator[] = JSON.parse(event.data);
+        useEmulatorStore.getState().updateEmulators(parsedData);
+      },
+      onclose() {
+        console.log("Connection closed by the server");
+      },
+      onerror(err) {
+        console.log("There was an error from the server", err);
+      },
+      signal: ctrl.signal,
+    });
+    get().eventSource = ctrl;
+  },
+  logout: () => {
+    localStorage.removeItem("token");
+    get().eventSource?.abort();
+    set({ eventSource: null, emulators: [], selectedEmulator: null });
+    set({
+      tripData: null,
+      pathTraveled: null,
+      pathNotTraveled: null,
+      center: { lat: defaultLat, lng: defaultLng },
+    });
+    const devices = get().devices;
+    if (devices.length > 0) {
+      devices.forEach((twillioDevice) => {
+        twillioDevice.device.destroy();
+      });
+    }
+    set({ devices: [], selectedDevice: null });
   },
   getBoth: () => {
     // get().bears + get().fishes
@@ -182,30 +238,3 @@ export const useEmulatorStore = create<
     ...createDeviceSlice(...args),
   }))
 );
-
-const token = localStorage.getItem("token");
-console.log("fetchEventSource TRIGGERED");
-fetchEventSource(`${BASE_URL}/sse`, {
-  method: "GET",
-  headers: {
-    Accept: "text/event-stream",
-    Authorization: `Bearer ${token}`,
-  },
-  onopen: async (res: Response) => {
-    if (res.ok && res.status === 200) {
-      console.log("Connection made ", res);
-    } else if (res.status >= 400 && res.status < 500 && res.status !== 429) {
-      console.log("Client side error ", res);
-    }
-  },
-  onmessage(event) {
-    const parsedData: Emulator[] = JSON.parse(event.data);
-    useEmulatorStore.getState().updateEmulators(parsedData);
-  },
-  onclose() {
-    console.log("Connection closed by the server");
-  },
-  onerror(err) {
-    console.log("There was an error from the server", err);
-  },
-});
