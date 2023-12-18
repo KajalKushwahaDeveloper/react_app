@@ -2,21 +2,14 @@ import React, { useEffect, useState } from "react";
 import LoginPage from "../login_page.js";
 import Home from "../home.js";
 import GPS from "../gps.js";
-import Navbar from "../components/navbar.js";
-import ResetPasswordPage from "../resetPassword.js";
 
-import {
-  Routes,
-  Route,
-  BrowserRouter as Router,
-  useLocation,
-  Outlet,
-} from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import ApiService from "../ApiService.js";
 import { CLIENT_CURRENT } from "../constants.js";
 import { useNavigate } from "react-router-dom";
 import PrivateRoutes from "../components/utils/privateRoutes.js";
 import PageNotFound from "../view/pageNotFound.js";
+import { useEmulatorStore } from "../stores/emulator/store.tsx";
 
 function App() {
   const navigate = useNavigate();
@@ -24,6 +17,8 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const [baseRoutes, setBaseRoutes] = useState(false);
+
+  const connectSse = useEmulatorStore((state) => state.connectSse);
 
   const checkToken = async () => {
     const token = localStorage.getItem("token");
@@ -97,10 +92,21 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+      console.log("checkUserData");
+      const token = localStorage.getItem("token");
+      if (token) {
+       console.log("checkUserData", token);
+       connectSse();
+      }
+  }, [connectSse, localStorage.getItem("token")]);
+
   return (
     <>
       <Routes>
-        <Route element={<PrivateRoutes isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}>
+        <Route
+          element={<PrivateRoutes isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}
+        >
           <Route path="/home" element={<Home />} />
           <Route path="/gps" element={<GPS />} />
           {window.location.pathname === "/" && navigate("/login")}

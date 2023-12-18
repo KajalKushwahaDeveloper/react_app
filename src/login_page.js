@@ -18,15 +18,11 @@ const LoginPage = () => {
     setEmail(e.target.value);
   };
 
-  const devices = useEmulatorStore((state) => state.devices);
+  const logout = useEmulatorStore((state) => state.logout);
 
   useEffect(() => {
-    if(devices.length > 0) {
-      devices.forEach((twillioDevice) => {
-        twillioDevice.device.destroy();
-      });
-    }
-  }, [devices]);
+    logout();  
+  }, [logout]);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
