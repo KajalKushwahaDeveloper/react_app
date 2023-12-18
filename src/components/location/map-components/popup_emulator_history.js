@@ -37,16 +37,14 @@ const PopUpEmulatorHistory = ({
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: "auto ",height:"auto"}}>
-          <form onSubmit={handleSubmit}>
             <h3>HISTORY</h3>
             <PopupEmulatorHistoryTable
               data={emulatorHistory}
               showToast={showToast}
             />
-            <button className="login_button" type="submit" style={{height:"40px"}}>
+            <button className="login_button" type="button" style={{height:"40px"}} onClick={(e) => handleSubmit(e)}>
               CLOSE
             </button>
-          </form>
         </Box>
       </Modal>
     </div>

@@ -30,8 +30,8 @@ const style = {
 const PopupEmulatorHistoryTable = ({ data, showToast }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(3);
-  const [historyRowSelected, setHistoryRowSelected] = useState(null);
-  const [showAdditionalDialog, setShowAdditionalDialog] = useState(null);
+  const [historyRowSelected, setHistoryRowSelected] = useState(false);
+  const [showAdditionalDialog, setShowAdditionalDialog] = useState(false);
 
   const handleShowAdditionalDialog = () => {
     setShowAdditionalDialog(true);
@@ -42,7 +42,6 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
   };
 
   const handleActionButtonClick = async (row) => {
-    console.log("setHistoryRowSelected:", row);
     setHistoryRowSelected(row);
     handleShowAdditionalDialog(true);
   };
@@ -243,7 +242,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
           <tfoot>
             <tr>
               <CustomTablePagination
-                rowsPerPageOptions={[3, 5, 10, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[3, 5, 10, {label: "All", value: -1}]}
                 colSpan={5}
                 count={data.length}
                 rowsPerPage={rowsPerPage}
@@ -295,7 +294,7 @@ const CustomTablePagination = styled(TablePagination)(
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content:space-arround;
+        justify-content: space-around;
         gap: 10px;
       }
     
