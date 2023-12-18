@@ -74,7 +74,7 @@ const UserAssignDropDown = (props) => {
   const theme = useTheme();
 
   const [userName, setuserName] = React.useState([]);
-  const [users, setUsers] = useState();
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedUserId, SetSelectedUserId] = useState();

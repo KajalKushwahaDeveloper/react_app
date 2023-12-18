@@ -56,16 +56,25 @@ const MenuProps = {
 };
 
 const DropDown = (props) => {
-  const { setTwilioUpdatedPhone, alternateNumber, setAlternateNumber ,setSelectedDropdownValue} = props;
+  const {
+    setTwilioUpdatedPhone,
+    alternateNumber,
+    setAlternateNumber,
+    setSelectedDropdownValue,
+    userToEdit,
+  } = props;
 
   const [phoneNumber, setPhoneNumber] = useState();
   const [twilioPhoneNumber, setTwilioPhoneNumber] = useState([]);
   const [teleError, setTeleError] = useState("");
 
   useEffect(() => {
-
-    const defaultCountryCode = 'US'; 
+    const defaultCountryCode = "US";
     setAlternateNumber(`+${defaultCountryCode}`);
+    
+    if(alternateNumber !== null) {
+      setAlternateNumber(alternateNumber);
+    }
   }, []);
 
   // Fetch data from API
@@ -85,8 +94,14 @@ const DropDown = (props) => {
         const responseData = await response.text();
 
         const deserializedData = JSON.parse(responseData);
-        console.log("response11:::", deserializedData);
-        setTwilioPhoneNumber(deserializedData);
+        if (userToEdit?.telephone === null) {
+          setTwilioPhoneNumber(deserializedData);
+        } else {
+          const array = [userToEdit?.telephone, ...deserializedData];
+          setTwilioPhoneNumber(array);
+          setPhoneNumber(userToEdit?.telephone);
+          setTwilioUpdatedPhone(userToEdit?.telephone);
+        }
         return { success: true, error: null };
       }
     } catch (error) {
@@ -95,7 +110,6 @@ const DropDown = (props) => {
   };
 
   const handleChange = (e) => {
-    console.log("helloh");
     const {
       target: { value },
     } = e;
@@ -106,7 +120,7 @@ const DropDown = (props) => {
 
   const handleAlternateNumberChange = (value) => {
     if (!value) {
-      setTeleError("Please enter your telephone number");
+      setTeleError("Please enter you telrephone number");
     } else {
       setTeleError(""); // Clear the error if a valid value is entered
     }
@@ -115,7 +129,6 @@ const DropDown = (props) => {
 
   useEffect(async () => {
     const userData = await fetchUsers();
-    console.log("userData111", userData);
   }, []);
 
   return (
@@ -128,9 +141,11 @@ const DropDown = (props) => {
           labelId="tel-number-label"
           id="demo-multiple-name"
           value={phoneNumber}
+          // value={userToEdit?.telephone}
           onChange={handleChange}
           input={<OutlinedInput label="Name" />}
           MenuProps={MenuProps}
+          defaultValue={userToEdit?.telephone}
         >
           {twilioPhoneNumber?.map((telephone, index) => (
             <MenuItem key={index} value={telephone}>
@@ -145,10 +160,10 @@ const DropDown = (props) => {
           international
           countryCallingCodeEditable={false}
           defaultCountry="US"
-          defaultValue={alternateNumber}
+          defaultValue={userToEdit?.alternateTelephone}
+          value={userToEdit?.alternateTelephone}
           limitMaxLength={10}
           onChange={handleAlternateNumberChange}
-          
         />
         {teleError && (
           <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
