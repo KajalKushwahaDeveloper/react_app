@@ -2,19 +2,21 @@ import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../scss/navbar.scss";
 import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
 import { CLIENT_CURRENT } from "../constants";
+import { useEmulatorStore } from "../stores/emulator/store.tsx";
 
 const Navbar = ({ isAdmin, setIsAdmin }) => {
   const [menuIcon, setMenuIcon] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState();
 
+  const logout = useEmulatorStore((state) => state.logout);
   const navigate = useNavigate();
   
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAdmin(false);
+    logout();
     navigate("/login");
   };
 

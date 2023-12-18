@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import LoginPage from "../login_page.js";
+import RedirectPage from "../redirect_page.js";
 import Home from "../home.js";
 import GPS from "../gps.js";
 
@@ -64,36 +65,24 @@ function App() {
           }
         } else {
           console.error("CLIENT_CURRENT Error: ", error);
-          /* localStorage.removeItem("token");
-          navigate("/login"); */
+          localStorage.removeItem("token");
+          navigate("/login");
         }
       } catch (error) {
         console.error("CLIENT_CURRENT 2 Error: ", error);
-        /* localStorage.removeItem("token");
-        navigate("/login"); */
+        localStorage.removeItem("token");
+        navigate("/login");
       }
+    } else {
+      navigate("/login");
     }
   };
 
   useEffect(() => {
     checkToken();
   }, [location.pathname]);
-  // TODO: When checkToken is running, we need to show a redirecting page....
 
   useEffect(() => {
-    if (localStorage.getItem("token") && window.location.pathname === "/") {
-      navigate(-1);
-    } else if (window.location.pathname === "/") {
-      navigate("/login");
-    } else if (window.location.pathname === "/login") {
-      navigate(-1);
-    } else {
-      setBaseRoutes(true);
-    }
-  }, []);
-
-  useEffect(() => {
-      console.log("checkUserData");
       const token = localStorage.getItem("token");
       if (token) {
        console.log("checkUserData", token);
@@ -109,6 +98,7 @@ function App() {
         >
           <Route path="/home" element={<Home />} />
           <Route path="/gps" element={<GPS />} />
+          <Route path="/redirect" element={<RedirectPage />} />
           {window.location.pathname === "/" && navigate("/login")}
         </Route>
         <Route exact path="/login" element={<LoginPage />} />
@@ -116,6 +106,7 @@ function App() {
           <Route>
             {window.location.pathname === "/" && navigate("/login")}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/redirect" element={<RedirectPage />} />
             <Route path="*" element={<PageNotFound />} />
           </Route>
         )}

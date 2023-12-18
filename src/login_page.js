@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./scss/login.scss";
 import ApiService from "./ApiService";
 import { CLIENT_LOGIN } from "./constants";
 import ForgotPasswordModal from "./components/location/map-components/ForgotPasswordModal";
-import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -18,11 +17,6 @@ const LoginPage = () => {
     setEmail(e.target.value);
   };
 
-  const logout = useEmulatorStore((state) => state.logout);
-
-  useEffect(() => {
-    logout();  
-  }, [logout]);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -50,7 +44,7 @@ const LoginPage = () => {
           const token = data.token;
           localStorage.setItem("token", token);
           console.log("Login successful");
-          navigate("/home"); // Redirect to the home page
+          navigate("/redirect"); // Redirect to the home page
         } else {
           setResponseError(error || "Invalid credentials"); // Display appropriate error message
         }
