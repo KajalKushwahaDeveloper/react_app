@@ -17,11 +17,22 @@ function App() {
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const [baseRoutes, setBaseRoutes] = useState(false);
-
   const connectSse = useEmulatorStore((state) => state.connectSse);
 
   const checkToken = async () => {
+    console.log("location.pathname", location.pathname);
+    if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/" &&
+      location.pathname !== "/home" &&
+      location.pathname !== "/redirect" &&
+      location.pathname !== "/gps" &&
+      location.pathname !== "/page404"
+    ) {
+      navigate("/page404");
+      return;
+    }
+
     const token = localStorage.getItem("token");
     if (token != null) {
       try {
@@ -83,33 +94,24 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-       console.log("checkUserData", token);
-       connectSse();
-      }
+    const token = localStorage.getItem("token");
+    if (token) {
+      console.log("checkUserData", token);
+      connectSse();
+    }
   }, [connectSse, localStorage.getItem("token")]);
 
   return (
     <>
       <Routes>
+        <Route path="/page404" element={<PageNotFound />} />
         <Route
-          element={<PrivateRoutes isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}
-        >
+          element={<PrivateRoutes isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}>
           <Route path="/home" element={<Home />} />
           <Route path="/gps" element={<GPS />} />
           <Route path="/redirect" element={<RedirectPage />} />
-          {window.location.pathname === "/" && navigate("/login")}
+          <Route exact path="/login" element={<LoginPage />} />
         </Route>
-        <Route exact path="/login" element={<LoginPage />} />
-        {baseRoutes === true && (
-          <Route>
-            {window.location.pathname === "/" && navigate("/login")}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/redirect" element={<RedirectPage />} />
-            <Route path="*" element={<PageNotFound />} />
-          </Route>
-        )}
       </Routes>
     </>
   );
