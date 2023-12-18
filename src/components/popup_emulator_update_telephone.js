@@ -36,14 +36,12 @@ const PopUpEmulatorTelephone = ({
     if (userToEdit) {
       setAlternateNumber(userToEdit.alternateTelephone);
       setId(userToEdit.id);
-      console.log("userToEdit::", userToEdit);
     }
   }, [userToEdit]);
-  console.log("twilioUpdatedPhone", twilioNumber);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("twilioNumber:", twilioNumber);
     if (!twilioNumber) {
       alert("Telephone Number is empty, Please select a number.");
       return;
@@ -80,7 +78,6 @@ const PopUpEmulatorTelephone = ({
     };
 
     const token = localStorage.getItem("token");
-    console.log("token : ", token);
     try {
       const response = await fetch(EMULATOR_TELEPHONE_UPDATE_URL, {
         method: "POST",
@@ -141,6 +138,7 @@ const PopUpEmulatorTelephone = ({
               alternateNumber={alternateNumber}
               setAlternateNumber={setAlternateNumber}
               setSelectedDropdownValue={setSelectedDropdownValue}
+              userToEdit={userToEdit}
             />
 
             <button
