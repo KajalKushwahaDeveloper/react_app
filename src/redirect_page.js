@@ -1,11 +1,12 @@
 import React from "react";
+import "../src/view/view.scss";
+
 const RedirectPage = () => {
   return (
-    <div>
-      <h1>
-        PLEASE WAIT
-      </h1>
-    </div>
+    <>
+      <h2 style={{textAlign:"center"}}>LOADING...</h2>
+      <div class="loaderRedirect"></div>
+    </>
   );
 };
 export default RedirectPage;
