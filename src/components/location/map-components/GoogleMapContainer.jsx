@@ -519,7 +519,7 @@ const GoogleMapContainer = ({
         <Marker
           position={{ lat: startLat, lng: startLng }}
           icon={{
-            url: "images/start_location.png",
+            url: "images/Origin.svg",
             scaledSize: new window.google.maps.Size(30, 30),
             anchor: new window.google.maps.Point(15, 15),
             scale: 1,
@@ -531,7 +531,7 @@ const GoogleMapContainer = ({
         <Marker
           position={{ lat: endLat, lng: endLng }}
           icon={{
-            url: "images/stop_location.png",
+            url: "images/Destination.svg",
             scaledSize: new window.google.maps.Size(30, 30),
             anchor: new window.google.maps.Point(15, 15),
             scale: 1,
