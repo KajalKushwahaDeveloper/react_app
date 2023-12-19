@@ -1,11 +1,11 @@
 import React from "react";
+import "../src/view/pageNotFound";
 const RedirectPage = () => {
   return (
-    <div>
-      <h1>
-        PLEASE WAIT
-      </h1>
-    </div>
+    <>
+      <h2 style={{textAlign:"center"}}>LOADING...</h2>
+      <div class="loaderRedirect"></div>
+    </>
   );
 };
 export default RedirectPage;

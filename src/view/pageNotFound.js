@@ -2,7 +2,6 @@ import React from "react";
 import "./view.scss";
 
 const PageNotFound = () => {
-  console.log("Hello11");
   return (
     <div className="mainFourZeroFour">
       <h1 id="mainHead">404 Error</h1>

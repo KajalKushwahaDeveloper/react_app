@@ -20,7 +20,6 @@ function App() {
   const connectSse = useEmulatorStore((state) => state.connectSse);
 
   const checkToken = async () => {
-    console.log("location.pathname", location.pathname);
     if (
       location.pathname !== "/login" &&
       location.pathname !== "/" &&
@@ -96,7 +95,6 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      console.log("checkUserData", token);
       connectSse();
     }
   }, [connectSse, localStorage.getItem("token")]);
