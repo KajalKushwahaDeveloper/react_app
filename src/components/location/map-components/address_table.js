@@ -165,6 +165,48 @@ const AddressTable = () => {
               {toAddress ? toAddress : "N/A"}
             </div>
           </div>
+
+          {/* ARRIVAL TIME */}
+          <div
+            className="col d-flex flex-column"
+            style={{
+              border: "2px solid",
+              alignItems: "center",
+              padding: "0px !important",
+            }}>
+            <div className="address-table-heading">Arrival Time </div>
+            {tripData && selectedEmulator ? (
+              <div
+                style={{
+                  marginTop: "5px !important",
+                  height: "30px",
+                  textAlign: "center",
+                  maxWidth: "20vw",
+                }}
+                className="totalTimeSubContent">
+                <div
+                  className="addressTable"
+                  style={{ wordWrap: "break-word" }}>
+                  {"20:18:20 GMT"}
+                </div>
+                {tripData &&
+                  selectedEmulator &&
+                  selectedEmulator.tripStatus === "RESTING" &&
+                  currentStop && (
+                    <div
+                      className="addressTable"
+                      style={{ wordWrap: "break-word" }}>
+                      <p>{stopReachedTime}</p>
+                      <p>{stopWaitingTillTime}</p>
+                      <p>{stopRemainingTime}</p>
+                    </div>
+                  )}
+              </div>
+            ) : (
+              <div className="addressTable">N/A</div>
+            )}
+          </div>
+
           {/* TIME */}
           <div
             className="col-5 d-flex flex-column"
@@ -209,6 +251,48 @@ const AddressTable = () => {
               </div>
             )}
           </div>
+
+          {/* REMAING DISTANCE */}
+          <div
+              className="col d-flex flex-column"
+              style={{
+                border: "2px solid",
+                alignItems: "center",
+                padding: "0px !important",
+              }}>
+            <div className="address-table-heading">Remaining Distance</div>
+            {tripData && selectedEmulator ? (
+              <div
+                style={{
+                  marginTop: "5px !important",
+                  height: "30px",
+                  textAlign: "center",
+                  maxWidth: "20vw",
+                }}
+                className="">
+                <div
+                  className="addressTable"
+                  style={{ wordWrap: "break-word"}}>
+                   {"22 mile"}
+                </div>
+                {tripData &&
+                  selectedEmulator &&
+                  selectedEmulator.tripStatus === "RESTING" &&
+                  currentStop && (
+                    <div
+                      className="addressTable"
+                      style={{ wordWrap: "break-word" }}>
+                      <p>{stopReachedTime}</p>
+                      <p>{stopWaitingTillTime}</p>
+                      <p>{stopRemainingTime}</p>
+                    </div>
+                  )}
+              </div>
+            ) : (
+              <div className="addressTable">N/A</div>
+            )}
+          </div>
+          
           {/* PLUS MINUS ICONS */}
           <div
             className="col-2 d-flex flex-column"

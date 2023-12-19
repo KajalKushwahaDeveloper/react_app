@@ -61,7 +61,7 @@ const GPS = () => {
                 INFO
               </div>
             }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.7]}
+            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.9]}
           >
             <div>
               ‎
