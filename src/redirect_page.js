@@ -1,5 +1,6 @@
 import React from "react";
-import "../src/view/pageNotFound";
+import "../src/view/view.scss";
+
 const RedirectPage = () => {
   return (
     <>
