@@ -86,6 +86,8 @@ const GpsTable = () => {
   const { width } = useViewPort();
   const breakpoint = 620;
   const breakpointThreeTwenty = 320;
+  const breakpointTab = 992;
+  const isTabBreakpoint = width < breakpointTab;
 
   const isMobile = width < breakpoint;
   const isMobileThreeTwenty = width <= breakpointThreeTwenty;
@@ -293,7 +295,7 @@ const GpsTable = () => {
           flexDirection: "column",
           position: isMobile ? "static" : "absolute",
           marginTop: isMobile ? "10px" : "0",
-          top: isMobile ? "0px" : "128px",
+          top: isMobile ? "0px" : isTabBreakpoint ? "143px" : "125px",
           paddingRight: isMobile && "0px",
           paddingLeft: isMobile && "0px",
         }}

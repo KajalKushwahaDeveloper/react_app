@@ -38,7 +38,9 @@ const CreateTripButton = () => {
     }
   );
   const breakpoint = 620;
+  const breakpointTab = 992;
   const isMobileBelowSixTwenty = width < breakpoint;
+  const isTabBreakpoint = width < breakpointTab;
   const [isSpinning, setSpinning] = useState(false);
   const [hideCancel, setHideCancel] = useState(false);
 
@@ -128,7 +130,17 @@ const CreateTripButton = () => {
                 alignItems: "center",
                 fontSize: "11px",
               }
-            : {
+            : isTabBreakpoint ? {
+              height: "38px",
+              zIndex: 2,
+              position: "absolute",
+              top: "155px",
+              right: !hideCancel ? 110 : 230,
+              padding: ".65rem",
+              display: "flex",
+              alignItems: "center",
+              }  :
+              {
                 height: "38px",
                 zIndex: 2,
                 position: "absolute",
@@ -158,7 +170,18 @@ const CreateTripButton = () => {
                   alignItems: "center",
                   fontSize: "11px",
                 }
-              : {
+              : isTabBreakpoint ?
+              {
+                height: "38px",
+                zIndex: 2,
+                position: "absolute",
+                top: "155px",
+                right: 110,
+                padding: ".65rem",
+                display: "flex",
+                alignItems: "center",
+                } :
+                {
                   height: "38px",
                   zIndex: 2,
                   position: "absolute",
@@ -187,7 +210,19 @@ const CreateTripButton = () => {
                 display: "flex",
                 alignItems: "center",
               }
-            : {
+            :
+            isTabBreakpoint ?
+              {
+                height: "38px",
+                zIndex: 2,
+                position: "absolute",
+                top: "155px",
+                right: 50,
+                padding: ".65rem",
+                display: "flex",
+                alignItems: "center",
+              }
+              :{
                 height: "38px",
                 zIndex: 2,
                 position: "absolute",

@@ -58,6 +58,13 @@ th {
   color: $background-color;
 }
 
+.ellipsisText{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 12vw
+}
+
 .main-address-table{
   position:fixed;
   top: 64px;
@@ -69,7 +76,7 @@ th {
       font-size: 12px;
       font-weight: bold;
       text-align: center;
-      height: 20px;
+      height: auto;
     }
     
     .addressTable{
@@ -79,16 +86,19 @@ th {
       overflow-wrap: break-word;
       word-wrap: break-word;
       hyphens: auto;
-      height: 40px;
+      height: auto;
     }
   }
 
+  .gm-style > div > button {
+    margin-top: 9vh !important;
+  }
 
   .address-table-heading{
     font-size: 12px;
     font-weight: bold;
     text-align: center;
-    height: 20px;
+    height: auto;
   }
   
   .addressTable{
