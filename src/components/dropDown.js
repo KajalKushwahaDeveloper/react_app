@@ -7,6 +7,8 @@ import {
   Select,
   MenuItem,
   OutlinedInput,
+  TextField,
+  Box,
 } from "@mui/material";
 
 import DialogTitle from "@mui/material/DialogTitle";
@@ -62,6 +64,8 @@ const DropDown = (props) => {
     setAlternateNumber,
     setSelectedDropdownValue,
     userToEdit,
+    voiceMsg,
+    setVoiceMsg,
   } = props;
 
   const [phoneNumber, setPhoneNumber] = useState();
@@ -69,10 +73,10 @@ const DropDown = (props) => {
   const [teleError, setTeleError] = useState("");
 
   useEffect(() => {
-    const defaultCountryCode = "US";
-    setAlternateNumber(`+${defaultCountryCode}`);
-    
-    if(alternateNumber !== null) {
+    // const defaultCountryCode = "US";
+    // setAlternateNumber(`+${defaultCountryCode}`);
+
+    if (alternateNumber !== null) {
       setAlternateNumber(alternateNumber);
     }
   }, []);
@@ -170,6 +174,17 @@ const DropDown = (props) => {
             {teleError}
           </p>
         )}
+
+        <TextField
+          id="voice-message-basic"
+          label="Voice Message"
+          variant="outlined"
+          fullWidth
+          style={{ marginTop: "1rem" }}
+          onChange={(e) => setVoiceMsg(e.target.value)}
+          defaultValue={voiceMsg}
+          multiline
+        />
       </FormControl>
     </div>
   );

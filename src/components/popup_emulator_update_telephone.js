@@ -31,11 +31,13 @@ const PopUpEmulatorTelephone = ({
   const [alternateNumber, setAlternateNumber] = useState("");
   const [error, setError] = useState("");
   const [selectedDropdownValue, setSelectedDropdownValue] = useState(null);
+  const [voiceMsg, setVoiceMsg] = useState("");
 
   useEffect(() => {
     if (userToEdit) {
       setAlternateNumber(userToEdit.alternateTelephone);
       setId(userToEdit.id);
+      setVoiceMsg(userToEdit.voiceMsg)
     }
   }, [userToEdit]);
 
@@ -66,8 +68,8 @@ const PopUpEmulatorTelephone = ({
       console.log("Error occurred while adding Telephone Number:", error);
       setError("An error occurred while adding Telephone Number");
     }
-    setTwilioUpdatedPhone("");
-    setAlternateNumber("");
+    // setTwilioUpdatedPhone("");
+    // setAlternateNumber("");
   };
 
   const addUser = async () => {
@@ -75,6 +77,7 @@ const PopUpEmulatorTelephone = ({
       id: id,
       telephone: twilioNumber,
       alternateTelephone: alternateNumber,
+      voiceMsg: voiceMsg
     };
 
     const token = localStorage.getItem("token");
@@ -139,6 +142,8 @@ const PopUpEmulatorTelephone = ({
               setAlternateNumber={setAlternateNumber}
               setSelectedDropdownValue={setSelectedDropdownValue}
               userToEdit={userToEdit}
+              voiceMsg={voiceMsg}
+              setVoiceMsg={setVoiceMsg}
             />
 
             <button
