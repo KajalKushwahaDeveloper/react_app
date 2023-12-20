@@ -14,9 +14,10 @@ import {
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { PHONE_GET_AVAILABLE_NUMBERS_URL } from "../constants";
+import { BASE_URL, PHONE_GET_AVAILABLE_NUMBERS_URL } from "../constants";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import axios from "axios";
 
 function BootstrapDialogTitle(props) {
   const { children, onClose, ...other } = props;
@@ -66,16 +67,18 @@ const DropDown = (props) => {
     userToEdit,
     voiceMsg,
     setVoiceMsg,
+    textMsg,
+    setTextMsg
   } = props;
 
   const [phoneNumber, setPhoneNumber] = useState();
   const [twilioPhoneNumber, setTwilioPhoneNumber] = useState([]);
   const [teleError, setTeleError] = useState("");
+  const [fileError, setFileError] = useState("");
+  const [type, setType] = useState("Voice");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // const defaultCountryCode = "US";
-    // setAlternateNumber(`+${defaultCountryCode}`);
-
     if (alternateNumber !== null) {
       setAlternateNumber(alternateNumber);
     }
@@ -135,9 +138,59 @@ const DropDown = (props) => {
     const userData = await fetchUsers();
   }, []);
 
+  const handleVoiceChange = (e) => {
+    const fileInput = e.target;
+    if (fileInput.value == "") {
+      setFileError("Please upload a file!");
+    }
+    const selectedFile = fileInput.files[0];
+
+    if (selectedFile) {
+      const allowedExtensions = [".mp3", ".wav"];
+      const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+
+      if (allowedExtensions.includes(`.${fileExtension}`)) {
+        setFileError("");
+        console.log("INSERT INTO DB");
+        // setVoiceMsg(selectedFile);
+        const file = new FormData();
+        file.append('file', selectedFile);
+        axios.post(`${BASE_URL}/message/upload`, file, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then(() => {
+          axios.get(`${BASE_URL}/message/files`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          }).then((response) => {
+            setVoiceMsg(response.data[1].name);
+          }).catch((error) => {
+            console.log(error);
+          });
+        }).catch((error) => {
+          console.log(error);
+        });
+
+
+        console.log(selectedFile);
+      } else {
+        console.log("Invalid extension");
+        setFileError("Please upload a valid file!");
+        // Reset the file input or show an error message
+        fileInput.value = ""; // Reset the input
+      }
+    }
+  };
+
+  const handleChanges = (event) => {
+    setType(event.target.value);
+  };
+
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
+      <FormControl sx={{ m: 1, margin: "1rem" }}>
         <InputLabel id="tel-number-label" style={{ borderRadius: "2rem" }}>
           Tel. No.
         </InputLabel>
@@ -174,17 +227,53 @@ const DropDown = (props) => {
             {teleError}
           </p>
         )}
+      </FormControl>
 
-        <TextField
-          id="voice-message-basic"
-          label="Voice Message"
-          variant="outlined"
-          fullWidth
-          style={{ marginTop: "1rem" }}
-          onChange={(e) => setVoiceMsg(e.target.value)}
-          defaultValue={voiceMsg}
-          multiline
-        />
+      <FormControl sx={{ margin: "1rem", width: "90%" }}>
+        <InputLabel id="select-label">Select your message type</InputLabel>
+        <Select
+          labelId="select-label"
+          id="simple-select"
+          value={type}
+          label="Select your message type"
+          onChange={handleChanges}
+          className="mb-3"
+        >
+          <MenuItem value="Text">Text</MenuItem>
+          <MenuItem value="Voice">Voice</MenuItem>
+        </Select>
+
+        {type === "Text" ? (
+          <TextField
+            id="text-message-basic"
+            label="Text Message"
+            variant="outlined"
+            fullWidth
+            onChange={(e) => setTextMsg(e.target.value)}
+            defaultValue={textMsg}
+            multiline
+            // sx={{width: '90%'}}
+          />
+        ) : (
+          <>
+            <TextField
+              id="voice-message-basic"
+              variant="outlined"
+              fullWidth
+              type="file"
+              inputProps={{ accept: "audio/wav, audio/mp3" }}
+              onChange={(e) => handleVoiceChange(e)}
+              // value={voiceMsg}
+            />
+            <p className="mb-1" style={{ fontSize: 14, color: "red" }}>
+              {fileError}
+            </p>
+
+            <p className="mb-1 mt-3" style={{ fontSize: 14 }}>
+            {typeof voiceMsg === "string" ? `Selected File: ${voiceMsg}` : ""}
+          </p>
+          </>
+        )}
       </FormControl>
     </div>
   );

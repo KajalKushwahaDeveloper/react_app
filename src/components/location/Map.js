@@ -162,6 +162,7 @@ const Map = () => {
     }
     const hours = Math.floor(timeInHours);
     const minutes = Math.round((timeInHours - hours) * 60);
+    const seconds = Math.round((timeInHours - hours) * 60 * 60);
     return `~${hours} hours and ${minutes} minutes`;
   }
 

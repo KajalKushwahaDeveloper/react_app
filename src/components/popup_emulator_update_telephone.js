@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import IconButton from "@mui/material/IconButton";
 import ClearIcon from "@mui/icons-material/Clear";
 import "../scss/login.scss";
-import { EMULATOR_TELEPHONE_UPDATE_URL } from "../constants";
+import { BASE_URL, EMULATOR_TELEPHONE_UPDATE_URL } from "../constants";
 import DropDown from "./dropDown";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -32,12 +33,27 @@ const PopUpEmulatorTelephone = ({
   const [error, setError] = useState("");
   const [selectedDropdownValue, setSelectedDropdownValue] = useState(null);
   const [voiceMsg, setVoiceMsg] = useState("");
-
+  const [textMsg, setTextMsg] = useState("");
+  const token = localStorage.getItem("token");
+ 
   useEffect(() => {
     if (userToEdit) {
+      console.log("userToEdit", userToEdit);
       setAlternateNumber(userToEdit.alternateTelephone);
       setId(userToEdit.id);
-      setVoiceMsg(userToEdit.voiceMsg)
+      setTextMsg(userToEdit.textMsg);
+      setVoiceMsg(userToEdit.voiceMsg);
+      axios.get(`${BASE_URL}/message/files`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }).then((response) => {
+        response.data.map((_ , index) => {
+          setVoiceMsg(response?.data[index]?.name);
+        })
+      }).catch((error) => {
+        console.log(error);
+      });
     }
   }, [userToEdit]);
 
@@ -77,7 +93,8 @@ const PopUpEmulatorTelephone = ({
       id: id,
       telephone: twilioNumber,
       alternateTelephone: alternateNumber,
-      voiceMsg: voiceMsg
+      voiceMsg: voiceMsg,
+      textMsg: textMsg? textMsg: "",
     };
 
     const token = localStorage.getItem("token");
@@ -144,6 +161,8 @@ const PopUpEmulatorTelephone = ({
               userToEdit={userToEdit}
               voiceMsg={voiceMsg}
               setVoiceMsg={setVoiceMsg}
+              textMsg={textMsg}
+              setTextMsg={setTextMsg}
             />
 
             <button
