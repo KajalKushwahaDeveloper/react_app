@@ -95,6 +95,9 @@ const GoogleMapContainer = ({
       let selectedEmulatorNearestStopPoint = tripData?.stops.find(
         (stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex
       );
+      console.log("selectedEmulatorTimeToReachStop11@@:", selectedEmulator.currentTripPointIndex,
+        selectedEmulatorNearestStopPoint,
+        selectedEmulator.speed);
       const selectedEmulatorTimeToReachStop =
         calculateTimeFromTripPointIndexToStopPoint(
           selectedEmulator.currentTripPointIndex,
@@ -381,8 +384,8 @@ const GoogleMapContainer = ({
           onCloseClick={handleInfoWindowClose}
         >
           <div style={{ width: "auto" }}>
-            <h3 style={{ color: "black" }}>Stop Address:</h3>
-            <p style={{ color: "black" }}>
+            <h6 style={{ color: "black" }}>Stop Address:</h6>
+            <p style={{ color: "black", fontSize:"11px"}}>
               {selectedStop.address.map((addressItem, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && ", "}
@@ -390,8 +393,8 @@ const GoogleMapContainer = ({
                 </React.Fragment>
               ))}
             </p>
-            <h3 style={{ color: "black" }}>Nearest Gas Station:</h3>
-            <p style={{ color: "black" }}>
+            <h6 style={{ color: "black" }}>Nearest Gas Station:</h6>
+            <p style={{ color: "black", fontSize:"11px"}}>
               {selectedStop.gasStation.map((gasStationAddressItem, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && ", "}
@@ -400,8 +403,14 @@ const GoogleMapContainer = ({
               ))}
             </p>
 
-            <h3 style={{ color: "black" }}>Time To Reach: </h3>
-            <p style={{ color: "black" }}>{emulatorTimeLeftToReachNextStop}</p>
+            <h6 style={{ color: "black" }}>Arrival Time: </h6>
+            <p style={{ color: "black", fontSize:"11px"}}>{emulatorTimeLeftToReachNextStop}</p>
+
+            <h6 style={{ color: "black" }}>Total Time: </h6>
+            <p style={{ color: "black", fontSize:"11px"}}>{emulatorTimeLeftToReachNextStop}</p>
+            
+            <h6 style={{ color: "black" }}>Remaining Distance: </h6>
+            <p style={{ color: "black", fontSize:"11px"}}>{"22 miles"}</p>
           </div>
         </InfoWindow>
       )}

@@ -273,7 +273,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word"}}>
-                   {"22 mile"}
+                   {"22 miles"}
                 </div>
                 {tripData &&
                   selectedEmulator &&
@@ -490,7 +490,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word"}}>
-                   {"22 mile"}
+                   {"22 miles"}
                 </div>
                 {tripData &&
                   selectedEmulator &&

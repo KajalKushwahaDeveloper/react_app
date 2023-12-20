@@ -58,6 +58,10 @@ const Map = () => {
   const [dragWithoutTrip, setDragWithoutTrip] = useState();
 
   const [selectedStop, setSelectedStop] = useState(null);
+  const [counter, setCounter] = useState(0);
+  const [getMinutes, setMinutes] = useState();
+  const [secondsCounter, setSecondsCounter] = useState(false);
+
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -134,6 +138,26 @@ const Map = () => {
     return nextStopPoint;
   }
 
+  useEffect(() => {
+    if (counter === 60) {
+      setCounter(0);
+    }
+  
+    if (counter < 60) {
+      setTimeout(() => setCounter(counter + 1), 1000); 
+    }
+
+    console.log("counterCheck:", counter);
+    console.log("Checkboolean:",secondsCounter)
+    setSecondsCounter(false);
+  }, [secondsCounter,counter])
+  
+  
+  useEffect(() => {
+    console.log("Increament");
+    setSecondsCounter(true);
+  }, [getMinutes]);
+  
   function calculateTimeFromTripPointIndexToStopPoint(
     startIndex,
     stop,
@@ -160,9 +184,15 @@ const Map = () => {
     if (timeInHours === Infinity) {
       return `Refreshing...`;
     }
+
     const hours = Math.floor(timeInHours);
     const minutes = Math.round((timeInHours - hours) * 60);
-    return `~${hours} hours and ${minutes} minutes`;
+    //const seconds = Math.round(((timeInHours - hours) * 60 * 60) / 60);
+    //return `~${hours} hours and ${minutes} minutes`;
+    setMinutes(minutes);
+    console.log("Check_min:", minutes);
+
+    return `${hours} : ${minutes} : ${counter} GMT`;
   }
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
