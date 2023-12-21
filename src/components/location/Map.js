@@ -13,7 +13,7 @@ import { useEmulatorStore } from "../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../stores/emulator/types_maps.tsx";
 import useFetch from "../../hooks/useFetch.js";
 
-const Map = () => {
+const Map = ({setArrivalTime,totalTime}) => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   
   const selectedEmulator = useEmulatorStore(
@@ -142,20 +142,14 @@ const Map = () => {
     if (counter === 60) {
       setCounter(0);
     }
-  
-    if (counter < 60) {
-      setTimeout(() => setCounter(counter + 1), 1000); 
+    if (secondsCounter === true || counter) {
+      counter < 60 && setTimeout(() => setCounter(counter + 1), 1000);
     }
-
-    console.log("counterCheck:", counter);
-    console.log("Checkboolean:",secondsCounter)
     setSecondsCounter(false);
-  }, [secondsCounter,counter])
-  
+  }, [secondsCounter, counter, getMinutes]);
   
   useEffect(() => {
-    console.log("Increament");
-    setSecondsCounter(true);
+    setSecondsCounter(true)
   }, [getMinutes]);
   
   function calculateTimeFromTripPointIndexToStopPoint(
@@ -187,12 +181,13 @@ const Map = () => {
 
     const hours = Math.floor(timeInHours);
     const minutes = Math.round((timeInHours - hours) * 60);
-    //const seconds = Math.round(((timeInHours - hours) * 60 * 60) / 60);
+    //const seconds = Math.round(((timeInHours - hours) * 60 * 60));
     //return `~${hours} hours and ${minutes} minutes`;
     setMinutes(minutes);
-    console.log("Check_min:", minutes);
+    //return `${hours} : ${minutes} : ${counter} GMT`;
 
-    return `${hours} : ${minutes} : ${counter} GMT`;
+    return `${hours} : ${minutes} : 00 GMT`;
+
   }
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
@@ -339,6 +334,8 @@ const Map = () => {
       calculateTimeFromTripPointIndexToStopPoint={
         calculateTimeFromTripPointIndexToStopPoint
       }
+      setArrivalTime={setArrivalTime}
+      totalTime={totalTime}
     />
   );
 };

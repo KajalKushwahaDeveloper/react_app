@@ -7,7 +7,7 @@ import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 import Tooltip from '@mui/material/Tooltip';
 
-const AddressTable = () => {
+const AddressTable = ({arrivalTime,setTotalTime}) => {
   var fromAddress = null;
   var toAddress = null;
   var timeInHours = null;
@@ -66,6 +66,7 @@ const AddressTable = () => {
 
   //const totalTime = `~${hours} hours and ${minutes} minutes \n(Including ${stopCount} stops)`;
   const totalTime = `${hours} : ${minutes} : 00 GMT`;
+  setTotalTime(totalTime);
 
 
   const currentStop = tripData?.stops.find(
@@ -187,7 +188,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}>
-                  {"20:18:20 GMT"}
+                  {arrivalTime}
                 </div>
                 {tripData &&
                   selectedEmulator &&
@@ -408,7 +409,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}>
-                  {"20:18:20 GMT"}
+                  {arrivalTime}
                 </div>
                 {tripData &&
                   selectedEmulator &&
