@@ -48,6 +48,7 @@ const GoogleMapContainer = ({
   setArrivalTime,
   totalTime
 }) => {
+  
   const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
@@ -58,6 +59,7 @@ const GoogleMapContainer = ({
       compareEmulators(oldEmulators, newEmulators);
     }
   );
+
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
@@ -78,6 +80,9 @@ const GoogleMapContainer = ({
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
 
+  console.log("TripData1:", tripData?.tripPoints);
+  console.log("TripData2:", emulators);
+
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
 
@@ -92,30 +97,22 @@ const GoogleMapContainer = ({
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
 
-  useEffect(() => {
-    if (selectedEmulator !== null && tripData !== null && tripData?.stops != null) {
-      let selectedEmulatorNearestStopPoint = tripData?.stops.find(
-        (stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex
-      );
-      console.log("selectedEmulatorTimeToReachStop11@@:", selectedEmulator.currentTripPointIndex,
-        selectedEmulatorNearestStopPoint,
-        selectedEmulator.speed);
-      const selectedEmulatorTimeToReachStop =
-        calculateTimeFromTripPointIndexToStopPoint(
-          selectedEmulator.currentTripPointIndex,
-          selectedEmulatorNearestStopPoint,
-          selectedEmulator.speed
-        );
-     
-      setArrivalTime(selectedEmulatorTimeToReachStop);
-      setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
-    }
-  }, [
-    selectedEmulator,
-    calculateTimeFromTripPointIndexToStopPoint,
-    tripData,
-    setArrivalTime
-  ]);
+    useEffect(() => {
+      if (selectedEmulator !== null && tripData !== null && tripData?.stops != null && selectedStop !== null) {
+        const selectedEmulatorTimeToReachStop =
+          calculateTimeFromTripPointIndexToStopPoint(
+            selectedEmulator.currentTripPointIndex,
+            selectedStop,
+            selectedEmulator.speed
+          );
+        setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
+      }
+    }, [
+      selectedEmulator,
+      calculateTimeFromTripPointIndexToStopPoint,
+      tripData,
+      selectedStop
+    ]);
 
   useMemo(() => {
     if (
@@ -426,7 +423,8 @@ const GoogleMapContainer = ({
             (emulator) =>
               emulator.latitude !== null && emulator.longitude !== null
           )
-          .map((emulator, _) => {
+        .map((emulator, _) => {
+            console.log("emulatorComing:",emulator);
             const isHovered = hoveredMarker?.id === emulator?.id;
             const isSelected = selectedEmulator?.id === emulator?.id;
 
@@ -488,7 +486,7 @@ const GoogleMapContainer = ({
               scaledSize: new window.google.maps.Size(20, 20),
               anchor: new window.google.maps.Point(10, 10),
             };
-
+            console.log("emulatorData11:",emulator)
             return (
               <React.Fragment key={emulator.id}>
                 <Marker

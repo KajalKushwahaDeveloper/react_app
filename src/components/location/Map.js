@@ -174,6 +174,7 @@ const Map = ({setArrivalTime,totalTime}) => {
         distance += path.distance;
       }
     });
+    console.log("Check_distance:",distance)
     const timeInHours = distance / velocity;
     if (timeInHours === Infinity) {
       return `Refreshing...`;
