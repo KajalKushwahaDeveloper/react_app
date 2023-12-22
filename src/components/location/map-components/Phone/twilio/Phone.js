@@ -84,11 +84,6 @@ const Phone = ({setContactDialogOptions}) => {
 
   return (
     <>
-      {/* <FakeState
-        currentState={state}
-        setState={setState}
-        setConn={setConn}
-      ></FakeState> */}
       <p className="status">
         {selectedDevice?.number + " : " + selectedDevice?.state}
       </p>

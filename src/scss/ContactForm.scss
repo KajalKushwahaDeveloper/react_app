@@ -1,4 +1,7 @@
 .sms_form {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     form {
         // margin-top: 2rem;
         display: flex;
