@@ -46,7 +46,8 @@ const GoogleMapContainer = ({
   confirmNewLocation,
   calculateTimeFromTripPointIndexToStopPoint,
   setArrivalTime,
-  totalTime
+  totalTime,
+  setRemainingDistance
 }) => {
   
   const emulators = useEmulatorStore(
@@ -107,11 +108,42 @@ const GoogleMapContainer = ({
           );
         setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
       }
+
+      const startIndex = selectedEmulator?.currentTripPointIndex;
+      const velocity = selectedEmulator?.speed;
+      // Calculate remaining distance and time
+      const tripDataArr = tripData?.tripPoints;
+      const lastTripPointIndex = tripDataArr && tripDataArr[tripDataArr?.length - 1]?.tripPointIndex;
+      let remainingDistance = 0;
+      tripData?.tripPoints?.forEach((path) => {
+        if (
+          path.tripPointIndex >= startIndex &&
+          path.tripPointIndex <= lastTripPointIndex
+        ) {
+          remainingDistance += path.distance;
+        }
+      });
+
+      const remaingingTimeInHours = remainingDistance / velocity;
+
+      const Remainginghours = Math.floor(remaingingTimeInHours);
+
+      const remaingingTimeInMinutes = Math.round((remaingingTimeInHours - Remainginghours) * 60);
+
+      const totalArrivalTime = `${Remainginghours} : ${remaingingTimeInMinutes} : 00 GMT`
+
+      const remainingDistanceResp = Math.floor(remainingDistance);
+      
+      setRemainingDistance(remainingDistanceResp);
+      setArrivalTime(totalArrivalTime);
+      
     }, [
       selectedEmulator,
       calculateTimeFromTripPointIndexToStopPoint,
       tripData,
-      selectedStop
+      selectedStop,
+      setArrivalTime,
+      setRemainingDistance
     ]);
 
   useMemo(() => {
@@ -486,7 +518,7 @@ const GoogleMapContainer = ({
               scaledSize: new window.google.maps.Size(20, 20),
               anchor: new window.google.maps.Point(10, 10),
             };
-            console.log("emulatorData11:",emulator)
+          
             return (
               <React.Fragment key={emulator.id}>
                 <Marker

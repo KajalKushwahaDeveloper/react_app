@@ -13,7 +13,7 @@ import { useEmulatorStore } from "../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../stores/emulator/types_maps.tsx";
 import useFetch from "../../hooks/useFetch.js";
 
-const Map = ({setArrivalTime,totalTime}) => {
+const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   
   const selectedEmulator = useEmulatorStore(
@@ -174,7 +174,7 @@ const Map = ({setArrivalTime,totalTime}) => {
         distance += path.distance;
       }
     });
-    console.log("Check_distance:",distance)
+
     const timeInHours = distance / velocity;
     if (timeInHours === Infinity) {
       return `Refreshing...`;
@@ -182,10 +182,7 @@ const Map = ({setArrivalTime,totalTime}) => {
 
     const hours = Math.floor(timeInHours);
     const minutes = Math.round((timeInHours - hours) * 60);
-    //const seconds = Math.round(((timeInHours - hours) * 60 * 60));
-    //return `~${hours} hours and ${minutes} minutes`;
     setMinutes(minutes);
-    //return `${hours} : ${minutes} : ${counter} GMT`;
 
     return `${hours} : ${minutes} : 00 GMT`;
 
@@ -337,6 +334,7 @@ const Map = ({setArrivalTime,totalTime}) => {
       }
       setArrivalTime={setArrivalTime}
       totalTime={totalTime}
+      setRemainingDistance={setRemainingDistance}
     />
   );
 };

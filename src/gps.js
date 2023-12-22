@@ -14,6 +14,7 @@ const GPS = () => {
   const [arrivalTime, setArrivalTime] = useState();
   const [totalTime, setTotalTime] = useState();
 
+  const [remainingDistance, setRemainingDistance] = useState();
   const { width } = useViewPort();
 
   console.log("CheckArrivalTime11@@$$:", totalTime);
@@ -29,7 +30,8 @@ const GPS = () => {
         <>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div>
-              <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime} />
+              <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime} 
+              remainingDistance={remainingDistance}/>
             </div>
             <div
               style={{
@@ -43,7 +45,8 @@ const GPS = () => {
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
               <div style={{ flex: "1" , top : "128px" }}>
-                <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime} />
+                <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime} 
+                setRemainingDistance={setRemainingDistance}/>
               </div>
             </div>
           </div>
@@ -54,7 +57,8 @@ const GPS = () => {
       {isMobile && (
         <>
           <div style={{ flex: "1", height: "100vh" }}>
-            <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime}/>
+            <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime}
+            setRemainingDistance={setRemainingDistance}/>
           </div>
           <BottomSheet
             className="bottom_sheet"
@@ -71,7 +75,8 @@ const GPS = () => {
               ‎
               <div>
                 <div>
-                  <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime}/>
+                  <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime}
+                  remainingDistance={remainingDistance}/>
                 </div>
               </div>
             </div>
