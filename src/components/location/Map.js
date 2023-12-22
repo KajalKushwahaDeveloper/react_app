@@ -175,6 +175,7 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
       }
     });
 
+    const remainingStopDistance = Math.floor(distance);
     const timeInHours = distance / velocity;
     if (timeInHours === Infinity) {
       return `Refreshing...`;
@@ -184,7 +185,7 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
     const minutes = Math.round((timeInHours - hours) * 60);
     setMinutes(minutes);
 
-    return `${hours} : ${minutes} : 00 GMT`;
+    return [`${hours} : ${minutes} : 00 GMT`, remainingStopDistance];
 
   }
 

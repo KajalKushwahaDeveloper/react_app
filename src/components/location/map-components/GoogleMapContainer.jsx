@@ -438,13 +438,13 @@ const GoogleMapContainer = ({
             </p>
 
             <h6 style={{ color: "black" }}>Arrival Time: </h6>
-            <p style={{ color: "black", fontSize:"11px"}}>{emulatorTimeLeftToReachNextStop}</p>
+            <p style={{ color: "black", fontSize:"11px"}}>{emulatorTimeLeftToReachNextStop[0]}</p>
 
             <h6 style={{ color: "black" }}>Total Time: </h6>
             <p style={{ color: "black", fontSize:"11px"}}>{totalTime}</p>
             
             <h6 style={{ color: "black" }}>Remaining Distance: </h6>
-            <p style={{ color: "black", fontSize:"11px"}}>{"22 miles"}</p>
+            <p style={{ color: "black", fontSize:"11px"}}>{emulatorTimeLeftToReachNextStop[1]} miles</p>
           </div>
         </InfoWindow>
       )}

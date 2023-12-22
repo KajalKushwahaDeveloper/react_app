@@ -175,7 +175,7 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Arrival Time </div>
+            <div className="address-table-heading">Final Arrival Time</div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
@@ -216,7 +216,7 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Total Time </div>
+            <div className="address-table-heading">Total Time</div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
@@ -396,7 +396,7 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Arrival Time </div>
+            <div className="address-table-heading">Final Arrival time </div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
@@ -437,7 +437,7 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Total Time </div>
+            <div className="address-table-heading">Total Time</div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
