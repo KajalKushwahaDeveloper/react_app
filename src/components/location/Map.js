@@ -289,10 +289,6 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
     setNearestTripPoint(null);
   };
 
-  const startLat = tripData?.tripPoints ? tripData?.tripPoints[0].lat : null;
-  const startLng = tripData?.tripPoints ? tripData?.tripPoints[0].lng : null;
-  const endLat = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lat : null;
-  const endLng = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lng : null;
 
   return (
     <GoogleMapContainer
@@ -303,10 +299,6 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
       handleMarkerMouseOver={handleMarkerMouseOver}
       handleMarkerMouseOut={handleMarkerMouseOut}
       handleInfoWindowClose={handleInfoWindowClose}
-      endLat={endLat}
-      endLng={endLng}
-      startLat={startLat}
-      startLng={startLng}
       handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
       openDialog={openDialog}
       onClose={closeDialog}

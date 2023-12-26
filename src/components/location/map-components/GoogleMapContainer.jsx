@@ -1,12 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 
-import {
-  GoogleMap,
-  Polyline,
-  Marker,
-  InfoWindow,
-  useJsApiLoader,
-} from "@react-google-maps/api";
+import { GoogleMap, Polyline, useJsApiLoader } from "@react-google-maps/api";
 
 import {
   Dialog,
@@ -24,6 +18,8 @@ import {
   compareTripData,
 } from "../../../stores/emulator/types_maps.tsx";
 import EmulatorMarker from "./Markers/EmulatorMarkers.jsx";
+import { TripComponents } from "./TripComponents.jsx";
+import { SelectedStopInfo } from "./SelectedStopInfo.jsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
@@ -35,19 +31,12 @@ const GoogleMapContainer = ({
   handleMarkerMouseOver,
   handleMarkerMouseOut,
   handleInfoWindowClose,
-  endLat,
-  endLng,
-  startLat,
-  startLng,
   handleEmulatorMarkerDragEnd,
   openDialog,
   onClose,
   DialogText,
   confirmNewLocation,
-  calculateTimeFromTripPointIndexToStopPoint,
-  setArrivalTime,
   totalTime,
-  setRemainingDistance,
 }) => {
   const emulators = useEmulatorStore(
     (state) => state.emulators,
@@ -57,21 +46,6 @@ const GoogleMapContainer = ({
         console.log("emulators changed ");
       }
       compareEmulators(oldEmulators, newEmulators);
-    }
-  );
-
-  const selectedEmulator = useEmulatorStore(
-    (state) => state.selectedEmulator,
-    (oldSelectedEmulator, newSelectedEmulator) => {
-      // TODO  Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulator(
-        oldSelectedEmulator,
-        newSelectedEmulator
-      );
-      if (diff === true) {
-        console.log("selectedEmulator changed (GoogleMapContainer)");
-      }
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
     }
   );
 
@@ -94,63 +68,6 @@ const GoogleMapContainer = ({
     libraries: libraries,
   });
 
-  const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
-    useState("N/A");
-
-  useEffect(() => {
-    if (
-      selectedEmulator !== null &&
-      tripData !== null &&
-      tripData?.stops != null &&
-      selectedStop !== null
-    ) {
-      const selectedEmulatorTimeToReachStop =
-        calculateTimeFromTripPointIndexToStopPoint(
-          selectedEmulator.currentTripPointIndex,
-          selectedStop,
-          selectedEmulator.speed
-        );
-      setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
-    }
-
-    const startIndex = selectedEmulator?.currentTripPointIndex;
-    const velocity = selectedEmulator?.speed;
-    // Calculate remaining distance and time
-    const tripDataArr = tripData?.tripPoints;
-    const lastTripPointIndex =
-      tripDataArr && tripDataArr[tripDataArr?.length - 1]?.tripPointIndex;
-    let remainingDistance = 0;
-    tripData?.tripPoints?.forEach((path) => {
-      if (
-        path.tripPointIndex >= startIndex &&
-        path.tripPointIndex <= lastTripPointIndex
-      ) {
-        remainingDistance += path.distance;
-      }
-    });
-
-    const remaingingTimeInHours = remainingDistance / velocity;
-
-    const Remainginghours = Math.floor(remaingingTimeInHours);
-
-    const remaingingTimeInMinutes = Math.round(
-      (remaingingTimeInHours - Remainginghours) * 60
-    );
-
-    const totalArrivalTime = `${Remainginghours} : ${remaingingTimeInMinutes} : 00 GMT`;
-
-    const remainingDistanceResp = Math.floor(remainingDistance);
-
-    setRemainingDistance(remainingDistanceResp);
-    setArrivalTime(totalArrivalTime);
-  }, [
-    selectedEmulator,
-    calculateTimeFromTripPointIndexToStopPoint,
-    tripData,
-    selectedStop,
-    setArrivalTime,
-    setRemainingDistance,
-  ]);
 
   useMemo(() => {
     if (
@@ -393,70 +310,13 @@ const GoogleMapContainer = ({
           }}
         />
       )}
-      {tripData?.stops != null &&
-        tripData?.stops.map((stop, index) => (
-          <React.Fragment key={index}>
-            <Marker
-              position={{
-                lat: stop.lat,
-                lng: stop.lng,
-              }}
-              title={"Stop" + stop.id}
-              label={`S${index + 1}`}
-              onClick={() => handleMarkerClick(stop)}
-            />
-            {stop.tripPoints && stop.tripPoints?.length > 0 && (
-              <Polyline
-                path={stop.tripPoints}
-                options={{
-                  strokeColor: "#FF2200",
-                  strokeWeight: 6,
-                  strokeOpacity: 0.6,
-                  defaultVisible: true,
-                }}
-              />
-            )}
-          </React.Fragment>
-        ))}
+      <TripComponents handleMarkerClick={handleMarkerClick}></TripComponents>
       {selectedStop && (
-        <InfoWindow
-          position={{ lat: selectedStop.lat, lng: selectedStop.lng }}
-          onCloseClick={handleInfoWindowClose}
-        >
-          <div style={{ width: "auto" }}>
-            <h6 style={{ color: "black" }}>Stop Address:</h6>
-            <p style={{ color: "black", fontSize: "11px" }}>
-              {selectedStop.address.map((addressItem, index) => (
-                <React.Fragment key={index}>
-                  {index > 0 && ", "}
-                  {addressItem.long_name}
-                </React.Fragment>
-              ))}
-            </p>
-            <h6 style={{ color: "black" }}>Nearest Gas Station:</h6>
-            <p style={{ color: "black", fontSize: "11px" }}>
-              {selectedStop.gasStation.map((gasStationAddressItem, index) => (
-                <React.Fragment key={index}>
-                  {index > 0 && ", "}
-                  {gasStationAddressItem.long_name}
-                </React.Fragment>
-              ))}
-            </p>
-
-            <h6 style={{ color: "black" }}>Arrival Time: </h6>
-            <p style={{ color: "black", fontSize: "11px" }}>
-              {emulatorTimeLeftToReachNextStop[0]}
-            </p>
-
-            <h6 style={{ color: "black" }}>Total Time: </h6>
-            <p style={{ color: "black", fontSize: "11px" }}>{totalTime}</p>
-
-            <h6 style={{ color: "black" }}>Remaining Distance: </h6>
-            <p style={{ color: "black", fontSize: "11px" }}>
-              {emulatorTimeLeftToReachNextStop[1]} miles
-            </p>
-          </div>
-        </InfoWindow>
+        <SelectedStopInfo
+          selectedStop={selectedStop}
+          handleInfoWindowClose={handleInfoWindowClose}
+          totalTime={totalTime}
+        ></SelectedStopInfo>
       )}
 
       <EmulatorMarker
@@ -466,29 +326,6 @@ const GoogleMapContainer = ({
         handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
       />
 
-      {endLat !== null && endLng !== null && (
-        <Marker
-          position={{ lat: startLat, lng: startLng }}
-          icon={{
-            url: "images/Origin.svg",
-            scaledSize: new window.google.maps.Size(30, 30),
-            anchor: new window.google.maps.Point(15, 15),
-            scale: 1,
-          }}
-        />
-      )}
-
-      {endLat !== null && endLng !== null && (
-        <Marker
-          position={{ lat: endLat, lng: endLng }}
-          icon={{
-            url: "images/Destination.svg",
-            scaledSize: new window.google.maps.Size(30, 30),
-            anchor: new window.google.maps.Point(15, 15),
-            scale: 1,
-          }}
-        />
-      )}
       <Dialog open={openDialog} onClose={onClose}>
         <DialogTitle id="alert-dialog-title">{"logbook gps"}</DialogTitle>
         <DialogContent>
