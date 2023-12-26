@@ -44,7 +44,6 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
   }, [createDevices, data]);
 
   const {
-    setAssignedTelephoneNumber,
     hoveredMarker,
     setHoveredMarker,
     showToast,
@@ -58,30 +57,15 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
   const [dragWithoutTrip, setDragWithoutTrip] = useState();
 
   const [selectedStop, setSelectedStop] = useState(null);
-  const [counter, setCounter] = useState(0);
-  const [getMinutes, setMinutes] = useState();
-  const [secondsCounter, setSecondsCounter] = useState(false);
 
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
   };
-  
-  const handleMarkerMouseOver = (emulator) => {
-    setHoveredMarker(emulator);
-  };
 
-  const handleMarkerMouseOut = () => {
-    setHoveredMarker(null);
-  };
 
   const handleInfoWindowClose = () => {
     setSelectedStop(null);
-  };
-
-  const handleEmulatorMarkerClick = (emulator) => {
-    setAssignedTelephoneNumber(emulator.telephone);
-    selectEmulator(emulator)
   };
 
   const handleDialog = (text) => {
@@ -138,20 +122,6 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
     return nextStopPoint;
   }
 
-  useEffect(() => {
-    if (counter === 60) {
-      setCounter(0);
-    }
-    if (secondsCounter === true || counter) {
-      counter < 60 && setTimeout(() => setCounter(counter + 1), 1000);
-    }
-    setSecondsCounter(false);
-  }, [secondsCounter, counter, getMinutes]);
-  
-  useEffect(() => {
-    setSecondsCounter(true)
-  }, [getMinutes]);
-  
   function calculateTimeFromTripPointIndexToStopPoint(
     startIndex,
     stop,
@@ -183,18 +153,31 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
 
     const hours = Math.floor(timeInHours);
     const minutes = Math.round((timeInHours - hours) * 60);
-    setMinutes(minutes);
 
     return [`${hours} : ${minutes} : 00 GMT`, remainingStopDistance];
 
   }
+  
+  const handleMarkerMouseOver = (emulatorId) => {
+    //find from store
+    const emulator = data.find((emulator) => emulator.id === emulatorId);
+    setHoveredMarker(emulator);
+  };
 
-  const handleEmulatorMarkerDragEnd = (emulator, event) => {
-    const { id } = emulator;
+  const handleMarkerMouseOut = () => {
+    setHoveredMarker(null);
+  };
+
+  const handleEmulatorMarkerDragEnd = (emulatorId, event) => {
+    const emulator = data.find((emulator) => emulator.id === emulatorId);
+    if(emulator === undefined) {
+      console.log("Emulator not found in data");
+      return;
+    }
     const { latLng } = event;
     const lat = latLng.lat();
     const lng = latLng.lng();
-    setDragId(id);
+    setDragId(emulatorId);
     // if emulator has no Trip
     if (emulator.startLat === null && emulator.tripStatus === "STOP") {
       setDragOutRange(null);
@@ -324,7 +307,6 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
       endLng={endLng}
       startLat={startLat}
       startLng={startLng}
-      handleEmulatorMarkerClick={handleEmulatorMarkerClick}
       handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
       openDialog={openDialog}
       onClose={closeDialog}

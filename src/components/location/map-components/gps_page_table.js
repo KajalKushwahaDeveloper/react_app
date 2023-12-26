@@ -79,7 +79,6 @@ const GpsTable = () => {
   const {
     staticEmulators,
     hoveredMarker,
-    setAssignedTelephoneNumber,
     showToast,
   } = useStates();
 
@@ -205,7 +204,6 @@ const GpsTable = () => {
   };
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
-    setAssignedTelephoneNumber(emulatorRow.telephone);
     if (selectedEmulator?.id !== emulatorRow.id) {
       selectEmulator(emulatorRow);
     } else {
