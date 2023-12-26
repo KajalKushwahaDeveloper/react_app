@@ -45,7 +45,11 @@ const GoogleMapContainer = ({
   DialogText,
   confirmNewLocation,
   calculateTimeFromTripPointIndexToStopPoint,
+  setArrivalTime,
+  totalTime,
+  setRemainingDistance
 }) => {
+  
   const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
@@ -56,6 +60,7 @@ const GoogleMapContainer = ({
       compareEmulators(oldEmulators, newEmulators);
     }
   );
+
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
@@ -76,6 +81,9 @@ const GoogleMapContainer = ({
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
 
+  console.log("TripData1:", tripData?.tripPoints);
+  console.log("TripData2:", emulators);
+
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
 
@@ -90,24 +98,53 @@ const GoogleMapContainer = ({
   const [emulatorTimeLeftToReachNextStop, setEmulatorTimeLeftToReachNextStop] =
     useState("N/A");
 
-  useEffect(() => {
-    if (selectedEmulator !== null && tripData !== null && tripData?.stops != null) {
-      let selectedEmulatorNearestStopPoint = tripData?.stops.find(
-        (stop) => selectedEmulator.currentTripPointIndex < stop.tripPointIndex
-      );
-      const selectedEmulatorTimeToReachStop =
-        calculateTimeFromTripPointIndexToStopPoint(
-          selectedEmulator.currentTripPointIndex,
-          selectedEmulatorNearestStopPoint,
-          selectedEmulator.speed
-        );
-      setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
-    }
-  }, [
-    selectedEmulator,
-    calculateTimeFromTripPointIndexToStopPoint,
-    tripData,
-  ]);
+    useEffect(() => {
+      if (selectedEmulator !== null && tripData !== null && tripData?.stops != null && selectedStop !== null) {
+        const selectedEmulatorTimeToReachStop =
+          calculateTimeFromTripPointIndexToStopPoint(
+            selectedEmulator.currentTripPointIndex,
+            selectedStop,
+            selectedEmulator.speed
+          );
+        setEmulatorTimeLeftToReachNextStop(selectedEmulatorTimeToReachStop);
+      }
+
+      const startIndex = selectedEmulator?.currentTripPointIndex;
+      const velocity = selectedEmulator?.speed;
+      // Calculate remaining distance and time
+      const tripDataArr = tripData?.tripPoints;
+      const lastTripPointIndex = tripDataArr && tripDataArr[tripDataArr?.length - 1]?.tripPointIndex;
+      let remainingDistance = 0;
+      tripData?.tripPoints?.forEach((path) => {
+        if (
+          path.tripPointIndex >= startIndex &&
+          path.tripPointIndex <= lastTripPointIndex
+        ) {
+          remainingDistance += path.distance;
+        }
+      });
+
+      const remaingingTimeInHours = remainingDistance / velocity;
+
+      const Remainginghours = Math.floor(remaingingTimeInHours);
+
+      const remaingingTimeInMinutes = Math.round((remaingingTimeInHours - Remainginghours) * 60);
+
+      const totalArrivalTime = `${Remainginghours} : ${remaingingTimeInMinutes} : 00 GMT`
+
+      const remainingDistanceResp = Math.floor(remainingDistance);
+      
+      setRemainingDistance(remainingDistanceResp);
+      setArrivalTime(totalArrivalTime);
+      
+    }, [
+      selectedEmulator,
+      calculateTimeFromTripPointIndexToStopPoint,
+      tripData,
+      selectedStop,
+      setArrivalTime,
+      setRemainingDistance
+    ]);
 
   useMemo(() => {
     if (
@@ -381,8 +418,8 @@ const GoogleMapContainer = ({
           onCloseClick={handleInfoWindowClose}
         >
           <div style={{ width: "auto" }}>
-            <h3 style={{ color: "black" }}>Stop Address:</h3>
-            <p style={{ color: "black" }}>
+            <h6 style={{ color: "black" }}>Stop Address:</h6>
+            <p style={{ color: "black", fontSize:"11px"}}>
               {selectedStop.address.map((addressItem, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && ", "}
@@ -390,8 +427,8 @@ const GoogleMapContainer = ({
                 </React.Fragment>
               ))}
             </p>
-            <h3 style={{ color: "black" }}>Nearest Gas Station:</h3>
-            <p style={{ color: "black" }}>
+            <h6 style={{ color: "black" }}>Nearest Gas Station:</h6>
+            <p style={{ color: "black", fontSize:"11px"}}>
               {selectedStop.gasStation.map((gasStationAddressItem, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && ", "}
@@ -400,8 +437,14 @@ const GoogleMapContainer = ({
               ))}
             </p>
 
-            <h3 style={{ color: "black" }}>Time To Reach: </h3>
-            <p style={{ color: "black" }}>{emulatorTimeLeftToReachNextStop}</p>
+            <h6 style={{ color: "black" }}>Arrival Time: </h6>
+            <p style={{ color: "black", fontSize:"11px"}}>{emulatorTimeLeftToReachNextStop[0]}</p>
+
+            <h6 style={{ color: "black" }}>Total Time: </h6>
+            <p style={{ color: "black", fontSize:"11px"}}>{totalTime}</p>
+            
+            <h6 style={{ color: "black" }}>Remaining Distance: </h6>
+            <p style={{ color: "black", fontSize:"11px"}}>{emulatorTimeLeftToReachNextStop[1]} miles</p>
           </div>
         </InfoWindow>
       )}
@@ -412,7 +455,8 @@ const GoogleMapContainer = ({
             (emulator) =>
               emulator.latitude !== null && emulator.longitude !== null
           )
-          .map((emulator, _) => {
+        .map((emulator, _) => {
+            console.log("emulatorComing:",emulator);
             const isHovered = hoveredMarker?.id === emulator?.id;
             const isSelected = selectedEmulator?.id === emulator?.id;
 
@@ -474,7 +518,7 @@ const GoogleMapContainer = ({
               scaledSize: new window.google.maps.Size(20, 20),
               anchor: new window.google.maps.Point(10, 10),
             };
-
+          
             return (
               <React.Fragment key={emulator.id}>
                 <Marker

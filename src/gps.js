@@ -1,7 +1,7 @@
 import "./scss/map.scss";
 import { ToastContainer } from "react-toastify";
 import WrappedMap from "./components/location/Map";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CreateTripButton from "./components/location/map-components/CreateTripButton.jsx";
 import CreateTripOverlay from "./components/location/map-components/CreateTripOverlay";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -11,8 +11,13 @@ import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
 
 const GPS = () => {
+  const [arrivalTime, setArrivalTime] = useState();
+  const [totalTime, setTotalTime] = useState();
 
+  const [remainingDistance, setRemainingDistance] = useState();
   const { width } = useViewPort();
+
+  console.log("CheckArrivalTime11@@$$:", totalTime);
 
   const breakpoint = 620;
   const isMobile = width < breakpoint;
@@ -25,7 +30,8 @@ const GPS = () => {
         <>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div>
-              <AddressTable />
+              <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime} 
+              remainingDistance={remainingDistance}/>
             </div>
             <div
               style={{
@@ -39,7 +45,8 @@ const GPS = () => {
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
               <div style={{ flex: "1" , top : "128px" }}>
-                <WrappedMap />
+                <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime} 
+                setRemainingDistance={setRemainingDistance}/>
               </div>
             </div>
           </div>
@@ -50,7 +57,8 @@ const GPS = () => {
       {isMobile && (
         <>
           <div style={{ flex: "1", height: "100vh" }}>
-            <WrappedMap />
+            <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime}
+            setRemainingDistance={setRemainingDistance}/>
           </div>
           <BottomSheet
             className="bottom_sheet"
@@ -61,13 +69,14 @@ const GPS = () => {
                 INFO
               </div>
             }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.9]}
+            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.88]}
           >
             <div>
               ‎
               <div>
                 <div>
-                  <AddressTable />
+                  <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime}
+                  remainingDistance={remainingDistance}/>
                 </div>
               </div>
             </div>

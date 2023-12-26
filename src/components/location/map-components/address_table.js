@@ -7,7 +7,7 @@ import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 import Tooltip from '@mui/material/Tooltip';
 
-const AddressTable = () => {
+const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
   var fromAddress = null;
   var toAddress = null;
   var timeInHours = null;
@@ -66,6 +66,7 @@ const AddressTable = () => {
 
   //const totalTime = `~${hours} hours and ${minutes} minutes \n(Including ${stopCount} stops)`;
   const totalTime = `${hours} : ${minutes} : 00 GMT`;
+  setTotalTime(totalTime);
 
 
   const currentStop = tripData?.stops.find(
@@ -174,7 +175,7 @@ const AddressTable = () => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Arrival Time </div>
+            <div className="address-table-heading">Final Arrival Time</div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
@@ -187,7 +188,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}>
-                  {"20:18:20 GMT"}
+                  {arrivalTime}
                 </div>
                 {tripData &&
                   selectedEmulator &&
@@ -215,7 +216,7 @@ const AddressTable = () => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Total Time </div>
+            <div className="address-table-heading">Total Time</div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
@@ -273,7 +274,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word"}}>
-                   {"22 mile"}
+                   {remainingDistance} miles
                 </div>
                 {tripData &&
                   selectedEmulator &&
@@ -395,7 +396,7 @@ const AddressTable = () => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Arrival Time </div>
+            <div className="address-table-heading">Final Arrival time </div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
@@ -408,7 +409,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}>
-                  {"20:18:20 GMT"}
+                  {arrivalTime}
                 </div>
                 {tripData &&
                   selectedEmulator &&
@@ -436,7 +437,7 @@ const AddressTable = () => {
               alignItems: "center",
               padding: "0px !important",
             }}>
-            <div className="address-table-heading">Total Time </div>
+            <div className="address-table-heading">Total Time</div>
             {tripData && selectedEmulator ? (
               <div
                 style={{
@@ -490,7 +491,7 @@ const AddressTable = () => {
                 <div
                   className="addressTable"
                   style={{ wordWrap: "break-word"}}>
-                   {"22 mile"}
+                   {remainingDistance} miles
                 </div>
                 {tripData &&
                   selectedEmulator &&

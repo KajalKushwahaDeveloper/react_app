@@ -13,7 +13,7 @@ import { useEmulatorStore } from "../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../stores/emulator/types_maps.tsx";
 import useFetch from "../../hooks/useFetch.js";
 
-const Map = () => {
+const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   
   const selectedEmulator = useEmulatorStore(
@@ -58,6 +58,10 @@ const Map = () => {
   const [dragWithoutTrip, setDragWithoutTrip] = useState();
 
   const [selectedStop, setSelectedStop] = useState(null);
+  const [counter, setCounter] = useState(0);
+  const [getMinutes, setMinutes] = useState();
+  const [secondsCounter, setSecondsCounter] = useState(false);
+
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
@@ -134,6 +138,20 @@ const Map = () => {
     return nextStopPoint;
   }
 
+  useEffect(() => {
+    if (counter === 60) {
+      setCounter(0);
+    }
+    if (secondsCounter === true || counter) {
+      counter < 60 && setTimeout(() => setCounter(counter + 1), 1000);
+    }
+    setSecondsCounter(false);
+  }, [secondsCounter, counter, getMinutes]);
+  
+  useEffect(() => {
+    setSecondsCounter(true)
+  }, [getMinutes]);
+  
   function calculateTimeFromTripPointIndexToStopPoint(
     startIndex,
     stop,
@@ -156,13 +174,19 @@ const Map = () => {
         distance += path.distance;
       }
     });
+
+    const remainingStopDistance = Math.floor(distance);
     const timeInHours = distance / velocity;
     if (timeInHours === Infinity) {
       return `Refreshing...`;
     }
+
     const hours = Math.floor(timeInHours);
     const minutes = Math.round((timeInHours - hours) * 60);
-    return `~${hours} hours and ${minutes} minutes`;
+    setMinutes(minutes);
+
+    return [`${hours} : ${minutes} : 00 GMT`, remainingStopDistance];
+
   }
 
   const handleEmulatorMarkerDragEnd = (emulator, event) => {
@@ -309,6 +333,9 @@ const Map = () => {
       calculateTimeFromTripPointIndexToStopPoint={
         calculateTimeFromTripPointIndexToStopPoint
       }
+      setArrivalTime={setArrivalTime}
+      totalTime={totalTime}
+      setRemainingDistance={setRemainingDistance}
     />
   );
 };
