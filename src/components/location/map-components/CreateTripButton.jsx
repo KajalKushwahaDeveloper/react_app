@@ -14,7 +14,6 @@ const CreateTripButton = () => {
   const { width, height } = useViewPort();
   const {
     showToast,
-    AssignedTelephoneNumber,
     setIsTableVisible,
     isTableVisible,
     tripData,
@@ -47,8 +46,8 @@ const CreateTripButton = () => {
   const handleCreateTripButton = () => {
     if (selectedEmulator === null) {
       showToast("Emulator is not selected", "error"); //Emulator is not selected error
-    } else if (AssignedTelephoneNumber === null) {
-      console.log("Assigned number", AssignedTelephoneNumber);
+    } else if (selectedEmulator.AssignedTelephoneNumber === null) {
+      console.log("Assigned number", selectedEmulator.AssignedTelephoneNumber);
       showToast("Telephone Number is not Assigned", "error"); //Telephone Number is not Assigned
     } else {
       setIsTableVisible(!isTableVisible);
@@ -130,17 +129,18 @@ const CreateTripButton = () => {
                 alignItems: "center",
                 fontSize: "11px",
               }
-            : isTabBreakpoint ? {
-              height: "38px",
-              zIndex: 2,
-              position: "absolute",
-              top: "155px",
-              right: !hideCancel ? 110 : 230,
-              padding: ".65rem",
-              display: "flex",
-              alignItems: "center",
-              }  :
-              {
+            : isTabBreakpoint
+            ? {
+                height: "38px",
+                zIndex: 2,
+                position: "absolute",
+                top: "155px",
+                right: !hideCancel ? 110 : 230,
+                padding: ".65rem",
+                display: "flex",
+                alignItems: "center",
+              }
+            : {
                 height: "38px",
                 zIndex: 2,
                 position: "absolute",
@@ -170,18 +170,18 @@ const CreateTripButton = () => {
                   alignItems: "center",
                   fontSize: "11px",
                 }
-              : isTabBreakpoint ?
-              {
-                height: "38px",
-                zIndex: 2,
-                position: "absolute",
-                top: "155px",
-                right: 110,
-                padding: ".65rem",
-                display: "flex",
-                alignItems: "center",
-                } :
-                {
+              : isTabBreakpoint
+              ? {
+                  height: "38px",
+                  zIndex: 2,
+                  position: "absolute",
+                  top: "155px",
+                  right: 110,
+                  padding: ".65rem",
+                  display: "flex",
+                  alignItems: "center",
+                }
+              : {
                   height: "38px",
                   zIndex: 2,
                   position: "absolute",
@@ -210,9 +210,8 @@ const CreateTripButton = () => {
                 display: "flex",
                 alignItems: "center",
               }
-            :
-            isTabBreakpoint ?
-              {
+            : isTabBreakpoint
+            ? {
                 height: "38px",
                 zIndex: 2,
                 position: "absolute",
@@ -222,7 +221,7 @@ const CreateTripButton = () => {
                 display: "flex",
                 alignItems: "center",
               }
-              :{
+            : {
                 height: "38px",
                 zIndex: 2,
                 position: "absolute",
