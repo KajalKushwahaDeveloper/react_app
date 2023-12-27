@@ -108,7 +108,7 @@ const CreateTripButton = () => {
           ? {
               display: "flex",
               justifyContent: "space-around",
-              marginTop: "1rem",
+              margin: ".5rem 0",
             }
           : {
               display: "flex",

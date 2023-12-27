@@ -5,9 +5,9 @@ import GpsTable from "./gps_page_table.js";
 import CreateTripButton from "./CreateTripButton";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from "@mui/material/Tooltip";
 
-const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
+const AddressTable = ({ arrivalTime, setTotalTime, remainingDistance }) => {
   var fromAddress = null;
   var toAddress = null;
   var timeInHours = null;
@@ -67,7 +67,6 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
   //const totalTime = `~${hours} hours and ${minutes} minutes \n(Including ${stopCount} stops)`;
   const totalTime = `${hours} : ${minutes} : 00 GMT`;
   setTotalTime(totalTime);
-
 
   const currentStop = tripData?.stops.find(
     (stop) =>
@@ -327,7 +326,7 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
           </div>
 
           <CreateTripButton />
-          <GpsTable />
+          
         </div>
       ) : (
         <div
@@ -347,12 +346,18 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
             }}>
             <div className="address-table-heading">Current location</div>
             <div className="addressTable ellipsisText">
-            <Tooltip title={selectedEmulator && selectedEmulator.address
-                && selectedEmulator.address} placement="top">
-              {selectedEmulator && selectedEmulator.address
-                ? selectedEmulator.address
-                    : "N/A"}
-            </Tooltip>
+              <Tooltip
+                title={
+                  selectedEmulator &&
+                  selectedEmulator.address &&
+                  selectedEmulator.address
+                }
+                placement="top"
+              >
+                {selectedEmulator && selectedEmulator.address
+                  ? selectedEmulator.address
+                  : "N/A"}
+              </Tooltip>
             </div>
           </div>
 
@@ -365,9 +370,9 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
               padding: "0",
             }}>
             <div className="address-table-heading">From address</div>
-              <div className="addressTable ellipsisText">
+            <div className="addressTable ellipsisText">
               <Tooltip title={fromAddress && fromAddress} placement="top">
-                  {fromAddress ? fromAddress : "N/A"}
+                {fromAddress ? fromAddress : "N/A"}
               </Tooltip>
             </div>
           </div>
@@ -381,11 +386,11 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
               padding: "0",
             }}>
             <div className="address-table-heading">To address</div>
-              <div className="addressTable ellipsisText">
-                <Tooltip title={toAddress && toAddress} placement="top">
-                  {toAddress ? toAddress : "N/A"}
-                </Tooltip>
-              </div>
+            <div className="addressTable ellipsisText">
+              <Tooltip title={toAddress && toAddress} placement="top">
+                {toAddress ? toAddress : "N/A"}
+              </Tooltip>
+            </div>
           </div>
 
           {/* ARRIVAL TIME */}
@@ -472,12 +477,13 @@ const AddressTable = ({arrivalTime,setTotalTime,remainingDistance}) => {
 
           {/* REMAING DISTANCE */}
           <div
-              className="col d-flex flex-column"
-              style={{
-                border: "2px solid",
-                alignItems: "center",
-                padding: "0px !important",
-              }}>
+            className="col d-flex flex-column"
+            style={{
+              border: "2px solid",
+              alignItems: "center",
+              padding: "0px !important",
+            }}
+          >
             <div className="address-table-heading">Remaining Distance</div>
             {tripData && selectedEmulator ? (
               <div
