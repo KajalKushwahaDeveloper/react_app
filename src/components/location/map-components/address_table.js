@@ -176,7 +176,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {fromAddress ? fromAddress : "N/A"}
+              {fromAddress.current ? fromAddress.current : "N/A"}
             </div>
           </div>
           {/* TO ADDRESS*/}
