@@ -1,5 +1,4 @@
-import React, { memo, useRef } from "react";
-import { Marker } from "@react-google-maps/api";
+import React, { useRef } from "react";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import {
   compareTripData,
@@ -8,14 +7,13 @@ import { compareEmulatorsForMarkers } from "./utils.tsx";
 import EmulatorMarker from "./EmulatorMarker.jsx";
 import EmulatorMarkerDirection from "./EmulatorMarkerDirection.jsx";
 
-const EmulatorMarkers = memo(
-  ({
+const EmulatorMarkers = ({
     hoveredMarker,
     handleMarkerMouseOut,
     handleMarkerMouseOver,
     handleEmulatorMarkerDragEnd,
   }) => {
-
+    console.log("EmulatorMarkers refreshed");
     const markers = useEmulatorStore(
       (state) => state.emulators,
       (oldEmulators, newEmulators) => {
@@ -141,7 +139,6 @@ const EmulatorMarkers = memo(
             })}
       </>
     );
-  }
-);
+  };
 
 export default EmulatorMarkers;

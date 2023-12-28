@@ -13,10 +13,9 @@
 // />
 
 import { Marker } from "@react-google-maps/api";
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
-const EmulatorMarker = memo(
-  ({
+const EmulatorMarker = ({
     id,
     latLng,
     telephone,
@@ -82,7 +81,6 @@ const EmulatorMarker = memo(
         zIndex={1}
       />
     );
-  }
-);
+  };
 
 export default EmulatorMarker;

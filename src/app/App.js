@@ -13,6 +13,7 @@ import PageNotFound from "../view/pageNotFound.js";
 import { useEmulatorStore } from "../stores/emulator/store.tsx";
 
 function App() {
+  console.log("App.js refreshed");
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);

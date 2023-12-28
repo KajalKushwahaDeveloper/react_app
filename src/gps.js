@@ -11,6 +11,7 @@ import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
 
 const GPS = () => {
+  console.log("GPS.js refreshed");
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;

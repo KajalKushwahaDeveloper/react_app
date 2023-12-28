@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useRef} from "react";
 
 import { GoogleMap, Polyline, useJsApiLoader } from "@react-google-maps/api";
 
@@ -12,9 +12,7 @@ import {
 } from "@mui/material";
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
-import {
-  compareTripData,
-} from "../../../stores/emulator/types_maps.tsx";
+import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
 import EmulatorMarker from "./Markers/EmulatorMarkers.jsx";
 import { StopComponents } from "./Trip/StopComponents.jsx";
 import { SelectedStopInfo } from "./SelectedStopInfo.jsx";
@@ -54,8 +52,7 @@ const GoogleMapContainer = ({
     libraries: libraries,
   });
 
-
-  useMemo(() => {
+  useEffect(() => {
     if (
       tripData === null ||
       mapRef.current === null ||
@@ -333,4 +330,4 @@ const GoogleMapContainer = ({
   );
 };
 
-export default React.memo(GoogleMapContainer);
+export default GoogleMapContainer;
