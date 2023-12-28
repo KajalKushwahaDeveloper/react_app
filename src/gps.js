@@ -54,8 +54,7 @@ const GPS = () => {
               ‎
               <div>
                 <div>
-                  <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime}
-                  remainingDistance={remainingDistance}/>
+                  <AddressTable/>
                 </div>
               
               </div>
