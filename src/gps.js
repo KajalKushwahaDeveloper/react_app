@@ -50,6 +50,16 @@ const GPS = () => {
           <div style={{ flex: "1", height: "100vh" }}>
             <WrappedMap />
           </div>
+          <div>
+              ‎
+              <div>
+                <div>
+                  <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime}
+                  remainingDistance={remainingDistance}/>
+                </div>
+              
+              </div>
+            </div>
           <BottomSheet
             className="bottom_sheet"
             open={true}
@@ -59,16 +69,17 @@ const GPS = () => {
                 INFO
               </div>
             }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.88]}
+            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.45]}
           >
-            <div>
+           <GpsTable />
+            {/* <div>
               ‎
               <div>
                 <div>
                   <AddressTable />
                 </div>
               </div>
-            </div>
+            </div> */}
           </BottomSheet>
         </>
       )}

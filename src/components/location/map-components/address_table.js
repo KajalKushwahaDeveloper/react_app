@@ -123,6 +123,7 @@ const AddressTable = () => {
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
+
   return (
     <div className="container-fluid main-address-table">
       {isMobile ? (
@@ -336,7 +337,7 @@ const AddressTable = () => {
           </div>
 
           <CreateTripButton />
-          <GpsTable />
+          
         </div>
       ) : (
         <div
