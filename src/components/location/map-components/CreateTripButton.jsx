@@ -40,7 +40,7 @@ const CreateTripButton = () => {
   const breakpointTab = 992;
   const isMobileBelowSixTwenty = width < breakpoint;
   const isTabBreakpoint = width < breakpointTab;
-  const [isSpinning, setSpinning] = useState(false);
+  const [isSpinning, setSpinning] = useState();
   const [hideCancel, setHideCancel] = useState(false);
 
   const handleCreateTripButton = () => {
