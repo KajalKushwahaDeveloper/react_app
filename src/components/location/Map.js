@@ -10,26 +10,39 @@ import ApiService from "../../ApiService";
 import "../../css/mapbottomsheet.css";
 import { useStates } from "../../StateProvider.js";
 import { useEmulatorStore } from "../../stores/emulator/store.tsx";
-import { compareSelectedEmulator } from "../../stores/emulator/types_maps.tsx";
+import { compareTripData } from "../../stores/emulator/types_maps.tsx";
 import useFetch from "../../hooks/useFetch.js";
+import { compareSelectedEmulatorChangedNullOrId } from "./utils.tsx";
 
-const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
-  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+const Map = () => {
+  console.log("Map refreshed");
   
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  console.log("fetchEmulators: ", fetchEmulators);
+
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
       // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      const diff = compareSelectedEmulatorChangedNullOrId(oldSelectedEmulator, newSelectedEmulator);
       if(diff === true) {
-        console.log("selectedEmulator changed (Map)", );
+        console.warn("selectedEmulator Changed (Map)");
       }
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+      compareSelectedEmulatorChangedNullOrId(oldSelectedEmulator, newSelectedEmulator)
     }
   );
 
-  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
-  const tripData = useEmulatorStore((state) => state.tripData);
+  const tripData = useEmulatorStore(
+    (state) => state.tripData,
+    (oldTripData, newTripData) => {
+      const diff = compareTripData(oldTripData, newTripData);
+      if(diff === true) {
+        console.warn("tripData changed (Map)");
+      }
+      compareTripData(oldTripData, newTripData)
+    }
+  );
+
   const center = useEmulatorStore((state) => state.center);
   
   const createDevices = useEmulatorStore((state) => state.createDevices);
@@ -307,9 +320,6 @@ const Map = ({setArrivalTime,totalTime, setRemainingDistance}) => {
       calculateTimeFromTripPointIndexToStopPoint={
         calculateTimeFromTripPointIndexToStopPoint
       }
-      setArrivalTime={setArrivalTime}
-      totalTime={totalTime}
-      setRemainingDistance={setRemainingDistance}
     />
   );
 };

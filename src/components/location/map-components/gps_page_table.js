@@ -26,6 +26,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 //components
 import ContactDialogComponent from "./Phone/ContactDialogComponent";
@@ -41,9 +42,9 @@ import {
   compareSelectedEmulator,
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
+import CustomNotesModal from "./Phone/CustomNotesModal";
 
 const GpsTable = () => {
-
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
   const emulators = useEmulatorStore(
@@ -76,11 +77,7 @@ const GpsTable = () => {
   const devices = useEmulatorStore((state) => state.devices);
 
   // State variables
-  const {
-    staticEmulators,
-    hoveredMarker,
-    showToast,
-  } = useStates();
+  const { staticEmulators, hoveredMarker, showToast } = useStates();
 
   const { width } = useViewPort();
   const breakpoint = 620;
@@ -114,6 +111,13 @@ const GpsTable = () => {
     dialogType: "",
     emulatorId: null,
   });
+
+  const [customNotes, setCustomNotes] = useState({});
+
+  const [openCustomNotesModal, setOpenCustomNotesModal] = useState(false);
+  const [selectedEmulatorIdForNotes, setSelectedEmulatorIdForNotes] =
+    useState(null);
+  const [noteText, setNoteText] = useState("");
 
   const selectedDevice = useEmulatorStore(
     (state) => state.selectedDevice,
@@ -171,6 +175,13 @@ const GpsTable = () => {
       emulatorId: row.id,
     });
   };
+  const handleNoteIconClicked = (row) => {
+    setSelectedEmulatorIdForNotes(row.id);
+    setNoteText(customNotes[row.id] || ""); // Set the existing note, if any
+    setOpenCustomNotesModal(true);
+  };
+
+
 
   useEffect(() => {
     if (emulators != null) {
@@ -292,7 +303,7 @@ const GpsTable = () => {
           display: "flex",
           flexDirection: "column",
           position: isMobile ? "static" : "absolute",
-          marginTop: isMobile ? "10px" : "0",
+          marginTop: isMobile ? "1px" : "0",
           top: isMobile ? "0px" : isTabBreakpoint ? "143px" : "125px",
           paddingRight: isMobile && "0px",
           paddingLeft: isMobile && "0px",
@@ -402,6 +413,14 @@ const GpsTable = () => {
                             >
                               <HistoryIcon fontSize="small" />
                             </IconButton>
+
+                            {/* custom notes */}
+                            <IconButton
+                              size="small"
+                              onClick={() => handleNoteIconClicked(row)}
+                            >
+                              <DescriptionIcon fontSize="small" />
+                            </IconButton>
                           </div>
                         </Tooltip>
                       </Fragment>
@@ -481,7 +500,7 @@ const GpsTable = () => {
                 </tr>
               </tfoot>
             </table>
-        
+
             <PopUpEmulatorHistory
               showToast={showToast}
               handleClose={handleHistoryClose}
@@ -494,6 +513,16 @@ const GpsTable = () => {
               setContactDialogOptions={setContactDialogOptions}
               emulators={staticEmulators}
               showToast={showToast}
+            />
+
+            <CustomNotesModal
+              open={openCustomNotesModal}
+              handleClose={() => setOpenCustomNotesModal(false)}
+              setOpenCustomNotesModal={setOpenCustomNotesModal}
+              noteText={noteText}
+              setNoteText={setNoteText}
+              selectedEmulatorIdForNotes={selectedEmulatorIdForNotes}
+              setCustomNotes={setCustomNotes}
             />
           </>
         </div>

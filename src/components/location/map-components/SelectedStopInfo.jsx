@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InfoWindow } from "@react-google-maps/api";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import {
@@ -7,6 +7,7 @@ import {
 } from "../../../stores/emulator/types_maps.tsx";
 
 export function SelectedStopInfo(props) {
+
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
@@ -19,7 +20,9 @@ export function SelectedStopInfo(props) {
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
 
-  const calculateTimeFromTripPointIndexToStopPoint = useCallback(
+  const totalTime = useRef(null);
+
+  const getTimeToReachStopPoint = useCallback(
     (startIndex, stop, velocity) => {
       if (
         startIndex == null ||
@@ -44,15 +47,15 @@ export function SelectedStopInfo(props) {
     [tripData]
   );
 
-  const emulatorTimeLeftToReachNextStop = useMemo(
+  const timeToReachNextStop = useMemo(
     () =>
-      calculateTimeFromTripPointIndexToStopPoint(
+      getTimeToReachStopPoint(
         selectedEmulator.currentTripPointIndex,
         props.selectedStop,
         selectedEmulator.speed
       ),
     [
-      calculateTimeFromTripPointIndexToStopPoint,
+      getTimeToReachStopPoint,
       selectedEmulator.currentTripPointIndex,
       selectedEmulator.speed,
       props.selectedStop,
@@ -126,7 +129,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {emulatorTimeLeftToReachNextStop}
+          {timeToReachNextStop}
         </p>
 
         <h6
@@ -142,7 +145,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {props.totalTime}
+          {totalTime.current ? totalTime.current : "N/A" }
         </p>
 
         <h6
@@ -158,7 +161,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {emulatorTimeLeftToReachNextStop}
+          {timeToReachNextStop}
         </p>
       </div>
     </InfoWindow>

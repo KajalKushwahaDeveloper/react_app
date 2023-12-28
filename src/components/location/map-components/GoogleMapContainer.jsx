@@ -13,12 +13,10 @@ import {
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import {
-  compareSelectedEmulator,
-  compareEmulators,
   compareTripData,
 } from "../../../stores/emulator/types_maps.tsx";
 import EmulatorMarker from "./Markers/EmulatorMarkers.jsx";
-import { TripComponents } from "./TripComponents.jsx";
+import { StopComponents } from "./Trip/StopComponents.jsx";
 import { SelectedStopInfo } from "./SelectedStopInfo.jsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
@@ -36,26 +34,14 @@ const GoogleMapContainer = ({
   onClose,
   DialogText,
   confirmNewLocation,
-  totalTime,
 }) => {
-  const emulators = useEmulatorStore(
-    (state) => state.emulators,
-    (oldEmulators, newEmulators) => {
-      const diff = compareEmulators(oldEmulators, newEmulators);
-      if (diff === true) {
-        console.log("emulators changed ");
-      }
-      compareEmulators(oldEmulators, newEmulators);
-    }
-  );
-
+  console.log("GoogleMapContainer refreshed");
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
 
   console.log("TripData1:", tripData?.tripPoints);
-  console.log("TripData2:", emulators);
 
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
@@ -310,12 +296,11 @@ const GoogleMapContainer = ({
           }}
         />
       )}
-      <TripComponents handleMarkerClick={handleMarkerClick}></TripComponents>
+      <StopComponents handleMarkerClick={handleMarkerClick}></StopComponents>
       {selectedStop && (
         <SelectedStopInfo
           selectedStop={selectedStop}
           handleInfoWindowClose={handleInfoWindowClose}
-          totalTime={totalTime}
         ></SelectedStopInfo>
       )}
 

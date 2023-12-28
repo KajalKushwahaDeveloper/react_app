@@ -1,12 +1,14 @@
 import React from "react";
 import { Polyline, Marker } from "@react-google-maps/api";
-import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
-import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
+import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import { compareTripDataChangedNullOrId } from "./utils.tsx";
 
-export function TripComponents(props) {
+export function StopComponents(props) {
+  console.log("StopComponents refreshed");
+
   const tripData = useEmulatorStore(
     (state) => state.tripData,
-    (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
+    (oldTripData, newTripData) => compareTripDataChangedNullOrId(oldTripData, newTripData)
   );
 
   const startLat = tripData?.tripPoints ? tripData?.tripPoints[0].lat : null;

@@ -1,7 +1,7 @@
 import "./scss/map.scss";
 import { ToastContainer } from "react-toastify";
 import WrappedMap from "./components/location/Map";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CreateTripButton from "./components/location/map-components/CreateTripButton.jsx";
 import CreateTripOverlay from "./components/location/map-components/CreateTripOverlay";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -11,14 +11,7 @@ import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/address_table.js";
 
 const GPS = () => {
-  const [arrivalTime, setArrivalTime] = useState();
-  const [totalTime, setTotalTime] = useState();
-
-  const [remainingDistance, setRemainingDistance] = useState();
   const { width } = useViewPort();
-
-  console.log("CheckArrivalTime11@@$$:", totalTime);
-
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
@@ -30,8 +23,7 @@ const GPS = () => {
         <>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div>
-              <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime} 
-              remainingDistance={remainingDistance}/>
+              <AddressTable />
             </div>
             <div
               style={{
@@ -44,9 +36,8 @@ const GPS = () => {
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
-              <div style={{ flex: "1" , top : "128px" }}>
-                <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime} 
-                setRemainingDistance={setRemainingDistance}/>
+              <div style={{ flex: "1", top: "128px" }}>
+                <WrappedMap />
               </div>
             </div>
           </div>
@@ -57,9 +48,17 @@ const GPS = () => {
       {isMobile && (
         <>
           <div style={{ flex: "1", height: "100vh" }}>
-            <WrappedMap setArrivalTime={setArrivalTime} totalTime={totalTime}
-            setRemainingDistance={setRemainingDistance}/>
+            <WrappedMap />
           </div>
+          <div>
+              ‎
+              <div>
+                <div>
+                  <AddressTable/>
+                </div>
+              
+              </div>
+            </div>
           <BottomSheet
             className="bottom_sheet"
             open={true}
@@ -69,17 +68,17 @@ const GPS = () => {
                 INFO
               </div>
             }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.88]}
+            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.45]}
           >
-            <div>
+           <GpsTable />
+            {/* <div>
               ‎
               <div>
                 <div>
-                  <AddressTable arrivalTime={arrivalTime} setTotalTime={setTotalTime}
-                  remainingDistance={remainingDistance}/>
+                  <AddressTable />
                 </div>
               </div>
-            </div>
+            </div> */}
           </BottomSheet>
         </>
       )}

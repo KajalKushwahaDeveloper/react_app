@@ -120,13 +120,13 @@ th {
 }
 
 .table-responsive-mobile {
-  max-height: 32vh;
+  max-height: 36vh;
   max-width: 640px;
   position: "absolute";
-  overflow-y: auto;
+  overflow-y: auto !important;
   overflow-x: hidden;
   top: 90;
-  margin-top: 0.5rem;
+  // margin-top: 0.5rem;
 }
 
 .table-responsive-laptop {
