@@ -197,7 +197,7 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Sent Date:</Typography>
                       <Typography fontWeight={400}>
-                        {new Date(msgData.dateSent).toLocaleTimeString()}
+                      {new Date(msgData.dateSent).toLocaleDateString()}
                       </Typography>
                     </Grid>
                     <Grid  
@@ -209,7 +209,8 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Sent Time:</Typography>
                       <Typography fontWeight={400}>
-                        {new Date(msgData.dateSent).toLocaleDateString()}
+                      {new Date(msgData.dateSent).toLocaleTimeString()}
+                        
                       </Typography>
                     </Grid>
                   </Grid>
