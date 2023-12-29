@@ -1,22 +1,7 @@
-// component with marker which will change position with animation on new props
-// <EmulatorMarker
-// emulator={emulator}
-// emulatorIcon={emulatorIcon}
-// isSelected={isSelected}
-// rotationAngle={rotationAngle}
-// hoveredMarker={hoveredMarker}
-// handleMarkerMouseOver={handleMarkerMouseOver}
-// handleMarkerMouseOut={handleMarkerMouseOut}
-// handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
-// selectEmulator={selectEmulator}
-// markerRefs={markerRefs}
-// />
-
 import { Marker } from "@react-google-maps/api";
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
-const EmulatorMarker = memo(
-  ({
+const EmulatorMarker = ({
     id,
     latLng,
     telephone,
@@ -27,7 +12,6 @@ const EmulatorMarker = memo(
     handleMarkerMouseOut,
     handleEmulatorMarkerDragEnd,
     selectEmulatorId,
-    markerRefs,
   }) => {
     const [currentPosition, setCurrentPosition] = useState(latLng);
     const intervalId = useRef(null);
@@ -44,7 +28,7 @@ const EmulatorMarker = memo(
         const newLng =
           currentPosition.lng + (latLng.lng - currentPosition.lng) * 0.03;
         setCurrentPosition({ lat: newLat, lng: newLng });
-      }, 10);
+      }, 50);
       return () => {
         if (intervalId.current) {
           clearInterval(intervalId.current);
@@ -61,7 +45,7 @@ const EmulatorMarker = memo(
           lng: currentPosition.lng,
         }}
         onLoad={(marker) => {
-          markerRefs.current[id] = marker;
+          
         }}
         title={`${telephone} ${tripStatus}(${status})`}
         labelStyle={{
@@ -82,7 +66,6 @@ const EmulatorMarker = memo(
         zIndex={1}
       />
     );
-  }
-);
+  };
 
 export default EmulatorMarker;
