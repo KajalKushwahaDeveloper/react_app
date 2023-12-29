@@ -36,9 +36,6 @@ const EmulatorMarkers = ({
 
     const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
 
-    const markerRefs = useRef({});
-    const markerDirectionRefs = useRef({});
-
     function selectEmulatorId(id) {
       // find from emulators, the emulator with id
       const emulator = markers.find((emulator) => emulator.id === id);
@@ -99,7 +96,6 @@ const EmulatorMarkers = ({
                   console.log("MARKERS rotationAngle Error : ", e);
                 }
                 console.log("MARKERS rotationAngle : ", rotationAngle);
-               
               }
 
               const emulatorIcon = {
@@ -111,6 +107,7 @@ const EmulatorMarkers = ({
               return (
                 <>
                   <EmulatorMarker
+                    key={emulator.id}
                     id={emulator.id}
                     latLng={{ lat: emulator.latitude, lng: emulator.longitude }}
                     telephone={emulator.telephone}
@@ -121,7 +118,6 @@ const EmulatorMarkers = ({
                     handleMarkerMouseOut={handleMarkerMouseOut}
                     handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
                     selectEmulatorId={selectEmulatorId}
-                    markerRefs={markerRefs}
                   />
                   {isSelected && rotationAngle !== null && (
                     <EmulatorMarkerDirection
@@ -131,7 +127,6 @@ const EmulatorMarkers = ({
                         lng: emulator.longitude,
                       }}
                       rotationAngle={rotationAngle}
-                      markerDirectionRefs={markerDirectionRefs}
                     />
                   )}
                 </>

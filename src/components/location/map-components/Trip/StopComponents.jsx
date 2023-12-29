@@ -8,8 +8,10 @@ export function StopComponents(props) {
 
   const tripData = useEmulatorStore(
     (state) => state.tripData,
-    (oldTripData, newTripData) => compareTripDataChangedNullOrId(oldTripData, newTripData)
-  );
+    (oldTripData, newTripData) =>  {
+      compareTripDataChangedNullOrId(oldTripData, newTripData)
+    }
+    );
 
   const startLat = tripData?.tripPoints ? tripData?.tripPoints[0].lat : null;
   const startLng = tripData?.tripPoints ? tripData?.tripPoints[0].lng : null;

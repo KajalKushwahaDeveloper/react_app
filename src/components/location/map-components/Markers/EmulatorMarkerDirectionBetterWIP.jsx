@@ -1,38 +1,12 @@
-// component with marker which will change position with animation on new props
-// <EmulatorMarker
-// emulator={emulator}
-// emulatorIcon={emulatorIcon}
-// isSelected={isSelected}
-// rotationAngle={rotationAngle}
-// hoveredMarker={hoveredMarker}
-// handleMarkerMouseOver={handleMarkerMouseOver}
-// handleMarkerMouseOut={handleMarkerMouseOut}
-// handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
-// selectEmulator={selectEmulator}
-// markerRefs={markerRefs}
-// />
-
 import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
-import _ from "lodash";
 
-const EmulatorMarker = ({
-  id,
-  latLng,
-  telephone,
-  status,
-  tripStatus,
-  emulatorIcon,
-  handleMarkerMouseOver,
-  handleMarkerMouseOut,
-  handleEmulatorMarkerDragEnd,
-  selectEmulatorId,
-}) => {
-  console.log("EmulatorMarker refreshed");
+const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
+  console.log("EmulatorMarkerDirection refreshed");
   const markerRef = useRef(null);
   // copy latLng to initialPosition but don't update it on latLng change
   useEffect(() => {
-    if(markerRef.current === null || markerRef.current === undefined){
+    if (markerRef.current === null || markerRef.current === undefined) {
       return;
     }
     animateMarkerTo(markerRef.current, latLng);
@@ -123,40 +97,46 @@ const EmulatorMarker = ({
 
   const arePropsEqual = (prevProps, nextProps) => {
     // compare all props except latLng
-    const { latLng: prevLatLng, ...restPrevProps } = prevProps;
-    const { latLng: nextLatLng, ...restNextProps } = nextProps;
+    const { latLng: prevLatLng, rotationAngle : prevRotationAngle, ...restPrevProps } = prevProps;
+    const { latLng: nextLatLng, rotationAngle : nextRotationAngle, ...restNextProps } = nextProps;
     const isEqual = _.isEqual(restPrevProps, restNextProps);
     console.log("EmulatorMarker arePropsEqual:", isEqual);
     return isEqual;
   };
-  
-  const MemoizedMarker = React.memo(Marker, arePropsEqual);
 
+  const MemoizedMarker = React.memo(Marker, arePropsEqual);
+  // SVG with gradient and rotation
+
+  const svgIcon = `
+      <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" transform="rotate(${rotationAngle})">
+      <defs>
+        <radialGradient id="grad1" cx="50%" cy="100%" r="100%" fx="50%" fy="100%">
+          <stop offset="0%" style="stop-color:rgb(0,255,255);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:rgb(0,0,0,0);stop-opacity:0" />
+        </radialGradient>
+      </defs>
+      <path d="M32,0 A16,16 0 0,1 48,16 L32,32 L16,16 A16,16 0 0,1 32,0" fill="url(#grad1)" />
+      </svg>`;
   return (
     <MemoizedMarker
       key={id}
-      icon={emulatorIcon}
-      position={{ lat: latLng.lat, lng: latLng.lng}}
       onLoad={(marker) => {
         markerRef.current = marker;
       }}
-      title={`${telephone} ${tripStatus}(${status})`}
-      labelStyle={{
-        textAlign: "center",
-        width: "auto",
-        color: "#037777777777",
-        fontSize: "11px",
-        padding: "0px",
+      icon={{
+        url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svgIcon),
+        scaledSize: new window.google.maps.Size(100, 100),
+        anchor: new window.google.maps.Point(50, 50),
+        rotation: rotationAngle,
       }}
-      labelAnchor={{ x: "auto", y: "auto" }}
-      onClick={() => selectEmulatorId(id)}
-      onMouseOver={() => handleMarkerMouseOver(id)}
-      onMouseOut={handleMarkerMouseOut}
-      draggable={true}
-      onDragEnd={(event) => {
-        handleEmulatorMarkerDragEnd(id, event);
+      rotation={rotationAngle}
+      position={{
+        lat: latLng.lat,
+        lng: latLng.lng,
       }}
-      zIndex={1}
+      zIndex={0}
     />
   );
 };
+
+export default EmulatorMarkerDirection;
