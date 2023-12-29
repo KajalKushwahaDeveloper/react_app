@@ -1,23 +1,15 @@
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useRef } from "react";
 
-import { GoogleMap, Polyline, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-} from "@mui/material";
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
-import {
-  compareTripData,
-} from "../../../stores/emulator/types_maps.tsx";
+import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
 import EmulatorMarker from "./Markers/EmulatorMarkers.jsx";
 import { StopComponents } from "./Trip/StopComponents.jsx";
 import { SelectedStopInfo } from "./SelectedStopInfo.jsx";
+import { PathComponent } from "./Trip/PathComponent.jsx";
+import { DragDialog } from "./DragDialog.jsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
@@ -40,12 +32,6 @@ const GoogleMapContainer = ({
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
-
-  console.log("TripData1:", tripData?.tripPoints);
-
-  const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
-  const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
-
   const mapRef = useRef(null);
 
   const { isLoaded } = useJsApiLoader({
@@ -54,8 +40,7 @@ const GoogleMapContainer = ({
     libraries: libraries,
   });
 
-
-  useMemo(() => {
+  useEffect(() => {
     if (
       tripData === null ||
       mapRef.current === null ||
@@ -274,28 +259,8 @@ const GoogleMapContainer = ({
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      {pathTraveled != null && (
-        <Polyline
-          path={pathTraveled}
-          options={{
-            strokeColor: "#559900",
-            strokeWeight: 6,
-            strokeOpacity: 0.6,
-            defaultVisible: true,
-          }}
-        />
-      )}
-      {pathNotTraveled != null && (
-        <Polyline
-          path={pathNotTraveled}
-          options={{
-            strokeColor: "#0088FF",
-            strokeWeight: 6,
-            strokeOpacity: 0.6,
-            defaultVisible: true,
-          }}
-        />
-      )}
+      <PathComponent />
+
       <StopComponents handleMarkerClick={handleMarkerClick}></StopComponents>
       {selectedStop && (
         <SelectedStopInfo
@@ -311,26 +276,16 @@ const GoogleMapContainer = ({
         handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
       />
 
-      <Dialog open={openDialog} onClose={onClose}>
-        <DialogTitle id="alert-dialog-title">{"logbook gps"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {DialogText}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={confirmNewLocation} autoFocus>
-            Confim
-          </Button>
-          <Button onClick={onClose} autoFocus>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DragDialog
+        openDialog={openDialog}
+        onClose={onClose}
+        DialogText={DialogText}
+        confirmNewLocation={confirmNewLocation}
+      ></DragDialog>
     </GoogleMap>
   ) : (
     <>Loading...</>
   );
 };
 
-export default React.memo(GoogleMapContainer);
+export default GoogleMapContainer;

@@ -9,7 +9,7 @@ export const LIVE_API_CLIENT_HTTPS = "https://www.logbookgps.com/api";
 
 export const LOCAL_API_SAURABH = "http://192.168.1.154:8080";
 
-export const BASE_URL = LIVE_API_CLIENT_HTTPS;
+export const BASE_URL = LOCAL_API_LOCAL;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
@@ -30,6 +30,7 @@ export const EMULATOR_DELETE_URL = EMULATOR_URL;
 export const EMULATOR_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updatePhoneNumber";
 export const EMULATOR_ALT_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updateAlternatePhoneNumber";
 export const EMULATOR_DRAG_URL = EMULATOR_URL + "/dragEmulator";
+export const EMULATOR_NOTE_URL = EMULATOR_URL + "/note";
 
 //USER
 export const USER_URL = BASE_URL + "/user";

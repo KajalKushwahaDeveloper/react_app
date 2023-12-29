@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import "../../../scss/map.scss";
-import { useViewPort } from "../../../ViewportProvider.js";
-import GpsTable from "./gps_page_table.js";
-import CreateTripButton from "./CreateTripButton";
-import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { useViewPort } from "../../../../ViewportProvider.js";
+import CreateTripButton from "../CreateTripButton.jsx";
+import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import Tooltip from "@mui/material/Tooltip";
-import { compareSelectedEmulatorChangedNullOrId } from "../utils.tsx";
-import { compareTripDataChangedNullOrId } from "./Trip/utils.tsx";
+import { compareTripDataChangedNullOrId, compareSelectedEmulatorChangedNullOrId } from "./utils.tsx";
 
 const AddressTable = () => {
   console.log("AddressTable refreshed");
@@ -19,8 +16,13 @@ const AddressTable = () => {
 
   const tripData = useEmulatorStore(
     (state) => state.tripData,
-    (oldTripData, newTripData) =>
-      compareTripDataChangedNullOrId(oldTripData, newTripData)
+    (oldTripData, newTripData) => {
+      const diff = compareTripDataChangedNullOrId(oldTripData, newTripData);
+      if (diff === true) {
+        console.log("tripData changed (Address table)");
+      }
+      compareTripDataChangedNullOrId(oldTripData, newTripData);
+    }
   );
 
   const selectedEmulator = useEmulatorStore(
@@ -58,6 +60,7 @@ const AddressTable = () => {
       timeInHours.current = null;
       return;
     }
+    console.log("AddressTable useEffect");
     fromAddress.current =
       tripData.fromAddress[0]?.long_name +
         ", " +
@@ -76,7 +79,6 @@ const AddressTable = () => {
         " ," +
         tripData.toAddress[3]?.long_name || "N/A";
 
-    
     timeInHours.current = tripData.distance / tripData.velocity;
 
     var hours = Math.floor(timeInHours);
@@ -122,7 +124,6 @@ const AddressTable = () => {
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
-
 
   return (
     <div className="container-fluid main-address-table">
@@ -176,7 +177,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {fromAddress.current ? fromAddress.current : "N/A"}
+              {selectedEmulator && fromAddress.current ? fromAddress.current : "N/A"}
             </div>
           </div>
           {/* TO ADDRESS*/}
@@ -197,7 +198,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {toAddress.current ? toAddress.current : "N/A"}
+              {selectedEmulator && toAddress.current ? toAddress.current : "N/A"}
             </div>
           </div>
 
@@ -211,7 +212,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Final Arrival Time</div>
-            {arrivalTime.current ? (
+            {selectedEmulator && arrivalTime.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -225,7 +226,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {arrivalTime.current}
+                  {selectedEmulator && arrivalTime.current}
                 </div>
               </div>
             ) : (
@@ -243,7 +244,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Total Time</div>
-            {totalTime.current ? (
+            {selectedEmulator && totalTime.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -259,7 +260,7 @@ const AddressTable = () => {
                     width: "calc(100% - 5px)",
                   }}
                 >
-                  {totalTime.current}
+                  {selectedEmulator && totalTime.current}
                 </div>
               </div>
             ) : (
@@ -279,7 +280,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
-            {remainingDistance.current ? (
+            {selectedEmulator && remainingDistance.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -293,7 +294,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {remainingDistance.current} miles
+                  {selectedEmulator && remainingDistance.current} miles
                 </div>
               </div>
             ) : (
@@ -337,7 +338,6 @@ const AddressTable = () => {
           </div>
 
           <CreateTripButton />
-          
         </div>
       ) : (
         <div
@@ -386,10 +386,10 @@ const AddressTable = () => {
             <div className="address-table-heading">From address</div>
             <div className="addressTable ellipsisText">
               <Tooltip
-                title={fromAddress.current && fromAddress.current}
+                title={selectedEmulator && fromAddress.current && fromAddress.current}
                 placement="top"
               >
-                {fromAddress.current ? fromAddress.current : "N/A"}
+                {selectedEmulator && fromAddress.current ? fromAddress.current : "N/A"}
               </Tooltip>
             </div>
           </div>
@@ -406,10 +406,10 @@ const AddressTable = () => {
             <div className="address-table-heading">To address</div>
             <div className="addressTable ellipsisText">
               <Tooltip
-                title={toAddress.current && toAddress.current}
+                title={selectedEmulator && toAddress.current && toAddress.current}
                 placement="top"
               >
-                {toAddress.current ? toAddress.current : "N/A"}
+                {selectedEmulator && toAddress.current ? toAddress.current : "N/A"}
               </Tooltip>
             </div>
           </div>
@@ -424,7 +424,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Final Arrival time </div>
-            {arrivalTime.current ? (
+            {selectedEmulator && arrivalTime.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -438,7 +438,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {arrivalTime.current}
+                  {selectedEmulator && arrivalTime.current}
                 </div>
               </div>
             ) : (
@@ -456,7 +456,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Total Time</div>
-            {totalTime.current ? (
+            {selectedEmulator && totalTime.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -470,7 +470,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {totalTime.current}
+                  {selectedEmulator && totalTime.current}
                 </div>
               </div>
             ) : (
@@ -488,7 +488,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
-            {remainingDistance.current ? (
+            {selectedEmulator && remainingDistance.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -502,7 +502,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {remainingDistance.current} miles
+                  {selectedEmulator && remainingDistance.current} miles
                 </div>
               </div>
             ) : (

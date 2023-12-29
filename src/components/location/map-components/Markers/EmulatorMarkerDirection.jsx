@@ -1,8 +1,7 @@
 import { Marker } from "@react-google-maps/api";
-import React, { memo, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
-const EmulatorMarkerDirection = memo(
-  ({ rotationAngle, id, latLng, markerDirectionRefs }) => {
+const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
     const [currentPosition, setCurrentPosition] = useState(latLng);
 
     const intervalId = useRef(null);
@@ -19,7 +18,7 @@ const EmulatorMarkerDirection = memo(
         const newLng =
           currentPosition.lng + (latLng.lng - currentPosition.lng) * 0.05;
         setCurrentPosition({ lat: newLat, lng: newLng });
-      }, 10);
+      }, 50);
       return () => {
         if (intervalId.current) {
           clearInterval(intervalId.current);
@@ -45,7 +44,7 @@ const EmulatorMarkerDirection = memo(
         return (
       <Marker
         onLoad={(marker) => {
-          markerDirectionRefs.current[id] = marker;
+          
         }}
         icon={{
           url:
@@ -62,7 +61,6 @@ const EmulatorMarkerDirection = memo(
         zIndex={0}
       />
     );
-  }
-);
+  };
 
 export default EmulatorMarkerDirection;
