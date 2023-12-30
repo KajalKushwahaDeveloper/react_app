@@ -13,7 +13,6 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
-import { bottomNavigationActionClasses } from "@mui/material";
 
 const UserTable = ({
   showToast,
@@ -26,8 +25,6 @@ const UserTable = ({
   const [userData, setUserData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

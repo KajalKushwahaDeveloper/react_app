@@ -4,7 +4,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EMULATOR_CREATE_RANDOM_URL, USER_URL } from "./constants.js";
 import EmulatorTable from "./components/emulator_table.js";
-import UserTable from "./components/user_table.js";
+// import UserTable from "./components/user_table.js";
+import UserTable from "./components/home/UserTable"
 import { Button } from "@mui/material";
 import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
@@ -16,6 +17,7 @@ import { GetEmulatorApi } from "./components/api/emulator.js";
 import { useForm } from "react-hook-form";
 
 const Home = () => {
+  console.log("Home component loaded!");
   const [openUserPopup, setOpenUserPopup] = useState(false);
   const [openEmulatorPopup, setOpenEmulatorPopup] = useState(false);
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
@@ -225,7 +227,6 @@ const Home = () => {
                   emulatorToAssignUser={emulatorToAssignUser}
                   handleAssignedUserToEmulator={handleAssignedUserToEmulator}
                 />
-
                 {/* user table */}
                 <UserTable
                   showToast={showToast}
