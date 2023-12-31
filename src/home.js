@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import "./scss/home.scss";
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EMULATOR_CREATE_RANDOM_URL, USER_URL } from "./constants.js";
-import EmulatorTable from "./components/emulator_table.js";
+import EmulatorTable from "./components/home/emulator/EmulatorTable";
 // import UserTable from "./components/user_table.js";
-import UserTable from "./components/home/UserTable"
+import UserTable from "./components/home/user/UserTable";
 import { Button } from "@mui/material";
 import DownloadApk from "./components/download_apk.js";
 import PopUpUser from "./components/popup_user.js";
@@ -27,13 +26,11 @@ const Home = () => {
   const [userEditedId, setUserEditedId] = useState(null);
   const [emulatorEditedId, setEmulatorEditedId] = useState(null);
 
-
   const [openChangeSsidPopup, setOpenChangeSsidPopup] = useState(false);
   const [emulatorToChangeSsid, setEmulatorToChangeSsid] = useState(null);
   const [emulatorData, setEmulatorData] = useState([]);
   const [updatedData, setUpdatedData] = useState([]);
   const [updateSerial, setUpdateSerial] = useState(false);
-
 
   const {
     register,
@@ -90,7 +87,7 @@ const Home = () => {
       },
     });
     response.json().then((data) => {
-    setUpdatedData(data);
+      setUpdatedData(data);
     });
     setUserToEdit(null);
 
@@ -156,20 +153,8 @@ const Home = () => {
       <section className="dashboard">
         <div className="container-fluid">
           <div className="row">
+            <DownloadApk />
             <div className="col-lg-6 hello">
-              <DownloadApk />
-
-              <Button
-                style={{
-                  width: "10rem",
-                  background: "#007dc6",
-                  color: "white",
-                  marginBottom: "1rem",
-                }}
-                onClick={handleCreateEmulator}
-              >
-                Create Emulator
-              </Button>
               <EmulatorTable
                 showToast={showToast}
                 handleAssignUserButtonClick={handleAssignUserButtonClick}
@@ -180,13 +165,11 @@ const Home = () => {
                 handleGeneratedIdButtonClick={handleGeneratedIdButtonClick}
                 emulatorData={emulatorData}
                 updateSerial={updateSerial}
+                handleCreateEmulator={handleCreateEmulator}
               />
             </div>
             <div className="col-lg-6 mt-4 mt-lg-0">
               <div className="mb-5">
-                <button className="btn btn-green mb-4" onClick={handleOpen}>
-                  Add User
-                </button>
                 <PopUpUser
                   showToast={showToast}
                   handleClose={handleClose}
@@ -234,6 +217,7 @@ const Home = () => {
                   userEditedId={userEditedId}
                   userAssingedEmulator={userAssingedEmulator}
                   updatedData={updatedData}
+                  handleOpen={handleOpen}
                 />
               </div>
             </div>

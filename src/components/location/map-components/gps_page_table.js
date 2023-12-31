@@ -13,7 +13,6 @@ import {
 
 //scss
 import "../../../scss/map.scss";
-import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 import "../../../scss/global.scss";
 

@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { RESET_PASSWORD } from "./constants";
 import { useSearchParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import "./scss/home.scss";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ResetPasswordPage = () => {

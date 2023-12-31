@@ -41,22 +41,8 @@ table {
   overflow: hidden;
 }
 
-td{
-  border: 1px solid $light-grey;
-  text-align: left;
-  padding: 1px;
-  vertical-align: middle;
-}
 
-thead, 
-th {
-  border: 1px solid $light-grey;
-  text-align: left;
-  padding: 5px;
-  vertical-align: middle;
-  background-color: $background-color;
-  color: $background-color;
-}
+
 
 .ellipsisText{
   white-space: nowrap;
@@ -149,11 +135,6 @@ th {
   table {
     font-size: 0.75rem;
     overflow-x: auto;
-  }
-  td,
-  th {
-    padding: 3px;
-    height: 100%;
   }
   .address-table-heading{
     font-size: 11px;

@@ -72,11 +72,6 @@
   font-weight: 500;
 }
 
-th {
-  color: white;
-  font-weight: bolder;
-  text-align: center;
-}
 
 /* width */
 ::-webkit-scrollbar {
@@ -137,21 +132,13 @@ th {
 
 .dashboard {
   background: #F3F6F9;
-  padding: 8rem 1rem 1rem 1rem;
+  padding: 5rem 0 0 0;
 }
 
 input {
   &:focus {
     box-shadow: none !important;
   }
-}
-th {
-  font-size: 12px;
-  font-weight: 900;
-}
-td {
-  font-size: 11px;
-  font-weight: bold !important;
 }
 
 .gm-style-mtc

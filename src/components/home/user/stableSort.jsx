@@ -9,18 +9,29 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import AddIcon from "@mui/icons-material/Add";
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
+  // special case for emulatorCount
+  if (orderBy === "emulatorCount") {
+    if (a[orderBy].allEmulatorsCount < b[orderBy].allEmulatorsCount) {
+      return -1;
+    }
+    if (a[orderBy].allEmulatorsCount > b[orderBy].allEmulatorsCount) {
+      return 1;
+    }
+  } else {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
   }
   return 0;
 }
+
 export function getComparator(order, orderBy) {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -43,32 +54,38 @@ export function stableSort(array, comparator) {
 }
 const headCells = [
   {
-    id: "name",
+    id: "enabled",
+    numeric: false,
+    disablePadding: false,
+    label: "ACTIONS",
+  },
+  {
+    id: "firstName",
     numeric: false,
     disablePadding: true,
     label: "USER",
   },
   {
     id: "email",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "EMAIL",
   },
   {
     id: "telephone",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "TEL. #",
   },
   {
-    id: "emulators",
-    numeric: true,
+    id: "emulatorCount",
+    numeric: false,
     disablePadding: false,
     label: "EMULATORS",
   },
   {
-    id: "registered",
-    numeric: true,
+    id: "createdAt",
+    numeric: false,
     disablePadding: false,
     label: "REGISTERED",
   },
@@ -92,6 +109,7 @@ export function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
+              sx={{ fontWeight: "bold", color: "#007dc6" }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -112,30 +130,32 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
-export function EnhancedTableToolbar() {
+export function EnhancedTableToolbar(props) {
   return (
     <Toolbar
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        backgroundColor: "#007dc6",
+        borderRadius: "5px 5px 0px 0px",
       }}
     >
       <Typography
-        sx={{ flex: "1 1 100%" }}
+        sx={{ flex: "1 1 100%", color: "white" }}
         variant="h6"
         id="tableTitle"
         component="div"
       >
         USERS
       </Typography>
-      <Tooltip title="Filter list">
-        <IconButton>
-          <FilterListIcon />
+      <Tooltip title="ADD USER">
+        <IconButton onClick={props.handleOpen} sx={{ color: "white" }}>
+          <AddIcon />
         </IconButton>
       </Tooltip>
     </Toolbar>
   );
 }
 EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
+  handleOpen: PropTypes.func.isRequired,
 };

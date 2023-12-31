@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-import TablePagination, {
-  tablePaginationClasses as classes,
-} from "@mui/base/TablePagination";
+import TablePagination from "@mui/base/TablePagination";
 
-import { styled } from "@mui/system";
 import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../constants";
-import "../scss/table.scss";
 import "../scss/button.scss";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ApiService from "../ApiService";
 import { EMULATOR_DELETE_URL } from "../constants";
-import { GetEmulatorApi, deleteEmulatorApi } from "../components/api/emulator";
-import { display } from "@material-ui/system";
+import { GetEmulatorApi } from "../components/api/emulator";
 import { Tooltip } from "@mui/material";
 
 const EmulatorTable = ({
@@ -32,8 +27,6 @@ const EmulatorTable = ({
   const [emulators, setEmulators] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(3); // Number of items to display per page
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -305,11 +298,6 @@ const EmulatorTable = ({
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
               <td style={{ display:"flex", width: "auto" ,borderBottom:"none"}} align="right">
-                <IconButton size="small" aria-label="delete" onClick={() => handleEmulatorTelephonePopup(row)}>
-                  <EditIcon
-                    fontSize="small"
-                  />
-                </IconButton>
                 <IconButton
                   size="small"
                   style={{
@@ -343,7 +331,7 @@ const EmulatorTable = ({
         <tfoot className="table_footer" style={{ border: "none" }}>
           <tr style={{ textAlign: "center" }}>
             <td colSpan={5} style={{ textAlign: "right", paddingTop: ".5rem" }}>
-              <CustomTablePagination
+              <TablePagination
                 rowsPerPageOptions={[10, 20, 30, { label: "All", value: -1 }]}
                 colSpan={5}
                 count={emulators.length}
@@ -382,61 +370,3 @@ const grey = {
   800: "#2D3843",
   900: "#1A2027",
 };
-
-const CustomTablePagination = styled(TablePagination)(
-  ({ theme }) => `
-      /* Remove the spacer element */
-      & .${classes.spacer} {
-        display: none;
-      }
-    
-      /* Update the toolbar styles */
-      & .${classes.toolbar} {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content:space-arround;
-        gap: 10px;
-      }
-    
-      /* Update the select label styles */
-      & .${classes.selectLabel} {
-        margin: 0;
-      }
-    
-      /* Update the select styles */
-      & .${classes.select} {
-        padding: 2px;
-        border: 1px solid ${
-          theme.palette.mode === "dark" ? grey[800] : grey[200]
-        };
-        border-radius: 50px;
-        background-color: transparent;
-    
-        &:hover {
-          background-color: ${
-            theme.palette.mode === "dark" ? grey[800] : grey[50]
-          };
-        }
-    
-        &:focus {
-          outline: 1px solid ${
-            theme.palette.mode === "dark" ? blue[400] : blue[200]
-          };
-        }
-      }
-    
-      /* Update the actions styles */
-      .${classes.actions} {
-        padding: 2px;
-        border-radius: 50px;
-        text-align: center;
-        display: flex;
-      }
-    
-      /* Update the displayed rows styles */
-      & .${classes.displayedRows} {
-        margin-left: 2rem;
-      }
-      `
-);

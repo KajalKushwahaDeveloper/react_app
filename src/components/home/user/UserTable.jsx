@@ -8,15 +8,19 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { CircularProgress } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   stableSort,
   getComparator,
   EnhancedTableToolbar,
   EnhancedTableHead,
-} from "./stableSort";
-import ApiService from "../../ApiService";
-import { USER_CHANGE_STATUS_URL, USER_URL } from "../../constants";
-import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
+} from "./stableSort"
+import ApiService from "../../../ApiService";
+import { USER_CHANGE_STATUS_URL, USER_URL } from "../../../constants";
+import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
+import { CustomTablePagination } from "../../CustomTablePagination";
 
 export default function UserTable({
   showToast,
@@ -24,6 +28,7 @@ export default function UserTable({
   userEditedId,
   userAssingedEmulator,
   updatedData,
+  handleOpen,
 }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -280,12 +285,12 @@ export default function UserTable({
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar />
+        <EnhancedTableToolbar handleOpen={handleOpen} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={"medium"}
+            size={"small"}
           >
             <EnhancedTableHead
               order={order}
@@ -298,17 +303,67 @@ export default function UserTable({
                 const labelId = `enhanced-table-checkbox-${index}`;
                 const createdAtDate = new Date(row.createdAt);
                 const formattedDate = createdAtDate.toISOString().split("T")[0];
-                const onlineEmulator = row.emulatorCount?.activeEmulatorsCount ? row.emulatorCount?.activeEmulatorsCount : 0 ;
-                const allEmulator = row.emulatorCount?.activeEmulatorsCount ? row.emulatorCount?.allEmulatorsCount : 0;
-             
+                const onlineEmulator = row.emulatorCount?.activeEmulatorsCount
+                  ? row.emulatorCount?.activeEmulatorsCount
+                  : 0;
+                const allEmulator = row.emulatorCount?.allEmulatorsCount
+                  ? row.emulatorCount?.allEmulatorsCount
+                  : 0;
+
                 return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    tabIndex={-1}
-                    key={row.id}
-                    sx={{ cursor: "pointer" }}
-                  >
+                  <TableRow hover tabIndex={-1} key={row.id}>
+                    <TableCell align="left">
+                      <div className="d-flex align-items-center justify-content-center flex-column">
+                        <div className="d-flex align-items-center justify-content-center flex-sm-row">
+                          <IconButton
+                            size="small"
+                            style={{
+                              height: "40px",
+                              width: "40px",
+                              marginRight: "10px",
+                              borderRadius: "50%",
+                              backgroundColor: "#007dc6",
+                              color: "#fff",
+                            }}
+                            aria-label="edit"
+                            onClick={() => handleEditButtonClick(row)}
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            style={{
+                              height: "40px",
+                              width: "40px",
+                              marginRight: "10px",
+                              borderRadius: "50%",
+                              backgroundColor: "red",
+                              color: "#fff",
+                            }}
+                            aria-label="delete"
+                            onClick={() => handleDeleteButtonClick(row)}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                          <button
+                            className="btn btn-sm"
+                            style={{
+                              backgroundColor:
+                                row.status === "ENABLED" ? "green" : "red",
+                              color: "white",
+                              height: "40px",
+                              width: "7rem",
+                            }}
+                            onClick={() =>
+                              handleActionButtonClick(row.id, row.status)
+                            }
+                          >
+                          {row.status}
+                        </button>
+                        </div>
+                        {/* can use for vertical */}
+                      </div>
+                    </TableCell>
                     <TableCell id={labelId} scope="row">
                       {row.firstName + " " + row.lastName || "N/A"}
                     </TableCell>
@@ -317,9 +372,13 @@ export default function UserTable({
                     <TableCell align="left">
                       {/** print online emulator, and if greater than 0, draw icon after number */}
                       {onlineEmulator > 0 ? onlineEmulator : 0}
-                      {onlineEmulator > 0 ? <OnlinePredictionIcon color="success"/> : ""} 
-                       /
-                      {allEmulator} </TableCell>
+                      {onlineEmulator > 0 ? (
+                        <OnlinePredictionIcon color="success" />
+                      ) : (
+                        ""
+                      )}
+                      /{allEmulator}
+                    </TableCell>
                     <TableCell align="left">{formattedDate || "N/A"}</TableCell>
                   </TableRow>
                 );
@@ -327,7 +386,7 @@ export default function UserTable({
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: 53 * emptyRows,
+                    height: 33 * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />
@@ -336,9 +395,8 @@ export default function UserTable({
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
+        <CustomTablePagination
           rowsPerPageOptions={[10, 30, 50]}
-          component="div"
           count={userData.length}
           rowsPerPage={rowsPerPage}
           page={page}
