@@ -14,6 +14,9 @@ import AddIcon from "@mui/icons-material/Add";
 
 function descendingComparator(a, b, orderBy) {
   console.log(a[orderBy]);
+  if(a[orderBy] === null || a[orderBy] === undefined) {
+    return 1;
+  }
   // special case for emulatorCount
   if (orderBy === "user") {
     // add check if user exist else return 0
