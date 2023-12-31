@@ -300,7 +300,7 @@ export default function EmulatorTable({
                             }}
                             onClick={() => handleActionButtonClick(row)}
                           >
-                          {row.user === null ? "ASSIGNED" : "UNASSIGN"}
+                          {row.user === null ? "ASSIGN__" : "UNASSIGN"}
                           </button>
                         </div>
                         {/* can use for vertical */}
