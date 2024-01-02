@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import React, { useState } from "react";
 import PopupEmulatorHistoryTable from "./popup_emulator_history_table";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const style = {
   position: "absolute",
@@ -21,7 +22,12 @@ const mobileStyle = {
   maxWidth: "90vw", // Adjust the maximum width for smaller screens
 };
 
-const PopUpEmulatorHistory = ({ showToast, handleClose, open, emulatorHistory }) => {
+const PopUpEmulatorHistory = ({
+  showToast,
+  handleClose,
+  open,
+  emulatorHistory,
+}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleClose(0);
@@ -43,17 +49,22 @@ const PopUpEmulatorHistory = ({ showToast, handleClose, open, emulatorHistory })
             ...mobileStyle, // Apply mobile styles
           }}
         >
-          <h3>HISTORY</h3>
-          {/* Ensure that PopupEmulatorHistoryTable is properly set inside the Box */}
-          <PopupEmulatorHistoryTable data={emulatorHistory} showToast={showToast} />
-          <button
-            className="login_button"
-            type="button"
-            style={{ height: "40px" }}
-            onClick={(e) => handleSubmit(e)}
+          <div
+            style={{
+              display: "flex",
+              alignContent: "center",
+              justifyContent: "space-between",
+              marginBottom: "1rem",
+            }}
           >
-            CLOSE
-          </button>
+            <h3>HISTORY</h3>
+            <ClearIcon onClick={(e) => handleSubmit(e)} />
+          </div>
+          {/* Ensure that PopupEmulatorHistoryTable is properly set inside the Box */}
+          <PopupEmulatorHistoryTable
+            data={emulatorHistory}
+            showToast={showToast}
+          />
         </Box>
       </Modal>
     </div>

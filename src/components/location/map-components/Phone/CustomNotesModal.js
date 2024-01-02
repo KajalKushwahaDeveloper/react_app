@@ -1,16 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@material-ui/core/Modal";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import CloseIcon from "@mui/icons-material/Close";
 import { makeStyles } from "@material-ui/core/styles";
 import ApiService from "../../../../ApiService";
 import { EMULATOR_NOTE_URL, EMULATOR_URL } from "../../../../constants";
 import { useStates } from "../../../../StateProvider";
-import CloseIcon from "@mui/icons-material/Close";
-import { inputLabelClasses } from "@mui/material/InputLabel";
 
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2),
+    outline: "none",
+    maxWidth: "80%",
+    minWidth: "300px",
+  },
+  root: {
+    // input label when focused
+    "& label.Mui-focused": {
+      color: "#5A5A5A"
+    },
+    // focused color for input with variant='standard'
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "#5A5A5A"
+    },
+    // focused color for input with variant='filled'
+    "& .MuiFilledInput-underline:after": {
+      borderBottomColor: "#5A5A5A"
+    },
+  }
+}));
 
 const CustomNotesModal = ({
   open,
@@ -18,11 +43,17 @@ const CustomNotesModal = ({
   setOpenCustomNotesModal,
   setSelectedEmulatorIdForNotes,
 }) => {
+  
   const { showToast } = useStates();
 
   const [noteText, setNoteText] = useState("");
 
-  /*  const classes = useStyles(); */
+  const classes = useStyles();
+
+const closeCustomNotesModal = () => {
+  setOpenCustomNotesModal(false);
+  setNoteText("");
+}
 
   useEffect(() => {
     const getNote = async () => {
@@ -43,21 +74,16 @@ const CustomNotesModal = ({
       }
     };
 
-    if (
-      selectedEmulatorIdForNotes != null &&
-      selectedEmulatorIdForNotes !== undefined
-    ) {
+    if(selectedEmulatorIdForNotes != null && selectedEmulatorIdForNotes !== undefined) {
       getNote();
     }
   }, [selectedEmulatorIdForNotes]);
-
   const handleNoteChange = (e) => {
     // Limit the input length to 25 characters
     const newText = e.target.value.slice(0, 25);
     setNoteText(newText);
     console.log("newText:", newText);
   };
-
   const handleSaveNote = async () => {
     const token = localStorage.getItem("token");
     const payload = { noteText, emulatorId: selectedEmulatorIdForNotes };
@@ -70,6 +96,7 @@ const CustomNotesModal = ({
     if (success) {
       showToast(" Note Updated! ", "success");
       setOpenCustomNotesModal(false);
+      setNoteText("");
     } else {
       console.log("Failed to update Note! error:", error);
       showToast(" Failed to update Note! ", "error");
@@ -77,49 +104,42 @@ const CustomNotesModal = ({
   };
 
   return (
-    <Dialog open={open} /* onClose={()=>setOpenCustomNotesModal(false)} */>
-      <div>
-        <CloseIcon
-          style={{ float: "right", cursor: "pointer" }}
-          onClick={() => setOpenCustomNotesModal(false)}
+    <Modal
+      open={open}
+      onClose={() => {
+        setSelectedEmulatorIdForNotes(null);
+        setOpenCustomNotesModal(false);
+        setNoteText("");
+      }}
+      className={classes.modal}
+    >
+      <div className={classes.modalContent}>
+      <CloseIcon
+          style={{ float: "right", cursor: "pointer" ,color:"#5A5A5A"}}
+          onClick={closeCustomNotesModal}
         />
-      </div>
-      <div>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Custom Note"
-            type="text"
-            fullWidth
-            variant="standard"
-            color="primary"
-            InputLabelProps={{
-              sx: {
-                color: "#007dc6",
-                [`&.${inputLabelClasses.shrink}`]: {
-                  color: "#007dc6",
-                },
-              },
-            }}
-          />
-        </DialogContent>
-      </div>
-      <div>
+        <TextField
+          label="Custom Note::"
+          multiline
+          rows={1}
+          variant="standard"
+          fullWidth
+          value={noteText}
+          onChange={handleNoteChange}
+          maxLength={12}
+          className={classes.root}
+        />
         <button
-          style={{
-            float: "right",
-            marginBottom: "15px",
-            padding: "5px 12px 5px 12px",
-            borderRadius: "8px",
-          }}>
-          {" "}
-          Save Note{" "}
+          variant="contained"
+          color="primary"
+          onClick={handleSaveNote}
+          style={{ marginTop: "1rem", float: "right" }}
+        >
+          Save Note
         </button>
       </div>
-    </Dialog>
-  );
-};
-
-export default CustomNotesModal;
+    </Modal>
+      );
+    };
+    
+    export default CustomNotesModal;
