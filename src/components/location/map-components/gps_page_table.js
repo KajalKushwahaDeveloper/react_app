@@ -117,7 +117,6 @@ const GpsTable = () => {
   const [openCustomNotesModal, setOpenCustomNotesModal] = useState(false);
   const [selectedEmulatorIdForNotes, setSelectedEmulatorIdForNotes] =
     useState(null);
-  const [noteText, setNoteText] = useState("");
 
   const selectedDevice = useEmulatorStore(
     (state) => state.selectedDevice,
@@ -177,7 +176,6 @@ const GpsTable = () => {
   };
   const handleNoteIconClicked = (row) => {
     setSelectedEmulatorIdForNotes(row.id);
-    setNoteText(customNotes[row.id] || ""); // Set the existing note, if any
     setOpenCustomNotesModal(true);
   };
 
@@ -517,10 +515,8 @@ const GpsTable = () => {
 
             <CustomNotesModal
               open={openCustomNotesModal}
-              handleClose={() => setOpenCustomNotesModal(false)}
+              setSelectedEmulatorIdForNotes = {setSelectedEmulatorIdForNotes}
               setOpenCustomNotesModal={setOpenCustomNotesModal}
-              noteText={noteText}
-              setNoteText={setNoteText}
               selectedEmulatorIdForNotes={selectedEmulatorIdForNotes}
               setCustomNotes={setCustomNotes}
             />

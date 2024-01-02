@@ -159,7 +159,7 @@ export function ShowHistory({ dialogType, data }) {
         ) : dialogType === "message" ? (
           data.map((msgData, index) => {
             return (
-              <List style={{ paddingTop: "5px", paddingBottom: "5px" }}>
+              <List style={{ padding: "0px 5px"}}>
                 <Card
                   style={{ padding: "0.5rem", boxShadow: "0px 0px 8px -4px" }}
                 >
@@ -197,7 +197,7 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Sent Date:</Typography>
                       <Typography fontWeight={400}>
-                        {new Date(msgData.dateSent).toLocaleTimeString()}
+                      {new Date(msgData.dateSent).toLocaleDateString()}
                       </Typography>
                     </Grid>
                     <Grid  
@@ -209,7 +209,8 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Sent Time:</Typography>
                       <Typography fontWeight={400}>
-                        {new Date(msgData.dateSent).toLocaleDateString()}
+                      {new Date(msgData.dateSent).toLocaleTimeString()}
+                        
                       </Typography>
                     </Grid>
                   </Grid>
@@ -254,7 +255,7 @@ export function ShowHistory({ dialogType, data }) {
                   <Grid className="showHistory" container>
                     <Grid item xs={12} display={"flex"} >
                       <Typography fontWeight={800}>Message:</Typography>
-                      <Typography fontWeight={400}>{msgData.body}</Typography>
+                      <Typography fontWeight={400}style={{ wordBreak: "break-word" }}>{msgData.body}</Typography>
                     </Grid>
                   </Grid>
                 </Card>

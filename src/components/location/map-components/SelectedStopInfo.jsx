@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import { InfoWindow } from "@react-google-maps/api";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import {
@@ -7,7 +7,6 @@ import {
 } from "../../../stores/emulator/types_maps.tsx";
 
 export function SelectedStopInfo(props) {
-
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
@@ -47,7 +46,7 @@ export function SelectedStopInfo(props) {
     [tripData]
   );
 
-  const timeToReachNextStop = useMemo(
+  const timeToReachNextStop = useRef(
     () =>
       getTimeToReachStopPoint(
         selectedEmulator.currentTripPointIndex,
@@ -145,7 +144,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {totalTime.current ? totalTime.current : "N/A" }
+          {totalTime.current ? totalTime.current : "N/A"}
         </p>
 
         <h6

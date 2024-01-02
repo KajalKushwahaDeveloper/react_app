@@ -1,5 +1,4 @@
-import React, { memo, useRef } from "react";
-import { Marker } from "@react-google-maps/api";
+import React, { useRef } from "react";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import {
   compareTripData,
@@ -8,14 +7,13 @@ import { compareEmulatorsForMarkers } from "./utils.tsx";
 import EmulatorMarker from "./EmulatorMarker.jsx";
 import EmulatorMarkerDirection from "./EmulatorMarkerDirection.jsx";
 
-const EmulatorMarkers = memo(
-  ({
+const EmulatorMarkers = ({
     hoveredMarker,
     handleMarkerMouseOut,
     handleMarkerMouseOver,
     handleEmulatorMarkerDragEnd,
   }) => {
-
+    console.log("EmulatorMarkers refreshed");
     const markers = useEmulatorStore(
       (state) => state.emulators,
       (oldEmulators, newEmulators) => {
@@ -37,9 +35,6 @@ const EmulatorMarkers = memo(
     );
 
     const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
-
-    const markerRefs = useRef({});
-    const markerDirectionRefs = useRef({});
 
     function selectEmulatorId(id) {
       // find from emulators, the emulator with id
@@ -101,7 +96,6 @@ const EmulatorMarkers = memo(
                   console.log("MARKERS rotationAngle Error : ", e);
                 }
                 console.log("MARKERS rotationAngle : ", rotationAngle);
-               
               }
 
               const emulatorIcon = {
@@ -113,6 +107,7 @@ const EmulatorMarkers = memo(
               return (
                 <>
                   <EmulatorMarker
+                    key={emulator.id}
                     id={emulator.id}
                     latLng={{ lat: emulator.latitude, lng: emulator.longitude }}
                     telephone={emulator.telephone}
@@ -123,7 +118,6 @@ const EmulatorMarkers = memo(
                     handleMarkerMouseOut={handleMarkerMouseOut}
                     handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
                     selectEmulatorId={selectEmulatorId}
-                    markerRefs={markerRefs}
                   />
                   {isSelected && rotationAngle !== null && (
                     <EmulatorMarkerDirection
@@ -133,7 +127,6 @@ const EmulatorMarkers = memo(
                         lng: emulator.longitude,
                       }}
                       rotationAngle={rotationAngle}
-                      markerDirectionRefs={markerDirectionRefs}
                     />
                   )}
                 </>
@@ -141,7 +134,6 @@ const EmulatorMarkers = memo(
             })}
       </>
     );
-  }
-);
+  };
 
 export default EmulatorMarkers;

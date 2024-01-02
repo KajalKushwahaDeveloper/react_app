@@ -30,6 +30,7 @@ export const EMULATOR_DELETE_URL = EMULATOR_URL;
 export const EMULATOR_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updatePhoneNumber";
 export const EMULATOR_ALT_TELEPHONE_UPDATE_URL = EMULATOR_URL + "/updateAlternatePhoneNumber";
 export const EMULATOR_DRAG_URL = EMULATOR_URL + "/dragEmulator";
+export const EMULATOR_NOTE_URL = EMULATOR_URL + "/note";
 
 //USER
 export const USER_URL = BASE_URL + "/user";
