@@ -2,6 +2,7 @@ import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useState, useRef } from "react";
 
 const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
+    console.log("EmulatorMarkerDirection refreshed");
     const [currentPosition, setCurrentPosition] = useState(latLng);
 
     const intervalId = useRef(null);
@@ -14,11 +15,11 @@ const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
 
       intervalId.current = setInterval(() => {
         const newLat =
-          currentPosition.lat + (latLng.lat - currentPosition.lat) * 0.05;
+          currentPosition.lat + (latLng.lat - currentPosition.lat) * 0.2;
         const newLng =
-          currentPosition.lng + (latLng.lng - currentPosition.lng) * 0.05;
+          currentPosition.lng + (latLng.lng - currentPosition.lng) * 0.2;
         setCurrentPosition({ lat: newLat, lng: newLng });
-      }, 50);
+      }, 500);
       return () => {
         if (intervalId.current) {
           clearInterval(intervalId.current);
