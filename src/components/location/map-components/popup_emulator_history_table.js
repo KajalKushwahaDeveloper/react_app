@@ -26,6 +26,10 @@ const style = {
   px: 4,
   pb: 3,
 };
+const mobileStyle = {
+  width: "90%",
+  maxWidth: "90vw", // Adjust the maximum width for smaller screens
+};
 
 const PopupEmulatorHistoryTable = ({ data, showToast }) => {
   const [page, setPage] = useState(0);
@@ -59,7 +63,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
   //   rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
   return (
-    <div>
+    <div style={{overflow:"scroll"}}>
       {/* Additional Dialog */}
       {showAdditionalDialog && historyRowSelected && (
         <Modal
@@ -68,7 +72,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
           aria-labelledby="additional-modal-title"
           aria-describedby="additional-modal-description"
         >
-          <Box sx={{ ...style, width: 600 }}>
+         <Box sx={{ ...style, ...mobileStyle }}>
             {/* Display cancelDetails if cancelled */}
             {historyRowSelected.cancelDetails && (
               <div>
@@ -158,7 +162,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
       )}
 
       {data.length !== 0 ? (
-        <table aria-label="custom pagination table">
+        <table aria-label="custom pagination table" style={{overflow:"scroll"}}>
           <thead>
             <tr>
               <th>FROM</th>
