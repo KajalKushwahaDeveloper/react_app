@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import {
   compareTripData,

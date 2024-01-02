@@ -128,7 +128,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {timeToReachNextStop}
+          {timeToReachNextStop.current ? timeToReachNextStop.current : "N/A"}
         </p>
 
         <h6
@@ -160,7 +160,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {timeToReachNextStop}
+          {timeToReachNextStop.current ? timeToReachNextStop.current : "N/A"}
         </p>
       </div>
     </InfoWindow>

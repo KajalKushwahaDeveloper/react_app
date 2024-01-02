@@ -160,3 +160,5 @@ const EmulatorMarker = ({
     />
   );
 };
+
+export default EmulatorMarker;
