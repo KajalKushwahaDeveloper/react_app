@@ -107,8 +107,6 @@ const EmulatorMarkers = ({
               return (
                 <>
                   <EmulatorMarker
-                    key={emulator.id}
-                    id={emulator.id}
                     latLng={{ lat: emulator.latitude, lng: emulator.longitude }}
                     telephone={emulator.telephone}
                     status={emulator.status}
@@ -121,7 +119,6 @@ const EmulatorMarkers = ({
                   />
                   {isSelected && rotationAngle !== null && (
                     <EmulatorMarkerDirection
-                      id={emulator.id}
                       latLng={{
                         lat: emulator.latitude,
                         lng: emulator.longitude,

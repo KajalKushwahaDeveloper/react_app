@@ -10,6 +10,7 @@ import {
 import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { TripDataResponse } from "../../model/response.tsx";
 
 export interface EmulatorsSlice {
   eventSource: AbortController | null;
@@ -131,16 +132,42 @@ const createTripDataSlice: StateCreator<
       set({ tripData: null, pathTraveled: null, pathNotTraveled: null });
     } else {
       try {
+        const tripDataOld = get().tripData;
+        var tripDataOldDistance = 0;
+        if (
+          tripDataOld !== null &&
+          tripDataOld !== undefined &&
+          tripDataOld.distance !== null &&
+          tripDataOld.distance !== undefined
+        ) {
+          tripDataOldDistance = tripDataOld.distance;
+        }
+        // pass tripDataOldDistance as a query parameter
         const response = await fetch(TRIP_URL + `/${selectedEmulator.id}`, {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({ distance : tripDataOldDistance }),
         });
-        const tripData: TripData = await response.json();
-        set({ tripData });
-        get().setPaths(tripData);
+        // can return either the TripData or a string
+        const tripDataResp: TripDataResponse = await response.json();
+        if (tripDataResp.data === null || tripDataResp.data === undefined) {
+          console.log(
+            "TripData is null",
+            tripDataResp.status +
+              " " +
+              tripDataResp.statusText 
+          );
+          set({ tripData: tripDataOld });
+          get().setPaths(tripDataOld);
+        } else {
+          console.log("Got trip data: ", tripDataResp.data);
+          const tripData = tripDataResp.data;
+          set({ tripData });
+          get().setPaths(tripData);
+        }
       } catch (error) {
         console.error("Failed to fetch trip data:", error);
         set({ tripData: null, pathTraveled: null, pathNotTraveled: null });

@@ -141,7 +141,7 @@ export function StopComponents(props) {
     <React.Fragment>
       {tripData?.stops != null &&
         tripData?.stops.map((stop, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={stop.currentTripPointIndex}>
             <Marker
               onLoad={(marker) => {
                 stopRefs.current[index] = marker;
@@ -160,6 +160,7 @@ export function StopComponents(props) {
             />
             {stop.tripPoints && stop.tripPoints?.length > 0 && (
               <Polyline
+                key={stop.tripPointIndex}
                 path={stop.tripPoints}
                 options={{
                   strokeColor: "#FF2200",

@@ -160,7 +160,7 @@ export function EnhancedTableToolbar(props) {
       >
         EMULATORS
       </Typography>
-      <Tooltip title="ADD USER">
+      <Tooltip title="ADD EMULATOR">
         <IconButton onClick={props.handleOpen} sx={{ color: "white" }}>
           <AddIcon />
         </IconButton>
