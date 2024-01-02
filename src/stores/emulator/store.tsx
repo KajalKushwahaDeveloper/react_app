@@ -9,10 +9,7 @@ import {
 } from "./types_maps.tsx";
 import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
-import {
-  fetchEventSource,
-  FetchEventSourceInit,
-} from "@microsoft/fetch-event-source";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 export interface EmulatorsSlice {
   eventSource: AbortController | null;
@@ -29,7 +26,9 @@ export interface TripDataSlice {
   tripData: TripData | null;
   pathTraveled: TripPoint[] | null;
   pathNotTraveled: TripPoint[] | null;
-  setTripData: (selectedEmulator: Emulator | null) => Promise<void>;
+  fetchTripData: (selectedEmulator: Emulator | null) => Promise<void>;
+  setTripData: (tripData: TripData | null) => void;
+  setPaths: (tripData: TripData | null) => void;
 }
 
 interface SharedSlice {
@@ -60,7 +59,7 @@ const createEmulatorsSlice: StateCreator<
       const emulators = await response.json();
       const selectedEmulator = get().selectedEmulator;
       if (selectedEmulator !== null) {
-        get().setTripData(selectedEmulator);
+        get().fetchTripData(selectedEmulator);
       }
       set({ emulators });
     } catch (error) {
@@ -77,7 +76,7 @@ const createEmulatorsSlice: StateCreator<
       get().center = { lat: emulator.latitude, lng: emulator.longitude };
     }
     set({ selectedEmulator: emulator });
-    get().setTripData(emulator);
+    get().fetchTripData(emulator);
   },
 
   updateEmulators: (newEmulators) => {
@@ -102,7 +101,7 @@ const createEmulatorsSlice: StateCreator<
           selectedEmulatorNew.currentTripPointIndex !==
             selectedEmulatorOld.currentTripPointIndex
         ) {
-          get().setTripData(selectedEmulatorNew);
+          get().fetchTripData(selectedEmulatorNew);
         }
         set({ selectedEmulator: selectedEmulatorNew });
       }
@@ -121,7 +120,7 @@ const createTripDataSlice: StateCreator<
   tripData: null,
   pathTraveled: null,
   pathNotTraveled: null,
-  setTripData: async (selectedEmulator: Emulator | null) => {
+  fetchTripData: async (selectedEmulator: Emulator | null) => {
     const token = localStorage.getItem("token");
     if (
       selectedEmulator === null ||
@@ -140,25 +139,32 @@ const createTripDataSlice: StateCreator<
           },
         });
         const tripData: TripData = await response.json();
-        let pathTraveledIndex = selectedEmulator?.currentTripPointIndex + 1;
-        let pathNotTraveledIndex = selectedEmulator?.currentTripPointIndex;
-        if (selectedEmulator?.currentTripPointIndex < 0) {
-          pathTraveledIndex = 1;
-          pathNotTraveledIndex = 0;
-        }
-        const pathTraveled = tripData?.tripPoints?.slice(0, pathTraveledIndex);
-        const pathNotTraveled =
-          tripData?.tripPoints?.slice(pathNotTraveledIndex);
-        console.warn(
-          "New TRIP DATA: currentTripPointIndex : ",
-          selectedEmulator?.currentTripPointIndex
-        );
-        set({ tripData, pathTraveled, pathNotTraveled });
+        set({ tripData });
+        get().setPaths(tripData);
       } catch (error) {
         console.error("Failed to fetch trip data:", error);
         set({ tripData: null, pathTraveled: null, pathNotTraveled: null });
       }
     }
+  },
+  setTripData: (tripData: TripData | null) => {
+    set({ tripData });
+    get().setPaths(tripData);
+  },
+  setPaths: (tripData: TripData | null) => {
+    const selectedEmulator = get().selectedEmulator;
+    if (selectedEmulator === null || tripData === null) {
+      return;
+    }
+    let pathTraveledIndex = selectedEmulator.currentTripPointIndex + 1;
+    let pathNotTraveledIndex = selectedEmulator?.currentTripPointIndex;
+    if (selectedEmulator?.currentTripPointIndex < 0) {
+      pathTraveledIndex = 1;
+      pathNotTraveledIndex = 0;
+    }
+    const pathTraveled = tripData?.tripPoints?.slice(0, pathTraveledIndex);
+    const pathNotTraveled = tripData?.tripPoints?.slice(pathNotTraveledIndex);
+    set({ pathTraveled, pathNotTraveled });
   },
 });
 

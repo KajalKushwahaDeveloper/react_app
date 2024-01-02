@@ -2,35 +2,161 @@ import React from "react";
 import { Polyline, Marker } from "@react-google-maps/api";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import { compareTripDataChangedNullOrId } from "./utils.tsx";
+import { useStates } from "../../../../StateProvider.js";
+import ApiService from "../../../../ApiService.js";
+import { TRIP_STOPS_URL } from "../../../../constants.js";
 
 export function StopComponents(props) {
   console.log("StopComponents refreshed");
 
+  const { showToast } = useStates();
   const tripData = useEmulatorStore(
     (state) => state.tripData,
-    (oldTripData, newTripData) =>  {
-      compareTripDataChangedNullOrId(oldTripData, newTripData)
+    (oldTripData, newTripData) => {
+      compareTripDataChangedNullOrId(oldTripData, newTripData);
     }
-    );
+  );
+
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+  const setTripData = useEmulatorStore((state) => state.setTripData);
 
   const startLat = tripData?.tripPoints ? tripData?.tripPoints[0].lat : null;
   const startLng = tripData?.tripPoints ? tripData?.tripPoints[0].lng : null;
-  const endLat = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lat : null;
-  const endLng = tripData?.tripPoints ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lng : null;
+  const endLat = tripData?.tripPoints
+    ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lat
+    : null;
+  const endLng = tripData?.tripPoints
+    ? tripData?.tripPoints[tripData?.tripPoints?.length - 1].lng
+    : null;
+
+  const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
+  const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
+
+  const totalPath = pathTraveled?.concat(pathNotTraveled);
+
+  const stopRefs = React.useRef({});
+
+  let stopNewLatLng = null;
+
+  const handleStopDragEnd = (e, index, stop) => {
+    // get new lat lng of the marker
+    console.info("event: ", e);
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    console.info(`stop index ${stop.tripPointIndex} lat: ${lat} lng: ${lng}`);
+    console.info("stopRefs: ", stopRefs.current[index]);
+    const marker = stopRefs.current[index];
+    if (stopNewLatLng !== null) {
+      marker.setPosition({ lat: stopNewLatLng.lat, lng: stopNewLatLng.lng });
+    }
+    requestNewStopCreation(marker, stopNewLatLng, index);
+  };
+
+  const handleStopDragged = (e, index, stop) => {
+    console.info("stopRefs: ", stopRefs.current[index]);
+    // get new lat lng of the marker
+    console.info("event: ", e);
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    console.info(
+      `stop index: ${index} tripPointIndex: ${stop.tripPointIndex} lat: ${lat} lng: ${lng}`
+    );
+
+    //snap to closest path lat lng
+    const clickedLatLng = { lat: lat, lng: lng };
+    const findClosestPointIndex = (path) => {
+      return path.reduce((closestIndex, currentLatLng, index) => {
+        const d1 =
+          Math.pow(currentLatLng.lat - clickedLatLng.lat, 2) +
+          Math.pow(currentLatLng.lng - clickedLatLng.lng, 2);
+        const d2 =
+          closestIndex === -1
+            ? Infinity
+            : Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) +
+              Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
+        return d1 < d2 ? index : closestIndex;
+      }, -1);
+    };
+
+    const closestIndexPath = findClosestPointIndex(totalPath);
+    if (
+      closestIndexPath === null ||
+      closestIndexPath < 0 ||
+      closestIndexPath > totalPath.length
+    ) {
+      console.error("Could not find closest point in pathTraveled");
+      return;
+    }
+
+    console.log("Closest point in pathTraveled: ", totalPath[closestIndexPath]);
+    // snap the marker from markerRef to the closest point in pathTraveled
+    const marker = stopRefs.current[index];
+    marker.setPosition({
+      lat: totalPath[closestIndexPath].lat,
+      lng: totalPath[closestIndexPath].lng,
+    });
+    stopNewLatLng = {
+      oldTripPointIndex: stop.tripPointIndex,
+      newTripPointIndex: closestIndexPath,
+      lat: totalPath[closestIndexPath].lat,
+      lng: totalPath[closestIndexPath].lng,
+    };
+  };
+
+  async function requestNewStopCreation(marker, newLatLng, index) {
+    // confirm from window alert
+    const confirm = window.confirm(`Change stop S${index + 1} location to this?}`);
+    if (!confirm) {
+      stopNewLatLng = null;
+      //reset marker position to original
+      if(tripData?.stops !== null && tripData?.stops !== undefined && tripData?.stops.length > 0) {
+        console.log("tripData.stops[index]: ", tripData.stops[index].lat, tripData.stops[index].lng);
+        marker.setPosition({ lat : tripData.stops[index].lat, lng: tripData.stops[index].lng})
+      }
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    showToast("Updating Stop...", "info");
+    const { success, data, error } = await ApiService.makeApiCall(
+      TRIP_STOPS_URL,
+      "PUT",
+      newLatLng,
+      token,
+      selectedEmulator.id
+    );
+    if (success) {
+      showToast("Stop updated!", "success");
+      console.log("LOG 1 - created Stop: ", data);
+      setTripData(data);
+      stopNewLatLng = null;
+    } else {
+      showToast("Error updating Stop!", "error");
+      console.log("LOG 1 - error creating Stop: ", error);
+      stopNewLatLng = null;
+    }
+  }
 
   return (
     <React.Fragment>
       {tripData?.stops != null &&
         tripData?.stops.map((stop, index) => (
-          <React.Fragment key = {index}>
+          <React.Fragment key={index}>
             <Marker
+              onLoad={(marker) => {
+                stopRefs.current[index] = marker;
+              }}
+              id={stop.tripPointIndex}
+              key={stop.tripPointIndex}
               position={{
                 lat: stop.lat,
                 lng: stop.lng,
               }}
-              title={"Stop" + stop.id}
               label={`S${index + 1}`}
+              draggable={true}
               onClick={() => props.handleMarkerClick(stop)}
+              onDragEnd={(event) => handleStopDragEnd(event, index, stop)}
+              onDrag={(event) => handleStopDragged(event, index, stop)}
             />
             {stop.tripPoints && stop.tripPoints?.length > 0 && (
               <Polyline
@@ -69,7 +195,6 @@ export function StopComponents(props) {
           }}
         />
       )}
-   
     </React.Fragment>
   );
 }

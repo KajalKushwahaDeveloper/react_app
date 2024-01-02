@@ -16,6 +16,11 @@ export function compareTripDataChangedNullOrId(oldTripData : TripData | null, ne
   if (oldTripData?.distance !== newTripData?.distance ) {
     return true;
   }
+
+  if(oldTripData?.stops?.length !== newTripData?.stops?.length) {
+    return true;
+  }
+
   console.log("TRIP new TripData returns false")
   return false;
 }

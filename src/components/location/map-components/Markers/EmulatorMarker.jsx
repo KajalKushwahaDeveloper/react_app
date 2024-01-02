@@ -13,6 +13,7 @@ const EmulatorMarker = ({
     handleEmulatorMarkerDragEnd,
     selectEmulatorId,
   }) => {
+    console.log("EmulatorMarker refreshed");
     const [currentPosition, setCurrentPosition] = useState(latLng);
     const intervalId = useRef(null);
 
@@ -24,11 +25,11 @@ const EmulatorMarker = ({
 
       intervalId.current = setInterval(() => {
         const newLat =
-          currentPosition.lat + (latLng.lat - currentPosition.lat) * 0.03;
+          currentPosition.lat + (latLng.lat - currentPosition.lat) * 0.2;
         const newLng =
-          currentPosition.lng + (latLng.lng - currentPosition.lng) * 0.03;
+          currentPosition.lng + (latLng.lng - currentPosition.lng) * 0.2;
         setCurrentPosition({ lat: newLat, lng: newLng });
-      }, 50);
+      }, 500);
       return () => {
         if (intervalId.current) {
           clearInterval(intervalId.current);
