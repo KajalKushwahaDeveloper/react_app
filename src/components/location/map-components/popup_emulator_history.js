@@ -1,6 +1,7 @@
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import React, { useState } from "react";
+import { useViewPort } from "../../../../src/ViewportProvider";
 import PopupEmulatorHistoryTable from "./popup_emulator_history_table";
 import ClearIcon from "@mui/icons-material/Clear";
 
@@ -17,10 +18,6 @@ const style = {
   pb: 2,
 };
 
-const mobileStyle = {
-  width: "90%",
-  maxWidth: "90vw", // Adjust the maximum width for smaller screens
-};
 
 const PopUpEmulatorHistory = ({
   showToast,
@@ -28,6 +25,17 @@ const PopUpEmulatorHistory = ({
   open,
   emulatorHistory,
 }) => {
+
+  const { width } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
+
+
+  const mobileStyle = {
+    width: isMobile ? "90%" : "50%",
+    maxWidth: "90vw", // Adjust the maximum width for smaller screens
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     handleClose(0);
