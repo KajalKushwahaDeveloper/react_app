@@ -160,7 +160,6 @@ export function StopComponents(props) {
             />
             {stop.tripPoints && stop.tripPoints?.length > 0 && (
               <Polyline
-                key={stop.tripPointIndex}
                 path={stop.tripPoints}
                 options={{
                   strokeColor: "#FF2200",

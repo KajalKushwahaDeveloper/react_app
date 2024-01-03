@@ -41,7 +41,7 @@ import {
   compareSelectedEmulator,
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
-import CustomNotesModal from "./Phone/CustomNotesModal";
+import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
 
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
@@ -173,12 +173,6 @@ const GpsTable = () => {
       emulatorId: row.id,
     });
   };
-  const handleNoteIconClicked = (row) => {
-    setSelectedEmulatorIdForNotes(row.id);
-    setOpenCustomNotesModal(true);
-  };
-
-
 
   useEffect(() => {
     if (emulators != null) {
@@ -325,24 +319,25 @@ const GpsTable = () => {
                       page * rowsPerPage + rowsPerPage
                     )
                   : emulators
-                )?.map((row, index) => (
+                )?.map((emulator, index) => (
                   <tr
-                    key={row.id || "N/A"}
+                    key={emulator.id || "N/A"}
                     style={{
                       background:
-                        selectedEmulator?.id === row.id
+                        selectedEmulator?.id === emulator.id
                           ? "lightblue"
-                          : hoveredMarker?.id === row.id
+                          : hoveredMarker?.id === emulator.id
                           ? "lightpink"
                           : "white",
                     }}
+                    onClick={() => handleEmulatorCheckboxChange(emulator)}
                   >
                     <td
                       style={{
                         background:
-                          row.status === "ACTIVE"
+                          emulator.status === "ACTIVE"
                             ? "#16BA00"
-                            : row.status === "INACTIVE"
+                            : emulator.status === "INACTIVE"
                             ? "#FFA500"
                             : "#ff4d4d",
                         textAlign: "center",
@@ -351,7 +346,7 @@ const GpsTable = () => {
                       {/* Restart/Reset Button */}
                       <RestartAltIcon
                         fontSize="small"
-                        onClick={() => handleRestartButtonClick(row)}
+                        onClick={() => handleRestartButtonClick(emulator)}
                       />
                     </td>
 
@@ -359,76 +354,68 @@ const GpsTable = () => {
                     <td>
                       <Fragment>
                         <Tooltip
-                          style={{ display: "flex", alignItems: "center" }}
-                          title={row.telephone || "N/A"}
+                          title={emulator.telephone || "N/A"}
                           placement="top"
                         >
                           <div
-                            style={
-                              isMobileThreeTwenty
-                                ? {
-                                    textOverflow: "ellipsis",
-                                    overflow: "hidden",
-                                    whiteSpace: "nowrap",
-                                    flexGrow: 1,
-                                    maxWidth: 26,
-                                  }
-                                : {
-                                    textOverflow: "ellipsis",
-                                    overflow: "hidden",
-                                    whiteSpace: "nowrap",
-                                    flexGrow: 1,
-                                    maxWidth: 80,
-                                  }
-                            }
+                            style={{ display: "flex", alignItems: "center" }}
                           >
-                            {row.telephone || "N/A"}
-                          </div>
-
-                          {/* Icons */}
-                          <div style={{ display: "flex" }}>
-                            {/* calling icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleCallIconClicked(row)}
+                            <div
+                              style={
+                                isMobileThreeTwenty
+                                  ? {
+                                      textOverflow: "ellipsis",
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      flexGrow: 1,
+                                      maxWidth: 26,
+                                    }
+                                  : {
+                                      textOverflow: "ellipsis",
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      flexGrow: 1,
+                                      maxWidth: 80,
+                                    }
+                              }
                             >
-                              <CallRoundedIcon fontSize="small" />
-                            </IconButton>
+                              {emulator.telephone || "N/A"}
+                            </div>
+                            {/* Icons */}
+                            <div style={{ display: "flex" }}>
+                              {/* calling icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() => handleCallIconClicked(emulator)}
+                              >
+                                <CallRoundedIcon fontSize="small" />
+                              </IconButton>
 
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleMessageIconClicked(row)}
-                            >
-                              <MessageRoundedIcon fontSize="small" />
-                            </IconButton>
+                              {/* message icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleMessageIconClicked(emulator)
+                                }
+                              >
+                                <MessageRoundedIcon fontSize="small" />
+                              </IconButton>
 
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleHistoryButtonClick(row)}
-                            >
-                              <HistoryIcon fontSize="small" />
-                            </IconButton>
-
-                            {/* custom notes */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleNoteIconClicked(row)}
-                            >
-                              <DescriptionIcon fontSize="small" />
-                            </IconButton>
+                              {/* message icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleHistoryButtonClick(emulator)
+                                }
+                              >
+                                <HistoryIcon fontSize="small" />
+                              </IconButton>
+                            </div>
                           </div>
                         </Tooltip>
+                        {/* custom notes */}
+                        <CustomNoteComponent emulator={emulator} />
                       </Fragment>
-                    </td>
-
-                    <td align="right">
-                      <Checkbox
-                        size="small"
-                        checked={selectedEmulator?.id === row.id}
-                        onChange={() => handleEmulatorCheckboxChange(row)}
-                      />
                     </td>
                     <td align="right">
                       <div
@@ -441,35 +428,26 @@ const GpsTable = () => {
                       >
                         {/* Trip Status */}
                         <p style={{ marginTop: "0", marginBottom: "0" }}>
-                          {row.tripStatus}
+                          {emulator.tripStatus}
                         </p>
                         {/* Trip Status Action */}
-                        <IconButton size="small">
-                          {row.tripStatus === "RUNNING" && (
-                            <PauseCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
+                        <IconButton
+                          size="small"
+                          onClick={() => handleActionButtonClick(emulator)}
+                        >
+                          {emulator.tripStatus === "RUNNING" && (
+                            <PauseCircleOutlineIcon fontSize="small" />
                           )}
-                          {row.tripStatus === "PAUSED" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
+                          {emulator.tripStatus === "PAUSED" && (
+                            <PlayCircleOutlineIcon fontSize="small" />
                           )}
-                          {row.tripStatus === "STOP" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
+                          {emulator.tripStatus === "STOP" && (
+                            <PlayCircleOutlineIcon fontSize="small" />
                           )}
-                          {row.tripStatus === "RESTING" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
+                          {emulator.tripStatus === "RESTING" && (
+                            <PlayCircleOutlineIcon fontSize="small" />
                           )}
-                          {row.tripStatus === "FINISHED" && (
+                          {emulator.tripStatus === "FINISHED" && (
                             <CheckCircleOutlineIcon fontSize="small" />
                           )}
                         </IconButton>
@@ -510,14 +488,6 @@ const GpsTable = () => {
               setContactDialogOptions={setContactDialogOptions}
               emulators={staticEmulators}
               showToast={showToast}
-            />
-
-            <CustomNotesModal
-              open={openCustomNotesModal}
-              setSelectedEmulatorIdForNotes = {setSelectedEmulatorIdForNotes}
-              setOpenCustomNotesModal={setOpenCustomNotesModal}
-              selectedEmulatorIdForNotes={selectedEmulatorIdForNotes}
-              setCustomNotes={setCustomNotes}
             />
           </>
         </div>

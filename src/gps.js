@@ -9,6 +9,7 @@ import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/Address/address_table.js";
+import { DragDialog } from "./components/location/map-components/DragDialog.jsx";
 
 const GPS = () => {
   console.log("GPS.js refreshed");
@@ -19,6 +20,7 @@ const GPS = () => {
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
+      <DragDialog/>
       <CreateTripOverlay />
       {!isMobile && (
         <>

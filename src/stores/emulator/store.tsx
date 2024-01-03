@@ -1,6 +1,6 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
-import { Emulator, TripData, TripPoint } from "./types.tsx";
+import { DragEmulator, Emulator, TripData, TripPoint } from "./types.tsx";
 import {
   Center,
   defaultLng,
@@ -16,9 +16,13 @@ export interface EmulatorsSlice {
   eventSource: AbortController | null;
   selectedEmulator: Emulator | null;
   emulators: Emulator[] | [];
+  hoveredEmulator: Emulator | null;
+  dragEmulatorRequest: DragEmulator | null;
   updateEmulators: (emulators: Emulator[]) => void;
   fetchEmulators: () => Promise<void>;
   selectEmulator: (emulator: Emulator | null) => void;
+  hoverEmulator: (emulator: Emulator | null) => void;
+  dragEmulator: (emulator: DragEmulator | null ) => void;
 }
 
 export interface TripDataSlice {
@@ -47,6 +51,8 @@ const createEmulatorsSlice: StateCreator<
   eventSource: null,
   emulators: [],
   selectedEmulator: null,
+  hoveredEmulator: null,
+  dragEmulatorRequest: null,
   fetchEmulators: async () => {
     const token = localStorage.getItem("token");
     try {
@@ -79,7 +85,6 @@ const createEmulatorsSlice: StateCreator<
     set({ selectedEmulator: emulator });
     get().fetchTripData(emulator);
   },
-
   updateEmulators: (newEmulators) => {
     const isUpdatedEmulators = compareEmulatorsCompletely(
       get().emulators,
@@ -109,7 +114,9 @@ const createEmulatorsSlice: StateCreator<
     }
     set({ emulators: newEmulators });
   },
-});
+  hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
+  dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
+  });
 
 const createTripDataSlice: StateCreator<
   EmulatorsSlice & TripDataSlice,

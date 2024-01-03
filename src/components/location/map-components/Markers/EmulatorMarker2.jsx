@@ -15,28 +15,55 @@
 import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import _ from "lodash";
+import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 
-const EmulatorMarker = ({
-  id,
-  latLng,
-  telephone,
-  status,
-  tripStatus,
-  emulatorIcon,
-  handleMarkerMouseOver,
-  handleMarkerMouseOut,
-  handleEmulatorMarkerDragEnd,
-  selectEmulatorId,
-}) => {
-  console.log("EmulatorMarker refreshed");
+const EmulatorMarker = React.memo(({ emulator }) => {
+  console.log("EmulatorMarker refreshed", emulator);
+
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+
+  const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
+
+  const hoveredMarker = useEmulatorStore((state) => state.hoveredEmulator);
+  const hoverEmulator = useEmulatorStore((state) => state.hoverEmulator);
+
+  const selectEmulator =  useEmulatorStore((state) => state.selectEmulator)
+  
+  const isSelected = selectedEmulator?.id === emulator?.id;
+
+  const isHovered = hoveredMarker?.id === emulator?.id;
+  //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
+  var icon_url = `images/${emulator.tripStatus}/`;
+  if (isHovered) {
+    icon_url = icon_url + "HOVER";
+  } else if (isSelected) {
+    icon_url = icon_url + "SELECT";
+  } else {
+    icon_url = icon_url + "DEFAULT";
+  }
+  icon_url = `${icon_url}/${emulator.status}.svg`;
+
+  const emulatorIcon = {
+    url: icon_url,
+    scaledSize: new window.google.maps.Size(20, 20),
+    anchor: new window.google.maps.Point(10, 10),
+  };
+
   const markerRef = useRef(null);
   // copy latLng to initialPosition but don't update it on latLng change
   useEffect(() => {
-    if(markerRef.current === null || markerRef.current === undefined){
+    if (
+      markerRef.current === null ||
+      markerRef.current === undefined ||
+      emulator === undefined
+    ) {
       return;
     }
-    animateMarkerTo(markerRef.current, latLng);
-  }, [latLng, markerRef]);
+    animateMarkerTo(markerRef.current, {
+      lat: emulator.latitude,
+      lng: emulator.longitude,
+    });
+  }, [emulator, emulator.latitude, emulator.longitude, markerRef]);
 
   // https://stackoverflow.com/a/55043218/9058905
   function animateMarkerTo(marker, newPosition) {
@@ -121,26 +148,24 @@ const EmulatorMarker = ({
     animateStep(marker, new Date().getTime());
   }
 
-  const arePropsEqual = (prevProps, nextProps) => {
-    // compare all props except latLng
-    const { latLng: prevLatLng, ...restPrevProps } = prevProps;
-    const { latLng: nextLatLng, ...restNextProps } = nextProps;
-    const isEqual = _.isEqual(restPrevProps, restNextProps);
-    console.log("EmulatorMarker arePropsEqual:", isEqual);
-    return isEqual;
+  const handleEmulatorMarkerDragEnd = (event) => {
+    if (emulator === undefined) {
+      console.log("DRAG Emulator not found in data");
+      return;
+    }
+    const { latLng } = event;
+    dragEmulator({ emulator: emulator, latitude:  latLng.lat() , longitude: latLng.lng() });
   };
-  
-  const MemoizedMarker = React.memo(Marker, arePropsEqual);
 
   return (
-    <MemoizedMarker
-      key={id}
+    <Marker
+      key={emulator.id}
       icon={emulatorIcon}
-      position={{ lat: latLng.lat, lng: latLng.lng}}
+      position={{ lat: emulator.latitude, lng: emulator.longitude }}
       onLoad={(marker) => {
         markerRef.current = marker;
       }}
-      title={`${telephone} ${tripStatus}(${status})`}
+      title={`${emulator.telephone} ${emulator.tripStatus}(${emulator.status})`}
       labelStyle={{
         textAlign: "center",
         width: "auto",
@@ -149,16 +174,16 @@ const EmulatorMarker = ({
         padding: "0px",
       }}
       labelAnchor={{ x: "auto", y: "auto" }}
-      onClick={() => selectEmulatorId(id)}
-      onMouseOver={() => handleMarkerMouseOver(id)}
-      onMouseOut={handleMarkerMouseOut}
+      onClick={() => selectEmulator(emulator)}
+      onMouseOver={() => hoverEmulator(emulator)}
+      onMouseOut={() => hoverEmulator(null)}
       draggable={true}
       onDragEnd={(event) => {
-        handleEmulatorMarkerDragEnd(id, event);
+        handleEmulatorMarkerDragEnd(event);
       }}
       zIndex={1}
     />
   );
-};
+});
 
 export default EmulatorMarker;

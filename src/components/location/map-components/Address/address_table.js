@@ -3,7 +3,10 @@ import { useViewPort } from "../../../../ViewportProvider.js";
 import CreateTripButton from "../CreateTripButton.jsx";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import Tooltip from "@mui/material/Tooltip";
-import { compareTripDataChangedNullOrId, compareSelectedEmulatorChangedNullOrId } from "./utils.tsx";
+import {
+  compareTripDataChangedNullOrId,
+  compareSelectedEmulatorChangedNullOrId,
+} from "./utils.tsx";
 
 const AddressTable = () => {
   console.log("AddressTable refreshed");
@@ -177,7 +180,9 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {selectedEmulator && fromAddress.current ? fromAddress.current : "N/A"}
+              {selectedEmulator && fromAddress.current
+                ? fromAddress.current
+                : "N/A"}
             </div>
           </div>
           {/* TO ADDRESS*/}
@@ -198,7 +203,9 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {selectedEmulator && toAddress.current ? toAddress.current : "N/A"}
+              {selectedEmulator && toAddress.current
+                ? toAddress.current
+                : "N/A"}
             </div>
           </div>
 
@@ -367,9 +374,11 @@ const AddressTable = () => {
                 }
                 placement="top"
               >
-                {selectedEmulator && selectedEmulator.address
-                  ? selectedEmulator.address
-                  : "N/A"}
+                <div>
+                  {selectedEmulator && selectedEmulator.address
+                    ? selectedEmulator.address
+                    : "N/A"}
+                </div>
               </Tooltip>
             </div>
           </div>
@@ -386,10 +395,16 @@ const AddressTable = () => {
             <div className="address-table-heading">From address</div>
             <div className="addressTable ellipsisText">
               <Tooltip
-                title={selectedEmulator && fromAddress.current && fromAddress.current}
+                title={
+                  selectedEmulator && fromAddress.current && fromAddress.current
+                }
                 placement="top"
               >
-                {selectedEmulator && fromAddress.current ? fromAddress.current : "N/A"}
+                <div>
+                  {selectedEmulator && fromAddress.current
+                    ? fromAddress.current
+                    : "N/A"}
+                </div>
               </Tooltip>
             </div>
           </div>
@@ -406,10 +421,16 @@ const AddressTable = () => {
             <div className="address-table-heading">To address</div>
             <div className="addressTable ellipsisText">
               <Tooltip
-                title={selectedEmulator && toAddress.current && toAddress.current}
+                title={
+                  selectedEmulator && toAddress.current && toAddress.current
+                }
                 placement="top"
               >
-                {selectedEmulator && toAddress.current ? toAddress.current : "N/A"}
+                <div>
+                  {selectedEmulator && toAddress.current
+                    ? toAddress.current
+                    : "N/A"}
+                </div>
               </Tooltip>
             </div>
           </div>

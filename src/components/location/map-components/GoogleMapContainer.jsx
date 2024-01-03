@@ -5,29 +5,20 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
-import EmulatorMarker from "./Markers/EmulatorMarkers.jsx";
+import EmulatorMarkers from "./Markers/EmulatorMarkers.jsx";
 import { StopComponents } from "./Trip/StopComponents.jsx";
-import { SelectedStopInfo } from "./SelectedStopInfo.jsx";
+import { SelectedStopInfo } from "./Trip/SelectedStopInfo.jsx";
 import { PathComponent } from "./Trip/PathComponent.jsx";
-import { DragDialog } from "./DragDialog.jsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
 const GoogleMapContainer = ({
-  center,
   selectedStop,
   handleMarkerClick,
-  hoveredMarker,
-  handleMarkerMouseOver,
-  handleMarkerMouseOut,
-  handleInfoWindowClose,
-  handleEmulatorMarkerDragEnd,
-  openDialog,
-  onClose,
-  DialogText,
-  confirmNewLocation,
+  handleInfoWindowClose
 }) => {
-  console.log("GoogleMapContainer refreshed");
+  const center = useEmulatorStore((state) => state.center);
+  console.log("GoogleMapContainer refreshed ");
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
@@ -269,19 +260,7 @@ const GoogleMapContainer = ({
         ></SelectedStopInfo>
       )}
 
-      <EmulatorMarker
-        hoveredMarker={hoveredMarker}
-        handleMarkerMouseOver={handleMarkerMouseOver}
-        handleMarkerMouseOut={handleMarkerMouseOut}
-        handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
-      />
-
-      <DragDialog
-        openDialog={openDialog}
-        onClose={onClose}
-        DialogText={DialogText}
-        confirmNewLocation={confirmNewLocation}
-      ></DragDialog>
+      <EmulatorMarkers/>
     </GoogleMap>
   ) : (
     <>Loading...</>
