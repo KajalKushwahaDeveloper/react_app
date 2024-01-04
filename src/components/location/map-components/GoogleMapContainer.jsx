@@ -9,14 +9,12 @@ import EmulatorMarkers from "./Markers/EmulatorMarkers.jsx";
 import { StopComponents } from "./Trip/StopComponents.jsx";
 import { SelectedStopInfo } from "./Trip/SelectedStopInfo.jsx";
 import { PathComponent } from "./Trip/PathComponent.jsx";
+import useFetch from "../../../hooks/useFetch.js";
+import { EMULATOR_URL } from "../../../constants.js";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
-const GoogleMapContainer = ({
-  selectedStop,
-  handleMarkerClick,
-  handleInfoWindowClose
-}) => {
+const GoogleMapContainer = () => {
   const center = useEmulatorStore((state) => state.center);
   console.log("GoogleMapContainer refreshed ");
   const tripData = useEmulatorStore(
@@ -30,7 +28,26 @@ const GoogleMapContainer = ({
     googleMapsApiKey: "AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E",
     libraries: libraries,
   });
+  const [selectedStop, setSelectedStop] = React.useState(null);
 
+  const handleMarkerClick = (stop) => {
+    setSelectedStop(stop);
+  };
+
+  const createDevices = useEmulatorStore((state) => state.createDevices);
+
+  const { data } = useFetch(EMULATOR_URL);
+
+  useEffect(() => {
+    console.log("Map.js - useEffect - data: ", data);
+    if (data !== null) {
+      createDevices(data);
+    }
+  }, [createDevices, data]);
+
+  const handleInfoWindowClose = () => {
+    setSelectedStop(null);
+  };
   useEffect(() => {
     if (
       tripData === null ||
@@ -260,11 +277,11 @@ const GoogleMapContainer = ({
         ></SelectedStopInfo>
       )}
 
-      <EmulatorMarkers/>
+      <EmulatorMarkers />
     </GoogleMap>
   ) : (
     <>Loading...</>
   );
 };
 
-export default GoogleMapContainer;
+export default React.memo(GoogleMapContainer);

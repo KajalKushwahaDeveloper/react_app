@@ -75,7 +75,7 @@ const GpsTable = () => {
 
   const devices = useEmulatorStore((state) => state.devices);
 
-  const hoveredMarker = useEmulatorStore((state) => state.hoveredEmulator);
+  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator);
 
   // State variables
   const { staticEmulators, showToast } = useStates();
@@ -91,10 +91,8 @@ const GpsTable = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [emptyRows, setEmptyRows] = useState(null);
   const [loading, setLoading] = useState(true);
   const [messageLoading, setMessageLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false);
@@ -112,12 +110,6 @@ const GpsTable = () => {
     dialogType: "",
     emulatorId: null,
   });
-
-  const [customNotes, setCustomNotes] = useState({});
-
-  const [openCustomNotesModal, setOpenCustomNotesModal] = useState(false);
-  const [selectedEmulatorIdForNotes, setSelectedEmulatorIdForNotes] =
-    useState(null);
 
   const selectedDevice = useEmulatorStore(
     (state) => state.selectedDevice,
@@ -178,15 +170,21 @@ const GpsTable = () => {
 
   useEffect(() => {
     if (emulators != null) {
-      setEmptyRows(
-        rowsPerPage -
-          Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
-      );
       setLoading(false);
     } else {
       setLoading(true);
     }
-    if (selectedEmulator != null) {
+    if (hoveredEmulator !== null) {
+      const selectedEmIndex = emulators.findIndex(
+        (emulator) => emulator.id === hoveredEmulator.id
+      );
+      // Calculate the new active page based on the selected checkbox index and rowsPerPage
+      if (selectedEmIndex !== -1) {
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
+        setPage(newActivePage);
+      }
+    }
+    if (selectedEmulator !== null) {
       const selectedEmIndex = emulators.findIndex(
         (emulator) => emulator === selectedEmulator
       );
@@ -196,7 +194,7 @@ const GpsTable = () => {
         setPage(newActivePage);
       }
     }
-  }, [emulators, page, rowsPerPage, selectedEmulator]);
+  }, [emulators, page, rowsPerPage, selectedEmulator, hoveredEmulator]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -282,10 +280,6 @@ const GpsTable = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div style={{ position: "relative" }}>
       <Backdrop color="primary" style={{ zIndex: 4 }} open={messageLoading}>
@@ -328,7 +322,7 @@ const GpsTable = () => {
                       background:
                         selectedEmulator?.id === emulator.id
                           ? "lightblue"
-                          : hoveredMarker?.id === emulator.id
+                          : hoveredEmulator?.id === emulator.id
                           ? "lightpink"
                           : "white",
                     }}
@@ -428,30 +422,28 @@ const GpsTable = () => {
                           maxWidth: 85,
                         }}
                       >
-                        {/* Trip Status */}
-                        <p style={{ marginTop: "0", marginBottom: "0" }}>
-                          {emulator.tripStatus}
-                        </p>
                         {/* Trip Status Action */}
                         <IconButton
                           size="small"
                           onClick={() => handleActionButtonClick(emulator)}
                         >
-                          {emulator.tripStatus === "RUNNING" && (
-                            <PauseCircleOutlineIcon fontSize="small" />
-                          )}
-                          {emulator.tripStatus === "PAUSED" && (
-                            <PlayCircleOutlineIcon fontSize="small" />
-                          )}
-                          {emulator.tripStatus === "STOP" && (
-                            <PlayCircleOutlineIcon fontSize="small" />
-                          )}
-                          {emulator.tripStatus === "RESTING" && (
-                            <PlayCircleOutlineIcon fontSize="small" />
-                          )}
-                          {emulator.tripStatus === "FINISHED" && (
-                            <CheckCircleOutlineIcon fontSize="small" />
-                          )}
+                          <Tooltip title = {emulator.tripStatus}>
+                            {emulator.tripStatus === "RUNNING" && (
+                              <PauseCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "PAUSED" && (
+                              <PlayCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "STOP" && (
+                              <PlayCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "RESTING" && (
+                              <PlayCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "FINISHED" && (
+                              <CheckCircleOutlineIcon fontSize="small" />
+                            )}
+                          </Tooltip>
                         </IconButton>
                       </div>
                     </td>
