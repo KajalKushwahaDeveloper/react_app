@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TablePagination, {
   tablePaginationClasses as classes,
-} from "@mui/base/TablePagination";
-import { Backdrop, Checkbox, CircularProgress, Hidden } from "@mui/material";
+} from "@mui/material/TablePagination";
+import { Backdrop, CircularProgress } from "@mui/material";
 import { styled } from "@mui/system";
 import {
   EMULATOR_NOTIFICATION_URL,
@@ -42,7 +42,7 @@ import {
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
-
+import TextField from "@mui/material/TextField";
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
@@ -348,7 +348,7 @@ const GpsTable = () => {
 
                     {/* TELEPHONE */}
                     <td>
-                      <Fragment>
+                      <div style={{ width: "100%" }}>
                         <Tooltip
                           title={emulator.telephone || "N/A"}
                           placement="top"
@@ -356,27 +356,7 @@ const GpsTable = () => {
                           <div
                             style={{ display: "flex", alignItems: "center" }}
                           >
-                            <div
-                              style={
-                                isMobileThreeTwenty
-                                  ? {
-                                      textOverflow: "ellipsis",
-                                      overflow: "hidden",
-                                      whiteSpace: "nowrap",
-                                      flexGrow: 1,
-                                      maxWidth: 26,
-                                    }
-                                  : {
-                                      textOverflow: "ellipsis",
-                                      overflow: "hidden",
-                                      whiteSpace: "nowrap",
-                                      flexGrow: 1,
-                                      maxWidth: 80,
-                                    }
-                              }
-                            >
-                              {emulator.telephone || "N/A"}
-                            </div>
+                            <div>{emulator.telephone || "N/A"}</div>
                             {/* Icons */}
                             <div style={{ display: "flex" }}>
                               {/* calling icon */}
@@ -411,7 +391,7 @@ const GpsTable = () => {
                         </Tooltip>
                         {/* custom notes */}
                         <CustomNoteComponent emulator={emulator} />
-                      </Fragment>
+                      </div>
                     </td>
                     <td align="right">
                       <div
@@ -427,7 +407,7 @@ const GpsTable = () => {
                           size="small"
                           onClick={() => handleActionButtonClick(emulator)}
                         >
-                          <Tooltip title = {emulator.tripStatus}>
+                          <Tooltip title={emulator.tripStatus}>
                             {emulator.tripStatus === "RUNNING" && (
                               <PauseCircleOutlineIcon fontSize="small" />
                             )}

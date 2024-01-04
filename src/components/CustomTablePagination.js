@@ -1,6 +1,4 @@
-import TablePagination, {
-  tablePaginationClasses as classes,
-} from "@mui/base/TablePagination";
+import { TablePagination , tablePaginationClasses as classes } from "@mui/material";
 import { styled } from "@mui/system";
 
 const blue = {

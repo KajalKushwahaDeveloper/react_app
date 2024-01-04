@@ -7,7 +7,7 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
-import AddressTable from "./components/location/map-components/Address/address_table.js";
+import AddressTable from "./components/location/map-components/Address/AddressTable.js";
 import { DragDialog } from "./components/location/map-components/DragDialog.jsx";
 import GoogleMapContainer from "./components/location/map-components/GoogleMapContainer.jsx";
 

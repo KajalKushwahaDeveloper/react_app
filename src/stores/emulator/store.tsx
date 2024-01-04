@@ -11,6 +11,7 @@ import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { TripDataResponse } from "../../model/response.tsx";
+import { TwillioDevice } from "../call/types.tsx";
 
 export interface EmulatorsSlice {
   eventSource: AbortController | null;
@@ -257,8 +258,9 @@ const createSharedSlice: StateCreator<
     });
     const devices = get().devices;
     if (devices.length > 0) {
-      devices.forEach((twillioDevice) => {
-        twillioDevice.device.destroy();
+      devices.forEach((twillioDevice : TwillioDevice | null) => {
+      console.log("DEVICES twillioDevice:", twillioDevice);
+      twillioDevice?.device?.destroy();
       });
     }
     set({ devices: [], selectedDevice: null });

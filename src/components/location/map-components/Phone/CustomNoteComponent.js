@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import TextField from "@material-ui/core/TextField";
+import TextField from '@mui/material/TextField';
 import ApiService from "../../../../ApiService";
 import { EMULATOR_NOTE_URL } from "../../../../constants";
 import { useStates } from "../../../../StateProvider";
-import IconButton from "@material-ui/core/IconButton";
-import { InputAdornment } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
 
 const CustomNoteComponent = ({ emulator }) => {
   console.log("CustomNoteComponent emulator Refreshed");
@@ -22,6 +19,9 @@ const CustomNoteComponent = ({ emulator }) => {
     const newText = e.target.value.slice(0, 25);
     setNoteText(newText);
     console.log("newText:", newText);
+    if (newText !== emulator.note) {
+      handleSaveNote();
+    }
   };
 
   const handleSaveNote = async () => {
@@ -35,7 +35,7 @@ const CustomNoteComponent = ({ emulator }) => {
       token
     );
     if (success) {
-      showToast(" Note Updated! ", "success");
+      showToast("Note Updated! ", "success");
     } else {
       console.log("Failed to update Note! error:", error);
       showToast(" Failed to update Note! ", "error");
@@ -44,19 +44,12 @@ const CustomNoteComponent = ({ emulator }) => {
 
   return (
     <TextField
+      style={{ width: "100%", padding: "0px 10px" }}
       label={noteText ? "" : "Add Note"}
-      style={{ width: "100%", fontSize: "12px" }}
+      variant="outlined"
       value={noteText}
       onChange={handleNoteChange}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton onClick={handleSaveNote}>
-              <SaveIcon />
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
+      size="small"
     />
   );
 };
