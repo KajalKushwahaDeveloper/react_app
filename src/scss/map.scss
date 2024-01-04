@@ -34,15 +34,12 @@ body {
 }
 //table//
 table {
-  font-size: 16px;
+  font-size: 12px;
   width: auto;
   padding: 0.5rem;
   background: white;
   overflow: hidden;
 }
-
-
-
 
 .ellipsisText{
   white-space: nowrap;
@@ -55,7 +52,7 @@ table {
   position:fixed;
   top: 64px;
   z-index: 2;
-  background-color: white;
+  background-color: transparent;
 
   @media screen and (max-width: 620px) {
     .address-table-heading{
@@ -68,11 +65,7 @@ table {
     .addressTable{
       text-align: center;
       font-size: 11px;
-      overflow: hidden;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-      hyphens: auto;
-      height: auto;
+      padding: 0px !important;
     }
   }
 
@@ -94,23 +87,25 @@ table {
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
-    height: 40px;
+    height: auto;
+    width:100px
   }
 }
 
 .table-responsive {
   max-height: 80vh;
-  max-width: 640px ; 
+  max-width:700px ; 
   position: "absolute";
   top: 90;
+  overflow-x: auto;
 }
 
 .table-responsive-mobile {
   max-height: 36vh;
   max-width: 640px;
   position: "absolute";
-  overflow-y: auto !important;
-  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
   top: 90;
   // margin-top: 0.5rem;
 }

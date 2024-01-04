@@ -65,6 +65,7 @@ const closeCustomNotesModal = () => {
         token,
         selectedEmulatorIdForNotes
       );
+      console.log("selectedEmulatorIdForNotes:", selectedEmulatorIdForNotes)
       if (success) {
         console.log("NOTE data:", data);
         console.log("NOTE data:", data.note);

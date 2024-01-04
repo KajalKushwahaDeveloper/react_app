@@ -255,7 +255,7 @@ const GoogleMapContainer = ({
       center={center}
       gestureHandling="none"
       zoomControl={false}
-      options={{ scrollwheel: true, styles: darkMapStyle }}
+      options={{ scrollwheel: true, styles: darkMapStyle, disableDefaultUI: true }}
       onLoad={onLoad}
       onUnmount={onUnmount}
     >

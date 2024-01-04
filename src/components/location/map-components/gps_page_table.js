@@ -15,6 +15,7 @@ import {
 import "../../../scss/map.scss";
 import "../../../scss/button.scss";
 import "../../../scss/global.scss";
+import "../../../scss/table.scss";
 
 //icons
 import IconButton from "@mui/material/IconButton";
@@ -26,6 +27,7 @@ import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import DescriptionIcon from "@mui/icons-material/Description";
+import TextField from "@material-ui/core/TextField";
 
 //components
 import ContactDialogComponent from "./Phone/ContactDialogComponent";
@@ -100,19 +102,16 @@ const GpsTable = () => {
   const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] =
     useState(null);
 
-  const handleHistoryClose = () => {
-    setOpenEmulatorHistoryPopUp(false);
-    setSelectedEmulatorForHistoryData(null);
-  };
-
   const [contactDialogOptions, setContactDialogOptions] = useState({
     open: false,
     dialogType: "",
     emulatorId: null,
   });
+  const [showNotes, setShowNotes] = useState({});
+  const [noteText, setNoteText] = useState("");
+  const [clickedFromIcon, setClickedFromIcon] = useState(false);
 
   const [customNotes, setCustomNotes] = useState({});
-
   const [openCustomNotesModal, setOpenCustomNotesModal] = useState(false);
   const [selectedEmulatorIdForNotes, setSelectedEmulatorIdForNotes] =
     useState(null);
@@ -165,6 +164,10 @@ const GpsTable = () => {
       emulatorId: null,
     });
   };
+  const handleHistoryClose = () => {
+    setOpenEmulatorHistoryPopUp(false);
+    setSelectedEmulatorForHistoryData(null);
+  };
 
   const handleMessageIconClicked = (row) => {
     setContactDialogOptions({
@@ -173,12 +176,26 @@ const GpsTable = () => {
       emulatorId: row.id,
     });
   };
-  const handleNoteIconClicked = (row) => {
-    setSelectedEmulatorIdForNotes(row.id);
-    setOpenCustomNotesModal(true);
+
+  // const handleNoteIconClicked = (row) => {
+  //   setSelectedEmulatorIdForNotes(row.id);
+  //   setOpenCustomNotesModal(true);
+  //   setShowNotes(!showNotes);
+  // };
+
+  const handleNoteIconClicked = (event,row) => {
+    console.log("prevShowNotes", row.id);
+    setShowNotes((prevShowNotes) => ({
+      ...prevShowNotes,
+      [row.id]: !prevShowNotes[row.id],
+    }));
+    event.stopPropagation(); 
   };
 
-
+  const handleNoteTextChange = (event) => {
+    setNoteText(event.target.value);
+    console.log("target:", event.target.value);
+  };
 
   useEffect(() => {
     if (emulators != null) {
@@ -282,6 +299,28 @@ const GpsTable = () => {
     }
   };
 
+  const handleTableRowClick = (emulatorRow) => {
+    console.log("emulatorRow:", emulatorRow);
+    handleEmulatorCheckboxChange(emulatorRow);
+    setClickedFromIcon(false);
+  };
+
+  // Create a new array with the selected row moved to the top
+  const sortedEmulators = isMobile
+    ? selectedEmulator
+      ? [
+          selectedEmulator,
+          ...emulators.filter(
+            (emulator) => emulator.id !== selectedEmulator.id
+          ),
+        ]
+      : emulators
+    : emulators;
+
+  {
+    console.log("selectedEmulator:", selectedEmulator);
+  }
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -300,8 +339,8 @@ const GpsTable = () => {
           display: "flex",
           flexDirection: "column",
           position: isMobile ? "static" : "absolute",
-          marginTop: isMobile ? "1px" : "0",
-          top: isMobile ? "0px" : isTabBreakpoint ? "143px" : "125px",
+          marginTop: isMobile ? "0px" : "0px",
+          top: isMobile ? "0px" : isTabBreakpoint ? "120px" : "115px",
           paddingRight: isMobile && "0px",
           paddingLeft: isMobile && "0px",
         }}
@@ -320,162 +359,193 @@ const GpsTable = () => {
             >
               <tbody>
                 {(rowsPerPage > 0
-                  ? emulators.slice(
+                  ? sortedEmulators.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : emulators
+                  : sortedEmulators
                 )?.map((row, index) => (
-                  <tr
-                    key={row.id || "N/A"}
-                    style={{
-                      background:
-                        selectedEmulator?.id === row.id
-                          ? "lightblue"
-                          : hoveredMarker?.id === row.id
-                          ? "lightpink"
-                          : "white",
-                    }}
-                  >
-                    <td
+                  <>
+                    <tr
+                      key={row.id || "N/A"}
                       style={{
+                        borderBottom: "1px solid #E6E5E5",
+                        borderTop: "1px solid #E6E5E5",
                         background:
-                          row.status === "ACTIVE"
-                            ? "#16BA00"
-                            : row.status === "INACTIVE"
-                            ? "#FFA500"
-                            : "#ff4d4d",
-                        textAlign: "center",
+                          selectedEmulator?.id === row.id
+                            ? "lightblue"
+                            : hoveredMarker?.id === row.id
+                            ? "lightpink"
+                            : "white",
                       }}
+                      onClick={() => handleTableRowClick(row)} // Add onClick handler to select row
                     >
-                      {/* Restart/Reset Button */}
-                      <RestartAltIcon
-                        fontSize="small"
-                        onClick={() => handleRestartButtonClick(row)}
-                      />
-                    </td>
+                      <td
+                        style={{
+                          background:
+                            row.status === "ACTIVE"
+                              ? "#16BA00"
+                              : row.status === "INACTIVE"
+                              ? "#FFA500"
+                              : "#ff4d4d",
+                          textAlign: "center",
+                        }}
+                      >
+                        {/* Restart/Reset Button */}
+                        <RestartAltIcon
+                          fontSize="small"
+                          onClick={() => handleRestartButtonClick(row)}
+                        />
+                      </td>
 
-                    {/* TELEPHONE */}
-                    <td>
-                      <Fragment>
-                        <Tooltip
-                          style={{ display: "flex", alignItems: "center" }}
-                          title={row.telephone || "N/A"}
-                          placement="top"
-                        >
-                          <div
-                            style={
-                              isMobileThreeTwenty
-                                ? {
-                                    textOverflow: "ellipsis",
-                                    overflow: "hidden",
-                                    whiteSpace: "nowrap",
-                                    flexGrow: 1,
-                                    maxWidth: 26,
-                                  }
-                                : {
-                                    textOverflow: "ellipsis",
-                                    overflow: "hidden",
-                                    whiteSpace: "nowrap",
-                                    flexGrow: 1,
-                                    maxWidth: 80,
-                                  }
-                            }
+                      {/* TELEPHONE */}
+                      <td>
+                        <Fragment>
+                          <Tooltip
+                            style={{ display: "flex", alignItems: "center" }}
+                            title={row.telephone || "N/A"}
+                            placement="top"
                           >
-                            {row.telephone || "N/A"}
-                          </div>
-
-                          {/* Icons */}
-                          <div style={{ display: "flex" }}>
-                            {/* calling icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleCallIconClicked(row)}
+                            <div
+                              style={
+                                isMobileThreeTwenty
+                                  ? {
+                                      textOverflow: "ellipsis",
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      flexGrow: 1,
+                                      maxWidth: 26,
+                                    }
+                                  : {
+                                      textOverflow: "ellipsis",
+                                      overflow: "hidden",
+                                      whiteSpace: "nowrap",
+                                      flexGrow: 1,
+                                      maxWidth: 80,
+                                    }
+                              }
                             >
-                              <CallRoundedIcon fontSize="small" />
-                            </IconButton>
+                              {row.telephone || "N/A"}
+                            </div>
 
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleMessageIconClicked(row)}
-                            >
-                              <MessageRoundedIcon fontSize="small" />
-                            </IconButton>
+                            {/* Icons */}
+                            <div style={{ display: "flex" }}>
+                              {/* calling icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() => handleCallIconClicked(row)}
+                              >
+                                <CallRoundedIcon fontSize="small" />
+                              </IconButton>
 
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleHistoryButtonClick(row)}
-                            >
-                              <HistoryIcon fontSize="small" />
-                            </IconButton>
+                              {/* message icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() => handleMessageIconClicked(row)}
+                              >
+                                <MessageRoundedIcon fontSize="small" />
+                              </IconButton>
 
-                            {/* custom notes */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleNoteIconClicked(row)}
-                            >
-                              <DescriptionIcon fontSize="small" />
-                            </IconButton>
-                          </div>
-                        </Tooltip>
-                      </Fragment>
-                    </td>
+                              {/* message icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() => handleHistoryButtonClick(row)}
+                              >
+                                <HistoryIcon fontSize="small" />
+                              </IconButton>
 
-                    <td align="right">
+                              {/* custom notes */}
+                              <IconButton
+                                size="small"
+                                onClick={(event) => handleNoteIconClicked(event, row)}
+                              >
+                                <DescriptionIcon fontSize="small" />
+                              </IconButton>
+                            </div>
+                          </Tooltip>
+                        </Fragment>
+                      </td>
+
+                      {/* <td align="right">
                       <Checkbox
                         size="small"
                         checked={selectedEmulator?.id === row.id}
                         onChange={() => handleEmulatorCheckboxChange(row)}
                       />
-                    </td>
-                    <td align="right">
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          maxWidth: 85,
-                        }}
-                      >
-                        {/* Trip Status */}
-                        <p style={{ marginTop: "0", marginBottom: "0" }}>
-                          {row.tripStatus}
-                        </p>
-                        {/* Trip Status Action */}
-                        <IconButton size="small">
-                          {row.tripStatus === "RUNNING" && (
-                            <PauseCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "PAUSED" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "STOP" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "RESTING" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "FINISHED" && (
-                            <CheckCircleOutlineIcon fontSize="small" />
-                          )}
-                        </IconButton>
-                      </div>
-                    </td>
-                  </tr>
+                    </td> */}
+                      <td align="right">
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            // maxWidth: 85,
+                          }}
+                        >
+                          {/* Trip Status */}
+                          <p style={{ marginTop: "0", marginBottom: "0" }}>
+                            {row.tripStatus}
+                          </p>
+                          {/* Trip Status Action */}
+                          <IconButton size="small">
+                            {row.tripStatus === "RUNNING" && (
+                              <PauseCircleOutlineIcon
+                                fontSize="small"
+                                onClick={() => handleActionButtonClick(row)}
+                              />
+                            )}
+                            {row.tripStatus === "PAUSED" && (
+                              <PlayCircleOutlineIcon
+                                fontSize="small"
+                                onClick={() => handleActionButtonClick(row)}
+                              />
+                            )}
+                            {row.tripStatus === "STOP" && (
+                              <PlayCircleOutlineIcon
+                                fontSize="small"
+                                onClick={() => handleActionButtonClick(row)}
+                              />
+                            )}
+                            {row.tripStatus === "RESTING" && (
+                              <PlayCircleOutlineIcon
+                                fontSize="small"
+                                onClick={() => handleActionButtonClick(row)}
+                              />
+                            )}
+                            {row.tripStatus === "FINISHED" && (
+                              <CheckCircleOutlineIcon fontSize="small" />
+                            )}
+                          </IconButton>
+                        </div>
+                      </td>
+                    </tr>
+                    {/* Notes TextField row */}
+                    {showNotes[row.id] && (
+                      <tr key={row.id}>
+                        {console.log("rowId:", row.id)}
+
+                        <td colSpan={6}>
+                          <TextField
+                            multiline
+                            rows={2}
+                            value={noteText}
+                            onChange={handleNoteTextChange}
+                            variant="outlined"
+                            placeholder="Type your notes here"
+                            fullWidth
+                            InputProps={{
+                              classes: {
+                                notchedOutline: "no-border",
+                              },
+                            }}
+                            InputLabelProps={{
+                              style: { display: "none" },
+                            }}
+                          />
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 ))}
               </tbody>
               <tfoot className="table_footer">
@@ -512,13 +582,13 @@ const GpsTable = () => {
               showToast={showToast}
             />
 
-            <CustomNotesModal
+            {/* <CustomNotesModal
               open={openCustomNotesModal}
-              setSelectedEmulatorIdForNotes = {setSelectedEmulatorIdForNotes}
+              setSelectedEmulatorIdForNotes={setSelectedEmulatorIdForNotes}
               setOpenCustomNotesModal={setOpenCustomNotesModal}
               selectedEmulatorIdForNotes={selectedEmulatorIdForNotes}
               setCustomNotes={setCustomNotes}
-            />
+            /> */}
           </>
         </div>
         <div></div>

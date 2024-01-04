@@ -36,7 +36,7 @@ const GPS = () => {
               <div style={{ minWidth: "390px", height: "100vh" }}>
                 <GpsTable />
               </div>
-              {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
+              {/*  fix the map, its showing full screen, should be 100% of the remaining space */}
               <div style={{ flex: "1", top: "128px" }}>
                 <WrappedMap />
               </div>
@@ -57,18 +57,17 @@ const GPS = () => {
                 <div>
                   <AddressTable/>
                 </div>
-              
               </div>
             </div>
           <BottomSheet
             className="bottom_sheet"
             open={true}
             blocking={false}
-            header={
-              <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
-                INFO
-              </div>
-            }
+            // header={
+            //   <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
+            //     INFO
+            //   </div>
+            // }
             snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.45]}
           >
            <GpsTable />

@@ -76,6 +76,7 @@
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 5px
 }
 
 /* Track */
@@ -112,8 +113,8 @@
     box-shadow: none;
   }
 }
-.btn-main {
-  background-color: $background-color;
+.btn-blue {
+  background-color:red;
   border-radius: 12px !important;
   color: white;
 

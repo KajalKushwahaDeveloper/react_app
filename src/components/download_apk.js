@@ -10,9 +10,14 @@ import { DOWNLOAD_APK_URL, COPY_DOWNLOAD_APK_URL } from "../constants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GetAppIcon from "@mui/icons-material/GetApp";
+import { useViewPort } from "../../src/ViewportProvider.js";
 
 const DownloadApk = () => {
   const [loading, setLoading] = useState(false);
+
+  const { width } = useViewPort();
+  const breakpoint = 376;
+  const isMobile = width < breakpoint;
 
   const handleDownloadFile = async () => {
     setLoading(true); // Set loading to true before starting the fetch
@@ -82,22 +87,28 @@ const DownloadApk = () => {
     >
       <CardContent style={{padding:"1rem"}}>
         <div className="d-flex justify-content-around">
-          <Typography variant="h5" component="h2">
+          <Typography variant="h5" component="h2" style={{
+             fontSize: isMobile ? "1rem" : "1.5rem",
+          }}>
             Mock Application APK
           </Typography>
           <Button
             variant="contained"
-            className="btn btn-main d-flex flex-column flex-sm-row"
+            className="btn btn-blue d-flex flex-column flex-sm-row px-5"
             startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
             onClick={handleDownloadFile}
-            style={{ marginLeft: "1.2rem", width: "12rem !important" }}
+            style={{ marginLeft: "1rem", width:"12px !important",
+            fontSize: isMobile ? ".7rem" : ".875rem",
+          }}
             endIcon={loading && <CircularProgress color="inherit" size={20} />}
             disabled={loading}
           >
             Download File
           </Button>
 
-          <button className="btn btn-green" onClick={handleCopyUrl}>
+          <button className="btn btn-green" onClick={handleCopyUrl} style={{
+            fontSize: isMobile ? ".7rem" : ".875rem",
+          }}>
             <i className="fa-solid fa-copy"></i> COPY DOWNLOAD LINK
           </button>
         </div>
