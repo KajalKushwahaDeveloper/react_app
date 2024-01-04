@@ -75,8 +75,10 @@ const GpsTable = () => {
 
   const devices = useEmulatorStore((state) => state.devices);
 
+  const hoveredMarker = useEmulatorStore((state) => state.hoveredEmulator);
+
   // State variables
-  const { staticEmulators, hoveredMarker, showToast } = useStates();
+  const { staticEmulators, showToast } = useStates();
 
   const { width } = useViewPort();
   const breakpoint = 620;

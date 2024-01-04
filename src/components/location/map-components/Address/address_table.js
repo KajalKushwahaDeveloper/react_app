@@ -7,19 +7,18 @@ import {
   compareTripDataChangedNullOrId,
   compareSelectedEmulatorChangedNullOrId,
 } from "./utils.tsx";
+import ApiService from "../../../../ApiService.js";
+import { TRIP_URL } from "../../../../constants.js";
 
 const AddressTable = () => {
   console.log("AddressTable refreshed");
-  const totalTime = useRef();
-  const arrivalTime = useRef();
-  const remainingDistance = useRef();
-  const fromAddress = useRef();
-  const toAddress = useRef();
-  const timeInHours = useRef();
+
+  const tableValues = useRef(null);
 
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => {
+      console.log("AddressTable tripData changed");
       const diff = compareTripDataChangedNullOrId(oldTripData, newTripData);
       if (diff === true) {
         console.log("tripData changed (Address table)");
@@ -31,7 +30,8 @@ const AddressTable = () => {
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
-      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
+      console.log("AddressTable selectedEmulator changed");
+      // Check if compareSelectedEmulator is working as intended (Updating emulators only on shallow change)
       const diff = compareSelectedEmulatorChangedNullOrId(
         oldSelectedEmulator,
         newSelectedEmulator
@@ -46,25 +46,13 @@ const AddressTable = () => {
     }
   );
 
-  useEffect(() => {
-    if (
-      tripData === null ||
-      tripData === undefined ||
-      selectedEmulator === null ||
-      selectedEmulator === undefined
-    ) {
-      console.log(
-        "Making all values null at AddressTable",
-        tripData,
-        selectedEmulator
-      );
-      fromAddress.current = null;
-      toAddress.current = null;
-      timeInHours.current = null;
-      return;
-    }
-    console.log("AddressTable useEffect");
-    fromAddress.current =
+  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator);
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  function setTableValues(emulator, tripData) {
+    console.log("setTableValues", emulator, tripData);
+    const fromAddress =
       tripData.fromAddress[0]?.long_name +
         ", " +
         tripData.fromAddress[1]?.long_name +
@@ -73,7 +61,7 @@ const AddressTable = () => {
         ", " +
         tripData.fromAddress[3]?.long_name || "N/A";
 
-    toAddress.current =
+    const toAddress =
       tripData.toAddress[0]?.long_name +
         ", " +
         tripData.toAddress[1]?.long_name +
@@ -81,52 +69,117 @@ const AddressTable = () => {
         tripData.toAddress[2]?.long_name +
         " ," +
         tripData.toAddress[3]?.long_name || "N/A";
+    const arrivalTime = "TODO";
+    const totalTime = "TODO";
+    const remainingDistance = "TODO";
 
-    timeInHours.current = tripData.distance / tripData.velocity;
+    tableValues.current = {
+      fromAddress,
+      toAddress,
+      arrivalTime,
+      totalTime,
+      remainingDistance,
+    };
+  }
 
-    var hours = Math.floor(timeInHours);
-    const minutes = Math.round((timeInHours - hours) * 60);
-
-    tripData.stops.forEach((stop) => {
-      hours = hours + 12;
-    });
-
-    //const totalTime = `~${hours} hours and ${minutes} minutes \n(Including ${stopCount} stops)`;
-    const totalTimeToTrip = `${hours} : ${minutes} : 00 GMT`;
-    totalTime.current = totalTimeToTrip;
-
-    const currentStop = tripData?.stops.find(
-      (stop) =>
-        stop.tripPointIndex === selectedEmulator?.currentTripPointIndex + 1
-    );
-    var stopReachedTime = "N/A";
-    var stopWaitingTillTime = "N/A";
-    var stopRemainingTime = "N/A";
-    if (currentStop) {
-      // CALCULATING Stop Details Parse the reachedTime string into a Date object
-      const reachedTime = new Date("2023-09-21T15:30:44.239");
-      // Calculate the time after 12 hours
-      const twelveHoursLater = new Date(reachedTime);
-      twelveHoursLater.setHours(twelveHoursLater.getHours() + 12);
-      // Calculate the time remaining to reach twelveHoursLater
-      const now = new Date();
-      const timeRemainingInMillis = twelveHoursLater - now;
-      const timeRemainingInSeconds = Math.floor(timeRemainingInMillis / 1000);
-      // Calculate hours, minutes, and seconds
-      const hoursRemaining = Math.floor(timeRemainingInSeconds / 3600);
-      const minutesRemaining = Math.floor((timeRemainingInSeconds % 3600) / 60);
-      const secondsRemaining = timeRemainingInSeconds % 60;
-      // Create a human-readable string
-      const humanReadableTimeRemaining = `${hoursRemaining} hours, ${minutesRemaining} minutes, ${secondsRemaining} seconds`;
-      stopReachedTime = `Reached Time: ${reachedTime.toLocaleString()}`;
-      stopWaitingTillTime = `Waiting till ${twelveHoursLater.toLocaleString()}`;
-      stopRemainingTime = `Time Remaining: ${humanReadableTimeRemaining}`;
+  useEffect(() => {
+    async function updateTableValues(hoveredEmulator) {
+      setIsLoading(true);
+      const token = localStorage.getItem("token");
+      const { data, error } = await ApiService.makeApiCall(
+        TRIP_URL,
+        "POST",
+        { distance: 0 },
+        token,
+        hoveredEmulator.id
+      );
+      if (error) {
+        console.log("Error fetching trip data", error);
+        tableValues.current = null;
+        setIsLoading(false);
+        return;
+      }
+      if (data === null || data === undefined) {
+        console.log("Data is null or undefined");
+        tableValues.current = null;
+        setIsLoading(false);
+        return;
+      }
+      if (
+        data.data.tripPoints === null ||
+        data.data.tripPoints === undefined ||
+        data.data.tripPoints.length === 0
+      ) {
+        console.log("Trip points are null or undefined or empty");
+        tableValues.current = null;
+        setIsLoading(false);
+        return;
+      }
+      if (hoveredEmulator !== null) {
+        setTableValues(hoveredEmulator, data.data);
+      }
+      setIsLoading(false);
     }
+
+    if (hoveredEmulator === null && selectedEmulator === null) {
+      tableValues.current = null;
+      setIsLoading(false);
+      return;
+    }
+    // handle hovered emulator
+    if (hoveredEmulator !== null && hoveredEmulator !== undefined) {
+      //if hovered emulator is not selected emulator
+      if (
+        selectedEmulator === null ||
+        selectedEmulator === undefined ||
+        selectedEmulator.id !== hoveredEmulator.id
+      ) {
+        updateTableValues(hoveredEmulator);
+      }
+      // else do nothing
+    }
+  }, [selectedEmulator, hoveredEmulator]);
+
+  useEffect(() => {
+    if (
+      selectedEmulator === null ||
+      selectedEmulator === undefined ||
+      tripData === null ||
+      tripData === undefined
+    ) {
+      tableValues.current = null;
+      return;
+    }
+    console.log("setTableValues", selectedEmulator, tripData);
+    setTableValues(selectedEmulator, tripData);
   }, [selectedEmulator, tripData]);
 
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
+
+  if (isLoading) {
+    return (
+      <div className="container-fluid main-address-table">
+        <div
+          className="row"
+          style={{
+            height: "90px !important",
+            background:
+              hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
+                ? "lightpink"
+                : selectedEmulator
+                ? "lightblue"
+                : "white",
+            textAlign: "center",
+            justifyContent: "center",
+          }}
+        >
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-fluid main-address-table">
@@ -157,9 +210,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {selectedEmulator && selectedEmulator.address
-                ? selectedEmulator.address
-                : "N/A"}
+              {tableValues.current ? tableValues.current.address : "N/A"}
             </div>
           </div>
           {/* FROM ADDRESS*/}
@@ -180,9 +231,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {selectedEmulator && fromAddress.current
-                ? fromAddress.current
-                : "N/A"}
+              {tableValues.current ? tableValues.current.fromAddress : "N/A"}
             </div>
           </div>
           {/* TO ADDRESS*/}
@@ -203,9 +252,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {selectedEmulator && toAddress.current
-                ? toAddress.current
-                : "N/A"}
+              {tableValues.current ? tableValues.current.toAddress : "N/A"}
             </div>
           </div>
 
@@ -218,8 +265,8 @@ const AddressTable = () => {
               padding: "0px !important",
             }}
           >
-            <div className="address-table-heading">Final Arrival Time</div>
-            {selectedEmulator && arrivalTime.current ? (
+            <div className="address-table-heading">Arrival Time</div>
+            {tableValues.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -233,7 +280,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {selectedEmulator && arrivalTime.current}
+                  {tableValues.current.arrivalTime}
                 </div>
               </div>
             ) : (
@@ -251,7 +298,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Total Time</div>
-            {selectedEmulator && totalTime.current ? (
+            {tableValues.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -267,7 +314,7 @@ const AddressTable = () => {
                     width: "calc(100% - 5px)",
                   }}
                 >
-                  {selectedEmulator && totalTime.current}
+                  {tableValues.current.totalTime}
                 </div>
               </div>
             ) : (
@@ -287,7 +334,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
-            {selectedEmulator && remainingDistance.current ? (
+            {tableValues.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -301,7 +348,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {selectedEmulator && remainingDistance.current} miles
+                  {tableValues.current.remainingDistance} miles
                 </div>
               </div>
             ) : (
@@ -351,7 +398,12 @@ const AddressTable = () => {
           className="row"
           style={{
             height: "35px !important",
-            background: "white",
+            background:
+              hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
+                ? "lightpink"
+                : selectedEmulator
+                ? "lightblue"
+                : "white",
           }}
         >
           {/* CURRENT ADDRESS*/}
@@ -368,15 +420,15 @@ const AddressTable = () => {
             <div className="addressTable ellipsisText">
               <Tooltip
                 title={
-                  selectedEmulator &&
-                  selectedEmulator.address &&
-                  selectedEmulator.address
+                  tableValues.current &&
+                  tableValues.current.address &&
+                  tableValues.current.address
                 }
                 placement="top"
               >
                 <div>
-                  {selectedEmulator && selectedEmulator.address
-                    ? selectedEmulator.address
+                  {tableValues.current && tableValues.current.address
+                    ? tableValues.current.address
                     : "N/A"}
                 </div>
               </Tooltip>
@@ -394,15 +446,10 @@ const AddressTable = () => {
           >
             <div className="address-table-heading">From address</div>
             <div className="addressTable ellipsisText">
-              <Tooltip
-                title={
-                  selectedEmulator && fromAddress.current && fromAddress.current
-                }
-                placement="top"
-              >
+              <Tooltip title={tableValues.current} placement="top">
                 <div>
-                  {selectedEmulator && fromAddress.current
-                    ? fromAddress.current
+                  {tableValues.current
+                    ? tableValues.current.fromAddress
                     : "N/A"}
                 </div>
               </Tooltip>
@@ -421,15 +468,11 @@ const AddressTable = () => {
             <div className="address-table-heading">To address</div>
             <div className="addressTable ellipsisText">
               <Tooltip
-                title={
-                  selectedEmulator && toAddress.current && toAddress.current
-                }
+                title={tableValues.current && tableValues.current.toAddress}
                 placement="top"
               >
                 <div>
-                  {selectedEmulator && toAddress.current
-                    ? toAddress.current
-                    : "N/A"}
+                  {tableValues.current ? tableValues.current.toAddress : "N/A"}
                 </div>
               </Tooltip>
             </div>
@@ -445,7 +488,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Final Arrival time </div>
-            {selectedEmulator && arrivalTime.current ? (
+            {tableValues.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -459,7 +502,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {selectedEmulator && arrivalTime.current}
+                  {tableValues.current.arrivalTime}
                 </div>
               </div>
             ) : (
@@ -477,7 +520,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Total Time</div>
-            {selectedEmulator && totalTime.current ? (
+            {tableValues.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -491,7 +534,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {selectedEmulator && totalTime.current}
+                  {tableValues.current.totalTime}
                 </div>
               </div>
             ) : (
@@ -509,7 +552,7 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
-            {selectedEmulator && remainingDistance.current ? (
+            {tableValues.current ? (
               <div
                 style={{
                   marginTop: "5px !important",
@@ -523,7 +566,7 @@ const AddressTable = () => {
                   className="addressTable"
                   style={{ wordWrap: "break-word" }}
                 >
-                  {selectedEmulator && remainingDistance.current} miles
+                  {tableValues.current.remainingDistance} miles
                 </div>
               </div>
             ) : (
