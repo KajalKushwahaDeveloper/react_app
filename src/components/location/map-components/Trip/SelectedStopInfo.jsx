@@ -23,6 +23,8 @@ export function SelectedStopInfo(props) {
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
 
+  const setTripData = useEmulatorStore((state) => state.setTripData);
+
   const totalTime = useRef(null);
 
   const getTimeToReachStopPoint = useCallback(
@@ -70,12 +72,13 @@ export function SelectedStopInfo(props) {
     // if yes, delete stop
     // if no, do nothing
 
-    const { shouldDelete } = window.confirm(
+    const shouldDelete = window.confirm(
       "Are you sure you want to delete this stop?"
     );
     if (!shouldDelete) {
       return;
     }
+    showToast("Deleting stop...", "info");
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
       TRIP_STOPS_DELETE_URL,
@@ -91,6 +94,10 @@ export function SelectedStopInfo(props) {
     if (!success) {
       showToast("Error deleting stop", "error");
       console.error("handleDeleteStop error : ", error);
+    } else {
+      setTripData(data);
+      showToast("Stop deleted", "success");
+      props.handleInfoWindowClose();
     }
   };
 
