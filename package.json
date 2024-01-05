@@ -61,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.202",
     "@types/meyda": "^4.3.0",
     "body-parser": "^1.19.0",
     "devextreme-themebuilder": "^23.1.3",
