@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
-import useFetch from "./hooks/useFetch";
-import { toast } from "react-toastify";
-import { EMULATOR_URL } from "./constants.js";
-
-export const StatesContext = React.createContext({});
+import useFetch from './hooks/useFetch'
+import { toast } from 'react-toastify'
+import { EMULATOR_URL } from './constants.js'
+import PropTypes from 'prop-types'
+export const StatesContext = React.createContext({})
 
 const useStates = () => {
   const {
@@ -13,30 +13,30 @@ const useStates = () => {
     setIsTableVisible,
     hoveredMarker,
     setHoveredMarker,
-    showToast,
-  } = React.useContext(StatesContext);
+    showToast
+  } = React.useContext(StatesContext)
   return {
     staticEmulators,
     isTableVisible,
     setIsTableVisible,
     hoveredMarker,
     setHoveredMarker,
-    showToast,
-  };
-};
+    showToast
+  }
+}
 
-export { useStates };
+export { useStates }
 
 export const StateProvider = ({ children }) => {
-  const { data: staticEmulators } = useFetch(EMULATOR_URL);
+  const { data: staticEmulators } = useFetch(EMULATOR_URL)
 
-  const [isTableVisible, setIsTableVisible] = useState(false);
+  const [isTableVisible, setIsTableVisible] = useState(false)
 
-  const [hoveredMarker, setHoveredMarker] = useState(null);
+  const [hoveredMarker, setHoveredMarker] = useState(null)
 
   const showToast = (message, type) => {
-    toast[type](message); // Use the 'type' argument to determine the toast type
-  };
+    toast[type](message) // Use the 'type' argument to determine the toast type
+  }
 
   return (
     <StatesContext.Provider
@@ -46,10 +46,14 @@ export const StateProvider = ({ children }) => {
         setIsTableVisible,
         hoveredMarker,
         setHoveredMarker,
-        showToast,
+        showToast
       }}
     >
       {children}
     </StatesContext.Provider>
-  );
-};
+  )
+}
+
+StateProvider.propTypes = {
+  children: PropTypes.node
+}

@@ -1,24 +1,24 @@
-import React, { useEffect, useRef } from "react";
-import { useViewPort } from "../../../../ViewportProvider.js";
-import CreateTripButton from "../CreateTripButton.jsx";
-import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
-import Tooltip from "@mui/material/Tooltip";
+import React, { useEffect, useRef } from 'react'
+import { useViewPort } from '../../../../ViewportProvider.js'
+import CreateTripButton from '../CreateTripButton.jsx'
+import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
+import Tooltip from '@mui/material/Tooltip'
 import {
   compareTripDataChangedNullOrId,
-  compareSelectedEmulatorChangedNullOrId,
-} from "./utils.tsx";
-import ApiService from "../../../../ApiService.js";
-import { TRIP_URL } from "../../../../constants.js";
+  compareSelectedEmulatorChangedNullOrId
+} from './utils.tsx'
+import ApiService from '../../../../ApiService.js'
+import { TRIP_URL } from '../../../../constants.js'
 
 const AddressTable = () => {
-  const tableValues = useRef(null);
+  const tableValues = useRef(null)
 
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => {
-      compareTripDataChangedNullOrId(oldTripData, newTripData);
+      compareTripDataChangedNullOrId(oldTripData, newTripData)
     }
-  );
+  )
 
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
@@ -26,102 +26,102 @@ const AddressTable = () => {
       compareSelectedEmulatorChangedNullOrId(
         oldSelectedEmulator,
         newSelectedEmulator
-      );
+      )
     }
-  );
+  )
 
-  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator);
+  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator)
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false)
 
-  function setTableValues(emulator, tripData) {
+  function setTableValues (emulator, tripData) {
     const fromAddress =
       tripData.fromAddress[0]?.long_name +
-        ", " +
+        ', ' +
         tripData.fromAddress[1]?.long_name +
-        ", " +
+        ', ' +
         tripData.fromAddress[2]?.long_name +
-        ", " +
-        tripData.fromAddress[3]?.long_name || "N/A";
+        ', ' +
+        tripData.fromAddress[3]?.long_name || 'N/A'
 
     const toAddress =
       tripData.toAddress[0]?.long_name +
-        ", " +
+        ', ' +
         tripData.toAddress[1]?.long_name +
-        ", " +
+        ', ' +
         tripData.toAddress[2]?.long_name +
-        " ," +
-        tripData.toAddress[3]?.long_name || "N/A";
-    const arrivalTime = "TODO";
-    const totalTime = "TODO";
-    const remainingDistance = "TODO";
+        ' ,' +
+        tripData.toAddress[3]?.long_name || 'N/A'
+    const arrivalTime = 'TODO'
+    const totalTime = 'TODO'
+    const remainingDistance = 'TODO'
 
     tableValues.current = {
       fromAddress,
       toAddress,
       arrivalTime,
       totalTime,
-      remainingDistance,
-    };
+      remainingDistance
+    }
   }
 
   useEffect(() => {
-    async function updateTableValues(hoveredEmulator) {
-      setIsLoading(true);
-      const token = localStorage.getItem("token");
+    async function updateTableValues (hoveredEmulator) {
+      setIsLoading(true)
+      const token = localStorage.getItem('token')
       const { data, error } = await ApiService.makeApiCall(
         TRIP_URL,
-        "POST",
+        'POST',
         { distance: 0 },
         token,
         hoveredEmulator.id
-      );
+      )
       if (error) {
-        console.error("Error fetching trip data", error);
-        tableValues.current = null;
-        setIsLoading(false);
-        return;
+        console.error('Error fetching trip data', error)
+        tableValues.current = null
+        setIsLoading(false)
+        return
       }
       if (data === null || data === undefined) {
-        console.error("Data is null or undefined");
-        tableValues.current = null;
-        setIsLoading(false);
-        return;
+        console.error('Data is null or undefined')
+        tableValues.current = null
+        setIsLoading(false)
+        return
       }
       if (
         data.data.tripPoints === null ||
         data.data.tripPoints === undefined ||
         data.data.tripPoints.length === 0
       ) {
-        console.error("Trip points are null or undefined or empty");
-        tableValues.current = null;
-        setIsLoading(false);
-        return;
+        console.error('Trip points are null or undefined or empty')
+        tableValues.current = null
+        setIsLoading(false)
+        return
       }
       if (hoveredEmulator !== null) {
-        setTableValues(hoveredEmulator, data.data);
+        setTableValues(hoveredEmulator, data.data)
       }
-      setIsLoading(false);
+      setIsLoading(false)
     }
 
     if (hoveredEmulator === null && selectedEmulator === null) {
-      tableValues.current = null;
-      setIsLoading(false);
-      return;
+      tableValues.current = null
+      setIsLoading(false)
+      return
     }
     // handle hovered emulator
     if (hoveredEmulator !== null && hoveredEmulator !== undefined) {
-      //if hovered emulator is not selected emulator
+      // if hovered emulator is not selected emulator
       if (
         selectedEmulator === null ||
         selectedEmulator === undefined ||
         selectedEmulator.id !== hoveredEmulator.id
       ) {
-        updateTableValues(hoveredEmulator);
+        updateTableValues(hoveredEmulator)
       }
       // else do nothing
     }
-  }, [selectedEmulator, hoveredEmulator]);
+  }, [selectedEmulator, hoveredEmulator])
 
   useEffect(() => {
     if (
@@ -130,15 +130,15 @@ const AddressTable = () => {
       tripData === null ||
       tripData === undefined
     ) {
-      tableValues.current = null;
-      return;
+      tableValues.current = null
+      return
     }
-    setTableValues(selectedEmulator, tripData);
-  }, [selectedEmulator, tripData]);
+    setTableValues(selectedEmulator, tripData)
+  }, [selectedEmulator, tripData])
 
-  const { width } = useViewPort();
-  const breakpoint = 620;
-  const isMobile = width < breakpoint;
+  const { width } = useViewPort()
+  const breakpoint = 620
+  const isMobile = width < breakpoint
 
   if (isLoading) {
     return (
@@ -146,256 +146,264 @@ const AddressTable = () => {
         <div
           className="row"
           style={{
-            height: "90px !important",
+            height: '90px !important',
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
-                ? "lightpink"
+                ? 'lightpink'
                 : selectedEmulator
-                ? "lightblue"
-                : "white",
-            textAlign: "center",
-            justifyContent: "center",
+                  ? 'lightblue'
+                  : 'white',
+            textAlign: 'center',
+            justifyContent: 'center'
           }}
         >
           Loading...
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="container-fluid main-address-table">
-      {isMobile ? (
-        <div
-          className="row"
-          style={{
-            height: "35px !important",
-            background: "white",
-          }}
-        >
-          {/* CURRENT ADDRESS*/}
+      {isMobile
+        ? (
           <div
-            className="col-6 d-flex flex-column"
+            className="row"
             style={{
-              border: "2px solid",
-              color: "black",
-              alignItems: "center",
-              padding: "0",
+              height: '35px !important',
+              background: 'white'
             }}
           >
-            <div className="address-table-heading">Current location</div>
+            {/* CURRENT ADDRESS */}
             <div
-              className="addressTable"
+              className="col-6 d-flex flex-column"
               style={{
-                height: "auto",
-                fontSize: "10px",
-                width: "calc(100% - 5px)",
+                border: '2px solid',
+                color: 'black',
+                alignItems: 'center',
+                padding: '0'
               }}
             >
-              {tableValues.current ? tableValues.current.address : "N/A"}
-            </div>
-          </div>
-          {/* FROM ADDRESS*/}
-          <div
-            className="col-6 d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0",
-            }}
-          >
-            <div className="address-table-heading">From address</div>
-            <div
-              className="addressTable"
-              style={{
-                height: "auto",
-                fontSize: "10px",
-                width: "calc(100% - 5px)",
-              }}
-            >
-              {tableValues.current ? tableValues.current.fromAddress : "N/A"}
-            </div>
-          </div>
-          {/* TO ADDRESS*/}
-          <div
-            className="col-5 d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0",
-            }}
-          >
-            <div className="address-table-heading">To address</div>
-            <div
-              className="addressTable"
-              style={{
-                height: "auto",
-                fontSize: "10px",
-                width: "calc(100% - 5px)",
-              }}
-            >
-              {tableValues.current ? tableValues.current.toAddress : "N/A"}
-            </div>
-          </div>
-
-          {/* ARRIVAL TIME */}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
-            }}
-          >
-            <div className="address-table-heading">Arrival Time</div>
-            {tableValues.current ? (
+              <div className="address-table-heading">Current location</div>
               <div
+                className="addressTable"
                 style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
+                  height: 'auto',
+                  fontSize: '10px',
+                  width: 'calc(100% - 5px)'
                 }}
-                className="totalTimeSubContent"
               >
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}
-                >
-                  {tableValues.current.arrivalTime}
-                </div>
+                {tableValues.current ? tableValues.current.address : 'N/A'}
               </div>
-            ) : (
-              <div className="addressTable">N/A</div>
-            )}
-          </div>
-
-          {/* TIME */}
-          <div
-            className="col-5 d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
-            }}
-          >
-            <div className="address-table-heading">Total Time</div>
-            {tableValues.current ? (
+            </div>
+            {/* FROM ADDRESS */}
+            <div
+              className="col-6 d-flex flex-column"
+              style={{
+                border: '2px solid',
+                alignItems: 'center',
+                padding: '0'
+              }}
+            >
+              <div className="address-table-heading">From address</div>
               <div
+                className="addressTable"
                 style={{
-                  marginTop: "5px !important",
+                  height: 'auto',
+                  fontSize: '10px',
+                  width: 'calc(100% - 5px)'
                 }}
-                className="totalTimeSubContent"
               >
+                {tableValues.current ? tableValues.current.fromAddress : 'N/A'}
+              </div>
+            </div>
+            {/* TO ADDRESS */}
+            <div
+              className="col-5 d-flex flex-column"
+              style={{
+                border: '2px solid',
+                alignItems: 'center',
+                padding: '0'
+              }}
+            >
+              <div className="address-table-heading">To address</div>
+              <div
+                className="addressTable"
+                style={{
+                  height: 'auto',
+                  fontSize: '10px',
+                  width: 'calc(100% - 5px)'
+                }}
+              >
+                {tableValues.current ? tableValues.current.toAddress : 'N/A'}
+              </div>
+            </div>
+
+            {/* ARRIVAL TIME */}
+            <div
+              className="col d-flex flex-column"
+              style={{
+                border: '2px solid',
+                alignItems: 'center',
+                padding: '0px !important'
+              }}
+            >
+              <div className="address-table-heading">Arrival Time</div>
+              {tableValues.current
+                ? (
                 <div
-                  className="addressTable"
                   style={{
-                    wordWrap: "break-word",
-                    height: "auto",
-                    fontSize: "10px",
-                    width: "calc(100% - 5px)",
+                    marginTop: '5px !important',
+                    height: '30px',
+                    textAlign: 'center',
+                    maxWidth: '20vw'
+                  }}
+                  className="totalTimeSubContent"
+                >
+                  <div
+                    className="addressTable"
+                    style={{ wordWrap: 'break-word' }}
+                  >
+                    {tableValues.current.arrivalTime}
+                  </div>
+                </div>
+                  )
+                : (
+                <div className="addressTable">N/A</div>
+                  )}
+            </div>
+
+            {/* TIME */}
+            <div
+              className="col-5 d-flex flex-column"
+              style={{
+                border: '2px solid',
+                alignItems: 'center',
+                padding: '0px !important'
+              }}
+            >
+              <div className="address-table-heading">Total Time</div>
+              {tableValues.current
+                ? (
+                <div
+                  style={{
+                    marginTop: '5px !important'
+                  }}
+                  className="totalTimeSubContent"
+                >
+                  <div
+                    className="addressTable"
+                    style={{
+                      wordWrap: 'break-word',
+                      height: 'auto',
+                      fontSize: '10px',
+                      width: 'calc(100% - 5px)'
+                    }}
+                  >
+                    {tableValues.current.totalTime}
+                  </div>
+                </div>
+                  )
+                : (
+                <div className="addressTable" style={{ height: '50px' }}>
+                  N/A
+                </div>
+                  )}
+            </div>
+
+            {/* REMAING DISTANCE */}
+            <div
+              className="col d-flex flex-column"
+              style={{
+                border: '2px solid',
+                alignItems: 'center',
+                padding: '0px !important'
+              }}
+            >
+              <div className="address-table-heading">Remaining Distance</div>
+              {tableValues.current
+                ? (
+                <div
+                  style={{
+                    marginTop: '5px !important',
+                    height: '30px',
+                    textAlign: 'center',
+                    maxWidth: '20vw'
+                  }}
+                  className=""
+                >
+                  <div
+                    className="addressTable"
+                    style={{ wordWrap: 'break-word' }}
+                  >
+                    {tableValues.current.remainingDistance} miles
+                  </div>
+                </div>
+                  )
+                : (
+                <div className="addressTable">N/A</div>
+                  )}
+            </div>
+
+            {/* PLUS MINUS ICONS */}
+            <div
+              className="col-2 d-flex flex-column"
+              style={{
+                padding: '0'
+              }}
+            >
+              <div className="btn-group">
+                <button
+                  type="button"
+                  className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
+                  style={{
+                    backgroundColor: '#ff0000',
+                    margin: 0,
+                    width: '50%',
+                    height: '100%'
                   }}
                 >
-                  {tableValues.current.totalTime}
-                </div>
-              </div>
-            ) : (
-              <div className="addressTable" style={{ height: "50px" }}>
-                N/A
-              </div>
-            )}
-          </div>
-
-          {/* REMAING DISTANCE */}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
-            }}
-          >
-            <div className="address-table-heading">Remaining Distance</div>
-            {tableValues.current ? (
-              <div
-                style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
-                }}
-                className=""
-              >
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}
+                  <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
+                </button>
+                <button
+                  type="button"
+                  className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
+                  style={{
+                    backgroundColor: '#39e600',
+                    margin: 0,
+                    width: '50%',
+                    height: '100%'
+                  }}
                 >
-                  {tableValues.current.remainingDistance} miles
-                </div>
+                  <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
+                </button>
               </div>
-            ) : (
-              <div className="addressTable">N/A</div>
-            )}
-          </div>
-
-          {/* PLUS MINUS ICONS */}
-          <div
-            className="col-2 d-flex flex-column"
-            style={{
-              padding: "0",
-            }}
-          >
-            <div className="btn-group">
-              <button
-                type="button"
-                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
-                style={{
-                  backgroundColor: "#ff0000",
-                  margin: 0,
-                  width: "50%",
-                  height: "100%",
-                }}
-              >
-                <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
-              </button>
-              <button
-                type="button"
-                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
-                style={{
-                  backgroundColor: "#39e600",
-                  margin: 0,
-                  width: "50%",
-                  height: "100%",
-                }}
-              >
-                <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
-              </button>
             </div>
-          </div>
 
-          <CreateTripButton />
-        </div>
-      ) : (
+            <CreateTripButton />
+          </div>
+          )
+        : (
         <div
           className="row"
           style={{
-            height: "35px !important",
+            height: '35px !important',
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
-                ? "lightpink"
+                ? 'lightpink'
                 : selectedEmulator
-                ? "lightblue"
-                : "white",
+                  ? 'lightblue'
+                  : 'white'
           }}
         >
-          {/* CURRENT ADDRESS*/}
+          {/* CURRENT ADDRESS */}
           <div
             className="col d-flex flex-column"
             style={{
-              border: "2px solid",
-              color: "black",
-              alignItems: "center",
-              padding: "0",
+              border: '2px solid',
+              color: 'black',
+              alignItems: 'center',
+              padding: '0'
             }}
           >
             <div className="address-table-heading">Current location</div>
@@ -411,19 +419,19 @@ const AddressTable = () => {
                 <div>
                   {tableValues.current && tableValues.current.address
                     ? tableValues.current.address
-                    : "N/A"}
+                    : 'N/A'}
                 </div>
               </Tooltip>
             </div>
           </div>
 
-          {/* FROM ADDRESS*/}
+          {/* FROM ADDRESS */}
           <div
             className="col d-flex flex-column"
             style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0",
+              border: '2px solid',
+              alignItems: 'center',
+              padding: '0'
             }}
           >
             <div className="address-table-heading">From address</div>
@@ -432,19 +440,19 @@ const AddressTable = () => {
                 <div>
                   {tableValues.current
                     ? tableValues.current.fromAddress
-                    : "N/A"}
+                    : 'N/A'}
                 </div>
               </Tooltip>
             </div>
           </div>
 
-          {/* TO ADDRESS*/}
+          {/* TO ADDRESS */}
           <div
             className="col d-flex flex-column"
             style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0",
+              border: '2px solid',
+              alignItems: 'center',
+              padding: '0'
             }}
           >
             <div className="address-table-heading">To address</div>
@@ -454,7 +462,7 @@ const AddressTable = () => {
                 placement="top"
               >
                 <div>
-                  {tableValues.current ? tableValues.current.toAddress : "N/A"}
+                  {tableValues.current ? tableValues.current.toAddress : 'N/A'}
                 </div>
               </Tooltip>
             </div>
@@ -464,103 +472,109 @@ const AddressTable = () => {
           <div
             className="col d-flex flex-column"
             style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
+              border: '2px solid',
+              alignItems: 'center',
+              padding: '0px !important'
             }}
           >
             <div className="address-table-heading">Final Arrival time </div>
-            {tableValues.current ? (
+            {tableValues.current
+              ? (
               <div
                 style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
+                  marginTop: '5px !important',
+                  height: '30px',
+                  textAlign: 'center',
+                  maxWidth: '20vw'
                 }}
                 className="totalTimeSubContent"
               >
                 <div
                   className="addressTable"
-                  style={{ wordWrap: "break-word" }}
+                  style={{ wordWrap: 'break-word' }}
                 >
                   {tableValues.current.arrivalTime}
                 </div>
               </div>
-            ) : (
+                )
+              : (
               <div className="addressTable">N/A</div>
-            )}
+                )}
           </div>
 
           {/* TIME */}
           <div
             className="col d-flex flex-column"
             style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
+              border: '2px solid',
+              alignItems: 'center',
+              padding: '0px !important'
             }}
           >
             <div className="address-table-heading">Total Time</div>
-            {tableValues.current ? (
+            {tableValues.current
+              ? (
               <div
                 style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
+                  marginTop: '5px !important',
+                  height: '30px',
+                  textAlign: 'center',
+                  maxWidth: '20vw'
                 }}
                 className="totalTimeSubContent"
               >
                 <div
                   className="addressTable"
-                  style={{ wordWrap: "break-word" }}
+                  style={{ wordWrap: 'break-word' }}
                 >
                   {tableValues.current.totalTime}
                 </div>
               </div>
-            ) : (
+                )
+              : (
               <div className="addressTable">N/A</div>
-            )}
+                )}
           </div>
 
           {/* REMAING DISTANCE */}
           <div
             className="col d-flex flex-column"
             style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
+              border: '2px solid',
+              alignItems: 'center',
+              padding: '0px !important'
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
-            {tableValues.current ? (
+            {tableValues.current
+              ? (
               <div
                 style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
+                  marginTop: '5px !important',
+                  height: '30px',
+                  textAlign: 'center',
+                  maxWidth: '20vw'
                 }}
                 className=""
               >
                 <div
                   className="addressTable"
-                  style={{ wordWrap: "break-word" }}
+                  style={{ wordWrap: 'break-word' }}
                 >
                   {tableValues.current.remainingDistance} miles
                 </div>
               </div>
-            ) : (
+                )
+              : (
               <div className="addressTable">N/A</div>
-            )}
+                )}
           </div>
 
           {/* PLUS MINUS ICONS */}
           <div
             className="col-1 d-flex flex-column"
             style={{
-              padding: "0",
+              padding: '0'
             }}
           >
             <div className="btn-group">
@@ -568,10 +582,10 @@ const AddressTable = () => {
                 type="button"
                 className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
                 style={{
-                  backgroundColor: "#ff0000",
+                  backgroundColor: '#ff0000',
                   margin: 0,
-                  width: "50%",
-                  height: "100%",
+                  width: '50%',
+                  height: '100%'
                 }}
               >
                 <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
@@ -580,10 +594,10 @@ const AddressTable = () => {
                 type="button"
                 className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
                 style={{
-                  backgroundColor: "#39e600",
+                  backgroundColor: '#39e600',
                   margin: 0,
-                  width: "50%",
-                  height: "100%",
+                  width: '50%',
+                  height: '100%'
                 }}
               >
                 <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
@@ -591,9 +605,9 @@ const AddressTable = () => {
             </div>
           </div>
         </div>
-      )}
+          )}
     </div>
-  );
-};
+  )
+}
 
-export default AddressTable;
+export default AddressTable

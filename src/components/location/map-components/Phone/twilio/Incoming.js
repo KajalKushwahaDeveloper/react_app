@@ -1,17 +1,19 @@
-import React from "react";
-import "./incoming.css";
-import CallEndIcon from "@mui/icons-material/CallEnd";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import React from 'react'
+import './incoming.css'
+import CallEndIcon from '@mui/icons-material/CallEnd'
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone'
+import PropTypes from 'prop-types'
 
-const Incoming = ({ callerName, acceptConnection, rejectConnection }) => {
-  const callerNameFinal = callerName?.parameters?.From ?? "Missed Call";
+const Incoming = (callerName, acceptConnection, rejectConnection) => {
+  const callerNameFinal = callerName?.parameters?.From ?? 'Missed Call'
 
   return (
     <div className="incoming-container">
       <div className="caller-name d-flex align-items-center gap-2">
         {callerNameFinal}
       </div>
-      {callerNameFinal !== "Missed Call" && callerName !== null ? (
+      {callerNameFinal !== 'Missed Call' && callerName !== null
+        ? (
         <div className="incoming-buttons">
           <button className="accept-button" onClick={acceptConnection}>
             <LocalPhoneIcon />
@@ -20,11 +22,18 @@ const Incoming = ({ callerName, acceptConnection, rejectConnection }) => {
             <CallEndIcon />
           </button>
         </div>
-      ) : (
-        ""
-      )}
+          )
+        : (
+            ''
+          )}
     </div>
-  );
-};
+  )
+}
 
-export default Incoming;
+Incoming.propTypes = {
+  callerName: PropTypes.object,
+  acceptConnection: PropTypes.func,
+  rejectConnection: PropTypes.func
+}
+
+export default Incoming

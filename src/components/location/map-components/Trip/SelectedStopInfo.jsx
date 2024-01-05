@@ -1,29 +1,30 @@
-import React, { useCallback, useRef } from "react";
-import { InfoWindow } from "@react-google-maps/api";
-import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import React, { useCallback, useRef } from 'react'
+import { InfoWindow } from '@react-google-maps/api'
+import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import {
   compareSelectedEmulator,
-  compareTripData,
-} from "../../../../stores/emulator/types_maps.tsx";
-import ApiService from "../../../../ApiService.js";
-import { TRIP_STOPS_DELETE_URL } from "../../../../constants.js";
-import { useStates } from "../../../../StateProvider.js";
+  compareTripData
+} from '../../../../stores/emulator/types_maps.tsx'
+import ApiService from '../../../../ApiService.js'
+import { TRIP_STOPS_DELETE_URL } from '../../../../constants.js'
+import { useStates } from '../../../../StateProvider.js'
+import PropTypes from 'prop-types'
 
-export function SelectedStopInfo(props) {
-  const { showToast } = useStates();
+function SelectedStopInfo (props) {
+  const { showToast } = useStates()
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
     }
-  );
+  )
 
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
-  );
+  )
 
-  const totalTime = useRef(null);
+  const totalTime = useRef(null)
 
   const getTimeToReachStopPoint = useCallback(
     (startIndex, stop, velocity) => {
@@ -33,22 +34,22 @@ export function SelectedStopInfo(props) {
         velocity == null ||
         tripData?.tripPoints == null
       ) {
-        return `N/A`;
+        return 'N/A'
       }
-      let distance = 0;
+      let distance = 0
       tripData?.tripPoints.forEach((path) => {
         if (
           path.tripPointIndex >= startIndex &&
           path.tripPointIndex <= stop.tripPointIndex
         ) {
-          distance += path.distance;
+          distance += path.distance
         }
-      });
+      })
       // Assuming you calculate time by dividing distance by velocity
-      return distance / velocity;
+      return distance / velocity
     },
     [tripData]
-  );
+  )
 
   const timeToReachNextStop = useRef(
     () =>
@@ -61,9 +62,9 @@ export function SelectedStopInfo(props) {
       getTimeToReachStopPoint,
       selectedEmulator.currentTripPointIndex,
       selectedEmulator.speed,
-      props.selectedStop,
+      props.selectedStop
     ]
-  );
+  )
 
   const handleDeleteStop = async () => {
     // request on window for confirmation
@@ -71,78 +72,78 @@ export function SelectedStopInfo(props) {
     // if no, do nothing
 
     const { shouldDelete } = window.confirm(
-      "Are you sure you want to delete this stop?"
-    );
+      'Are you sure you want to delete this stop?'
+    )
     if (!shouldDelete) {
-      return;
+      return
     }
-    const token = localStorage.getItem("token");
-    const { success, data, error } = await ApiService.makeApiCall(
+    const token = localStorage.getItem('token')
+    const { success, error } = await ApiService.makeApiCall(
       TRIP_STOPS_DELETE_URL,
-      "GET",
+      'GET',
       null,
       token,
       selectedEmulator.id,
       new URLSearchParams({
-        stopTripPointIndex: props.selectedStop.tripPointIndex,
+        stopTripPointIndex: props.selectedStop.tripPointIndex
       })
-    );
+    )
 
     if (!success) {
-      showToast("Error deleting stop", "error");
-      console.error("handleDeleteStop error : ", error);
+      showToast('Error deleting stop', 'error')
+      console.error('handleDeleteStop error : ', error)
     }
-  };
+  }
 
   return (
     <InfoWindow
       position={{
         lat: props.selectedStop.lat,
-        lng: props.selectedStop.lng,
+        lng: props.selectedStop.lng
       }}
       onCloseClick={props.handleInfoWindowClose}
     >
       <div
         style={{
-          width: "auto",
+          width: 'auto'
         }}
       >
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
           Stop Address:
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
           {props.selectedStop.address.map((addressItem, index) => (
             <React.Fragment key={index}>
-              {index > 0 && ", "}
+              {index > 0 && ', '}
               {addressItem.long_name}
             </React.Fragment>
           ))}
         </p>
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
           Nearest Gas Station:
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
           {props.selectedStop.gasStation.map((gasStationAddressItem, index) => (
             <React.Fragment key={index}>
-              {index > 0 && ", "}
+              {index > 0 && ', '}
               {gasStationAddressItem.long_name}
             </React.Fragment>
           ))}
@@ -150,59 +151,59 @@ export function SelectedStopInfo(props) {
 
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
-          Arrival Time:{" "}
+          Arrival Time:{' '}
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
-          {timeToReachNextStop.current ? timeToReachNextStop.current : "N/A"}
+          {timeToReachNextStop.current ? timeToReachNextStop.current : 'N/A'}
         </p>
 
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
-          Total Time:{" "}
+          Total Time:{' '}
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
-          {totalTime.current ? totalTime.current : "N/A"}
+          {totalTime.current ? totalTime.current : 'N/A'}
         </p>
 
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
-          Remaining Distance:{" "}
+          Remaining Distance:{' '}
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
-          {timeToReachNextStop.current ? timeToReachNextStop.current : "N/A"}
+          {timeToReachNextStop.current ? timeToReachNextStop.current : 'N/A'}
         </p>
         {/* Delete Button */}
         <button
           style={{
-            backgroundColor: "red",
-            color: "white",
-            fontSize: "11px",
-            padding: "10px",
-            margin: "0px",
+            backgroundColor: 'red',
+            color: 'white',
+            fontSize: '11px',
+            padding: '10px',
+            margin: '0px'
           }}
           onClick={() => handleDeleteStop()}
         >
@@ -210,5 +211,12 @@ export function SelectedStopInfo(props) {
         </button>
       </div>
     </InfoWindow>
-  );
+  )
 }
+
+SelectedStopInfo.propTypes = {
+  selectedStop: PropTypes.object,
+  handleInfoWindowClose: PropTypes.func
+}
+
+export default SelectedStopInfo

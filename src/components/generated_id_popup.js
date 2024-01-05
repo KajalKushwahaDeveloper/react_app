@@ -1,76 +1,76 @@
-import React, { useEffect, useState } from "react";
-import { useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Dialog from "@mui/material/Dialog";
-import Button from "@mui/material/Button";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import React, { useEffect, useState } from 'react'
+import { styled } from '@mui/material/styles'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
+import Dialog from '@mui/material/Dialog'
+import Button from '@mui/material/Button'
+import PropTypes from 'prop-types'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
 import {
   USER_URL,
-  USER_ASSIGN_EMULATOR_URL,
   EMULATOR_URL,
-  EMULATOR_CHANGE_SSID_URL,
-} from "../constants";
-import Radio from "@mui/material/Radio";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { Checkbox, Tooltip } from "@mui/material";
-import ApiService from "../ApiService";
+  EMULATOR_CHANGE_SSID_URL
+} from '../constants'
+import Radio from '@mui/material/Radio'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { Checkbox } from '@mui/material'
+import ApiService from '../ApiService'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(2)
   },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(1)
+  }
+}))
 
-function BootstrapDialogTitle(props) {
-  const { children, onClose, ...other } = props;
+function BootstrapDialogTitle (props) {
+  const { children, onClose, ...other } = props
 
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
       {children}
-      {onClose ? (
+      {onClose
+        ? (
         <IconButton
           aria-label="close"
           onClick={onClose}
           sx={{
-            position: "absolute",
+            position: 'absolute',
             right: 0,
             top: 0,
-            color: (theme) => theme.palette.blue,
+            color: (theme) => theme.palette.blue
           }}
         >
           <CloseIcon />
         </IconButton>
-      ) : null}
+          )
+        : null}
     </DialogTitle>
-  );
+  )
 }
 
 BootstrapDialogTitle.propTypes = {
   children: PropTypes.node,
-  onClose: PropTypes.func.isRequired,
-};
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+  onClose: PropTypes.func
+}
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
 const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+      width: 250
+    }
+  }
+}
 
 const ChangeEmulatorSsidPopup = (props) => {
   const {
@@ -79,103 +79,103 @@ const ChangeEmulatorSsidPopup = (props) => {
     handleClose,
     emulatorToChangeSsid,
     handleAssignedUserToEmulator,
-    setUpdateSerial,
-  } = props;
+    setUpdateSerial
+  } = props
 
-  const [emulators, setEmulators] = useState();
-  const [selectedUserId, setSelectedUserId] = useState();
-  const [generateIdChecked, setGenerateIdChecked] = React.useState(false);
+  const [emulators, setEmulators] = useState()
+  const [selectedUserId, setSelectedUserId] = useState()
+  const [generateIdChecked, setGenerateIdChecked] = React.useState(false)
 
   const handleChangeRadio = (event) => {
-    setSelectedUserId(event.target.value);
-  };
+    setSelectedUserId(event.target.value)
+  }
 
   const handleGenerateIdChange = (event) => {
-    setGenerateIdChecked(event.target.checked);
-  };
+    setGenerateIdChecked(event.target.checked)
+  }
 
   const handleSubmitChangeSsid = async () => {
     try {
-      const emulatorId = emulatorToChangeSsid.id;
-      const emulatorSsid = selectedUserId;
-      const generateRandomNewUuid = generateIdChecked;
+      const emulatorId = emulatorToChangeSsid.id
+      const emulatorSsid = selectedUserId
+      const generateRandomNewUuid = generateIdChecked
 
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token')
       const payload = {
-        emulatorId: emulatorId,
-        emulatorSsid: emulatorSsid,
-        generateRandomNewUuid: generateRandomNewUuid,
-      };
-      const { success, data, error } = await ApiService.makeApiCall(
+        emulatorId,
+        emulatorSsid,
+        generateRandomNewUuid
+      }
+      const { success, data } = await ApiService.makeApiCall(
         EMULATOR_CHANGE_SSID_URL,
-        "POST",
+        'POST',
         payload,
         token
-      );
+      )
       if (success) {
-        showToast("Emulator Updated ", "success");
-        handleClose(data.id, null);
-        handleAssignedUserToEmulator(true, null, data);
+        showToast('Emulator Updated ', 'success')
+        handleClose(data.id, null)
+        handleAssignedUserToEmulator(true, null, data)
       } else {
-        showToast("Emulator Not Updated", "error");
-        handleAssignedUserToEmulator(false, "error occurred", null);
+        showToast('Emulator Not Updated', 'error')
+        handleAssignedUserToEmulator(false, 'error occurred', null)
       }
     } catch (error) {
-      console.error("Error occurred while adding user:", error);
+      console.error('Error occurred while adding user:', error)
     }
-    setUpdateSerial(true);
-  };
+    setUpdateSerial(true)
+  }
 
   const handleChange = (event) => {
     const {
-      target: { value },
-    } = event;
+      target: { value }
+    } = event
 
-    setSelectedUserId(value);
-  };
+    setSelectedUserId(value)
+  }
 
   useEffect(() => {
     // Fetch data from API
     const fetchUsers = async () => {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token')
       try {
         const response = await fetch(USER_URL, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        })
         if (!response.ok || response.status !== 200) {
-          return { success: false, error: "Invalid credentials" };
+          return { success: false, error: 'Invalid credentials' }
         } else {
-          const responseData = await response.text();
+          const responseData = await response.text()
 
-          const deserializedData = JSON.parse(responseData);
+          const deserializedData = JSON.parse(responseData)
 
-          setEmulators(deserializedData);
-          return { success: true, error: null };
+          setEmulators(deserializedData)
+          return { success: true, error: null }
         }
       } catch (error) {
-        console.error("User Data Error: " + error);
+        console.error('User Data Error: ' + error)
       }
 
-      const { success, data, error } = await ApiService.makeApiCall(
+      const { success, data } = await ApiService.makeApiCall(
         EMULATOR_URL,
-        "GET",
+        'GET',
         null,
         token
-      );
+      )
       if (success) {
-        setEmulators(data);
-        return { success: true, error: null };
+        setEmulators(data)
+        return { success: true, error: null }
       } else {
-        showToast("Error Fetching Emulators", "error");
-        return { success: false, error: "Error Fetching Emulators" };
+        showToast('Error Fetching Emulators', 'error')
+        return { success: false, error: 'Error Fetching Emulators' }
       }
-    };
-    fetchUsers();
-  }, [open, showToast]);
+    }
+    fetchUsers()
+  }, [open, showToast])
 
   return (
     <div>
@@ -186,11 +186,11 @@ const ChangeEmulatorSsidPopup = (props) => {
       >
         <BootstrapDialogTitle
           style={{
-            marginTop: "1rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontWeight: "75px",
+            marginTop: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontWeight: '75px'
           }}
           id="customized-dialog-title"
           onClose={handleClose}
@@ -200,9 +200,9 @@ const ChangeEmulatorSsidPopup = (props) => {
         <div>
           <DialogContent
             dividers
-            sx={{ display: "flex", flexDirection: "column" }}
+            sx={{ display: 'flex', flexDirection: 'column' }}
           >
-            <FormControl sx={{ marginTop: "2rem" }}>
+            <FormControl sx={{ marginTop: '2rem' }}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -213,12 +213,12 @@ const ChangeEmulatorSsidPopup = (props) => {
                 label="Generate new UUID"
               />
             </FormControl>
-            <FormControl sx={{ m: 1, margin: "2rem" }}>
+            <FormControl sx={{ m: 1, margin: '2rem' }}>
               {!generateIdChecked && (
                 <>
                   <InputLabel
                     id="demo-multiple-name-label"
-                    style={{ borderRadius: "2rem" }}
+                    style={{ borderRadius: '2rem' }}
                   >
                     Id
                   </InputLabel>
@@ -239,16 +239,16 @@ const ChangeEmulatorSsidPopup = (props) => {
                           control={<Radio />}
                           onChange={(e) => handleChangeRadio(e)}
                         />
-                        {emulator.id + " ," + emulator.emulatorSsid}
+                        {emulator.id + ' ,' + emulator.emulatorSsid}
                       </MenuItem>
                     ))}
                   </Select>
                 </>
               )}
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   variant="contained"
-                  style={{ width: "2rem", marginTop: "2em" }}
+                  style={{ width: '2rem', marginTop: '2em' }}
                   onClick={() => handleSubmitChangeSsid()}
                 >
                   Submit
@@ -259,6 +259,16 @@ const ChangeEmulatorSsidPopup = (props) => {
         </div>
       </BootstrapDialog>
     </div>
-  );
-};
-export default ChangeEmulatorSsidPopup;
+  )
+}
+
+ChangeEmulatorSsidPopup.propTypes = {
+  showToast: PropTypes.func,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  emulatorToChangeSsid: PropTypes.object,
+  handleAssignedUserToEmulator: PropTypes.func,
+  setUpdateSerial: PropTypes.func
+}
+
+export default ChangeEmulatorSsidPopup

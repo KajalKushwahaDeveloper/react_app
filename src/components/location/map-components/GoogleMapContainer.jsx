@@ -1,51 +1,51 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react'
 
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
 
-import "../../../scss/map.scss";
-import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
-import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
-import EmulatorMarkers from "./Markers/EmulatorMarkers.jsx";
-import { StopComponents } from "./Trip/StopComponents.jsx";
-import { SelectedStopInfo } from "./Trip/SelectedStopInfo.jsx";
-import { PathComponent } from "./Trip/PathComponent.jsx";
-import useFetch from "../../../hooks/useFetch.js";
-import { EMULATOR_URL } from "../../../constants.js";
+import '../../../scss/map.scss'
+import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
+import { compareTripData } from '../../../stores/emulator/types_maps.tsx'
+import EmulatorMarkers from './Markers/EmulatorMarkers.jsx'
+import StopComponents from './Trip/StopComponents.jsx'
+import SelectedStopInfo from './Trip/SelectedStopInfo.jsx'
+import { PathComponent } from './Trip/PathComponent.jsx'
+import useFetch from '../../../hooks/useFetch.js'
+import { EMULATOR_URL } from '../../../constants.js'
 
-const libraries = ["drawing", "places", "autocomplete"];
+const libraries = ['drawing', 'places', 'autocomplete']
 
 const GoogleMapContainer = () => {
-  const center = useEmulatorStore((state) => state.center);
+  const center = useEmulatorStore((state) => state.center)
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
-  );
-  const mapRef = useRef(null);
+  )
+  const mapRef = useRef(null)
 
   const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E",
-    libraries: libraries,
-  });
-  const [selectedStop, setSelectedStop] = React.useState(null);
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E',
+    libraries
+  })
+  const [selectedStop, setSelectedStop] = React.useState(null)
 
   const handleMarkerClick = (stop) => {
-    setSelectedStop(stop);
-  };
+    setSelectedStop(stop)
+  }
 
-  const createDevices = useEmulatorStore((state) => state.createDevices);
+  const createDevices = useEmulatorStore((state) => state.createDevices)
 
-  const { data } = useFetch(EMULATOR_URL);
+  const { data } = useFetch(EMULATOR_URL)
 
   useEffect(() => {
     if (data !== null) {
-      createDevices(data);
+      createDevices(data)
     }
-  }, [createDevices, data]);
+  }, [createDevices, data])
 
   const handleInfoWindowClose = () => {
-    setSelectedStop(null);
-  };
+    setSelectedStop(null)
+  }
   useEffect(() => {
     if (
       tripData === null ||
@@ -53,201 +53,202 @@ const GoogleMapContainer = () => {
       mapRef.current === null ||
       mapRef.current === undefined
     ) {
-      return;
+      return
     }
     if (tripData.tripPoints === null || tripData.tripPoints.length <= 0) {
-      return;
+      return
     }
-    const bounds = new window.google.maps.LatLngBounds();
+    const bounds = new window.google.maps.LatLngBounds()
     tripData?.tripPoints?.forEach((element) => {
-      bounds.extend(new window.google.maps.LatLng(element.lat, element.lng));
-    });
-    mapRef.current.fitBounds(bounds);
-  }, [mapRef, tripData]);
+      bounds.extend(new window.google.maps.LatLng(element.lat, element.lng))
+    })
+    mapRef.current.fitBounds(bounds)
+  }, [mapRef, tripData])
 
   const containerStyle = {
-    position: "unset !important",
-    width: "100%",
-    height: "100%",
-  };
+    position: 'unset !important',
+    width: '100%',
+    height: '100%'
+  }
 
-  const onLoad = React.useCallback(function callback(map) {
-    mapRef.current = map;
-  }, []);
+  const onLoad = React.useCallback(function callback (map) {
+    mapRef.current = map
+  }, [])
 
-  const onUnmount = React.useCallback(function callback(map) {
-    mapRef.current = null;
-  }, []);
+  const onUnmount = React.useCallback(function callback (map) {
+    mapRef.current = null
+  }, [])
 
   const darkMapStyle = [
     {
-      featureType: "all",
-      elementType: "labels.text.fill",
+      featureType: 'all',
+      elementType: 'labels.text.fill',
       stylers: [
         {
-          saturation: 36,
+          saturation: 36
         },
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 40,
-        },
-      ],
+          lightness: 40
+        }
+      ]
     },
     {
-      featureType: "all",
-      elementType: "labels.text.stroke",
+      featureType: 'all',
+      elementType: 'labels.text.stroke',
       stylers: [
         {
-          visibility: "on",
+          visibility: 'on'
         },
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 16,
-        },
-      ],
+          lightness: 16
+        }
+      ]
     },
     {
-      featureType: "all",
-      elementType: "labels.icon",
+      featureType: 'all',
+      elementType: 'labels.icon',
       stylers: [
         {
-          visibility: "off",
-        },
-      ],
+          visibility: 'off'
+        }
+      ]
     },
     {
-      featureType: "administrative",
-      elementType: "geometry.fill",
+      featureType: 'administrative',
+      elementType: 'geometry.fill',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 20,
-        },
-      ],
+          lightness: 20
+        }
+      ]
     },
     {
-      featureType: "administrative",
-      elementType: "geometry.stroke",
+      featureType: 'administrative',
+      elementType: 'geometry.stroke',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 17,
+          lightness: 17
         },
         {
-          weight: 1.2,
-        },
-      ],
+          weight: 1.2
+        }
+      ]
     },
     {
-      featureType: "landscape",
-      elementType: "geometry",
+      featureType: 'landscape',
+      elementType: 'geometry',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 20,
-        },
-      ],
+          lightness: 20
+        }
+      ]
     },
     {
-      featureType: "poi",
-      elementType: "geometry",
+      featureType: 'poi',
+      elementType: 'geometry',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 21,
-        },
-      ],
+          lightness: 21
+        }
+      ]
     },
     {
-      featureType: "road.highway",
-      elementType: "geometry.fill",
+      featureType: 'road.highway',
+      elementType: 'geometry.fill',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 17,
-        },
-      ],
+          lightness: 17
+        }
+      ]
     },
     {
-      featureType: "road.highway",
-      elementType: "geometry.stroke",
+      featureType: 'road.highway',
+      elementType: 'geometry.stroke',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 29,
+          lightness: 29
         },
         {
-          weight: 0.2,
-        },
-      ],
+          weight: 0.2
+        }
+      ]
     },
     {
-      featureType: "road.arterial",
-      elementType: "geometry",
+      featureType: 'road.arterial',
+      elementType: 'geometry',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 18,
-        },
-      ],
+          lightness: 18
+        }
+      ]
     },
     {
-      featureType: "road.local",
-      elementType: "geometry",
+      featureType: 'road.local',
+      elementType: 'geometry',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 16,
-        },
-      ],
+          lightness: 16
+        }
+      ]
     },
     {
-      featureType: "transit",
-      elementType: "geometry",
+      featureType: 'transit',
+      elementType: 'geometry',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 19,
-        },
-      ],
+          lightness: 19
+        }
+      ]
     },
     {
-      featureType: "water",
-      elementType: "geometry",
+      featureType: 'water',
+      elementType: 'geometry',
       stylers: [
         {
-          color: "#000000",
+          color: '#000000'
         },
         {
-          lightness: 17,
-        },
-      ],
-    },
-  ];
+          lightness: 17
+        }
+      ]
+    }
+  ]
 
-  return isLoaded ? (
+  return isLoaded
+    ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       zoom={4}
@@ -270,9 +271,10 @@ const GoogleMapContainer = () => {
 
       <EmulatorMarkers />
     </GoogleMap>
-  ) : (
+      )
+    : (
     <>Loading...</>
-  );
-};
+      )
+}
 
-export default React.memo(GoogleMapContainer);
+export default React.memo(GoogleMapContainer)

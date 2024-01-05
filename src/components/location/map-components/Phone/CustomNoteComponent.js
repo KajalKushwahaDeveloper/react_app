@@ -1,55 +1,60 @@
-import React, { useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
-import ApiService from "../../../../ApiService";
-import { EMULATOR_NOTE_URL } from "../../../../constants";
-import { useStates } from "../../../../StateProvider";
+import React, { useEffect, useState } from 'react'
+import TextField from '@mui/material/TextField'
+import ApiService from '../../../../ApiService'
+import { EMULATOR_NOTE_URL } from '../../../../constants'
+import { useStates } from '../../../../StateProvider'
+import PropTypes from 'prop-types'
 
 const CustomNoteComponent = ({ emulator }) => {
-  const { showToast } = useStates();
+  const { showToast } = useStates()
 
-  const [noteText, setNoteText] = useState("");
+  const [noteText, setNoteText] = useState('')
 
   useEffect(() => {
-    setNoteText(emulator?.note);
-  }, [emulator]);
+    setNoteText(emulator?.note)
+  }, [emulator])
 
   // FIXME: not updating notes correctly.
   const handleNoteChange = (e) => {
     // Limit the input length to 25 characters
-    const newText = e.target.value.slice(0, 25);
-    setNoteText(newText);
+    const newText = e.target.value.slice(0, 25)
+    setNoteText(newText)
     if (newText !== emulator.note) {
-      handleSaveNote();
+      handleSaveNote()
     }
-  };
+  }
 
   const handleSaveNote = async () => {
-    showToast(" Saving Note... ", "info");
-    const token = localStorage.getItem("token");
-    const payload = { noteText, emulatorId: emulator.id };
-    const { success, data, error } = await ApiService.makeApiCall(
+    showToast(' Saving Note... ', 'info')
+    const token = localStorage.getItem('token')
+    const payload = { noteText, emulatorId: emulator.id }
+    const { success } = await ApiService.makeApiCall(
       EMULATOR_NOTE_URL,
-      "POST",
+      'POST',
       payload,
       token
-    );
+    )
     if (success) {
-      showToast("Note Updated! ", "success");
+      showToast('Note Updated! ', 'success')
     } else {
-      showToast(" Failed to update Note! ", "error");
+      showToast(' Failed to update Note! ', 'error')
     }
-  };
+  }
 
   return (
     <TextField
-      style={{ width: "100%", padding: "0px 10px" }}
-      label={noteText ? "" : "Add Note"}
+      style={{ width: '100%', padding: '0px 10px' }}
+      label={noteText ? '' : 'Add Note'}
       variant="outlined"
       value={noteText}
       onChange={handleNoteChange}
       size="small"
     />
-  );
-};
+  )
+}
 
-export default CustomNoteComponent;
+CustomNoteComponent.propTypes = {
+  emulator: PropTypes.object
+}
+
+export default CustomNoteComponent

@@ -237,6 +237,7 @@ const createSharedSlice: StateCreator<
     get().eventSource = ctrl;
   },
   logout: () => {
+    console.log("logout");
     localStorage.removeItem("token");
     get().eventSource?.abort();
     set({ eventSource: null, emulators: [], selectedEmulator: null });

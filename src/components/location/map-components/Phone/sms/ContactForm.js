@@ -1,71 +1,64 @@
-import React, { useState } from "react";
-import { Button } from "@mui/material";
-import ApiService from "../../../../../ApiService";
-import { MESSAGE_SEND_MSG } from "../../../../../constants";
-import UploadFiles from "./components/upload-files.component.js";
-import "../../../../../scss/ContactForm.scss";
+import React, { useState } from 'react'
+import { Button } from '@mui/material'
+import ApiService from '../../../../../ApiService'
+import { MESSAGE_SEND_MSG } from '../../../../../constants'
+import UploadFiles from './components/upload-files.component.js'
+import '../../../../../scss/ContactForm.scss'
+import PropTypes from 'prop-types'
 
-export function ContactForm({ emulatorId, showToast }) {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [message, setMessage] = useState("");
-  const [messageError, setMessageError] = useState("");
-  const [numberError, setPhoneNumberError] = useState("");
+export function ContactForm ({ emulatorId, showToast }) {
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [message, setMessage] = useState('')
 
-  const [fileNames, setFileNames] = useState([]);
+  const [fileNames, setFileNames] = useState([])
 
   const validatePhoneNumber = (number) => {
     if (!number) {
-      setPhoneNumberError("Phone number is required.");
-      return false;
+      return false
     }
 
-    if (number.replace(/\D/g, "").length > 13) {
-      setPhoneNumberError("Phone number is too long.");
-      return false;
+    if (number.replace(/\D/g, '').length > 13) {
+      return false
     }
 
-    setPhoneNumberError("");
-    return true;
-  };
+    return true
+  }
 
   const validateMessage = (text) => {
     if (!text) {
-      setMessageError("Message is required.");
-      return false;
+      return false
     }
-    return true;
-  };
+    return true
+  }
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
-      const extractedNames = fileNames.map((file) => file.name);
+      const extractedNames = fileNames.map((file) => file.name)
 
       const payload = {
-        emulatorId: emulatorId,
-        message: message,
+        emulatorId,
+        message,
         number: phoneNumber,
-        fileNames: extractedNames,
-      };
-      const token = localStorage.getItem("token");
-      const { success, data, error } = await ApiService.makeApiCall(
+        fileNames: extractedNames
+      }
+      const token = localStorage.getItem('token')
+      const { success, error } = await ApiService.makeApiCall(
         MESSAGE_SEND_MSG,
-        "POST",
+        'POST',
         payload,
         token,
         null
-      );
+      )
       if (success) {
-        setPhoneNumber("");
-        setMessage("");
-        setPhoneNumberError("");
-        setMessageError("");
-        showToast("Data submit Successfully", "success");
+        setPhoneNumber('')
+        setMessage('')
+        showToast('Data submit Successfully', 'success')
       } else if (error) {
-        showToast(`error: ${error}`, "error");
+        showToast(`error: ${error}`, 'error')
       }
     }
-  };
+  }
 
   return (
     <div className="sms_form">
@@ -87,16 +80,21 @@ export function ContactForm({ emulatorId, showToast }) {
 
         <UploadFiles setFileNames={setFileNames} showToast={showToast} />
 
-        {/*Submit button */}
+        {/* Submit button */}
         <Button
           type="submit"
           variant="contained"
           color="primary"
-          sx={{ marginTop: "1rem" }}
+          sx={{ marginTop: '1rem' }}
         >
           SEND
         </Button>
       </form>
     </div>
-  );
+  )
+}
+
+ContactForm.propTypes = {
+  emulatorId: PropTypes.number,
+  showToast: PropTypes.func
 }

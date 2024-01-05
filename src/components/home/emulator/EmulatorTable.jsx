@@ -1,34 +1,34 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { CircularProgress } from "@mui/material";
+import * as React from 'react'
+import Box from '@mui/material/Box'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableRow from '@mui/material/TableRow'
+import Paper from '@mui/material/Paper'
+import { CircularProgress, Tooltip } from '@mui/material'
 import {
   stableSort,
   getComparator,
   EnhancedTableToolbar,
-  EnhancedTableHead,
-} from "./stableSort";
+  EnhancedTableHead
+} from './stableSort'
 
 import {
   EMULATOR_URL,
   USER_ASSIGN_EMULATOR_URL,
-  EMULATOR_DELETE_URL,
-} from "../../../constants";
-import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ApiService from "./../../../ApiService";
-import { GetEmulatorApi } from "../../../components/api/emulator";
-import { Tooltip } from "@mui/material";
-import { useStates } from "../../../StateProvider";
-import { CustomTablePagination } from "../../CustomTablePagination";
+  EMULATOR_DELETE_URL
+} from '../../../constants'
+import IconButton from '@mui/material/IconButton'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ApiService from './../../../ApiService'
+import { GetEmulatorApi } from '../../../components/api/emulator'
+import { useStates } from '../../../StateProvider'
+import { CustomTablePagination } from '../../CustomTablePagination'
+import PropTypes from 'prop-types'
 
-export default function EmulatorTable({
+export default function EmulatorTable ({
   handleAssignUserButtonClick,
   userAssingedEmulator,
   setUserAssingedEmulator,
@@ -37,186 +37,186 @@ export default function EmulatorTable({
   handleGeneratedIdButtonClick,
   emulatorData,
   updateSerial,
-  handleCreateEmulator,
+  handleCreateEmulator
 }) {
-  const { showToast } = useStates();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const { showToast } = useStates()
+  const [order, setOrder] = React.useState('asc')
+  const [orderBy, setOrderBy] = React.useState('calories')
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState(null)
 
-  const [emulators, setEmulators] = React.useState([]);
+  const [emulators, setEmulators] = React.useState([])
 
   React.useEffect(() => {
-    setEmulators(emulatorData);
-  }, [emulatorData]);
+    setEmulators(emulatorData)
+  }, [emulatorData])
 
   React.useEffect(() => {
     if (emulatorEditedId != null) {
-      if (emulatorEditedId == 0) {
-        fetchData();
+      if (emulatorEditedId === 0) {
+        fetchData()
       } else {
-        refreshEditedEmulator(emulatorEditedId);
+        refreshEditedEmulator(emulatorEditedId)
       }
     }
-  }, [emulatorEditedId]);
+  }, [emulatorEditedId])
 
   React.useEffect(() => {
     const updateSerialEmu = async () => {
-      const { success, data, error } = await GetEmulatorApi();
+      const { success, data } = await GetEmulatorApi()
       if (success) {
-        setEmulators(data);
+        setEmulators(data)
       }
-    };
-    updateSerialEmu();
-  }, [updateSerial]);
+    }
+    updateSerialEmu()
+  }, [updateSerial])
 
   // Fetch data from API
   const refreshEditedEmulator = async (emulatorEditedId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
     const { success, data, error } = await ApiService.makeApiCall(
       EMULATOR_URL,
-      "GET",
+      'GET',
       null,
       token,
       emulatorEditedId
-    );
+    )
     if (success) {
       const updatedData = emulators.map((item) => {
         if (item.id === data.id) {
-          return data;
+          return data
         }
-        return item;
-      });
-      showToast(`Updated user table!`, "success");
-      setEmulators(updatedData);
+        return item
+      })
+      showToast('Updated user table!', 'success')
+      setEmulators(updatedData)
     } else {
-      showToast("Failed to update user table" + error, "error");
-      return { success: false, error: "Failed to unassign user" };
+      showToast('Failed to update user table' + error, 'error')
+      return { success: false, error: 'Failed to unassign user' }
     }
-  };
+  }
 
-  //assign/unassign button
+  // assign/unassign button
   const handleActionButtonClick = async (row) => {
     if (row.user != null) {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token')
       try {
-        const response = await fetch(USER_ASSIGN_EMULATOR_URL + "/" + row.id, {
-          method: "PUT",
+        const response = await fetch(USER_ASSIGN_EMULATOR_URL + '/' + row.id, {
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        })
 
         if (!response.ok || response.status !== 200) {
-          showToast("Failed to unassign user", "error");
-          return { success: false, error: "Failed to unassign user" };
+          showToast('Failed to unassign user', 'error')
+          return { success: false, error: 'Failed to unassign user' }
         }
         // Send the removed user ID to refresh in user table
         const userAssignedEmulator = {
           user: {
-            id: row.user?.id,
-          },
-        };
-        setUserAssingedEmulator(userAssignedEmulator);
+            id: row.user?.id
+          }
+        }
+        setUserAssingedEmulator(userAssignedEmulator)
         const updatedData = emulators.map((item) => {
           if (item.id === row.id) {
-            return { ...item, user: null };
+            return { ...item, user: null }
           }
-          return item;
-        });
-        showToast(`User Un-Assigned`, "success");
-        setEmulators(updatedData);
+          return item
+        })
+        showToast('User Un-Assigned', 'success')
+        setEmulators(updatedData)
       } catch (error) {
-        showToast(`Failed to unassign user ${error}`, "error");
+        showToast(`Failed to unassign user ${error}`, 'error')
       }
     } else {
-      handleAssignUserButtonClick(row);
+      handleAssignUserButtonClick(row)
     }
-  };
+  }
 
   // Fetch data from API // GET  API
   const fetchData = async () => {
-    setLoading(true);
-    const { success, data, error } = await GetEmulatorApi();
+    setLoading(true)
+    const { success, data, error } = await GetEmulatorApi()
 
     if (success) {
-      setEmulators(data);
-      setLoading(false);
+      setEmulators(data)
+      setLoading(false)
     } else {
-      setError(error);
-      setLoading(false);
+      setError(error)
+      setLoading(false)
     }
-  };
+  }
 
-  //delete button
+  // delete button
   const handleDeleteButtonClick = async (emulator) => {
     const confirmed = window.confirm(
-      "Delete this emulator : " + emulator.emulatorSsid + "?"
-    );
+      'Delete this emulator : ' + emulator.emulatorSsid + '?'
+    )
     if (confirmed) {
-      const token = localStorage.getItem("token");
-      const { success, data, error } = await ApiService.makeApiCall(
+      const token = localStorage.getItem('token')
+      const { success } = await ApiService.makeApiCall(
         EMULATOR_DELETE_URL,
-        "DELETE",
+        'DELETE',
         null,
         token,
         emulator.id
-      );
+      )
 
       if (success) {
-        showToast("emulator deleted", "success");
-        fetchData();
+        showToast('emulator deleted', 'success')
+        fetchData()
       } else {
-        showToast("emulator not deleted", "error");
+        showToast('emulator not deleted', 'error')
       }
     }
-  };
+  }
 
   React.useEffect(() => {
-    setLoading(true);
-    const { success, error } = fetchData();
+    setLoading(true)
+    const { success, error } = fetchData()
     if (success) {
-      showToast("Fetched Emulators successfully", "success");
+      showToast('Fetched Emulators successfully', 'success')
     } else {
-      showToast(error, "error");
+      showToast(error, 'error')
     }
-  }, []);
+  }, [])
 
   React.useEffect(() => {
     if (userAssingedEmulator != null) {
       const updatedData = emulators.map((item) => {
         if (item.id === userAssingedEmulator.id) {
-          return { ...item, user: userAssingedEmulator.user };
+          return { ...item, user: userAssingedEmulator.user }
         }
-        return item;
-      });
-      setEmulators(updatedData);
+        return item
+      })
+      setEmulators(updatedData)
     }
-  }, [userAssingedEmulator]);
+  }, [userAssingedEmulator])
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - emulators.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - emulators.length) : 0
 
   const visibleRows = React.useMemo(
     () =>
@@ -225,7 +225,7 @@ export default function EmulatorTable({
         page * rowsPerPage + rowsPerPage
       ),
     [order, orderBy, page, emulators, rowsPerPage]
-  );
+  )
 
   if (loading) {
     return (
@@ -233,7 +233,7 @@ export default function EmulatorTable({
         <h3>loading Emulators...</h3>
         <CircularProgress />
       </>
-    );
+    )
   }
 
   if (error) {
@@ -244,18 +244,18 @@ export default function EmulatorTable({
           <p>Error: {error}</p>
         </div>
       </>
-    );
+    )
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+    <Box sx={{ width: '100%' }}>
+      <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar handleOpen={handleCreateEmulator} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={"small"}
+            size={'small'}
           >
             <EnhancedTableHead
               order={order}
@@ -265,9 +265,9 @@ export default function EmulatorTable({
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`;
-                const createdAtDate = new Date(row.createdAt);
-                const formattedDate = createdAtDate.toISOString().split("T")[0];
+                const labelId = `enhanced-table-checkbox-${index}`
+                const createdAtDate = new Date(row.createdAt)
+                const formattedDate = createdAtDate.toISOString().split('T')[0]
                 return (
                   <TableRow hover tabIndex={-1} key={row.id}>
                     <TableCell align="left">
@@ -276,12 +276,12 @@ export default function EmulatorTable({
                           <IconButton
                             size="small"
                             style={{
-                              height: "40px",
-                              width: "40px",
-                              marginRight: "10px",
-                              borderRadius: "50%",
-                              backgroundColor: "red",
-                              color: "#fff",
+                              height: '40px',
+                              width: '40px',
+                              marginRight: '10px',
+                              borderRadius: '50%',
+                              backgroundColor: 'red',
+                              color: '#fff'
                             }}
                             aria-label="delete"
                             onClick={() => handleDeleteButtonClick(row)}
@@ -292,12 +292,12 @@ export default function EmulatorTable({
                             className="btn btn-sm"
                             style={{
                               backgroundColor:
-                                row.user === null ? "green" : "red",
-                              color: "white",
+                                row.user === null ? 'green' : 'red',
+                              color: 'white'
                             }}
                             onClick={() => handleActionButtonClick(row)}
                           >
-                            {row.user === null ? "ASSIGN__" : "UNASSIGN"}
+                            {row.user === null ? 'ASSIGN__' : 'UNASSIGN'}
                           </button>
                         </div>
                         {/* can use for vertical */}
@@ -305,33 +305,32 @@ export default function EmulatorTable({
                     </TableCell>
                     {/* status */}
                     <TableCell id={labelId} scope="row">
-                      {row.status || "N/A"}
+                      {row.status || 'N/A'}
                     </TableCell>
                     {/* serial code */}
                     <TableCell align="left">
                       <div
                         style={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center'
                         }}
                       >
                         <div>
                           <Tooltip
-                            title={row.emulatorSsid || "N/A"}
+                            title={row.emulatorSsid || 'N/A'}
                             placement="top"
                             alignItems="center"
                             display="flex"
                           >
                             <div
                               style={{
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                maxWidth: "150px",
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap',
+                                maxWidth: '150px'
                               }}
-                              align="left"
                             >
-                              {row.emulatorSsid || "N/A"}
+                              {row.emulatorSsid || 'N/A'}
                             </div>
                           </Tooltip>
                         </div>
@@ -340,9 +339,9 @@ export default function EmulatorTable({
                           <IconButton
                             size="small"
                             style={{
-                              height: "auto",
-                              width: "35px",
-                              float: "right",
+                              height: 'auto',
+                              width: '35px',
+                              float: 'right'
                             }}
                             aria-label="edit"
                           >
@@ -359,26 +358,25 @@ export default function EmulatorTable({
                     <TableCell align="left">
                       <div
                         style={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center'
                         }}
                       >
                         <div>
                           <Tooltip
-                            title={row.telephone || "N/A"}
+                            title={row.telephone || 'N/A'}
                             placement="top"
                             alignItems="center"
                             display="flex"
                           >
                             <div
                               style={{
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap'
                               }}
-                              align="left"
                             >
-                              {row.telephone || "N/A"}
+                              {row.telephone || 'N/A'}
                             </div>
                           </Tooltip>
                         </div>
@@ -387,9 +385,9 @@ export default function EmulatorTable({
                           <IconButton
                             size="small"
                             style={{
-                              height: "auto",
-                              width: "35px",
-                              float: "right",
+                              height: 'auto',
+                              width: '35px',
+                              float: 'right'
                             }}
                             aria-label="edit"
                           >
@@ -405,9 +403,9 @@ export default function EmulatorTable({
                     <TableCell align="left">
                       <Tooltip
                         title={
-                          (row.user?.firstName || "N/A") +
-                          " " +
-                          (row.user?.lastName || "N/A")
+                          (row.user?.firstName || 'N/A') +
+                          ' ' +
+                          (row.user?.lastName || 'N/A')
                         }
                         placement="top"
                         alignItems="start"
@@ -415,29 +413,28 @@ export default function EmulatorTable({
                       >
                         <div
                           style={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            maxWidth: "150px",
-                            textAlign: "start",
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            maxWidth: '150px',
+                            textAlign: 'start'
                           }}
-                          align="left"
                         >
-                          {(row.user?.firstName || "N/A") +
-                            " " +
-                            (row.user?.lastName || "N/A")}
+                          {(row.user?.firstName || 'N/A') +
+                            ' ' +
+                            (row.user?.lastName || 'N/A')}
                         </div>
                       </Tooltip>
                     </TableCell>
                     {/* REGISTERED */}
-                    <TableCell align="left">{formattedDate || "N/A"}</TableCell>
+                    <TableCell align="left">{formattedDate || 'N/A'}</TableCell>
                   </TableRow>
-                );
+                )
               })}
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: 33 * emptyRows,
+                    height: 33 * emptyRows
                   }}
                 >
                   <TableCell colSpan={6} />
@@ -456,5 +453,17 @@ export default function EmulatorTable({
         />
       </Paper>
     </Box>
-  );
+  )
+}
+
+EmulatorTable.propTypes = {
+  handleAssignUserButtonClick: PropTypes.func,
+  userAssingedEmulator: PropTypes.object,
+  setUserAssingedEmulator: PropTypes.func,
+  handleEmulatorTelephonePopup: PropTypes.func,
+  emulatorEditedId: PropTypes.number,
+  handleGeneratedIdButtonClick: PropTypes.func,
+  emulatorData: PropTypes.array,
+  updateSerial: PropTypes.bool,
+  handleCreateEmulator: PropTypes.func
 }

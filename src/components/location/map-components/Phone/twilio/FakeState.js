@@ -1,17 +1,18 @@
-import React from "react";
-import states from "./states";
-import "./FakeState.css";
+import React from 'react'
+import states from './states'
+import './FakeState.css'
+import PropTypes from 'prop-types'
 
-const FakeState = ({ currentState, setState, setConn }) => {
+const FakeState = (currentState, setState, setConn) => {
   const handleChange = event => {
-    const newState = states[event.target.value];
-    setState(newState);
+    const newState = states[event.target.value]
+    setState(newState)
     if (newState === states.INCOMING || newState === states.ON_CALL) {
-      setConn(true);
+      setConn(true)
     } else {
-      setConn(null);
+      setConn(null)
     }
-  };
+  }
 
   const checkboxes = Object.keys(states).map(stateKey => {
     return (
@@ -26,10 +27,16 @@ const FakeState = ({ currentState, setState, setConn }) => {
           onChange={handleChange}
         ></input>
       </>
-    );
-  });
+    )
+  })
 
-  return <div className="fake-state">{checkboxes}</div>;
-};
+  return <div className="fake-state">{checkboxes}</div>
+}
 
-export default FakeState;
+FakeState.propTypes = {
+  currentState: PropTypes.string,
+  setState: PropTypes.func,
+  setConn: PropTypes.func
+}
+
+export default FakeState

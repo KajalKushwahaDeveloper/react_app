@@ -1,12 +1,12 @@
-import React from "react";
-import "../src/view/view.scss";
+import React from 'react'
+import '../src/view/view.scss'
 
 const RedirectPage = () => {
   return (
     <>
-      <h2 style={{textAlign:"center"}}>LOADING...</h2>
-      <div class="loaderRedirect"></div>
+      <h2 style={{ textAlign: 'center' }}>LOADING...</h2>
+      <div className="loaderRedirect"></div>
     </>
-  );
-};
-export default RedirectPage;
+  )
+}
+export default RedirectPage

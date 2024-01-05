@@ -1,9 +1,9 @@
 const states = {
-  CONNECTING: "Connecting",
-  READY: "Ready",
-  INCOMING: "Incoming",
-  ON_CALL: "On call",
-  OFFLINE: "Offline"
-};
+  CONNECTING: 'Connecting',
+  READY: 'Ready',
+  INCOMING: 'Incoming',
+  ON_CALL: 'On call',
+  OFFLINE: 'Offline'
+}
 
-export default states;
+export default states

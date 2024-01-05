@@ -1,98 +1,99 @@
-import { Marker } from "@react-google-maps/api";
-import React, { useEffect, useRef } from "react";
-import _ from "lodash";
+import { Marker } from '@react-google-maps/api'
+import React, { useEffect, useRef } from 'react'
+import _ from 'lodash'
+import PropTypes from 'prop-types'
 
 const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
-  const markerRef = useRef(null);
+  const markerRef = useRef(null)
   // copy latLng to initialPosition but don't update it on latLng change
   useEffect(() => {
     if (markerRef.current === null || markerRef.current === undefined) {
-      return;
+      return
     }
-    animateMarkerTo(markerRef.current, latLng);
-  }, [latLng, markerRef]);
+    animateMarkerTo(markerRef.current, latLng)
+  }, [latLng, markerRef])
 
   // https://stackoverflow.com/a/55043218/9058905
-  function animateMarkerTo(marker, newPosition) {
-    var options = {
+  function animateMarkerTo (marker, newPosition) {
+    const options = {
       duration: 1000,
       easing: function (x, t, b, c, d) {
         // jquery animation: swing (easeOutQuad)
-        return -c * (t /= d) * (t - 2) + b;
-      },
-    };
+        return -c * (t /= d) * (t - 2) + b
+      }
+    }
 
     window.requestAnimationFrame =
       window.requestAnimationFrame ||
       window.mozRequestAnimationFrame ||
       window.webkitRequestAnimationFrame ||
-      window.msRequestAnimationFrame;
+      window.msRequestAnimationFrame
     window.cancelAnimationFrame =
-      window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+      window.cancelAnimationFrame || window.mozCancelAnimationFrame
 
     // save current position. prefixed to avoid name collisions. separate for lat/lng to avoid calling lat()/lng() in every frame
-    marker.AT_startPosition_lat = marker.getPosition().lat();
-    marker.AT_startPosition_lng = marker.getPosition().lng();
-    var newPosition_lat = newPosition.lat;
-    var newPosition_lng = newPosition.lng;
+    marker.AT_startPosition_lat = marker.getPosition().lat()
+    marker.AT_startPosition_lng = marker.getPosition().lng()
+    const newPositionLat = newPosition.lat
+    let newPositionLng = newPosition.lng
 
     // crossing the 180° meridian and going the long way around the earth?
-    if (Math.abs(newPosition_lng - marker.AT_startPosition_lng) > 180) {
-      if (newPosition_lng > marker.AT_startPosition_lng) {
-        newPosition_lng -= 360;
+    if (Math.abs(newPositionLng - marker.AT_startPosition_lng) > 180) {
+      if (newPositionLng > marker.AT_startPosition_lng) {
+        newPositionLng -= 360
       } else {
-        newPosition_lng += 360;
+        newPositionLng += 360
       }
     }
 
-    var animateStep = function (marker, startTime) {
-      var ellapsedTime = new Date().getTime() - startTime;
-      var durationRatio = ellapsedTime / options.duration; // 0 - 1
-      var easingDurationRatio = options.easing(
+    const animateStep = function (marker, startTime) {
+      const ellapsedTime = new Date().getTime() - startTime
+      const durationRatio = ellapsedTime / options.duration // 0 - 1
+      const easingDurationRatio = options.easing(
         durationRatio,
         ellapsedTime,
         0,
         1,
         options.duration
-      );
+      )
 
       if (durationRatio < 1) {
         marker.setPosition({
           lat:
             marker.AT_startPosition_lat +
-            (newPosition_lat - marker.AT_startPosition_lat) *
+            (newPositionLat - marker.AT_startPosition_lat) *
               easingDurationRatio,
           lng:
             marker.AT_startPosition_lng +
-            (newPosition_lng - marker.AT_startPosition_lng) *
-              easingDurationRatio,
-        });
+            (newPositionLng - marker.AT_startPosition_lng) *
+              easingDurationRatio
+        })
 
         // use requestAnimationFrame if it exists on this browser. If not, use setTimeout with ~60 fps
         if (window.requestAnimationFrame) {
           marker.AT_animationHandler = window.requestAnimationFrame(
             function () {
-              animateStep(marker, startTime);
+              animateStep(marker, startTime)
             }
-          );
+          )
         } else {
           marker.AT_animationHandler = setTimeout(function () {
-            animateStep(marker, startTime);
-          }, 17);
+            animateStep(marker, startTime)
+          }, 17)
         }
       } else {
-        marker.setPosition(newPosition);
+        marker.setPosition(newPosition)
       }
-    };
+    }
 
     // stop possibly running animation
     if (window.cancelAnimationFrame) {
-      window.cancelAnimationFrame(marker.AT_animationHandler);
+      window.cancelAnimationFrame(marker.AT_animationHandler)
     } else {
-      clearTimeout(marker.AT_animationHandler);
+      clearTimeout(marker.AT_animationHandler)
     }
 
-    animateStep(marker, new Date().getTime());
+    animateStep(marker, new Date().getTime())
   }
 
   const arePropsEqual = (prevProps, nextProps) => {
@@ -101,17 +102,17 @@ const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
       latLng: prevLatLng,
       rotationAngle: prevRotationAngle,
       ...restPrevProps
-    } = prevProps;
+    } = prevProps
     const {
       latLng: nextLatLng,
       rotationAngle: nextRotationAngle,
       ...restNextProps
-    } = nextProps;
-    const isEqual = _.isEqual(restPrevProps, restNextProps);
-    return isEqual;
-  };
+    } = nextProps
+    const isEqual = _.isEqual(restPrevProps, restNextProps)
+    return isEqual
+  }
 
-  const MemoizedMarker = React.memo(Marker, arePropsEqual);
+  const MemoizedMarker = React.memo(Marker, arePropsEqual)
   // SVG with gradient and rotation
 
   const svgIcon = `
@@ -123,27 +124,33 @@ const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
         </radialGradient>
       </defs>
       <path d="M32,0 A16,16 0 0,1 48,16 L32,32 L16,16 A16,16 0 0,1 32,0" fill="url(#grad1)" />
-      </svg>`;
+      </svg>`
   return (
     <MemoizedMarker
       key={id}
       onLoad={(marker) => {
-        markerRef.current = marker;
+        markerRef.current = marker
       }}
       icon={{
-        url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svgIcon),
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgIcon),
         scaledSize: new window.google.maps.Size(100, 100),
         anchor: new window.google.maps.Point(50, 50),
-        rotation: rotationAngle,
+        rotation: rotationAngle
       }}
       rotation={rotationAngle}
       position={{
         lat: latLng.lat,
-        lng: latLng.lng,
+        lng: latLng.lng
       }}
       zIndex={0}
     />
-  );
-};
+  )
+}
 
-export default EmulatorMarkerDirection;
+EmulatorMarkerDirection.propTypes = {
+  rotationAngle: PropTypes.number,
+  id: PropTypes.string,
+  latLng: PropTypes.object
+}
+
+export default EmulatorMarkerDirection

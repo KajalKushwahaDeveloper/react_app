@@ -1,20 +1,20 @@
-import "./scss/map.scss";
-import { ToastContainer } from "react-toastify";
-import React from "react";
-import CreateTripButton from "./components/location/map-components/CreateTripButton.jsx";
-import CreateTripOverlay from "./components/location/map-components/CreateTripOverlay";
-import { BottomSheet } from "react-spring-bottom-sheet";
-import "react-spring-bottom-sheet/dist/style.css";
-import { useViewPort } from "./ViewportProvider.js";
-import GpsTable from "./components/location/map-components/gps_page_table.js";
-import AddressTable from "./components/location/map-components/Address/AddressTable.js";
-import { DragDialog } from "./components/location/map-components/DragDialog.jsx";
-import GoogleMapContainer from "./components/location/map-components/GoogleMapContainer.jsx";
+import './scss/map.scss'
+import { ToastContainer } from 'react-toastify'
+import React from 'react'
+import CreateTripButton from './components/location/map-components/CreateTripButton.jsx'
+import CreateTripOverlay from './components/location/map-components/CreateTripOverlay'
+import { BottomSheet } from 'react-spring-bottom-sheet'
+import 'react-spring-bottom-sheet/dist/style.css'
+import { useViewPort } from './ViewportProvider.js'
+import GpsTable from './components/location/map-components/gps_page_table.js'
+import AddressTable from './components/location/map-components/Address/AddressTable.js'
+import { DragDialog } from './components/location/map-components/DragDialog.jsx'
+import GoogleMapContainer from './components/location/map-components/GoogleMapContainer.jsx'
 
 const GPS = () => {
-  const { width } = useViewPort();
-  const breakpoint = 620;
-  const isMobile = width < breakpoint;
+  const { width } = useViewPort()
+  const breakpoint = 620
+  const isMobile = width < breakpoint
 
   return (
     <>
@@ -23,22 +23,22 @@ const GPS = () => {
       <CreateTripOverlay />
       {!isMobile && (
         <>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div>
               <AddressTable />
             </div>
             <div
               style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap'
               }}
             >
-              <div style={{ minWidth: "390px", height: "100vh" }}>
+              <div style={{ minWidth: '390px', height: '100vh' }}>
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
-              <div style={{ flex: "1", top: "128px" }}>
+              <div style={{ flex: '1', top: '128px' }}>
                 <GoogleMapContainer />
               </div>
             </div>
@@ -49,7 +49,7 @@ const GPS = () => {
       )}
       {isMobile && (
         <>
-          <div style={{ flex: "1", height: "100vh" }}>
+          <div style={{ flex: '1', height: '100vh' }}>
             <GoogleMapContainer />
           </div>
           <div>
@@ -84,6 +84,6 @@ const GPS = () => {
         </>
       )}
     </>
-  );
-};
-export default GPS;
+  )
+}
+export default GPS

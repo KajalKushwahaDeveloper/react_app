@@ -1,19 +1,29 @@
-import { Outlet, Navigate } from "react-router-dom";
-import Navbar from "../../components/navbar.js";
+import { Outlet, Navigate } from 'react-router-dom'
+import Navbar from '../navbar.js'
 
-import GPS from "../../gps.js";
+import GPS from '../../gps.js'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 const PrivateRoutes = ({ isAdmin, setIsAdmin }) => {
-    let auth = localStorage.getItem("token");
-    return(
-      auth ? <>
+  const auth = localStorage.getItem('token')
+  return (
+    auth
+      ? <>
         <Navbar isAdmin={isAdmin} setIsAdmin={setIsAdmin} style={{ zIndex: 9998 }} />
-        {isAdmin === false ? (
+        {isAdmin === false
+          ? (
           <GPS />
-        ):  <Outlet />}
+            )
+          : <Outlet />}
         </>
-        : <Navigate to='/login' />
-    )
+      : <Navigate to='/login' />
+  )
 }
 
-export default PrivateRoutes;
+PrivateRoutes.propTypes = {
+  isAdmin: PropTypes.bool,
+  setIsAdmin: PropTypes.func
+}
+
+export default PrivateRoutes

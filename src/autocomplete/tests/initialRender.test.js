@@ -1,19 +1,19 @@
-import React from 'react';
-import { mount } from 'enzyme';
-import PlacesAutocomplete from '../index';
-import { setupGoogleMock } from './helpers/setup';
+import React from 'react'
+import { mount } from 'enzyme'
+import PlacesAutocomplete from '../index'
+import { setupGoogleMock } from './helpers/setup'
 
 beforeAll(() => {
-  setupGoogleMock();
-});
+  setupGoogleMock()
+})
 
 test('initial render', () => {
   let state = {
-    address: '',
-  };
+    address: ''
+  }
   const onChangeFunc = newAddress => {
-    state = { address: newAddress }; // reassian new object to state
-  };
+    state = { address: newAddress } // reassian new object to state
+  }
 
   const component = mount(
     <PlacesAutocomplete value={state.address} onChange={onChangeFunc}>
@@ -34,18 +34,18 @@ test('initial render', () => {
         </div>
       )}
     </PlacesAutocomplete>
-  );
+  )
 
-  expect(component).toMatchSnapshot();
-});
+  expect(component).toMatchSnapshot()
+})
 
 test('initial render with options to props-getter', () => {
   let state = {
-    address: '',
-  };
+    address: ''
+  }
   const onChangeFunc = newAddress => {
-    state = { address: newAddress }; // reassian new object to state
-  };
+    state = { address: newAddress } // reassian new object to state
+  }
 
   const component = mount(
     <PlacesAutocomplete value={state.address} onChange={onChangeFunc}>
@@ -54,7 +54,7 @@ test('initial render with options to props-getter', () => {
           <input
             {...getInputProps({
               placeholder: 'Search Places...',
-              className: 'my-input-classname',
+              className: 'my-input-classname'
             })}
           />
           <div>
@@ -63,7 +63,7 @@ test('initial render with options to props-getter', () => {
                 /* eslint-disable react/jsx-key */
                 <div
                   {...getSuggestionItemProps(suggestion, {
-                    className: 'my-suggestion-item-className',
+                    className: 'my-suggestion-item-className'
                   })}
                 >
                   <span>{suggestion.description}</span>
@@ -75,18 +75,18 @@ test('initial render with options to props-getter', () => {
         </div>
       )}
     </PlacesAutocomplete>
-  );
+  )
 
-  expect(component).toMatchSnapshot();
-});
+  expect(component).toMatchSnapshot()
+})
 
 test('initial render with initial input value', () => {
   let state = {
-    address: 'San Francisco, CA',
-  };
+    address: 'San Francisco, CA'
+  }
   const onChangeFunc = newAddress => {
-    state = { address: newAddress }; // reassian new object to state
-  };
+    state = { address: newAddress } // reassian new object to state
+  }
 
   const component = mount(
     <PlacesAutocomplete value={state.address} onChange={onChangeFunc}>
@@ -107,7 +107,7 @@ test('initial render with initial input value', () => {
         </div>
       )}
     </PlacesAutocomplete>
-  );
+  )
 
-  expect(component).toMatchSnapshot();
-});
+  expect(component).toMatchSnapshot()
+})

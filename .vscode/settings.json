@@ -1,9 +1,12 @@
 {
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
     "cSpell.words": [
         "Assinged",
         "Ssid"
     ],
     "editor.inlineSuggest.showToolbar": "onHover",
-    "console-ninja.outputMode": "In View"
-    "editor.inlineSuggest.showToolbar": "always"
+    "console-ninja.outputMode": "In View",
 }
