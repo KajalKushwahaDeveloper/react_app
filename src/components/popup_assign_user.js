@@ -75,8 +75,6 @@ const UserAssignDropDown = (props) => {
 
   const [userName, setuserName] = React.useState([]);
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedUserId, SetSelectedUserId] = useState();
 
   const handleUserSelect = async (userId) => {
@@ -99,41 +97,9 @@ const UserAssignDropDown = (props) => {
         showToast("User Added", "success");
       } else {
         showToast(error || "Failed to add user", "error");
-        setError(error || "Failed to add user");
       }
     } catch (error) {
       console.log("Error occurred while adding user:", error);
-      setError("An error occurred while adding user");
-    }
-  };
-
-  // Fetch data from API
-  const fetchUsers = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(USER_URL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok || response.status !== 200) {
-        return { success: false, error: "Invalid credentials" };
-      } else {
-        const responseData = await response.text();
-
-        const deserializedData = JSON.parse(responseData);
-        console.log("response:::", deserializedData);
-
-        setUsers(deserializedData);
-        setLoading(false);
-        return { success: true, error: null };
-      }
-    } catch (error) {
-      console.log("User Data Error: " + error);
-      setError(error.message);
-      setLoading(false);
     }
   };
 
@@ -173,16 +139,35 @@ const UserAssignDropDown = (props) => {
     return { success: true, error: null, data: result };
   };
 
-  const userHandleSelect = (e) => {
-    SetSelectedUserId(e.target.value);
-    console.log("target value", e.target.value);
-  };
+  useEffect(() => {
+    // Fetch data from API
+    const fetchUsers = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(USER_URL, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok || response.status !== 200) {
+          return { success: false, error: "Invalid credentials" };
+        } else {
+          const responseData = await response.text();
 
-  useEffect(async () => {
-    console.log("open::12", open);
-    //  setLoading(true);
-    const userData = await fetchUsers();
-    console.log("userData111", userData);
+          const deserializedData = JSON.parse(responseData);
+          console.log("response:::", deserializedData);
+
+          setUsers(deserializedData);
+          return { success: true, error: null };
+        }
+      } catch (error) {
+        console.log("User Data Error: " + error);
+      }
+    };
+
+    fetchUsers();
   }, [open]);
 
   return (

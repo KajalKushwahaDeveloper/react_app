@@ -32,31 +32,7 @@ body {
 .create_trip_button button {
   padding: 8px 12px;
 }
-//table//
-table {
-  font-size: 16px;
-  width: auto;
-  padding: 0.5rem;
-  background: white;
-  overflow: hidden;
-}
 
-td{
-  border: 1px solid $light-grey;
-  text-align: left;
-  padding: 1px;
-  vertical-align: middle;
-}
-
-thead, 
-th {
-  border: 1px solid $light-grey;
-  text-align: left;
-  padding: 5px;
-  vertical-align: middle;
-  background-color: $background-color;
-  color: $background-color;
-}
 
 .ellipsisText{
   white-space: nowrap;
@@ -67,9 +43,9 @@ th {
 
 .main-address-table{
   position:fixed;
-  top: 64px;
+  top: 4rem;
   z-index: 2;
-  background-color: white;
+  height: 4rem;
 
   @media screen and (max-width: 620px) {
     .address-table-heading{
@@ -78,20 +54,6 @@ th {
       text-align: center;
       height: auto;
     }
-    
-    .addressTable{
-      text-align: center;
-      font-size: 11px;
-      overflow: hidden;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-      hyphens: auto;
-      height: auto;
-    }
-  }
-
-  .gm-style > div > button {
-    margin-top: 9vh !important;
   }
 
   .address-table-heading{
@@ -136,25 +98,7 @@ th {
   top: 90;
 }
 
-.btn-group{
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-}
-
 @media screen and (max-width: 768px) {
-  table {
-    font-size: 0.75rem;
-    overflow-x: auto;
-  }
-  td,
-  th {
-    padding: 3px;
-    height: 100%;
-  }
   .address-table-heading{
     font-size: 11px;
   }

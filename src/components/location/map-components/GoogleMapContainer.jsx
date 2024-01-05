@@ -5,29 +5,18 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
-import EmulatorMarker from "./Markers/EmulatorMarkers.jsx";
+import EmulatorMarkers from "./Markers/EmulatorMarkers.jsx";
 import { StopComponents } from "./Trip/StopComponents.jsx";
-import { SelectedStopInfo } from "./SelectedStopInfo.jsx";
+import { SelectedStopInfo } from "./Trip/SelectedStopInfo.jsx";
 import { PathComponent } from "./Trip/PathComponent.jsx";
-import { DragDialog } from "./DragDialog.jsx";
+import useFetch from "../../../hooks/useFetch.js";
+import { EMULATOR_URL } from "../../../constants.js";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
-const GoogleMapContainer = ({
-  center,
-  selectedStop,
-  handleMarkerClick,
-  hoveredMarker,
-  handleMarkerMouseOver,
-  handleMarkerMouseOut,
-  handleInfoWindowClose,
-  handleEmulatorMarkerDragEnd,
-  openDialog,
-  onClose,
-  DialogText,
-  confirmNewLocation,
-}) => {
-  console.log("GoogleMapContainer refreshed");
+const GoogleMapContainer = () => {
+  const center = useEmulatorStore((state) => state.center);
+  console.log("GoogleMapContainer refreshed ");
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
@@ -39,7 +28,26 @@ const GoogleMapContainer = ({
     googleMapsApiKey: "AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E",
     libraries: libraries,
   });
+  const [selectedStop, setSelectedStop] = React.useState(null);
 
+  const handleMarkerClick = (stop) => {
+    setSelectedStop(stop);
+  };
+
+  const createDevices = useEmulatorStore((state) => state.createDevices);
+
+  const { data } = useFetch(EMULATOR_URL);
+
+  useEffect(() => {
+    console.log("Map.js - useEffect - data: ", data);
+    if (data !== null) {
+      createDevices(data);
+    }
+  }, [createDevices, data]);
+
+  const handleInfoWindowClose = () => {
+    setSelectedStop(null);
+  };
   useEffect(() => {
     if (
       tripData === null ||
@@ -269,23 +277,11 @@ const GoogleMapContainer = ({
         ></SelectedStopInfo>
       )}
 
-      <EmulatorMarker
-        hoveredMarker={hoveredMarker}
-        handleMarkerMouseOver={handleMarkerMouseOver}
-        handleMarkerMouseOut={handleMarkerMouseOut}
-        handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
-      />
-
-      <DragDialog
-        openDialog={openDialog}
-        onClose={onClose}
-        DialogText={DialogText}
-        confirmNewLocation={confirmNewLocation}
-      ></DragDialog>
+      <EmulatorMarkers />
     </GoogleMap>
   ) : (
     <>Loading...</>
   );
 };
 
-export default GoogleMapContainer;
+export default React.memo(GoogleMapContainer);

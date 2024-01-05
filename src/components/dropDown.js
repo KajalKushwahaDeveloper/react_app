@@ -81,38 +81,6 @@ const DropDown = (props) => {
     }
   }, []);
 
-  // Fetch data from API
-  const fetchUsers = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(PHONE_GET_AVAILABLE_NUMBERS_URL, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!response.ok || response.status !== 200) {
-        return { success: false, error: "Invalid credentials" };
-      } else {
-        const responseData = await response.text();
-
-        const deserializedData = JSON.parse(responseData);
-        if (userToEdit?.telephone === null) {
-          setTwilioPhoneNumber(deserializedData);
-        } else {
-          const array = [userToEdit?.telephone, ...deserializedData];
-          setTwilioPhoneNumber(array);
-          setPhoneNumber(userToEdit?.telephone);
-          setTwilioUpdatedPhone(userToEdit?.telephone);
-        }
-        return { success: true, error: null };
-      }
-    } catch (error) {
-      console.log("User Data Error: " + error);
-    }
-  };
-
   const handleChange = (e) => {
     const {
       target: { value },
@@ -131,8 +99,40 @@ const DropDown = (props) => {
     setAlternateNumber(value);
   };
 
-  useEffect(async () => {
-    const userData = await fetchUsers();
+  useEffect(() => {
+    // Fetch data from API
+    const fetchUsers = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(PHONE_GET_AVAILABLE_NUMBERS_URL, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok || response.status !== 200) {
+          return { success: false, error: "Invalid credentials" };
+        } else {
+          const responseData = await response.text();
+
+          const deserializedData = JSON.parse(responseData);
+          if (userToEdit?.telephone === null) {
+            setTwilioPhoneNumber(deserializedData);
+          } else {
+            const array = [userToEdit?.telephone, ...deserializedData];
+            setTwilioPhoneNumber(array);
+            setPhoneNumber(userToEdit?.telephone);
+            setTwilioUpdatedPhone(userToEdit?.telephone);
+          }
+          return { success: true, error: null };
+        }
+      } catch (error) {
+        console.log("User Data Error: " + error);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   return (

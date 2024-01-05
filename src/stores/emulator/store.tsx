@@ -1,6 +1,6 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
-import { Emulator, TripData, TripPoint } from "./types.tsx";
+import { DragEmulator, Emulator, TripData, TripPoint } from "./types.tsx";
 import {
   Center,
   defaultLng,
@@ -10,14 +10,20 @@ import {
 import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { TripDataResponse } from "../../model/response.tsx";
+import { TwillioDevice } from "../call/types.tsx";
 
 export interface EmulatorsSlice {
   eventSource: AbortController | null;
   selectedEmulator: Emulator | null;
   emulators: Emulator[] | [];
+  hoveredEmulator: Emulator | null;
+  dragEmulatorRequest: DragEmulator | null;
   updateEmulators: (emulators: Emulator[]) => void;
   fetchEmulators: () => Promise<void>;
   selectEmulator: (emulator: Emulator | null) => void;
+  hoverEmulator: (emulator: Emulator | null) => void;
+  dragEmulator: (emulator: DragEmulator | null ) => void;
 }
 
 export interface TripDataSlice {
@@ -46,6 +52,8 @@ const createEmulatorsSlice: StateCreator<
   eventSource: null,
   emulators: [],
   selectedEmulator: null,
+  hoveredEmulator: null,
+  dragEmulatorRequest: null,
   fetchEmulators: async () => {
     const token = localStorage.getItem("token");
     try {
@@ -78,7 +86,6 @@ const createEmulatorsSlice: StateCreator<
     set({ selectedEmulator: emulator });
     get().fetchTripData(emulator);
   },
-
   updateEmulators: (newEmulators) => {
     const isUpdatedEmulators = compareEmulatorsCompletely(
       get().emulators,
@@ -108,7 +115,9 @@ const createEmulatorsSlice: StateCreator<
     }
     set({ emulators: newEmulators });
   },
-});
+  hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
+  dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
+  });
 
 const createTripDataSlice: StateCreator<
   EmulatorsSlice & TripDataSlice,
@@ -131,16 +140,42 @@ const createTripDataSlice: StateCreator<
       set({ tripData: null, pathTraveled: null, pathNotTraveled: null });
     } else {
       try {
+        const tripDataOld = get().tripData;
+        var tripDataOldDistance = 0;
+        if (
+          tripDataOld !== null &&
+          tripDataOld !== undefined &&
+          tripDataOld.distance !== null &&
+          tripDataOld.distance !== undefined
+        ) {
+          tripDataOldDistance = tripDataOld.distance;
+        }
+        // pass tripDataOldDistance as a query parameter
         const response = await fetch(TRIP_URL + `/${selectedEmulator.id}`, {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({ distance : tripDataOldDistance }),
         });
-        const tripData: TripData = await response.json();
-        set({ tripData });
-        get().setPaths(tripData);
+        // can return either the TripData or a string
+        const tripDataResp: TripDataResponse = await response.json();
+        if (tripDataResp.data === null || tripDataResp.data === undefined) {
+          console.log(
+            "TripData is null",
+            tripDataResp.status +
+              " " +
+              tripDataResp.statusText 
+          );
+          set({ tripData: tripDataOld });
+          get().setPaths(tripDataOld);
+        } else {
+          console.log("Got trip data: ", tripDataResp.data);
+          const tripData = tripDataResp.data;
+          set({ tripData });
+          get().setPaths(tripData);
+        }
       } catch (error) {
         console.error("Failed to fetch trip data:", error);
         set({ tripData: null, pathTraveled: null, pathNotTraveled: null });
@@ -223,8 +258,9 @@ const createSharedSlice: StateCreator<
     });
     const devices = get().devices;
     if (devices.length > 0) {
-      devices.forEach((twillioDevice) => {
-        twillioDevice.device.destroy();
+      devices.forEach((twillioDevice : TwillioDevice | null) => {
+      console.log("DEVICES twillioDevice:", twillioDevice);
+      twillioDevice?.device?.destroy();
       });
     }
     set({ devices: [], selectedDevice: null });

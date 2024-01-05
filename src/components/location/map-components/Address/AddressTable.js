@@ -9,6 +9,11 @@ import {
 } from "./utils.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_URL } from "../../../../constants.js";
+import "./AddressTable.css";
+import ColumnResizer from "react-table-column-resizer";
+import AddIcon from "@mui/icons-material/Add";
+import { IconButton } from "@mui/material";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const AddressTable = () => {
   console.log("AddressTable refreshed");
@@ -160,11 +165,9 @@ const AddressTable = () => {
 
   if (isLoading) {
     return (
-      <div className="container-fluid main-address-table">
+      <div className="main-address-table">
         <div
-          className="row"
           style={{
-            height: "90px !important",
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
                 ? "lightpink"
@@ -182,7 +185,7 @@ const AddressTable = () => {
   }
 
   return (
-    <div className="container-fluid main-address-table">
+    <div className="main-address-table">
       {isMobile ? (
         <div
           className="row"
@@ -394,10 +397,9 @@ const AddressTable = () => {
           <CreateTripButton />
         </div>
       ) : (
-        <div
-          className="row"
+        <table
+          class="column_resize_table"
           style={{
-            height: "35px !important",
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
                 ? "lightpink"
@@ -406,209 +408,223 @@ const AddressTable = () => {
                 : "white",
           }}
         >
-          {/* CURRENT ADDRESS*/}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              color: "black",
-              alignItems: "center",
-              padding: "0",
-            }}
-          >
-            <div className="address-table-heading">Current location</div>
-            <div className="addressTable ellipsisText">
-              <Tooltip
-                title={
-                  tableValues.current &&
-                  tableValues.current.address &&
-                  tableValues.current.address
-                }
-                placement="top"
-              >
-                <div>
-                  {tableValues.current && tableValues.current.address
-                    ? tableValues.current.address
-                    : "N/A"}
-                </div>
-              </Tooltip>
-            </div>
-          </div>
-
-          {/* FROM ADDRESS*/}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0",
-            }}
-          >
-            <div className="address-table-heading">From address</div>
-            <div className="addressTable ellipsisText">
-              <Tooltip title={tableValues.current} placement="top">
-                <div>
-                  {tableValues.current
-                    ? tableValues.current.fromAddress
-                    : "N/A"}
-                </div>
-              </Tooltip>
-            </div>
-          </div>
-
-          {/* TO ADDRESS*/}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0",
-            }}
-          >
-            <div className="address-table-heading">To address</div>
-            <div className="addressTable ellipsisText">
-              <Tooltip
-                title={tableValues.current && tableValues.current.toAddress}
-                placement="top"
-              >
-                <div>
-                  {tableValues.current ? tableValues.current.toAddress : "N/A"}
-                </div>
-              </Tooltip>
-            </div>
-          </div>
-
-          {/* ARRIVAL TIME */}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
-            }}
-          >
-            <div className="address-table-heading">Final Arrival time </div>
-            {tableValues.current ? (
+          <thead>
+            <tr>
+              {/* CURRENT ADDRESS*/}
               <div
                 style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
+                  border: "2px solid",
                 }}
-                className="totalTimeSubContent"
               >
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}
-                >
-                  {tableValues.current.arrivalTime}
+                <div className="address-table-heading">Current location</div>
+                <div className="addressTable ellipsisText">
+                  <Tooltip
+                    title={
+                      tableValues.current &&
+                      tableValues.current.address &&
+                      tableValues.current.address
+                    }
+                    placement="top"
+                  >
+                    <div>
+                      {tableValues.current && tableValues.current.address
+                        ? tableValues.current.address
+                        : "N/A"}
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
-            ) : (
-              <div className="addressTable">N/A</div>
-            )}
-          </div>
-
-          {/* TIME */}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
-            }}
-          >
-            <div className="address-table-heading">Total Time</div>
-            {tableValues.current ? (
+              <ColumnResizer
+                id={1}
+                className="columnResizer"
+                minWidth={window.innerWidth / 7}
+              />
+              {/* FROM ADDRESS*/}
               <div
                 style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
+                  border: "2px solid",
+                  alignItems: "center",
                 }}
-                className="totalTimeSubContent"
               >
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}
-                >
-                  {tableValues.current.totalTime}
+                <div className="address-table-heading">From address</div>
+                <div className="addressTable ellipsisText">
+                  <Tooltip title={tableValues.current} placement="top">
+                    <div>
+                      {tableValues.current
+                        ? tableValues.current.fromAddress
+                        : "N/A"}
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
-            ) : (
-              <div className="addressTable">N/A</div>
-            )}
-          </div>
-
-          {/* REMAING DISTANCE */}
-          <div
-            className="col d-flex flex-column"
-            style={{
-              border: "2px solid",
-              alignItems: "center",
-              padding: "0px !important",
-            }}
-          >
-            <div className="address-table-heading">Remaining Distance</div>
-            {tableValues.current ? (
+              <ColumnResizer
+                id={2}
+                className="columnResizer"
+                minWidth={window.innerWidth / 7}
+              />
+              {/* TO ADDRESS*/}
+              <div
+                className="col d-flex flex-column"
+                style={{
+                  border: "2px solid",
+                  alignItems: "center",
+                  padding: "0",
+                }}
+              >
+                <div className="address-table-heading">To address</div>
+                <div className="addressTable ellipsisText">
+                  <Tooltip
+                    title={tableValues.current && tableValues.current.toAddress}
+                    placement="top"
+                  >
+                    <div>
+                      {tableValues.current
+                        ? tableValues.current.toAddress
+                        : "N/A"}
+                    </div>
+                  </Tooltip>
+                </div>
+              </div>
+              <ColumnResizer
+                id={3}
+                className="columnResizer"
+                minWidth={window.innerWidth / 7}
+              />
+              {/* ARRIVAL TIME */}
               <div
                 style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
+                  border: "2px solid",
+                  alignItems: "center",
                 }}
-                className=""
               >
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}
-                >
-                  {tableValues.current.remainingDistance} miles
+                <div className="address-table-heading">Final Arrival time </div>
+                {tableValues.current ? (
+                  <div
+                    style={{
+                      marginTop: "5px !important",
+                      height: "30px",
+                      textAlign: "center",
+                      maxWidth: "20vw",
+                    }}
+                    className="totalTimeSubContent"
+                  >
+                    <div
+                      className="addressTable"
+                      style={{ wordWrap: "break-word" }}
+                    >
+                      {tableValues.current.arrivalTime}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="addressTable">N/A</div>
+                )}
+              </div>
+              <ColumnResizer
+                id={4}
+                className="columnResizer"
+                minWidth={window.innerWidth / 7}
+              />
+              {/* TIME */}
+              <div
+                style={{
+                  border: "2px solid",
+                  alignItems: "center",
+                }}
+              >
+                <div className="address-table-heading">Total Time</div>
+                {tableValues.current ? (
+                  <div
+                    style={{
+                      marginTop: "5px !important",
+                      height: "30px",
+                      textAlign: "center",
+                      maxWidth: "20vw",
+                    }}
+                    className="totalTimeSubContent"
+                  >
+                    <div
+                      className="addressTable"
+                      style={{ wordWrap: "break-word" }}
+                    >
+                      {tableValues.current.totalTime}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="addressTable">N/A</div>
+                )}
+              </div>
+              <ColumnResizer
+                id={5}
+                className="columnResizer"
+                minWidth={window.innerWidth / 7}
+              />
+              {/* REMAING DISTANCE */}
+              <div
+                style={{
+                  border: "2px solid",
+                  alignItems: "center",
+                }}
+              >
+                <div className="address-table-heading">Remaining Distance</div>
+                {tableValues.current ? (
+                  <div
+                    style={{
+                      marginTop: "5px !important",
+                      height: "30px",
+                      textAlign: "center",
+                      maxWidth: "20vw",
+                    }}
+                    className=""
+                  >
+                    <div
+                      className="addressTable"
+                      style={{ wordWrap: "break-word" }}
+                    >
+                      {tableValues.current.remainingDistance} miles
+                    </div>
+                  </div>
+                ) : (
+                  <div className="addressTable">N/A</div>
+                )}
+              </div>
+              <ColumnResizer
+                id={6}
+                className="columnResizer"
+                minWidth={window.innerWidth / 7}
+              />
+              {/* PLUS MINUS ICONS */}
+              <div>
+                <div>
+                  <IconButton
+                    aria-label="close"
+                    sx={{
+                      borderRadius: "0px",
+                      color: "#ffffff",
+                      backgroundColor: "#00ff00",
+                    }}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="close"
+                    sx={{
+                      borderRadius: "0px",
+                      color: "#ffffff",
+                      backgroundColor: "#ff0000",
+                    }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
                 </div>
               </div>
-            ) : (
-              <div className="addressTable">N/A</div>
-            )}
-          </div>
-
-          {/* PLUS MINUS ICONS */}
-          <div
-            className="col-1 d-flex flex-column"
-            style={{
-              padding: "0",
-            }}
-          >
-            <div className="btn-group">
-              <button
-                type="button"
-                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
-                style={{
-                  backgroundColor: "#ff0000",
-                  margin: 0,
-                  width: "50%",
-                  height: "100%",
-                }}
-              >
-                <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
-              </button>
-              <button
-                type="button"
-                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
-                style={{
-                  backgroundColor: "#39e600",
-                  margin: 0,
-                  width: "50%",
-                  height: "100%",
-                }}
-              >
-                <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+              <ColumnResizer
+                id={7}
+                className="columnResizer"
+                minWidth={window.innerWidth / 7}
+              />
+            </tr>
+          </thead>
+        </table>
       )}
     </div>
   );

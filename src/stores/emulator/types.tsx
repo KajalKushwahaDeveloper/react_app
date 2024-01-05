@@ -103,3 +103,9 @@ export interface ToAddress {
   long_name: string;
   short_name: string;
 }
+
+export interface DragEmulator {
+  emulator: Emulator;
+  latitude: number;
+  longitude: number;
+}

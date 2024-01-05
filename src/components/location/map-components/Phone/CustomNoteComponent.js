@@ -1,0 +1,57 @@
+import React, { useEffect, useState } from "react";
+import TextField from '@mui/material/TextField';
+import ApiService from "../../../../ApiService";
+import { EMULATOR_NOTE_URL } from "../../../../constants";
+import { useStates } from "../../../../StateProvider";
+
+const CustomNoteComponent = ({ emulator }) => {
+  console.log("CustomNoteComponent emulator Refreshed");
+  const { showToast } = useStates();
+
+  const [noteText, setNoteText] = useState("");
+
+  useEffect(() => {
+    setNoteText(emulator?.note);
+  }, [emulator]);
+
+  const handleNoteChange = (e) => {
+    // Limit the input length to 25 characters
+    const newText = e.target.value.slice(0, 25);
+    setNoteText(newText);
+    console.log("newText:", newText);
+    if (newText !== emulator.note) {
+      handleSaveNote();
+    }
+  };
+
+  const handleSaveNote = async () => {
+    showToast(" Saving Note... ", "info");
+    const token = localStorage.getItem("token");
+    const payload = { noteText, emulatorId: emulator.id };
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_NOTE_URL,
+      "POST",
+      payload,
+      token
+    );
+    if (success) {
+      showToast("Note Updated! ", "success");
+    } else {
+      console.log("Failed to update Note! error:", error);
+      showToast(" Failed to update Note! ", "error");
+    }
+  };
+
+  return (
+    <TextField
+      style={{ width: "100%", padding: "0px 10px" }}
+      label={noteText ? "" : "Add Note"}
+      variant="outlined"
+      value={noteText}
+      onChange={handleNoteChange}
+      size="small"
+    />
+  );
+};
+
+export default CustomNoteComponent;

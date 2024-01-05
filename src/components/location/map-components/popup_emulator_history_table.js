@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import TablePagination, {
   tablePaginationClasses as classes,
-} from "@mui/base/TablePagination";
+} from "@mui/material/TablePagination";
+
 import { Modal } from "@mui/material";
 import { styled } from "@mui/system";
-import { EMULATOR_URL, USER_ASSIGN_EMULATOR_URL } from "../../../constants";
-import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 import IconButton from "@mui/material/IconButton";
 import InsightsIcon from "@mui/icons-material/Insights";
-import ApiService from "../../../ApiService";
-import { EMULATOR_DELETE_URL } from "../../../constants";
 import Box from "@mui/material/Box";
 
 const style = {

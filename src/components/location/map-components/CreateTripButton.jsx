@@ -2,21 +2,18 @@
 import React, { useEffect, useState } from "react";
 import SyncIcon from "@mui/icons-material/Sync";
 import ApiService from "../../../ApiService";
-import { EMULATOR_DRAG_URL, TRIP_URL } from "../../../constants";
+import { EMULATOR_DRAG_URL } from "../../../constants";
 import { useViewPort } from "../../../ViewportProvider.js";
 import { useStates } from "../../../StateProvider.js";
-import { border } from "@material-ui/system";
-import { ToastContainer, toast } from "react-toastify";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
 const CreateTripButton = () => {
-  const { width, height } = useViewPort();
+  const { width } = useViewPort();
   const {
     showToast,
     setIsTableVisible,
     isTableVisible,
-    tripData,
   } = useStates();
 
   //Initiate fetchEmulators from store
@@ -85,10 +82,10 @@ const CreateTripButton = () => {
       );
 
       if (success) {
-        toast["success"]("Trip has been cancelled");
+        showToast("Trip has been cancelled", "success");
         fetchEmulators();
       } else {
-        toast["error"]("Trip is not cancelled");
+        showToast("Trip Not cancelled", "error");
       }
     }
   };

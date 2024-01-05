@@ -3,9 +3,9 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "../../autocomplete";
-import TextField from "@material-ui/core/TextField";
 import { classnames } from "../../helpers";
 import "../../css/auto_complete.css";
+import TextField from '@mui/material/TextField';
 
 const SearchBar = (props) => {
   const [inputValue, setInputValue] = useState("");

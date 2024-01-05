@@ -1,30 +1,46 @@
-import React, { useEffect, useState } from "react";
-
-
-import { USER_URL } from "../constants";
-import { USER_CHANGE_STATUS_URL } from "../constants";
-import "../scss/button.scss";
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { CircularProgress } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ApiService from "../ApiService";
-import { Root, CustomTablePagination } from "./CustomTablePagination";
+import {
+  stableSort,
+  getComparator,
+  EnhancedTableToolbar,
+  EnhancedTableHead,
+} from "./stableSort"
+import ApiService from "../../../ApiService";
+import { USER_CHANGE_STATUS_URL, USER_URL } from "../../../constants";
+import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
+import { CustomTablePagination } from "../../CustomTablePagination";
 
-const UserTable = ({
+export default function UserTable({
   showToast,
   handleEditButtonClick,
   userEditedId,
   userAssingedEmulator,
   updatedData,
-}) => {
-  // State variables
-  const [userData, setUserData] = useState([]);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  handleOpen,
+}) {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  useEffect(() => {
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+
+  const [userData, setUserData] = React.useState([]);
+
+  React.useEffect(() => {
     if (userEditedId != null) {
       if (userEditedId == 0) {
         fetchUsers();
@@ -34,7 +50,7 @@ const UserTable = ({
     }
   }, [userEditedId, updatedData]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (userAssingedEmulator != null) {
       refreshUser(userAssingedEmulator.user?.id);
     }
@@ -209,7 +225,7 @@ const UserTable = ({
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     setLoading(true);
     const { success, error } = fetchUsers();
     if (success) {
@@ -218,6 +234,11 @@ const UserTable = ({
       showToast(error, "error");
     }
   }, []);
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -228,58 +249,72 @@ const UserTable = ({
     setPage(0);
   };
 
+  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, userData.length - page * rowsPerPage);
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userData.length) : 0;
+
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(userData, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    [order, orderBy, page, userData, rowsPerPage]
+  );
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <h3>loading Users...</h3>
+        <CircularProgress />
+      </>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <>
+        <div className="error">
+          <h1>Something went wrong!</h1>
+          <p>Error: {error}</p>
+        </div>
+      </>
+    );
   }
 
   return (
-    <Root sx={{ width: "auto", maxWidth: "100%" }}>
-      <div className="table-responsive">
-        <table aria-label="custom pagination table" className="w-100 shadow">
-          <tbody>
-            {(rowsPerPage > 0
-              ? userData.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : userData
-            ).map((row) => {
-              const createdAtDate = new Date(row.createdAt);
-              const formattedDate = createdAtDate.toISOString().split("T")[0];
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <EnhancedTableToolbar handleOpen={handleOpen} />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={"small"}
+          >
+            <EnhancedTableHead
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              rowCount={userData.length}
+            />
+            <TableBody>
+              {visibleRows.map((row, index) => {
+                const labelId = `enhanced-table-checkbox-${index}`;
+                const createdAtDate = new Date(row.createdAt);
+                const formattedDate = createdAtDate.toISOString().split("T")[0];
+                const onlineEmulator = row.emulatorCount?.activeEmulatorsCount
+                  ? row.emulatorCount?.activeEmulatorsCount
+                  : 0;
+                const allEmulator = row.emulatorCount?.allEmulatorsCount
+                  ? row.emulatorCount?.allEmulatorsCount
+                  : 0;
 
-              return (
-                <tr key={row.id}>
-                  <div></div>
-                  <td align="right">
-                    <div className="spcBetween">
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <h5>{row.firstName + " " + row.lastName || "N/A"}</h5>
-                        <ul>
-                          <li>Email : {row.email || "N/A"}</li>
-                          <li>Tel. # : {row.telephone || "N/A"}</li>
-                          <li>Registration Date : {formattedDate}</li>
-                          <li>
-                            Active Emulators :
-                            {row.emulatorCount?.activeEmulatorsCount !==
-                            undefined
-                              ? row.emulatorCount?.activeEmulatorsCount
-                              : "Err"}
-                            /
-                            {row.emulatorCount?.allEmulatorsCount !== undefined
-                              ? row.emulatorCount?.allEmulatorsCount
-                              : "Err"}
-                          </li>
-                        </ul>
-                      </div>
+                return (
+                  <TableRow hover tabIndex={-1} key={row.id}>
+                    <TableCell align="left">
                       <div className="d-flex align-items-center justify-content-center flex-column">
-                        <div className="d-flex align-items-center justify-content-center flex-sm-row mb-2">
+                        <div className="d-flex align-items-center justify-content-center flex-sm-row">
                           <IconButton
                             size="small"
                             style={{
@@ -310,53 +345,65 @@ const UserTable = ({
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
-                        </div>
-                        <button
-                          className="btn btn-sm"
-                          style={{
-                            backgroundColor:
-                              row.status === "ENABLED" ? "green" : "red",
-                            color: "white",
-                            height: "40px",
-                            width: "7rem",
-                          }}
-                          onClick={() =>
-                            handleActionButtonClick(row.id, row.status)
-                          }
-                        >
+                          <button
+                            className="btn btn-sm"
+                            style={{
+                              backgroundColor:
+                                row.status === "ENABLED" ? "green" : "red",
+                              color: "white",
+                              height: "40px",
+                              width: "7rem",
+                            }}
+                            onClick={() =>
+                              handleActionButtonClick(row.id, row.status)
+                            }
+                          >
                           {row.status}
                         </button>
+                        </div>
+                        {/* can use for vertical */}
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-
-            {/* {emptyRows > 0 && (
-            <tr style={{ height: 34 * emptyRows }}>
-              <td colSpan={3} />
-            </tr>
-          )} */}
-          </tbody>
-
-          <tfoot>
-            <tr>
-              <CustomTablePagination
-                rowsPerPageOptions={[10, 20, 30, { label: "All", value: -1 }]}
-                colSpan={3}
-                count={userData.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </Root>
+                    </TableCell>
+                    <TableCell id={labelId} scope="row">
+                      {row.firstName + " " + row.lastName || "N/A"}
+                    </TableCell>
+                    <TableCell align="left"> {row.email || "N/A"}</TableCell>
+                    <TableCell align="left">{row.telephone || "N/A"}</TableCell>
+                    <TableCell align="left">
+                      {/** print online emulator, and if greater than 0, draw icon after number */}
+                      {onlineEmulator > 0 ? onlineEmulator : 0}
+                      {onlineEmulator > 0 ? (
+                        <OnlinePredictionIcon color="success" />
+                      ) : (
+                        ""
+                      )}
+                      /{allEmulator}
+                    </TableCell>
+                    <TableCell align="left">{formattedDate || "N/A"}</TableCell>
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: 33 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <CustomTablePagination
+          rowsPerPageOptions={[10, 30, 50]}
+          count={userData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </Box>
   );
-};
-
-export default UserTable;
+}

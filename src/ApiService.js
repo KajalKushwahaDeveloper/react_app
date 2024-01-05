@@ -1,8 +1,11 @@
 class ApiService {
-  static async makeApiCall(url, method, payload, token, pathVariable) {
+  static async makeApiCall(url, method, payload, token, pathVariable, params) {
     try {
       if(pathVariable!=null) {
         url = url+ "/" + pathVariable
+      }
+      if(params!=null) {
+        url = url + "?" + params
       }
       const headers = {
         "Content-Type": "application/json",

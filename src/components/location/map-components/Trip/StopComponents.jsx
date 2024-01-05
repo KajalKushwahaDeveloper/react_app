@@ -141,7 +141,7 @@ export function StopComponents(props) {
     <React.Fragment>
       {tripData?.stops != null &&
         tripData?.stops.map((stop, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={stop.currentTripPointIndex}>
             <Marker
               onLoad={(marker) => {
                 stopRefs.current[index] = marker;

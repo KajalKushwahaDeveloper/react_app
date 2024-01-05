@@ -4,23 +4,14 @@ import {
   compareTripData,
 } from "../../../../stores/emulator/types_maps.tsx";
 import { compareEmulatorsForMarkers } from "./utils.tsx";
-import EmulatorMarker from "./EmulatorMarker.jsx";
-import EmulatorMarkerDirection from "./EmulatorMarkerDirection.jsx";
+import EmulatorMarker from "./EmulatorMarker2.jsx";
+import EmulatorMarkerDirection from "./EmulatorMarkerDirection2.jsx";
 
-const EmulatorMarkers = ({
-    hoveredMarker,
-    handleMarkerMouseOut,
-    handleMarkerMouseOver,
-    handleEmulatorMarkerDragEnd,
-  }) => {
+const EmulatorMarkers = () => {
     console.log("EmulatorMarkers refreshed");
     const markers = useEmulatorStore(
       (state) => state.emulators,
       (oldEmulators, newEmulators) => {
-        const diff = compareEmulatorsForMarkers(oldEmulators, newEmulators);
-        if (diff === true) {
-          console.log("MARKERS markers changed ");
-        }
         compareEmulatorsForMarkers(oldEmulators, newEmulators);
       }
     );
@@ -34,16 +25,7 @@ const EmulatorMarkers = ({
       (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
     );
 
-    const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
-
-    function selectEmulatorId(id) {
-      // find from emulators, the emulator with id
-      const emulator = markers.find((emulator) => emulator.id === id);
-      if (emulator) {
-        selectEmulator(emulator);
-      }
-    }
-
+  
     return (
       <>
         {markers !== null &&
@@ -53,22 +35,9 @@ const EmulatorMarkers = ({
               (emulator) =>
                 emulator.latitude !== null && emulator.longitude !== null
             )
-            .map((emulator, _) => {
-              console.log("MARKERS emulatorComing:", emulator);
-              const isHovered = hoveredMarker?.id === emulator?.id;
+            .map((emulator) => {
               const isSelected = selectedEmulator?.id === emulator?.id;
-
-              //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
-              var icon_url = `images/${emulator.tripStatus}/`;
-              if (isHovered) {
-                icon_url = icon_url + "HOVER";
-              } else if (isSelected) {
-                icon_url = icon_url + "SELECT";
-              } else {
-                icon_url = icon_url + "DEFAULT";
-              }
-              icon_url = `${icon_url}/${emulator.status}.svg`;
-
+              console.log("MARKERS emulatorComing:", emulator.id);
               if (isSelected) {
                 var rotationAngle = null;
                 try {
@@ -97,31 +66,11 @@ const EmulatorMarkers = ({
                 }
                 console.log("MARKERS rotationAngle : ", rotationAngle);
               }
-
-              const emulatorIcon = {
-                url: icon_url,
-                scaledSize: new window.google.maps.Size(20, 20),
-                anchor: new window.google.maps.Point(10, 10),
-              };
-
               return (
-                <>
-                  <EmulatorMarker
-                    key={emulator.id}
-                    id={emulator.id}
-                    latLng={{ lat: emulator.latitude, lng: emulator.longitude }}
-                    telephone={emulator.telephone}
-                    status={emulator.status}
-                    tripStatus={emulator.tripStatus}
-                    emulatorIcon={emulatorIcon}
-                    handleMarkerMouseOver={handleMarkerMouseOver}
-                    handleMarkerMouseOut={handleMarkerMouseOut}
-                    handleEmulatorMarkerDragEnd={handleEmulatorMarkerDragEnd}
-                    selectEmulatorId={selectEmulatorId}
-                  />
+                <React.Fragment key={emulator.id}>
+                  <EmulatorMarker emulator={emulator}/>
                   {isSelected && rotationAngle !== null && (
                     <EmulatorMarkerDirection
-                      id={emulator.id}
                       latLng={{
                         lat: emulator.latitude,
                         lng: emulator.longitude,
@@ -129,7 +78,7 @@ const EmulatorMarkers = ({
                       rotationAngle={rotationAngle}
                     />
                   )}
-                </>
+                </React.Fragment>
               );
             })}
       </>

@@ -1,6 +1,5 @@
 import "./scss/map.scss";
 import { ToastContainer } from "react-toastify";
-import WrappedMap from "./components/location/Map";
 import React from "react";
 import CreateTripButton from "./components/location/map-components/CreateTripButton.jsx";
 import CreateTripOverlay from "./components/location/map-components/CreateTripOverlay";
@@ -8,7 +7,9 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
 import GpsTable from "./components/location/map-components/gps_page_table.js";
-import AddressTable from "./components/location/map-components/Address/address_table.js";
+import AddressTable from "./components/location/map-components/Address/AddressTable.js";
+import { DragDialog } from "./components/location/map-components/DragDialog.jsx";
+import GoogleMapContainer from "./components/location/map-components/GoogleMapContainer.jsx";
 
 const GPS = () => {
   console.log("GPS.js refreshed");
@@ -19,6 +20,7 @@ const GPS = () => {
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
+      <DragDialog />
       <CreateTripOverlay />
       {!isMobile && (
         <>
@@ -38,7 +40,7 @@ const GPS = () => {
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
               <div style={{ flex: "1", top: "128px" }}>
-                <WrappedMap />
+                <GoogleMapContainer />
               </div>
             </div>
           </div>
@@ -49,17 +51,16 @@ const GPS = () => {
       {isMobile && (
         <>
           <div style={{ flex: "1", height: "100vh" }}>
-            <WrappedMap />
+            <GoogleMapContainer />
           </div>
           <div>
-              ‎
+            ‎
+            <div>
               <div>
-                <div>
-                  <AddressTable/>
-                </div>
-              
+                <AddressTable />
               </div>
             </div>
+          </div>
           <BottomSheet
             className="bottom_sheet"
             open={true}
@@ -71,7 +72,7 @@ const GPS = () => {
             }
             snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.45]}
           >
-           <GpsTable />
+            <GpsTable />
             {/* <div>
               ‎
               <div>

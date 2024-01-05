@@ -188,8 +188,9 @@ export const createDeviceSlice: StateCreator<
     set({ devices: updatedDevices });
   },
   deleteAllDevices: () => {
-    get().devices.forEach((twillioDevice) => {
-      twillioDevice.device.destroy();
+    get().devices.forEach((twillioDevice : TwillioDevice | null) => {
+      console.log("DEVICES twillioDevice:", twillioDevice);
+      twillioDevice?.device?.destroy();
     });
     set({ devices: [] });
     get().selectDevice(null);

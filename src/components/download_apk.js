@@ -76,24 +76,23 @@ const DownloadApk = () => {
       style={{
         backgroundColor: "white",
         color: "#007dc6",
-        marginBottom: "3rem",
-        borderRadius: "1rem",
+        marginBottom: "1rem",
         boxShadow: "-3px -3px 7px #bfbdbd73, 2px 2px 7px rgb(222, 241, 252)",
       }}
     >
-      <CardContent>
-        <Typography variant="h5" component="h2">
-          Mock Application Version
-        </Typography>
-        <div className="d-flex justify-content-around mt-5">
+      <CardContent style={{padding:"1rem"}}>
+        <div className="d-flex justify-content-around">
+          <Typography variant="h5" component="h2">
+            Mock Application APK
+          </Typography>
           <Button
             variant="contained"
-            className="btn btn-main d-flex flex-column flex-sm-row" 
+            className="btn btn-main d-flex flex-column flex-sm-row"
             startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
             onClick={handleDownloadFile}
-            style={{ marginLeft: "1.2rem", width: "12rem !important" ,}}
-            endIcon={loading && <CircularProgress color="inherit" size={20} />} 
-            disabled={loading} 
+            style={{ marginLeft: "1.2rem", width: "12rem !important" }}
+            endIcon={loading && <CircularProgress color="inherit" size={20} />}
+            disabled={loading}
           >
             Download File
           </Button>

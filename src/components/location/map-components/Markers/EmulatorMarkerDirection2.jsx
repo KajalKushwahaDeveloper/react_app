@@ -1,5 +1,6 @@
 import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
+import _ from "lodash";
 
 const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
   console.log("EmulatorMarkerDirection refreshed");

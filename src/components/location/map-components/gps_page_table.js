@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TablePagination, {
   tablePaginationClasses as classes,
-} from "@mui/base/TablePagination";
-import { Backdrop, Checkbox, CircularProgress, Hidden } from "@mui/material";
+} from "@mui/material/TablePagination";
+import { Backdrop, CircularProgress } from "@mui/material";
 import { styled } from "@mui/system";
 import {
   EMULATOR_NOTIFICATION_URL,
@@ -13,7 +13,6 @@ import {
 
 //scss
 import "../../../scss/map.scss";
-import "../../../scss/table.scss";
 import "../../../scss/button.scss";
 import "../../../scss/global.scss";
 
@@ -42,8 +41,8 @@ import {
   compareSelectedEmulator,
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
-import CustomNotesModal from "./Phone/CustomNotesModal";
-
+import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
+import TextField from "@mui/material/TextField";
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
@@ -76,8 +75,10 @@ const GpsTable = () => {
 
   const devices = useEmulatorStore((state) => state.devices);
 
+  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator);
+
   // State variables
-  const { staticEmulators, hoveredMarker, showToast } = useStates();
+  const { staticEmulators, showToast } = useStates();
 
   const { width } = useViewPort();
   const breakpoint = 620;
@@ -90,10 +91,8 @@ const GpsTable = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [emptyRows, setEmptyRows] = useState(null);
   const [loading, setLoading] = useState(true);
   const [messageLoading, setMessageLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false);
@@ -111,12 +110,6 @@ const GpsTable = () => {
     dialogType: "",
     emulatorId: null,
   });
-
-  const [customNotes, setCustomNotes] = useState({});
-
-  const [openCustomNotesModal, setOpenCustomNotesModal] = useState(false);
-  const [selectedEmulatorIdForNotes, setSelectedEmulatorIdForNotes] =
-    useState(null);
 
   const selectedDevice = useEmulatorStore(
     (state) => state.selectedDevice,
@@ -174,24 +167,24 @@ const GpsTable = () => {
       emulatorId: row.id,
     });
   };
-  const handleNoteIconClicked = (row) => {
-    setSelectedEmulatorIdForNotes(row.id);
-    setOpenCustomNotesModal(true);
-  };
-
-
 
   useEffect(() => {
     if (emulators != null) {
-      setEmptyRows(
-        rowsPerPage -
-          Math.min(rowsPerPage, emulators.length - page * rowsPerPage)
-      );
       setLoading(false);
     } else {
       setLoading(true);
     }
-    if (selectedEmulator != null) {
+    if (hoveredEmulator !== null) {
+      const selectedEmIndex = emulators.findIndex(
+        (emulator) => emulator.id === hoveredEmulator.id
+      );
+      // Calculate the new active page based on the selected checkbox index and rowsPerPage
+      if (selectedEmIndex !== -1) {
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
+        setPage(newActivePage);
+      }
+    }
+    if (selectedEmulator !== null) {
       const selectedEmIndex = emulators.findIndex(
         (emulator) => emulator === selectedEmulator
       );
@@ -201,7 +194,7 @@ const GpsTable = () => {
         setPage(newActivePage);
       }
     }
-  }, [emulators, page, rowsPerPage, selectedEmulator]);
+  }, [emulators, page, rowsPerPage, selectedEmulator, hoveredEmulator]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -287,10 +280,6 @@ const GpsTable = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div style={{ position: "relative" }}>
       <Backdrop color="primary" style={{ zIndex: 4 }} open={messageLoading}>
@@ -326,24 +315,25 @@ const GpsTable = () => {
                       page * rowsPerPage + rowsPerPage
                     )
                   : emulators
-                )?.map((row, index) => (
+                )?.map((emulator, index) => (
                   <tr
-                    key={row.id || "N/A"}
+                    key={emulator.id || "N/A"}
                     style={{
                       background:
-                        selectedEmulator?.id === row.id
+                        selectedEmulator?.id === emulator.id
                           ? "lightblue"
-                          : hoveredMarker?.id === row.id
+                          : hoveredEmulator?.id === emulator.id
                           ? "lightpink"
                           : "white",
                     }}
+                    onClick={() => handleEmulatorCheckboxChange(emulator)}
                   >
                     <td
                       style={{
                         background:
-                          row.status === "ACTIVE"
+                          emulator.status === "ACTIVE"
                             ? "#16BA00"
-                            : row.status === "INACTIVE"
+                            : emulator.status === "INACTIVE"
                             ? "#FFA500"
                             : "#ff4d4d",
                         textAlign: "center",
@@ -352,84 +342,56 @@ const GpsTable = () => {
                       {/* Restart/Reset Button */}
                       <RestartAltIcon
                         fontSize="small"
-                        onClick={() => handleRestartButtonClick(row)}
+                        onClick={() => handleRestartButtonClick(emulator)}
                       />
                     </td>
 
                     {/* TELEPHONE */}
                     <td>
-                      <Fragment>
+                      <div style={{ width: "100%" }}>
                         <Tooltip
-                          style={{ display: "flex", alignItems: "center" }}
-                          title={row.telephone || "N/A"}
+                          title={emulator.telephone || "N/A"}
                           placement="top"
                         >
                           <div
-                            style={
-                              isMobileThreeTwenty
-                                ? {
-                                    textOverflow: "ellipsis",
-                                    overflow: "hidden",
-                                    whiteSpace: "nowrap",
-                                    flexGrow: 1,
-                                    maxWidth: 26,
-                                  }
-                                : {
-                                    textOverflow: "ellipsis",
-                                    overflow: "hidden",
-                                    whiteSpace: "nowrap",
-                                    flexGrow: 1,
-                                    maxWidth: 80,
-                                  }
-                            }
+                            style={{ display: "flex", alignItems: "center" }}
                           >
-                            {row.telephone || "N/A"}
-                          </div>
+                            <div>{emulator.telephone || "N/A"}</div>
+                            {/* Icons */}
+                            <div style={{ display: "flex" }}>
+                              {/* calling icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() => handleCallIconClicked(emulator)}
+                              >
+                                <CallRoundedIcon fontSize="small" />
+                              </IconButton>
 
-                          {/* Icons */}
-                          <div style={{ display: "flex" }}>
-                            {/* calling icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleCallIconClicked(row)}
-                            >
-                              <CallRoundedIcon fontSize="small" />
-                            </IconButton>
+                              {/* message icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleMessageIconClicked(emulator)
+                                }
+                              >
+                                <MessageRoundedIcon fontSize="small" />
+                              </IconButton>
 
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleMessageIconClicked(row)}
-                            >
-                              <MessageRoundedIcon fontSize="small" />
-                            </IconButton>
-
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleHistoryButtonClick(row)}
-                            >
-                              <HistoryIcon fontSize="small" />
-                            </IconButton>
-
-                            {/* custom notes */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleNoteIconClicked(row)}
-                            >
-                              <DescriptionIcon fontSize="small" />
-                            </IconButton>
+                              {/* message icon */}
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleHistoryButtonClick(emulator)
+                                }
+                              >
+                                <HistoryIcon fontSize="small" />
+                              </IconButton>
+                            </div>
                           </div>
                         </Tooltip>
-                      </Fragment>
-                    </td>
-
-                    <td align="right">
-                      <Checkbox
-                        size="small"
-                        checked={selectedEmulator?.id === row.id}
-                        onChange={() => handleEmulatorCheckboxChange(row)}
-                      />
+                        {/* custom notes */}
+                        <CustomNoteComponent emulator={emulator} />
+                      </div>
                     </td>
                     <td align="right">
                       <div
@@ -440,39 +402,28 @@ const GpsTable = () => {
                           maxWidth: 85,
                         }}
                       >
-                        {/* Trip Status */}
-                        <p style={{ marginTop: "0", marginBottom: "0" }}>
-                          {row.tripStatus}
-                        </p>
                         {/* Trip Status Action */}
-                        <IconButton size="small">
-                          {row.tripStatus === "RUNNING" && (
-                            <PauseCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "PAUSED" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "STOP" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "RESTING" && (
-                            <PlayCircleOutlineIcon
-                              fontSize="small"
-                              onClick={() => handleActionButtonClick(row)}
-                            />
-                          )}
-                          {row.tripStatus === "FINISHED" && (
-                            <CheckCircleOutlineIcon fontSize="small" />
-                          )}
+                        <IconButton
+                          size="small"
+                          onClick={() => handleActionButtonClick(emulator)}
+                        >
+                          <Tooltip title={emulator.tripStatus}>
+                            {emulator.tripStatus === "RUNNING" && (
+                              <PauseCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "PAUSED" && (
+                              <PlayCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "STOP" && (
+                              <PlayCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "RESTING" && (
+                              <PlayCircleOutlineIcon fontSize="small" />
+                            )}
+                            {emulator.tripStatus === "FINISHED" && (
+                              <CheckCircleOutlineIcon fontSize="small" />
+                            )}
+                          </Tooltip>
                         </IconButton>
                       </div>
                     </td>
@@ -511,14 +462,6 @@ const GpsTable = () => {
               setContactDialogOptions={setContactDialogOptions}
               emulators={staticEmulators}
               showToast={showToast}
-            />
-
-            <CustomNotesModal
-              open={openCustomNotesModal}
-              setSelectedEmulatorIdForNotes = {setSelectedEmulatorIdForNotes}
-              setOpenCustomNotesModal={setOpenCustomNotesModal}
-              selectedEmulatorIdForNotes={selectedEmulatorIdForNotes}
-              setCustomNotes={setCustomNotes}
             />
           </>
         </div>

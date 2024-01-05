@@ -1,12 +1,17 @@
 import React, { useCallback, useRef } from "react";
 import { InfoWindow } from "@react-google-maps/api";
-import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import {
   compareSelectedEmulator,
   compareTripData,
-} from "../../../stores/emulator/types_maps.tsx";
+} from "../../../../stores/emulator/types_maps.tsx";
+import ApiService from "../../../../ApiService.js";
+import { TRIP_STOPS_DELETE_URL } from "../../../../constants.js";
+import { useStates } from "../../../../StateProvider.js";
+
 
 export function SelectedStopInfo(props) {
+  const { showToast } = useStates();
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
@@ -60,6 +65,40 @@ export function SelectedStopInfo(props) {
       props.selectedStop,
     ]
   );
+
+  const handleDeleteStop = async () => {
+    // request on window for confirmation
+    // if yes, delete stop
+    // if no, do nothing
+
+    const { shouldDelete } = window.confirm("Are you sure you want to delete this stop?");
+    if(!shouldDelete) {
+      return;
+    }
+    console.log("handleDeleteStop selectedStop : ", props.selectedStop);
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      TRIP_STOPS_DELETE_URL,
+      "GET",
+      null,
+      token,
+      selectedEmulator.id,
+      new URLSearchParams({
+        stopTripPointIndex: props.selectedStop.tripPointIndex,
+      })
+    );
+
+    if(success) {
+      console.log("handleDeleteStop success : ", success);
+      console.log("handleDeleteStop data : ", data);
+      console.log("handleDeleteStop error : ", error);
+    } else {
+      showToast("Error deleting stop", "error")
+      console.log("handleDeleteStop success : ", success);
+      console.log("handleDeleteStop data : ", data);
+      console.log("handleDeleteStop error : ", error);
+    }
+  };
 
   return (
     <InfoWindow
@@ -162,6 +201,19 @@ export function SelectedStopInfo(props) {
         >
           {timeToReachNextStop.current ? timeToReachNextStop.current : "N/A"}
         </p>
+        {/* Delete Button */}
+        <button
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            fontSize: "11px",
+            padding: "10px",
+            margin: "0px",
+          }}
+          onClick={() => handleDeleteStop()}
+        >
+          Delete
+        </button>
       </div>
     </InfoWindow>
   );
