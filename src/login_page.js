@@ -12,11 +12,11 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [responseError, setResponseError] = useState("");
-  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
+    useState(false);
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
-
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -43,13 +43,12 @@ const LoginPage = () => {
         if (success) {
           const token = data.token;
           localStorage.setItem("token", token);
-          console.log("Login successful");
           navigate("/redirect"); // Redirect to the home page
         } else {
           setResponseError(error || "Invalid credentials"); // Display appropriate error message
         }
       } catch (error) {
-        console.log("Error occurred during login:", error);
+        console.error("Error occurred during login:", error);
         setResponseError("An error occurred during login"); // Display a generic error message
       }
     }
@@ -61,9 +60,9 @@ const LoginPage = () => {
   const closeForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(false); // Close the "Forgot Password" modal
   };
-  
+
   const handleForgotPasswordClick = async () => {
-        setIsForgotPasswordModalOpen(true);
+    setIsForgotPasswordModalOpen(true);
   };
 
   return (
@@ -80,7 +79,10 @@ const LoginPage = () => {
               }}
             >
               <div className="Left_content">
-                <img src="images/logo/logbookgps_logo.png" className="FrontImg"/>
+                <img
+                  src="images/logo/logbookgps_logo.png"
+                  className="FrontImg"
+                />
                 <hr className="hr"></hr>
                 {/* <p className="para">
                   Vivamus at dui consequat, dapibus tellus vitae
@@ -98,7 +100,7 @@ const LoginPage = () => {
               <div className="authCard shadow">
                 <div className="Left_content d-block d-md-none">
                   {/* <img src="images/logo/logbookgps_logo.png" /> */}
-                  <img src="images/logo/logbookgps_logo.svg"  />
+                  <img src="images/logo/logbookgps_logo.svg" />
                   {/* <p className="para">
                     Vivamus at dui consequat, dapibus tellus vitae
                   </p> */}
@@ -135,7 +137,15 @@ const LoginPage = () => {
                       </div>
                     </div>
                     <div className="col-12 mt-3 btns" style={{}}>
-                      <button className="btn btn-main" type="submit" style={{background:"#007dc6", color:"white",width:"6rem"}}>
+                      <button
+                        className="btn btn-main"
+                        type="submit"
+                        style={{
+                          background: "#007dc6",
+                          color: "white",
+                          width: "6rem",
+                        }}
+                      >
                         Login
                       </button>
                     </div>
@@ -157,11 +167,10 @@ const LoginPage = () => {
               </div>
               {isForgotPasswordModalOpen === true && (
                 <ForgotPasswordModal
-                isOpen={isForgotPasswordModalOpen}
-                onClose={closeForgotPasswordModal}
-              />
+                  isOpen={isForgotPasswordModalOpen}
+                  onClose={closeForgotPasswordModal}
+                />
               )}
-              
             </div>
             <img src="images/map-location.svg" alt="" className="gps" />
             <img src="images/middleImg.svg" alt="" className="middle" />

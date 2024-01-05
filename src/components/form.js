@@ -49,7 +49,6 @@ const Form = ({ fcmToken }) => {
     fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log("FCM Success", result);
         setLat("");
         setLong("");
         setLoading(false);
@@ -57,7 +56,7 @@ const Form = ({ fcmToken }) => {
       })
       .catch((error) => {
         toast.error("Error sending Lat Long");
-        console.log("FCM error", error);
+        console.error("FCM error", error);
         setLoading(false);
       });
   };

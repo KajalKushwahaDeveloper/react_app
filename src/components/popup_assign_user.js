@@ -71,24 +71,19 @@ const UserAssignDropDown = (props) => {
     emulatorToAssignUser,
     handleAssignedUserToEmulator,
   } = props;
-  const theme = useTheme();
 
   const [userName, setuserName] = React.useState([]);
   const [users, setUsers] = useState([]);
   const [selectedUserId, SetSelectedUserId] = useState();
 
   const handleUserSelect = async (userId) => {
-    console.log("selectedUser:", selectedUserId);
     try {
-      console.log(emulatorToAssignUser.id);
-      console.log(userId);
       const { success, error, data } = await setUserToEmulator(
         emulatorToAssignUser.id,
         selectedUserId
       );
 
       if (success) {
-        console.log("User added successfully");
         if (emulatorToAssignUser != null) {
           handleAssignedUserToEmulator(success, error, data);
         } else {
@@ -99,7 +94,7 @@ const UserAssignDropDown = (props) => {
         showToast(error || "Failed to add user", "error");
       }
     } catch (error) {
-      console.log("Error occurred while adding user:", error);
+      console.error("Error occurred while adding user:", error);
     }
   };
 
@@ -113,16 +108,12 @@ const UserAssignDropDown = (props) => {
   };
 
   const setUserToEmulator = async (emulatorId, UserId) => {
-    console.log(emulatorId);
-    console.log(UserId);
-
     const toAssign = {
       user: { id: UserId },
       emulatorDetails: { id: emulatorId },
     };
 
     const token = localStorage.getItem("token");
-    console.log("token : ", token);
     const response = await fetch(USER_ASSIGN_EMULATOR_URL, {
       method: "POST",
       headers: {
@@ -131,7 +122,6 @@ const UserAssignDropDown = (props) => {
       },
       body: JSON.stringify(toAssign),
     });
-    console.log("response:", response);
     if (!response.ok || response.status !== 200) {
       return { success: false, error: "Failed to assign user", data: null };
     }
@@ -157,13 +147,12 @@ const UserAssignDropDown = (props) => {
           const responseData = await response.text();
 
           const deserializedData = JSON.parse(responseData);
-          console.log("response:::", deserializedData);
 
           setUsers(deserializedData);
           return { success: true, error: null };
         }
       } catch (error) {
-        console.log("User Data Error: " + error);
+        console.error("User Data Error: " + error);
       }
     };
 

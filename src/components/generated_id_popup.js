@@ -99,12 +99,8 @@ const ChangeEmulatorSsidPopup = (props) => {
       const emulatorId = emulatorToChangeSsid.id;
       const emulatorSsid = selectedUserId;
       const generateRandomNewUuid = generateIdChecked;
-      console.log(emulatorId);
-      console.log(emulatorSsid);
-      console.log(generateRandomNewUuid);
 
       const token = localStorage.getItem("token");
-      console.log("token : ", token);
       const payload = {
         emulatorId: emulatorId,
         emulatorSsid: emulatorSsid,
@@ -117,7 +113,6 @@ const ChangeEmulatorSsidPopup = (props) => {
         token
       );
       if (success) {
-        console.log("Emulator Updated : " + data);
         showToast("Emulator Updated ", "success");
         handleClose(data.id, null);
         handleAssignedUserToEmulator(true, null, data);
@@ -126,7 +121,7 @@ const ChangeEmulatorSsidPopup = (props) => {
         handleAssignedUserToEmulator(false, "error occurred", null);
       }
     } catch (error) {
-      console.log("Error occurred while adding user:", error);
+      console.error("Error occurred while adding user:", error);
     }
     setUpdateSerial(true);
   };
@@ -157,16 +152,14 @@ const ChangeEmulatorSsidPopup = (props) => {
           const responseData = await response.text();
 
           const deserializedData = JSON.parse(responseData);
-          console.log("response:::", deserializedData);
 
           setEmulators(deserializedData);
           return { success: true, error: null };
         }
       } catch (error) {
-        console.log("User Data Error: " + error);
+        console.error("User Data Error: " + error);
       }
 
-      console.log("token : ", token);
       const { success, data, error } = await ApiService.makeApiCall(
         EMULATOR_URL,
         "GET",

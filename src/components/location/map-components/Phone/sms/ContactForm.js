@@ -5,10 +5,7 @@ import { MESSAGE_SEND_MSG } from "../../../../../constants";
 import UploadFiles from "./components/upload-files.component.js";
 import "../../../../../scss/ContactForm.scss";
 
-export function ContactForm({
-  emulatorId,
-  showToast,
-}) {
+export function ContactForm({ emulatorId, showToast }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
   const [messageError, setMessageError] = useState("");
@@ -42,7 +39,6 @@ export function ContactForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
-      console.log("fileNames", fileNames);
       const extractedNames = fileNames.map((file) => file.name);
 
       const payload = {
@@ -92,7 +88,12 @@ export function ContactForm({
         <UploadFiles setFileNames={setFileNames} showToast={showToast} />
 
         {/*Submit button */}
-        <Button type="submit" variant="contained" color="primary" sx={{marginTop: '1rem'}}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ marginTop: "1rem" }}
+        >
           SEND
         </Button>
       </form>

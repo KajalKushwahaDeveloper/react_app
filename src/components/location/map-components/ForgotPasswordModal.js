@@ -34,14 +34,13 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
         if (success) {
           const token = data.token;
           localStorage.setItem("token", token);
-          console.log("Sent reset password mail successful");
-          setResetSuccess("Sent reset password mail successful")
+          setResetSuccess("Sent reset password mail successful");
         } else {
           setResponseError(error || "Invalid Email"); // Display appropriate error message
         }
       } catch (error) {
-        console.log("Error occurred during login:", error);
-        setResponseError("An error occurred during login"); // Display a generic error message
+        console.error("Error occurred while sending mail:", error);
+        setResponseError("An error occurred while sending mail"); // Display a generic error message
       }
     }
   };
@@ -55,7 +54,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
     >
       <Box
         sx={{
-          paddingTop:"15px",
+          paddingTop: "15px",
           position: "absolute",
           width: 400,
           bgcolor: "background.paper",
@@ -67,10 +66,25 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           transform: "translate(-50%, -50%)",
         }}
       >
-        <span className="close" onClick={onClose} style={{float:"right",marginTop:".5rem",height:"2rem",width:"2rem",cursor:"pointer"}}>
+        <span
+          className="close"
+          onClick={onClose}
+          style={{
+            float: "right",
+            marginTop: ".5rem",
+            height: "2rem",
+            width: "2rem",
+            cursor: "pointer",
+          }}
+        >
           &times;
         </span>
-        <Typography id="modal-modal-title" variant="h6" component="h2" style={{paddingTop:"5px"}}>
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          style={{ paddingTop: "5px" }}
+        >
           Forgot Password
         </Typography>
         {resetSuccess ? (
@@ -79,9 +93,15 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           </Typography>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div className="form-group" style={{paddingTop:"40px"}}>
+            <div className="form-group" style={{ paddingTop: "40px" }}>
               <label htmlFor="email">Email Address:</label>
-              <input style={{marginTop:"20px",marginBottom:"20px",marginLeft:"0px",marginRight:"0px"}}
+              <input
+                style={{
+                  marginTop: "20px",
+                  marginBottom: "20px",
+                  marginLeft: "0px",
+                  marginRight: "0px",
+                }}
                 type="email"
                 id="email"
                 name="email"
@@ -92,7 +112,12 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
               {emailError && <p className="error">{emailError}</p>}
               {responseError && <p className="error">{responseError}</p>}
             </div>
-            <Button type="submit" variant="contained" color="primary" style={{marginTop: "30px", float: "right"}}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ marginTop: "30px", float: "right" }}
+            >
               Reset Password
             </Button>
           </form>

@@ -22,35 +22,38 @@ export default class UploadFiles extends Component {
   }
 
   handleDeleteButtonClick(index) {
-    console.log('index', this.state.fileInfos);
-    console.log('index', index);
-    console.log('name', this.state.fileInfos[index].name);
-    UploadService.deleteFile(this.state.fileInfos[index].name).then((response) => {
-      console.log("deleteFile response", response);
-      UploadService.getFiles().then((response) => {
-        this.setState({
-          fileInfos: response.data,
-        });
-        this.props.setFileNames(response.data)
-      });
-    });
-  }
-
-  
-  componentDidMount() {
-    UploadService.resetFiles().then((response) => {
+    UploadService.deleteFile(this.state.fileInfos[index].name).then(
+      (response) => {
         UploadService.getFiles().then((response) => {
           this.setState({
             fileInfos: response.data,
           });
-          this.props.setFileNames(response.data)
+          this.props.setFileNames(response.data);
         });
+      }
+    );
+  }
+
+  componentDidMount() {
+    UploadService.resetFiles().then((response) => {
+      UploadService.getFiles().then((response) => {
+        this.setState({
+          fileInfos: response.data,
+        });
+        this.props.setFileNames(response.data);
+      });
     });
   }
 
   selectFile(event) {
     const allowedImageTypes = ["image/jpeg", "image/jpg", "image/png"];
-    const allowedDocumentTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+    const allowedDocumentTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
     const allowedVideoTypes = ["video/mp4"];
     const allowedAudioTypes = ["audio/ogg"];
 
@@ -58,15 +61,17 @@ export default class UploadFiles extends Component {
 
     for (let i = 0; i < selectedFiles.length; i++) {
       const fileType = selectedFiles[i].type;
-  
+
       if (
         !allowedImageTypes.includes(fileType) &&
         !allowedDocumentTypes.includes(fileType) &&
         !allowedVideoTypes.includes(fileType) &&
         !allowedAudioTypes.includes(fileType)
       ) {
-        console.error("Invalid file type. Please select files of type JPG, JPEG, PNG, PDF, DOC, DOCX, PPTX, XLSX, MP4 (with H.264 video codec and AAC audio), or OGG.");
-        this.props.showToast("Invalid file type.", "error")
+        console.error(
+          "Invalid file type. Please select files of type JPG, JPEG, PNG, PDF, DOC, DOCX, PPTX, XLSX, MP4 (with H.264 video codec and AAC audio), or OGG."
+        );
+        this.props.showToast("Invalid file type.", "error");
         return; // Prevent further processing or setting state
       }
     }
@@ -99,7 +104,7 @@ export default class UploadFiles extends Component {
         this.setState({
           fileInfos: files.data,
         });
-        this.props.setFileNames(files.data)
+        this.props.setFileNames(files.data);
       })
       .catch(() => {
         this.setState({
@@ -115,18 +120,16 @@ export default class UploadFiles extends Component {
   }
 
   render() {
-    const {
-      selectedFiles,
-      currentFile,
-      progress,
-      message,
-      fileInfos,
-    } = this.state;
-    
+    const { selectedFiles, currentFile, progress, message, fileInfos } =
+      this.state;
+
     return (
       <div>
         {currentFile && (
-          <div className="progress mt-3 mb-3" style={{width: "93%", display: 'block', margin: 'auto'}}>
+          <div
+            className="progress mt-3 mb-3"
+            style={{ width: "93%", display: "block", margin: "auto" }}
+          >
             <div
               className="progress-bar progress-bar-info progress-bar-striped"
               role="progressbar"
@@ -140,9 +143,12 @@ export default class UploadFiles extends Component {
           </div>
         )}
 
-        <label className="btn btn-default" style={{width:"100%"}}>
-          <input type="file" onChange={this.selectFile} className="inputField"/>
-          
+        <label className="btn btn-default" style={{ width: "100%" }}>
+          <input
+            type="file"
+            onChange={this.selectFile}
+            className="inputField"
+          />
         </label>
 
         <button
@@ -157,17 +163,26 @@ export default class UploadFiles extends Component {
           {message}
         </div>
 
-        <div className="card sms_list_card" >
+        <div className="card sms_list_card">
           <div className="card-header">List of Files</div>
           <ul className="list-group list-group-flush">
             {fileInfos &&
               fileInfos.map((file, index) => (
                 <li className="list-group-item" key={index}>
                   <div className="d-flex justify-content-between align-items-center">
-                  <a className="card_list" href={file.url} style={{fontSize: 14}}>{file.name}</a>
-                  <IconButton onClick={() => this.handleDeleteButtonClick(index)} size="small">
-                  <DeleteIcon color="error" fontSize="10" />
-                  </IconButton>
+                    <a
+                      className="card_list"
+                      href={file.url}
+                      style={{ fontSize: 14 }}
+                    >
+                      {file.name}
+                    </a>
+                    <IconButton
+                      onClick={() => this.handleDeleteButtonClick(index)}
+                      size="small"
+                    >
+                      <DeleteIcon color="error" fontSize="10" />
+                    </IconButton>
                   </div>
                 </li>
               ))}

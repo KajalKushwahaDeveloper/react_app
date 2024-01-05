@@ -103,7 +103,6 @@ export default function EmulatorTable({
   const handleActionButtonClick = async (row) => {
     if (row.user != null) {
       const token = localStorage.getItem("token");
-      console.log("token : ", token);
       try {
         const response = await fetch(USER_ASSIGN_EMULATOR_URL + "/" + row.id, {
           method: "PUT",
@@ -126,13 +125,11 @@ export default function EmulatorTable({
         setUserAssingedEmulator(userAssignedEmulator);
         const updatedData = emulators.map((item) => {
           if (item.id === row.id) {
-            console.log("Data Found");
             return { ...item, user: null };
           }
           return item;
         });
         showToast(`User Un-Assigned`, "success");
-        console.log("Data Updated : " + emulators);
         setEmulators(updatedData);
       } catch (error) {
         showToast(`Failed to unassign user ${error}`, "error");
@@ -300,7 +297,7 @@ export default function EmulatorTable({
                             }}
                             onClick={() => handleActionButtonClick(row)}
                           >
-                          {row.user === null ? "ASSIGN__" : "UNASSIGN"}
+                            {row.user === null ? "ASSIGN__" : "UNASSIGN"}
                           </button>
                         </div>
                         {/* can use for vertical */}
@@ -377,7 +374,7 @@ export default function EmulatorTable({
                               style={{
                                 textOverflow: "ellipsis",
                                 overflow: "hidden",
-                                whiteSpace: "nowrap", 
+                                whiteSpace: "nowrap",
                               }}
                               align="left"
                             >
@@ -408,7 +405,8 @@ export default function EmulatorTable({
                     <TableCell align="left">
                       <Tooltip
                         title={
-                          (row.user?.firstName || "N/A") + " " +
+                          (row.user?.firstName || "N/A") +
+                          " " +
                           (row.user?.lastName || "N/A")
                         }
                         placement="top"
@@ -425,7 +423,8 @@ export default function EmulatorTable({
                           }}
                           align="left"
                         >
-                          {(row.user?.firstName || "N/A") + " " +
+                          {(row.user?.firstName || "N/A") +
+                            " " +
                             (row.user?.lastName || "N/A")}
                         </div>
                       </Tooltip>

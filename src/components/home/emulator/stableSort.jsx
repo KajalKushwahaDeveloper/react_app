@@ -13,18 +13,24 @@ import { visuallyHidden } from "@mui/utils";
 import AddIcon from "@mui/icons-material/Add";
 
 function descendingComparator(a, b, orderBy) {
-  console.log(a[orderBy]);
-  if(a[orderBy] === null || a[orderBy] === undefined) {
+  if (a[orderBy] === null || a[orderBy] === undefined) {
     return 1;
   }
   // special case for emulatorCount
   if (orderBy === "user") {
     // add check if user exist else return 0
-    console.log(a[orderBy].user);
-    if (a[orderBy].user === null || a[orderBy].user === undefined ||  !a[orderBy].user?.firstName) {
+    if (
+      a[orderBy].user === null ||
+      a[orderBy].user === undefined ||
+      !a[orderBy].user?.firstName
+    ) {
       return 0;
     }
-    if(b[orderBy].user === null ||b[orderBy].user === undefined || !b[orderBy].user?.firstName) {
+    if (
+      b[orderBy].user === null ||
+      b[orderBy].user === undefined ||
+      !b[orderBy].user?.firstName
+    ) {
       return 1;
     }
     if (a[orderBy].user?.firstName < b[orderBy].user?.firstName) {

@@ -9,7 +9,6 @@ import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_DELETE_URL } from "../../../../constants.js";
 import { useStates } from "../../../../StateProvider.js";
 
-
 export function SelectedStopInfo(props) {
   const { showToast } = useStates();
   const selectedEmulator = useEmulatorStore(
@@ -71,11 +70,12 @@ export function SelectedStopInfo(props) {
     // if yes, delete stop
     // if no, do nothing
 
-    const { shouldDelete } = window.confirm("Are you sure you want to delete this stop?");
-    if(!shouldDelete) {
+    const { shouldDelete } = window.confirm(
+      "Are you sure you want to delete this stop?"
+    );
+    if (!shouldDelete) {
       return;
     }
-    console.log("handleDeleteStop selectedStop : ", props.selectedStop);
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
       TRIP_STOPS_DELETE_URL,
@@ -88,15 +88,9 @@ export function SelectedStopInfo(props) {
       })
     );
 
-    if(success) {
-      console.log("handleDeleteStop success : ", success);
-      console.log("handleDeleteStop data : ", data);
-      console.log("handleDeleteStop error : ", error);
-    } else {
-      showToast("Error deleting stop", "error")
-      console.log("handleDeleteStop success : ", success);
-      console.log("handleDeleteStop data : ", data);
-      console.log("handleDeleteStop error : ", error);
+    if (!success) {
+      showToast("Error deleting stop", "error");
+      console.error("handleDeleteStop error : ", error);
     }
   };
 

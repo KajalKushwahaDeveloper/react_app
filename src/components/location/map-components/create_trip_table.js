@@ -12,17 +12,11 @@ import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
 
 const CreateTripTable = () => {
-  
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
-      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
-      if(diff === true) {
-        console.log("selectedEmulator changed (CreateTrip)", );
-      }
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
     }
   );
 
@@ -37,10 +31,7 @@ const CreateTripTable = () => {
   const [open, setOpen] = useState(true); // Automatically open the modal
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    setIsTableVisible,
-    showToast,
-  } = useStates();
+  const { setIsTableVisible, showToast } = useStates();
 
   const handleClose = () => {
     setIsTableVisible(false);
@@ -91,11 +82,9 @@ const CreateTripTable = () => {
         token
       );
       if (success) {
-        console.log("data : ", selectedEmulator);
-        console.log("data : ", data.emulatorDetailsId);
         setIsLoading(true);
         showToast("Trip Added successfully", "success");
-        fetchEmulators()
+        fetchEmulators();
       } else {
         showToast(error, "error");
       }

@@ -9,7 +9,7 @@ export const defaultLng = -95.7129; // Default longitude (center of US)
 
 //custom equality function for selectedEmulator
 export function compareSelectedEmulator(
-  oldSelectedEmulator : Emulator | null,
+  oldSelectedEmulator: Emulator | null,
   newSelectedEmulator: Emulator | null
 ) {
   // both were null
@@ -40,10 +40,8 @@ export function compareSelectedEmulator(
 
   // neither was null but current lat and lng was different
   if (
-    oldSelectedEmulator?.latitude !==
-    newSelectedEmulator?.latitude && 
-    oldSelectedEmulator?.longitude !==
-    newSelectedEmulator?.longitude 
+    oldSelectedEmulator?.latitude !== newSelectedEmulator?.latitude &&
+    oldSelectedEmulator?.longitude !== newSelectedEmulator?.longitude
   ) {
     return true;
   }
@@ -52,7 +50,10 @@ export function compareSelectedEmulator(
 }
 
 // custom equality function for Emulators
-export function compareEmulators(oldEmulators: Emulator[] | [], newEmulators: Emulator[] | []) {
+export function compareEmulators(
+  oldEmulators: Emulator[] | [],
+  newEmulators: Emulator[] | []
+) {
   // if the size of the arrays are different
   if (oldEmulators?.length !== newEmulators?.length) {
     return true;
@@ -75,33 +76,36 @@ export function compareEmulators(oldEmulators: Emulator[] | [], newEmulators: Em
 }
 
 // custom equality function for Emulators
-export function compareTripData(oldTripData : TripData | null, newTripData : TripData | null) {
+export function compareTripData(
+  oldTripData: TripData | null,
+  newTripData: TripData | null
+) {
   // both were null
   if (oldTripData === null && newTripData === null) {
     return false;
-  } 
+  }
   // either one was null
   if (
     (oldTripData === null && newTripData !== null) ||
     (oldTripData !== null && newTripData === null)
   ) {
-    console.log("TRIP new TripData returns false")
     return false;
   }
   // neither was null but trip was different
-  // FIXME: This is not a good way to compare trips.  
+  // FIXME: This is not a good way to compare trips.
   // It should be done by comparing the trip id but id is similar and is based on emulator ID.
-  if (oldTripData?.distance !== newTripData?.distance ) {
+  if (oldTripData?.distance !== newTripData?.distance) {
     return false;
   }
 
   return true;
 }
 
-
-
 // custom equality function for Emulators
-export function compareEmulatorsCompletely(oldEmulators: Emulator[] | [], newEmulators: Emulator[] | []) {
+export function compareEmulatorsCompletely(
+  oldEmulators: Emulator[] | [],
+  newEmulators: Emulator[] | []
+) {
   // if the size of the arrays are different
   if (oldEmulators?.length !== newEmulators?.length) {
     return true;
@@ -125,7 +129,7 @@ export function compareEmulatorsCompletely(oldEmulators: Emulator[] | [], newEmu
 
 //custom equality function for selectedEmulator
 export function compareEmulatorCompletely(
-  oldSelectedEmulator : Emulator | null,
+  oldSelectedEmulator: Emulator | null,
   newSelectedEmulator: Emulator | null
 ) {
   // both were null
@@ -155,35 +159,24 @@ export function compareEmulatorCompletely(
   }
 
   // status was different
-  if (
-    oldSelectedEmulator?.status !==
-    newSelectedEmulator?.status
-  ) {
+  if (oldSelectedEmulator?.status !== newSelectedEmulator?.status) {
     return true;
   }
 
   // trip status was different
-  if (
-    oldSelectedEmulator?.status !==
-    newSelectedEmulator?.status
-  ) {
+  if (oldSelectedEmulator?.status !== newSelectedEmulator?.status) {
     return true;
   }
 
   // trip status was different
-  if (
-    oldSelectedEmulator?.tripStatus !==
-    newSelectedEmulator?.tripStatus
-  ) {
+  if (oldSelectedEmulator?.tripStatus !== newSelectedEmulator?.tripStatus) {
     return true;
   }
 
   // neither was null but current lat and lng was different
   if (
-    oldSelectedEmulator?.latitude !==
-    newSelectedEmulator?.latitude && 
-    oldSelectedEmulator?.longitude !==
-    newSelectedEmulator?.longitude 
+    oldSelectedEmulator?.latitude !== newSelectedEmulator?.latitude &&
+    oldSelectedEmulator?.longitude !== newSelectedEmulator?.longitude
   ) {
     return true;
   }

@@ -1,6 +1,10 @@
-import ApiService from "../../ApiService.js"; 
+import ApiService from "../../ApiService.js";
 
-import { EMULATOR_URL, EMULATOR_DELETE_URL, USER_ASSIGN_EMULATOR_URL } from "../../constants";
+import {
+  EMULATOR_URL,
+  EMULATOR_DELETE_URL,
+  USER_ASSIGN_EMULATOR_URL,
+} from "../../constants";
 
 // Fetch data from API // GET  API
 const GetEmulatorApi = async () => {
@@ -21,30 +25,30 @@ const GetEmulatorApi = async () => {
       return { success: true, data: deserializedData, error: null };
     }
   } catch (error) {
-    console.log("Data Error: " + error);
+    console.error("Data Error: " + error);
     return { success: false, error: error.message };
   }
 };
 
-//delete emulator 
+//delete emulator
 const deleteEmulatorApi = async (emulator) => {
+  const confirmed = window.confirm(
+    "Delete this emulator : " + emulator.emulatorSsid + "?"
+  );
+  if (confirmed) {
+    const token = localStorage.getItem("token");
+    const { success, data, error } = await ApiService.makeApiCall(
+      EMULATOR_DELETE_URL,
+      "DELETE",
+      null,
+      token,
+      emulator.id
+    );
 
-    const confirmed = window.confirm('Delete this emulator : ' + emulator.emulatorSsid + '?');
-    if (confirmed) {
-      const token = localStorage.getItem("token");
-      const { success, data, error } = await ApiService.makeApiCall(
-        EMULATOR_DELETE_URL,
-        "DELETE",
-        null,
-        token,
-        emulator.id
-      );
+    return success;
+  }
+};
 
-      return success;
-    }
-  };
-
-  
 // update emulator
 
 export const updateUserAssignmentApi = async (row, token) => {
@@ -68,5 +72,4 @@ export const updateUserAssignmentApi = async (row, token) => {
   }
 };
 
-
-export { GetEmulatorApi ,deleteEmulatorApi};
+export { GetEmulatorApi, deleteEmulatorApi };

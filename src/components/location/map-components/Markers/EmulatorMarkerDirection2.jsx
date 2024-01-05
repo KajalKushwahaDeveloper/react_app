@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from "react";
 import _ from "lodash";
 
 const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
-  console.log("EmulatorMarkerDirection refreshed");
   const markerRef = useRef(null);
   // copy latLng to initialPosition but don't update it on latLng change
   useEffect(() => {
@@ -98,10 +97,17 @@ const EmulatorMarkerDirection = ({ rotationAngle, id, latLng }) => {
 
   const arePropsEqual = (prevProps, nextProps) => {
     // compare all props except latLng
-    const { latLng: prevLatLng, rotationAngle : prevRotationAngle, ...restPrevProps } = prevProps;
-    const { latLng: nextLatLng, rotationAngle : nextRotationAngle, ...restNextProps } = nextProps;
+    const {
+      latLng: prevLatLng,
+      rotationAngle: prevRotationAngle,
+      ...restPrevProps
+    } = prevProps;
+    const {
+      latLng: nextLatLng,
+      rotationAngle: nextRotationAngle,
+      ...restNextProps
+    } = nextProps;
     const isEqual = _.isEqual(restPrevProps, restNextProps);
-    console.log("EmulatorMarker arePropsEqual:", isEqual);
     return isEqual;
   };
 

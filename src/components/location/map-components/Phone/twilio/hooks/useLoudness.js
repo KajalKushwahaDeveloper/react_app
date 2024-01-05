@@ -10,10 +10,10 @@ const useLoudness = (showToast) => {
     try {
       return await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: false
+        video: false,
       });
     } catch (err) {
-      showToast("Require mic permission","error")
+      showToast("Require mic permission", "error");
       console.error("Error:", err);
     }
   };
@@ -26,7 +26,7 @@ const useLoudness = (showToast) => {
     lowPass.frequency.setValueAtTime(3400, audioContext.currentTime);
 
     let newAnalyser;
-    getMedia().then(stream => {
+    getMedia().then((stream) => {
       if (audioContext.state === "closed") {
         return;
       }
@@ -39,12 +39,11 @@ const useLoudness = (showToast) => {
         source: lowPass,
         bufferSize: 8192,
         featureExtractors: ["loudness"],
-        callback: features => {
-          console.log(features);
+        callback: (features) => {
           setLoudness(
-            loudness => (loudness + features.loudness.total * 0.2) / 2
+            (loudness) => (loudness + features.loudness.total * 0.2) / 2
           );
-        }
+        },
       });
       setAnalyser(newAnalyser);
     });

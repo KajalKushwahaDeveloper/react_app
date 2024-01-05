@@ -6,7 +6,6 @@ import { TRIP_STOPS_URL } from "../../../../constants.js";
 import { useStates } from "../../../../StateProvider.js";
 
 export function PathComponent() {
-
   const { showToast } = useStates();
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
@@ -19,40 +18,48 @@ export function PathComponent() {
 
   function onPolyLineClickTraveled(e) {
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-  
+
     const findClosestPointIndex = (path) => {
       return path.reduce((closestIndex, currentLatLng, index) => {
-        const d1 = Math.pow(currentLatLng.lat - clickedLatLng.lat, 2) + Math.pow(currentLatLng.lng - clickedLatLng.lng, 2);
-        const d2 = closestIndex === -1 ? Infinity :
-          Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) + Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
+        const d1 =
+          Math.pow(currentLatLng.lat - clickedLatLng.lat, 2) +
+          Math.pow(currentLatLng.lng - clickedLatLng.lng, 2);
+        const d2 =
+          closestIndex === -1
+            ? Infinity
+            : Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) +
+              Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
         return d1 < d2 ? index : closestIndex;
       }, -1);
     };
-  
+
     const closestIndexPath = findClosestPointIndex(pathTraveled);
     if (closestIndexPath && closestIndexPath !== -1) {
-      console.log("Closest point in pathTraveled: ", pathTraveled[closestIndexPath]);
-      requestNewStopCreation(pathTraveled[closestIndexPath])
+      requestNewStopCreation(pathTraveled[closestIndexPath]);
     }
   }
 
   function onPolyLineClickNotTraveled(e) {
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
-  
+
     const findClosestPointIndex = (path) => {
       return path.reduce((closestIndex, currentLatLng, index) => {
-        const d1 = Math.pow(currentLatLng.lat - clickedLatLng.lat, 2) + Math.pow(currentLatLng.lng - clickedLatLng.lng, 2);
-        const d2 = closestIndex === -1 ? Infinity :
-          Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) + Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
+        const d1 =
+          Math.pow(currentLatLng.lat - clickedLatLng.lat, 2) +
+          Math.pow(currentLatLng.lng - clickedLatLng.lng, 2);
+        const d2 =
+          closestIndex === -1
+            ? Infinity
+            : Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) +
+              Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
         return d1 < d2 ? index : closestIndex;
       }, -1);
     };
-  
+
     const closestIndexPath = findClosestPointIndex(pathNotTraveled);
     if (closestIndexPath && closestIndexPath !== -1) {
-      console.log("Closest point in pathTraveled: ", pathNotTraveled[closestIndexPath]);
-      requestNewStopCreation(pathNotTraveled[closestIndexPath])
-    } 
+      requestNewStopCreation(pathNotTraveled[closestIndexPath]);
+    }
   }
 
   async function requestNewStopCreation(tripPoint) {
@@ -65,20 +72,19 @@ export function PathComponent() {
     const token = localStorage.getItem("token");
     showToast("Creating Stop...", "info");
     const { success, data, error } = await ApiService.makeApiCall(
-        TRIP_STOPS_URL,
-        "POST",
-        tripPoint,
-        token,
-        selectedEmulator.id
-      );
-      if (success) {
-        showToast("Stop created!", "success");
-        console.log("LOG 1 - created Stop: ", data);
-        setTripData(data);
-      } else {
-        showToast("Error creating Stop!", "error");
-        console.log("LOG 1 - error creating Stop: ", error);
-      }
+      TRIP_STOPS_URL,
+      "POST",
+      tripPoint,
+      token,
+      selectedEmulator.id
+    );
+    if (success) {
+      showToast("Stop created!", "success");
+      setTripData(data);
+    } else {
+      showToast("Error creating Stop!", "error");
+      console.error("Error creating Stop: ", error);
+    }
   }
 
   return (

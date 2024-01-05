@@ -10,7 +10,7 @@ const useMeyda = () => {
     try {
       return await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: false
+        video: false,
       });
     } catch (err) {
       console.error("Error:", err);
@@ -21,7 +21,7 @@ const useMeyda = () => {
     const audioContext = new AudioContext();
 
     let newAnalyser;
-    getMedia().then(stream => {
+    getMedia().then((stream) => {
       if (audioContext.state === "closed") {
         return;
       }
@@ -31,10 +31,9 @@ const useMeyda = () => {
         source: source,
         bufferSize: 8192,
         featureExtractors: ["loudness"],
-        callback: features => {
-          console.log(features);
+        callback: (features) => {
           setFeatures(features);
-        }
+        },
       });
       setAnalyser(newAnalyser);
     });

@@ -13,7 +13,6 @@ import PageNotFound from "../view/pageNotFound.js";
 import { useEmulatorStore } from "../stores/emulator/store.tsx";
 
 function App() {
-  console.log("App.js refreshed");
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -105,12 +104,13 @@ function App() {
       <Routes>
         <Route path="/page404" element={<PageNotFound />} />
         <Route
-          element={<PrivateRoutes isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}>
+          element={<PrivateRoutes isAdmin={isAdmin} setIsAdmin={setIsAdmin} />}
+        >
           <Route path="/home" element={<Home />} />
           <Route path="/gps" element={<GPS />} />
           <Route path="/redirect" element={<RedirectPage />} />
         </Route>
-          <Route exact path="/login" element={<LoginPage />} />
+        <Route exact path="/login" element={<LoginPage />} />
       </Routes>
     </>
   );

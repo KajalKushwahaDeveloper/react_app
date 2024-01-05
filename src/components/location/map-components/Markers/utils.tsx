@@ -7,7 +7,6 @@ export function compareEmulatorsForMarkers(
 ) {
   // if the size of the arrays are different
   if (oldEmulators?.length !== newEmulators?.length) {
-        console.log("MARKERS length is different, returning true");
     return true;
   }
 
@@ -18,7 +17,6 @@ export function compareEmulatorsForMarkers(
       (oldEmulator) => oldEmulator.id === newEmulator.id
     );
     if (oldEmulator === undefined) {
-        console.log("MARKERS oldEmulator is undefined, returning true");
       returnVal = true;
     }
     if (returnVal === true) {

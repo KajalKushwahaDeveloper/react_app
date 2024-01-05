@@ -18,8 +18,6 @@ import _ from "lodash";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 
 const EmulatorMarker = React.memo(({ emulator }) => {
-  console.log("EmulatorMarker refreshed", emulator);
-
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
 
   const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
@@ -27,8 +25,8 @@ const EmulatorMarker = React.memo(({ emulator }) => {
   const hoveredMarker = useEmulatorStore((state) => state.hoveredEmulator);
   const hoverEmulator = useEmulatorStore((state) => state.hoverEmulator);
 
-  const selectEmulator =  useEmulatorStore((state) => state.selectEmulator)
-  
+  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
+
   const isSelected = selectedEmulator?.id === emulator?.id;
 
   const isHovered = hoveredMarker?.id === emulator?.id;
@@ -150,11 +148,15 @@ const EmulatorMarker = React.memo(({ emulator }) => {
 
   const handleEmulatorMarkerDragEnd = (event) => {
     if (emulator === undefined) {
-      console.log("DRAG Emulator not found in data");
+      console.error("DRAG Emulator not found in data");
       return;
     }
     const { latLng } = event;
-    dragEmulator({ emulator: emulator, latitude:  latLng.lat() , longitude: latLng.lng() });
+    dragEmulator({
+      emulator: emulator,
+      latitude: latLng.lat(),
+      longitude: latLng.lng(),
+    });
   };
 
   return (

@@ -41,15 +41,12 @@ function ContactDialogComponent({
       );
       if (success) {
         setLoading(false);
-        console.log("emulatorId", url);
-        console.log("emulatorId", data);
         SetHistoryData(data);
       } else {
         setLoading(false);
-        console.log("Error In getting data", error);
+        console.error("Error In getting data", error);
       }
     };
-    console.log("contactDialogOptions", contactDialogOptions);
     if (contactDialogOptions && contactDialogOptions.open === true) {
       handleHistory();
     }
@@ -100,7 +97,7 @@ function ContactDialogComponent({
           </Tabs>
           <TabPanel value={tabIndexValue} index={0} style={{ height: "63%" }}>
             {contactDialogOptions.dialogType === "call" ? (
-              <Phone setContactDialogOptions = {setContactDialogOptions} />
+              <Phone setContactDialogOptions={setContactDialogOptions} />
             ) : (
               <ContactForm
                 emulatorId={contactDialogOptions.emulatorId}

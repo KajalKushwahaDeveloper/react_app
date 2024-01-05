@@ -128,7 +128,7 @@ const DropDown = (props) => {
           return { success: true, error: null };
         }
       } catch (error) {
-        console.log("User Data Error: " + error);
+        console.error("User Data Error: " + error);
       }
     };
 

@@ -16,18 +16,11 @@ import { IconButton } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 const AddressTable = () => {
-  console.log("AddressTable refreshed");
-
   const tableValues = useRef(null);
 
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => {
-      console.log("AddressTable tripData changed");
-      const diff = compareTripDataChangedNullOrId(oldTripData, newTripData);
-      if (diff === true) {
-        console.log("tripData changed (Address table)");
-      }
       compareTripDataChangedNullOrId(oldTripData, newTripData);
     }
   );
@@ -35,15 +28,6 @@ const AddressTable = () => {
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
-      console.log("AddressTable selectedEmulator changed");
-      // Check if compareSelectedEmulator is working as intended (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulatorChangedNullOrId(
-        oldSelectedEmulator,
-        newSelectedEmulator
-      );
-      if (diff === true) {
-        console.log("selectedEmulator changed (Address table)");
-      }
       compareSelectedEmulatorChangedNullOrId(
         oldSelectedEmulator,
         newSelectedEmulator
@@ -56,7 +40,6 @@ const AddressTable = () => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   function setTableValues(emulator, tripData) {
-    console.log("setTableValues", emulator, tripData);
     const fromAddress =
       tripData.fromAddress[0]?.long_name +
         ", " +
@@ -99,13 +82,13 @@ const AddressTable = () => {
         hoveredEmulator.id
       );
       if (error) {
-        console.log("Error fetching trip data", error);
+        console.error("Error fetching trip data", error);
         tableValues.current = null;
         setIsLoading(false);
         return;
       }
       if (data === null || data === undefined) {
-        console.log("Data is null or undefined");
+        console.error("Data is null or undefined");
         tableValues.current = null;
         setIsLoading(false);
         return;
@@ -115,7 +98,7 @@ const AddressTable = () => {
         data.data.tripPoints === undefined ||
         data.data.tripPoints.length === 0
       ) {
-        console.log("Trip points are null or undefined or empty");
+        console.error("Trip points are null or undefined or empty");
         tableValues.current = null;
         setIsLoading(false);
         return;
@@ -155,7 +138,6 @@ const AddressTable = () => {
       tableValues.current = null;
       return;
     }
-    console.log("setTableValues", selectedEmulator, tripData);
     setTableValues(selectedEmulator, tripData);
   }, [selectedEmulator, tripData]);
 

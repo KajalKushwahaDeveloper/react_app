@@ -5,7 +5,7 @@ import PlacesAutocomplete, {
 } from "../../autocomplete";
 import { classnames } from "../../helpers";
 import "../../css/auto_complete.css";
-import TextField from '@mui/material/TextField';
+import TextField from "@mui/material/TextField";
 
 const SearchBar = (props) => {
   const [inputValue, setInputValue] = useState("");
@@ -14,7 +14,6 @@ const SearchBar = (props) => {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [addressComponent, setAddressComponent] = useState(null);
-  const [isGeocoding, setIsGeocoding] = useState(false);
 
   const handleChange = (newAddress) => {
     setAddress(newAddress);
@@ -25,11 +24,9 @@ const SearchBar = (props) => {
   };
 
   const handleSelect = (selected) => {
-    setIsGeocoding(true);
     setAddress(selected);
     geocodeByAddress(selected)
       .then((res) => {
-        console.log(res[0].address_components);
         res[0].address_components &&
           setAddressComponent(res[0].address_components);
         return getLatLng(res[0]);
@@ -37,23 +34,13 @@ const SearchBar = (props) => {
       .then(({ lat, lng }) => {
         setLatitude(lat);
         setLongitude(lng);
-        setIsGeocoding(false);
       })
       .catch((error) => {
-        setIsGeocoding(false);
-        console.log("error", error);
+        console.error("error", error);
       });
   };
 
-  const handleCloseClick = () => {
-    setAddress("");
-    setLatitude(null);
-    setLongitude(null);
-    setAddressComponent(null);
-  };
-
   const handleError = (status, clearSuggestions) => {
-    console.log("Error from Google Maps API", status);
     setErrorMessage(status);
     clearSuggestions();
   };
@@ -63,12 +50,10 @@ const SearchBar = (props) => {
   };
 
   useEffect(() => {
-    console.log("CHECK : ", latitude);
     props.setLat(latitude);
     props.setAddress(addressComponent);
     props.setLong(longitude);
   }, [latitude, longitude, addressComponent, props]);
-
 
   return (
     <div>

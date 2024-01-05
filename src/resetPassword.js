@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { RESET_PASSWORD } from "./constants";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,9 +10,8 @@ const ResetPasswordPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token');
+  const token = searchParams.get("token");
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -43,7 +42,6 @@ const ResetPasswordPage = () => {
         .then((response) => {
           if (response.ok) {
             window.alert("SAVED PASSWORD");
-            console.log("SAVED PASSWORD", token);
             localStorage.setItem("token", token);
             navigate("/gps");
           } else {
@@ -61,28 +59,28 @@ const ResetPasswordPage = () => {
   return (
     <div className="reset_password">
       <h1>Reset Password</h1>
-     <div className="reset_password_form">
-     <form onSubmit={handleSubmit}>
-        <label>
-          New Password:
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </label>
-        <label>
-          Confirm Password:
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-          />
-        </label>
-        <button type="submit">Reset Password</button>
-        {error && <p>{error}</p>}
-      </form>
-     </div>
+      <div className="reset_password_form">
+        <form onSubmit={handleSubmit}>
+          <label>
+            New Password:
+            <input
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </label>
+          <label>
+            Confirm Password:
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+            />
+          </label>
+          <button type="submit">Reset Password</button>
+          {error && <p>{error}</p>}
+        </form>
+      </div>
     </div>
   );
 };

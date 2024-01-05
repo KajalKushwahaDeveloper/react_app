@@ -41,19 +41,18 @@ const EmulatorTable = ({
       } else {
         refreshEditedEmulator(emulatorEditedId);
       }
-     
     }
   }, [emulatorEditedId]);
 
-  useEffect( () => {
+  useEffect(() => {
     const updateSerialEmu = async () => {
       const { success, data, error } = await GetEmulatorApi();
       if (success) {
         setEmulators(data);
       }
-    }
+    };
     updateSerialEmu();
-  },[updateSerial])
+  }, [updateSerial]);
 
   // Fetch data from API
   const refreshEditedEmulator = async (emulatorEditedId) => {
@@ -82,10 +81,8 @@ const EmulatorTable = ({
 
   //assign/unassign button
   const handleActionButtonClick = async (row) => {
-    console.log("row data in emulator_page:", row);
     if (row.user != null) {
       const token = localStorage.getItem("token");
-      console.log("token : ", token);
       try {
         const response = await fetch(USER_ASSIGN_EMULATOR_URL + "/" + row.id, {
           method: "PUT",
@@ -94,8 +91,6 @@ const EmulatorTable = ({
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("response:", response);
-
         if (!response.ok || response.status !== 200) {
           showToast("Failed to unassign user", "error");
           return { success: false, error: "Failed to unassign user" };
@@ -107,19 +102,13 @@ const EmulatorTable = ({
           },
         };
         setUserAssingedEmulator(userAssignedEmulator);
-
-        console.log("Data Previous : " + emulators);
-        const result = await response.text();
-        console.log("result:", result);
         const updatedData = emulators.map((item) => {
           if (item.id === row.id) {
-            console.log("Data Found");
             return { ...item, user: null };
           }
           return item;
         });
         showToast(`User Un-Assigned`, "success");
-        console.log("Data Updated : " + emulators);
         setEmulators(updatedData);
       } catch (error) {
         showToast(`Failed to unassign user ${error}`, "error");
@@ -159,8 +148,6 @@ const EmulatorTable = ({
       );
 
       if (success) {
-        console.log("data45:", data);
-        console.log("Data Updated : " + data);
         showToast("emulator deleted", "success");
         fetchData();
       } else {
@@ -178,7 +165,6 @@ const EmulatorTable = ({
       showToast(error, "error");
     }
   }, []);
-
 
   useEffect(() => {
     if (userAssingedEmulator != null) {
@@ -214,7 +200,6 @@ const EmulatorTable = ({
 
   return (
     <div className="table-responsive tableBox">
-
       <table
         aria-label="custom pagination table"
         className="table shadow mb-0 n="
@@ -245,7 +230,7 @@ const EmulatorTable = ({
                   justifyContent: "center",
                   overflow: "hidden",
                   whiteSpace: "nowrap",
-                  borderTop:"none"
+                  borderTop: "none",
                 }}
               >
                 <div
@@ -297,7 +282,10 @@ const EmulatorTable = ({
               <td align="right">
                 {row.user?.firstName || "N/A"} {row.user?.lastName || "N/A"}
               </td>
-              <td style={{ display:"flex", width: "auto" ,borderBottom:"none"}} align="right">
+              <td
+                style={{ display: "flex", width: "auto", borderBottom: "none" }}
+                align="right"
+              >
                 <IconButton
                   size="small"
                   style={{
@@ -306,22 +294,20 @@ const EmulatorTable = ({
                   aria-label="delete"
                   onClick={() => handleDeleteButtonClick(row)}
                 >
-                  <DeleteIcon
-                    fontSize="small"
-                  />
+                  <DeleteIcon fontSize="small" />
                 </IconButton>
                 <div>
-                <button
-                  style={{
-                    backgroundColor: row.user === null ? "green" : "red",
-                    // width: row.user === null ? "95px" : "",
-                    width: "6.5rem",
-                    padding: ".4rem 0",
-                  }}
-                  onClick={() => handleActionButtonClick(row)}
-                >
-                  {row.user === null ? "assign" : "unassign"}
-                </button>
+                  <button
+                    style={{
+                      backgroundColor: row.user === null ? "green" : "red",
+                      // width: row.user === null ? "95px" : "",
+                      width: "6.5rem",
+                      padding: ".4rem 0",
+                    }}
+                    onClick={() => handleActionButtonClick(row)}
+                  >
+                    {row.user === null ? "assign" : "unassign"}
+                  </button>
                 </div>
               </td>
             </tr>

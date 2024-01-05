@@ -18,7 +18,6 @@ const DownloadApk = () => {
     setLoading(true); // Set loading to true before starting the fetch
 
     const token = localStorage.getItem("token");
-    console.log("token : ", token);
 
     fetch(DOWNLOAD_APK_URL, {
       headers: {
@@ -80,7 +79,7 @@ const DownloadApk = () => {
         boxShadow: "-3px -3px 7px #bfbdbd73, 2px 2px 7px rgb(222, 241, 252)",
       }}
     >
-      <CardContent style={{padding:"1rem"}}>
+      <CardContent style={{ padding: "1rem" }}>
         <div className="d-flex justify-content-around">
           <Typography variant="h5" component="h2">
             Mock Application APK

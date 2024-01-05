@@ -12,7 +12,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
 
   const logout = useEmulatorStore((state) => state.logout);
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAdmin(false);
@@ -21,7 +21,6 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
   };
 
   const fetchClientData = async () => {
-    console.log("fetchClientData isAdmin : "  + isAdmin);
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(CLIENT_CURRENT, {
@@ -35,14 +34,12 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
         return { success: false, error: "Invalid credentials" };
       } else {
         const responseData = await response.text();
-        console.log("responseData navbar:", responseData);
         const deserializedData = JSON.parse(responseData);
         setData(deserializedData);
-        console.log("deserializedData navbar:", deserializedData);
         return { success: true, error: null };
       }
     } catch (error) {
-      console.log("Data Error: " + error);
+      console.error("Data Error: " + error);
       setError(error.message);
     }
   };
@@ -75,7 +72,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
                   <NavLink
                     to="/home"
                     className="navbar-link"
-                    onClick={() => setMenuIcon(false)} 
+                    onClick={() => setMenuIcon(false)}
                   >
                     Licenses
                   </NavLink>
@@ -90,16 +87,13 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
                   GPS
                 </NavLink>
               </li>
-        
-              <p className="username_para" style={{margin :"1rem 0"}}>
+
+              <p className="username_para" style={{ margin: "1rem 0" }}>
                 {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
                 {data?.username || "N/A"})
               </p>
               <li>
-                <NavLink
-                  to="/"
-                  onClick={() => handleLogout()}
-                >
+                <NavLink to="/" onClick={() => handleLogout()}>
                   Logout
                 </NavLink>
               </li>
@@ -110,7 +104,13 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
             {/* hamburger menu start  */}
             <div className="hamburger-menu">
               <a href="#" onClick={() => setMenuIcon(!menuIcon)}>
-                <MenuIcon style={{ width: "4rem", height: "4rem",paddingBottom:"2.5rem", }} />
+                <MenuIcon
+                  style={{
+                    width: "4rem",
+                    height: "4rem",
+                    paddingBottom: "2.5rem",
+                  }}
+                />
               </a>
             </div>
           </div>

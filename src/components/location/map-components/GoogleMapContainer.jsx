@@ -16,7 +16,6 @@ const libraries = ["drawing", "places", "autocomplete"];
 
 const GoogleMapContainer = () => {
   const center = useEmulatorStore((state) => state.center);
-  console.log("GoogleMapContainer refreshed ");
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
@@ -39,7 +38,6 @@ const GoogleMapContainer = () => {
   const { data } = useFetch(EMULATOR_URL);
 
   useEffect(() => {
-    console.log("Map.js - useEffect - data: ", data);
     if (data !== null) {
       createDevices(data);
     }
@@ -55,22 +53,15 @@ const GoogleMapContainer = () => {
       mapRef.current === null ||
       mapRef.current === undefined
     ) {
-      console.log(`fitBounds ERROR: ${tripData} mapRef: ${mapRef.current}`);
       return;
     }
     if (tripData.tripPoints === null || tripData.tripPoints.length <= 0) {
-      console.log(
-        `fitBounds ERROR tripData: ${tripData === null} mapRef: ${
-          mapRef.current === null
-        }`
-      );
       return;
     }
     const bounds = new window.google.maps.LatLngBounds();
     tripData?.tripPoints?.forEach((element) => {
       bounds.extend(new window.google.maps.LatLng(element.lat, element.lng));
     });
-    console.log("bounds", bounds);
     mapRef.current.fitBounds(bounds);
   }, [mapRef, tripData]);
 

@@ -37,10 +37,9 @@ const PopUpEmulatorTelephone = ({
     if (userToEdit) {
       setAlternateNumber(userToEdit.alternateTelephone);
       setId(userToEdit.id);
-      setVoiceMsg(userToEdit.voiceMsg)
+      setVoiceMsg(userToEdit.voiceMsg);
     }
   }, [userToEdit]);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,7 +52,6 @@ const PopUpEmulatorTelephone = ({
       const { success, error } = await addUser();
 
       if (success) {
-        console.log("Telephone Number added successfully");
         if (userToEdit != null) {
           handleClose(null, userToEdit?.id);
         } else {
@@ -65,7 +63,7 @@ const PopUpEmulatorTelephone = ({
         setError(error || "Failed to add Telephone Number");
       }
     } catch (error) {
-      console.log("Error occurred while adding Telephone Number:", error);
+      console.error("Error occurred while adding Telephone Number:", error);
       setError("An error occurred while adding Telephone Number");
     }
     // setTwilioUpdatedPhone("");
@@ -77,7 +75,7 @@ const PopUpEmulatorTelephone = ({
       id: id,
       telephone: twilioNumber,
       alternateTelephone: alternateNumber,
-      voiceMsg: voiceMsg
+      voiceMsg: voiceMsg,
     };
 
     const token = localStorage.getItem("token");
@@ -90,7 +88,6 @@ const PopUpEmulatorTelephone = ({
         },
         body: JSON.stringify(user),
       });
-      console.log("addUser response:", response);
       if (!response.ok || response.status !== 200) {
         const text = await response.text();
         console.error("addUser error:", text);

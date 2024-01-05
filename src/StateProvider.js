@@ -1,6 +1,4 @@
-import React, {
-  useState,
-} from "react";
+import React, { useState } from "react";
 
 import useFetch from "./hooks/useFetch";
 import { toast } from "react-toastify";
@@ -30,7 +28,6 @@ const useStates = () => {
 export { useStates };
 
 export const StateProvider = ({ children }) => {
-
   const { data: staticEmulators } = useFetch(EMULATOR_URL);
 
   const [isTableVisible, setIsTableVisible] = useState(false);
@@ -38,7 +35,6 @@ export const StateProvider = ({ children }) => {
   const [hoveredMarker, setHoveredMarker] = useState(null);
 
   const showToast = (message, type) => {
-    console.log("Showing toast...");
     toast[type](message); // Use the 'type' argument to determine the toast type
   };
 

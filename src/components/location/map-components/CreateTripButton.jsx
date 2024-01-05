@@ -10,11 +10,7 @@ import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx
 
 const CreateTripButton = () => {
   const { width } = useViewPort();
-  const {
-    showToast,
-    setIsTableVisible,
-    isTableVisible,
-  } = useStates();
+  const { showToast, setIsTableVisible, isTableVisible } = useStates();
 
   //Initiate fetchEmulators from store
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
@@ -22,14 +18,6 @@ const CreateTripButton = () => {
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
-      // Check if compareSelectedEmulator is working as intented (Updating emulators only on shallow change)
-      const diff = compareSelectedEmulator(
-        oldSelectedEmulator,
-        newSelectedEmulator
-      );
-      if (diff === true) {
-        console.log("selectedEmulator changed (CreateTripButton)");
-      }
       compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
     }
   );
@@ -44,7 +32,6 @@ const CreateTripButton = () => {
     if (selectedEmulator === null) {
       showToast("Emulator is not selected", "error"); //Emulator is not selected error
     } else if (selectedEmulator.AssignedTelephoneNumber === null) {
-      console.log("Assigned number", selectedEmulator.AssignedTelephoneNumber);
       showToast("Telephone Number is not Assigned", "error"); //Telephone Number is not Assigned
     } else {
       setIsTableVisible(!isTableVisible);

@@ -23,7 +23,7 @@ export interface EmulatorsSlice {
   fetchEmulators: () => Promise<void>;
   selectEmulator: (emulator: Emulator | null) => void;
   hoverEmulator: (emulator: Emulator | null) => void;
-  dragEmulator: (emulator: DragEmulator | null ) => void;
+  dragEmulator: (emulator: DragEmulator | null) => void;
 }
 
 export interface TripDataSlice {
@@ -117,7 +117,7 @@ const createEmulatorsSlice: StateCreator<
   },
   hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
   dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
-  });
+});
 
 const createTripDataSlice: StateCreator<
   EmulatorsSlice & TripDataSlice,
@@ -157,21 +157,18 @@ const createTripDataSlice: StateCreator<
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ distance : tripDataOldDistance }),
+          body: JSON.stringify({ distance: tripDataOldDistance }),
         });
         // can return either the TripData or a string
         const tripDataResp: TripDataResponse = await response.json();
         if (tripDataResp.data === null || tripDataResp.data === undefined) {
-          console.log(
+          console.warn(
             "TripData is null",
-            tripDataResp.status +
-              " " +
-              tripDataResp.statusText 
+            tripDataResp.status + " " + tripDataResp.statusText
           );
           set({ tripData: tripDataOld });
           get().setPaths(tripDataOld);
         } else {
-          console.log("Got trip data: ", tripDataResp.data);
           const tripData = tripDataResp.data;
           set({ tripData });
           get().setPaths(tripData);
@@ -212,7 +209,6 @@ const createSharedSlice: StateCreator<
   connectSse: () => {
     // Run this when we are logged in. i.e. when we have a token
     const token = localStorage.getItem("token");
-    console.log("fetchEventSource TRIGGERED");
     const ctrl = new AbortController();
 
     fetchEventSource(`${BASE_URL}/sse`, {
@@ -222,14 +218,8 @@ const createSharedSlice: StateCreator<
         Authorization: `Bearer ${token}`,
       },
       onopen: async (res: Response) => {
-        if (res.ok && res.status === 200) {
-          console.log("Connection made ", res);
-        } else if (
-          res.status >= 400 &&
-          res.status < 500 &&
-          res.status !== 429
-        ) {
-          console.log("Client side error ", res);
+        if (res.status >= 400 && res.status < 500 && res.status !== 429) {
+          console.error("Client side error ", res);
         }
       },
       onmessage(event) {
@@ -237,10 +227,10 @@ const createSharedSlice: StateCreator<
         useEmulatorStore.getState().updateEmulators(parsedData);
       },
       onclose() {
-        console.log("Connection closed by the server");
+        console.warn("Connection closed by the server");
       },
       onerror(err) {
-        console.log("There was an error from the server", err);
+        console.error("There was an error from the server", err);
       },
       signal: ctrl.signal,
     });
@@ -258,9 +248,8 @@ const createSharedSlice: StateCreator<
     });
     const devices = get().devices;
     if (devices.length > 0) {
-      devices.forEach((twillioDevice : TwillioDevice | null) => {
-      console.log("DEVICES twillioDevice:", twillioDevice);
-      twillioDevice?.device?.destroy();
+      devices.forEach((twillioDevice: TwillioDevice | null) => {
+        twillioDevice?.device?.destroy();
       });
     }
     set({ devices: [], selectedDevice: null });

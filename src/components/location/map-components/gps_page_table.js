@@ -25,7 +25,6 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CallRoundedIcon from "@mui/icons-material/CallRounded";
 import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import DescriptionIcon from "@mui/icons-material/Description";
 
 //components
 import ContactDialogComponent from "./Phone/ContactDialogComponent";
@@ -42,17 +41,12 @@ import {
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
-import TextField from "@mui/material/TextField";
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
   const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
-      const diff = compareEmulatorsCompletely(oldEmulators, newEmulators);
-      if (diff === true) {
-        console.log("emulators changed ");
-      }
       compareEmulatorsCompletely(oldEmulators, newEmulators);
     }
   );
@@ -60,11 +54,6 @@ const GpsTable = () => {
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldEmulators, newEmulators) => {
-      // Check if compareEmulators is working as intented (Updating emulators only on shallow change)
-      const val = compareSelectedEmulator(oldEmulators, newEmulators);
-      if (val === true) {
-        console.log("emulators changed (GPS)", val);
-      }
       compareSelectedEmulator(oldEmulators, newEmulators);
     }
   );
@@ -215,9 +204,7 @@ const GpsTable = () => {
 
   const handleHistoryButtonClick = async (emulatorForHistory) => {
     setMessageLoading(true);
-    console.log("selected Emulator to Show It's history :", emulatorForHistory);
     const token = localStorage.getItem("token");
-    console.log("token : ", token);
     const { success, data, error } = await ApiService.makeApiCall(
       TRIP_HISTORY + "/" + emulatorForHistory.id,
       "GET",
@@ -234,7 +221,6 @@ const GpsTable = () => {
   };
 
   const handleRestartButtonClick = async (row) => {
-    console.log("emulator notification :", row);
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
       EMULATOR_NOTIFICATION_URL + "/" + row.id,
@@ -259,7 +245,6 @@ const GpsTable = () => {
       return;
     }
     const token = localStorage.getItem("token");
-    console.log("token : ", token);
     const { success, data, error } = await ApiService.makeApiCall(
       TRIP_TOGGLE + "/" + row.id,
       "GET",
@@ -267,11 +252,10 @@ const GpsTable = () => {
       token
     );
     if (success) {
-      console.log(`CHANGED TRIP STATUS : ${data.tripStatus}`);
       showToast("CHANGED TRIP STATUS", "success");
       fetchEmulators();
     } else {
-      console.log(`Error CHANGING TRIP STATUS : ${error}`);
+      console.error(`Error CHANGING TRIP STATUS : ${error}`);
       showToast("Error CHANGING TRIP STATUS", "error");
     }
   };

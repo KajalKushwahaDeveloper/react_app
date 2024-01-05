@@ -4,10 +4,8 @@ import { Emulator } from "../emulator/types";
 
 import { Device, Connection } from "twilio-client";
 import ApiService from "../../ApiService.js";
-import { EMULATOR_URL, VOICE_GET_TOKEN_URL } from "../../constants.js";
+import { VOICE_GET_TOKEN_URL } from "../../constants.js";
 import states from "../../components/location/map-components/Phone/twilio/states.js";
-import useFetch from "../../hooks/useFetch.js";
-import { useEmulatorStore } from "../emulator/store.js";
 
 export interface deviceStore {
   devices: TwillioDevice[] | [];
@@ -67,7 +65,6 @@ export const createDeviceSlice: StateCreator<
           });
 
           deviceDataModel.device.on("ready", () => {
-            console.log("DEVICES device ready");
             const deviceDataModelReady: TwillioDevice = {
               emulatorId: emulator.id,
               token: deviceDataModel.token,
@@ -79,7 +76,6 @@ export const createDeviceSlice: StateCreator<
             get().updateDeviceState(deviceDataModelReady);
           });
           deviceDataModel.device.on("connect", (connection) => {
-            console.log("DEVICES device connect", connection);
             const deviceDataModelConnect: TwillioDevice = {
               emulatorId: deviceDataModel.emulatorId,
               token: deviceDataModel.token,
@@ -91,7 +87,6 @@ export const createDeviceSlice: StateCreator<
             get().updateDeviceState(deviceDataModelConnect);
           });
           deviceDataModel.device.on("disconnect", () => {
-            console.log("DEVICES device disconnect");
             const deviceDataModelDisconnect = {
               emulatorId: emulator.id,
               token: deviceDataModel.token,
@@ -103,10 +98,6 @@ export const createDeviceSlice: StateCreator<
             get().updateDeviceState(deviceDataModelDisconnect);
           });
           deviceDataModel.device.on("incoming", (incomingConnection) => {
-            console.log(
-              "DEVICES device Incoming call received : ",
-              incomingConnection
-            );
             const deviceDataModelIncoming = {
               emulatorId: emulator.id,
               token: deviceDataModel.token,
@@ -118,7 +109,6 @@ export const createDeviceSlice: StateCreator<
             get().updateDeviceState(deviceDataModelIncoming);
 
             incomingConnection.on("reject", () => {
-              console.log("DEVICES device call rejected");
               const deviceDataModelReject = {
                 emulatorId: emulator.id,
                 token: deviceDataModel.token,
@@ -131,7 +121,6 @@ export const createDeviceSlice: StateCreator<
             });
           });
           deviceDataModel.device.on("cancel", () => {
-            console.log("DEVICES device call cancel");
             const deviceDataModelCancel = {
               emulatorId: emulator.id,
               token: deviceDataModel.token,
@@ -143,7 +132,6 @@ export const createDeviceSlice: StateCreator<
             get().updateDeviceState(deviceDataModelCancel);
           });
           deviceDataModel.device.on("reject", () => {
-            console.log("DEVICES device call reject");
             const deviceDataModelReject = {
               emulatorId: emulator.id,
               token: deviceDataModel.token,
@@ -156,7 +144,6 @@ export const createDeviceSlice: StateCreator<
           });
         })
       );
-      console.log("DEVICES newDevices:", newDevices);
       set({ devices: newDevices });
       console.error("DEVICES created Devices:", get().devices);
     } catch (error) {
@@ -164,7 +151,6 @@ export const createDeviceSlice: StateCreator<
     }
   },
   selectDevice: (selectedDevice) => {
-    console.log("DEVICES selectedDevice:", selectedDevice);
     set({ selectedDevice });
   },
   updateDeviceState: (updatedDevice) => {
@@ -188,13 +174,12 @@ export const createDeviceSlice: StateCreator<
     set({ devices: updatedDevices });
   },
   deleteAllDevices: () => {
-    get().devices.forEach((twillioDevice : TwillioDevice | null) => {
-      console.log("DEVICES twillioDevice:", twillioDevice);
+    get().devices.forEach((twillioDevice: TwillioDevice | null) => {
       twillioDevice?.device?.destroy();
     });
     set({ devices: [] });
     get().selectDevice(null);
-  }
+  },
 });
 
 // NOTE:: SPECIFICALLY FOR GPS_PAGE_TABLE to open/close dialog incoming/disconnect calls

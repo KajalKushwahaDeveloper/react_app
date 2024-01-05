@@ -16,7 +16,6 @@ import { GetEmulatorApi } from "./components/api/emulator.js";
 import { useForm } from "react-hook-form";
 
 const Home = () => {
-  console.log("Home component loaded!");
   const [openUserPopup, setOpenUserPopup] = useState(false);
   const [openEmulatorPopup, setOpenEmulatorPopup] = useState(false);
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false);
@@ -43,7 +42,6 @@ const Home = () => {
   } = useForm();
 
   const showToast = (message, type) => {
-    console.log("Showing toast...");
     toast[type](message); // Use the 'type' argument to determine the toast type
   };
 
@@ -109,14 +107,12 @@ const Home = () => {
 
   //Edit PHONE NUMBER button click
   const handleEditButtonClick = (data) => {
-    console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setOpenUserPopup(true);
   };
 
   //emulator generated id button click
   const handleGeneratedIdButtonClick = (data) => {
-    console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setEmulatorToChangeSsid(data);
     setOpenChangeSsidPopup(true);
@@ -125,26 +121,22 @@ const Home = () => {
 
   //telephone update
   const handleEmulatorTelephonePopup = (data) => {
-    console.log("IconButton clicked with data:", data);
     setUserToEdit(data);
     setOpenEmulatorPopup(true);
   };
   //assign user button
   const handleAssignUserButtonClick = (data) => {
-    console.log("Assign Button clicked with data:", data);
     setEmulatorToAssignUser(data);
     setOpenUserAssignPopup(true);
   };
   //assign user to an emulator
   const handleAssignedUserToEmulator = (success, error, data) => {
-    console.log("assignedUserToEmulator with data:", data);
     setUserAssingedEmulator(data);
     setEmulatorToAssignUser(null);
     setOpenUserAssignPopup(false);
   };
 
   const handleEmulatorSsidChanged = (success, error, data) => {
-    console.log("handleEmulatorSsidChanged with data:", data);
   };
 
   return (

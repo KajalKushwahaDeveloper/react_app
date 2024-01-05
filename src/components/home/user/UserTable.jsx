@@ -4,7 +4,6 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { CircularProgress } from "@mui/material";
@@ -16,7 +15,7 @@ import {
   getComparator,
   EnhancedTableToolbar,
   EnhancedTableHead,
-} from "./stableSort"
+} from "./stableSort";
 import ApiService from "../../../ApiService";
 import { USER_CHANGE_STATUS_URL, USER_URL } from "../../../constants";
 import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
@@ -41,20 +40,86 @@ export default function UserTable({
   const [userData, setUserData] = React.useState([]);
 
   React.useEffect(() => {
+    // Fetch data from API
+    const refreshEditedUser = async (userId) => {
+      const token = localStorage.getItem("token");
+      const { success, data, error } = await ApiService.makeApiCall(
+        USER_URL,
+        "GET",
+        null,
+        token,
+        userId
+      );
+      if (success) {
+        const updatedData = userData.map((item) => {
+          if (item.id === data.id) {
+            return data;
+          }
+          return item;
+        });
+        showToast(`Updated user table!`, "success");
+        setUserData(updatedData);
+      } else {
+        showToast("Failed to update user table", "error");
+        return { success: false, error: "Failed to unassign user" };
+      }
+    };
     if (userEditedId != null) {
-      if (userEditedId == 0) {
+      if (userEditedId === 0) {
         fetchUsers();
       } else {
         refreshEditedUser(userEditedId);
       }
     }
-  }, [userEditedId, updatedData]);
+  }, [userEditedId, updatedData, userData, showToast]);
 
   React.useEffect(() => {
+    // Fetch data from API
+    const refreshUser = async (userId) => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(USER_URL + "/" + userId, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // eslint-disable-next-line no-mixed-operators
+        if (!response.ok || response.status !== 200) {
+          if (userId !== undefined) {
+            showToast("Failed to update user table1122", "error");
+          }
+          return { success: false, error: "Failed to unassign user" };
+        }
+        const responseData = await response.text();
+        const result = JSON.parse(responseData);
+        const updatedData = userData.map((item) => {
+          if (item.id === result.id) {
+            return {
+              ...item,
+              emulatorCount: {
+                ...item.emulatorCount,
+                allEmulatorsCount: result.emulatorCount?.allEmulatorsCount,
+                activeEmulatorsCount:
+                  result.emulatorCount?.activeEmulatorsCount,
+              },
+            };
+          }
+          return item;
+        });
+        showToast(`Updated user table!`, "success");
+        setUserData(updatedData);
+      } catch (error) {
+        console.error("refreshUser error : " + error);
+        showToast(`Failed to update user table ${error}`, "error");
+      }
+    };
     if (userAssingedEmulator != null) {
       refreshUser(userAssingedEmulator.user?.id);
     }
-  }, [userAssingedEmulator]);
+  }, [showToast, userAssingedEmulator, userData]);
 
   const handleActionButtonClick = async (id, status) => {
     if (status == "ENABLED") {
@@ -68,7 +133,6 @@ export default function UserTable({
     };
 
     const token = localStorage.getItem("token");
-    console.log("token : ", token);
     const response = await fetch(USER_CHANGE_STATUS_URL, {
       method: "PUT",
       headers: {
@@ -77,21 +141,15 @@ export default function UserTable({
       },
       body: JSON.stringify(userStatusChange),
     });
-    console.log("response:", response);
     if (!response.ok || response.status !== 200) {
       return { success: false, error: "Failed to add user" };
     }
-    console.log("Data Previous : " + userData);
-    const result = await response.text();
-    console.log("result:", result);
     const updatedData = userData.map((item) => {
       if (item.id === id) {
-        console.log("Data Found");
         return { ...item, status: userStatusChange.status };
       }
       return item;
     });
-    console.log("Data Updated : " + userData);
     setUserData(updatedData);
   };
 
@@ -112,89 +170,11 @@ export default function UserTable({
 
       if (success) {
         const updatedData = userData.filter((item) => item.id !== user.id);
-        console.log("Data Updated : " + data);
         setUserData(updatedData);
         showToast("User deleted", "success");
       } else {
         showToast("User not deleted", "error");
       }
-    }
-  };
-  // Fetch data from API
-  const refreshEditedUser = async (userId) => {
-    const token = localStorage.getItem("token");
-    const { success, data, error } = await ApiService.makeApiCall(
-      USER_URL,
-      "GET",
-      null,
-      token,
-      userId
-    );
-    if (success) {
-      const updatedData = userData.map((item) => {
-        if (item.id === data.id) {
-          return data;
-        }
-        return item;
-      });
-      showToast(`Updated user table!`, "success");
-      setUserData(updatedData);
-    } else {
-      showToast("Failed to update user table", "error");
-      return { success: false, error: "Failed to unassign user" };
-    }
-  };
-  // Fetch data from API
-  const refreshUser = async (userId) => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await fetch(USER_URL + "/" + userId, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("refreshUser response:", response);
-
-      // eslint-disable-next-line no-mixed-operators
-      if (!response.ok || response.status !== 200) {
-        if (userId !== undefined) {
-          showToast("Failed to update user table1122", "error");
-        }
-        return { success: false, error: "Failed to unassign user" };
-      }
-      const responseData = await response.text();
-      console.log("refreshUser  " + responseData);
-      const result = JSON.parse(responseData);
-      console.log("refreshUser result : " + result);
-      console.log("refreshUser emulatorCount : " + result.emulatorCount);
-      console.log(
-        "refreshUser allEmulatorsCount : " +
-          result.emulatorCount?.allEmulatorsCount
-      );
-      console.log(
-        "refreshUser activeEmulatorsCount : " +
-          result.emulatorCount?.activeEmulatorsCount
-      );
-      const updatedData = userData.map((item) => {
-        if (item.id === result.id) {
-          return {
-            ...item,
-            emulatorCount: {
-              ...item.emulatorCount,
-              allEmulatorsCount: result.emulatorCount?.allEmulatorsCount,
-              activeEmulatorsCount: result.emulatorCount?.activeEmulatorsCount,
-            },
-          };
-        }
-        return item;
-      });
-      showToast(`Updated user table!`, "success");
-      setUserData(updatedData);
-    } catch (error) {
-      console.log("refreshUser error : " + error);
-      showToast(`Failed to update user table ${error}`, "error");
     }
   };
 
@@ -219,7 +199,7 @@ export default function UserTable({
         return { success: true, error: null };
       }
     } catch (error) {
-      console.log("User Data Error: " + error);
+      console.error("User Data Error: " + error);
       setError(error.message);
       setLoading(false);
     }
@@ -358,8 +338,8 @@ export default function UserTable({
                               handleActionButtonClick(row.id, row.status)
                             }
                           >
-                          {row.status}
-                        </button>
+                            {row.status}
+                          </button>
                         </div>
                         {/* can use for vertical */}
                       </div>

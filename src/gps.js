@@ -12,7 +12,6 @@ import { DragDialog } from "./components/location/map-components/DragDialog.jsx"
 import GoogleMapContainer from "./components/location/map-components/GoogleMapContainer.jsx";
 
 const GPS = () => {
-  console.log("GPS.js refreshed");
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;

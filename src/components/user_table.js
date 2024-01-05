@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-
 import { USER_URL } from "../constants";
 import { USER_CHANGE_STATUS_URL } from "../constants";
 import "../scss/button.scss";
@@ -52,7 +51,6 @@ const UserTable = ({
     };
 
     const token = localStorage.getItem("token");
-    console.log("token : ", token);
     const response = await fetch(USER_CHANGE_STATUS_URL, {
       method: "PUT",
       headers: {
@@ -61,21 +59,15 @@ const UserTable = ({
       },
       body: JSON.stringify(userStatusChange),
     });
-    console.log("response:", response);
     if (!response.ok || response.status !== 200) {
       return { success: false, error: "Failed to add user" };
     }
-    console.log("Data Previous : " + userData);
-    const result = await response.text();
-    console.log("result:", result);
     const updatedData = userData.map((item) => {
       if (item.id === id) {
-        console.log("Data Found");
         return { ...item, status: userStatusChange.status };
       }
       return item;
     });
-    console.log("Data Updated : " + userData);
     setUserData(updatedData);
   };
 
@@ -96,7 +88,6 @@ const UserTable = ({
 
       if (success) {
         const updatedData = userData.filter((item) => item.id !== user.id);
-        console.log("Data Updated : " + data);
         setUserData(updatedData);
         showToast("User deleted", "success");
       } else {
@@ -139,7 +130,6 @@ const UserTable = ({
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("refreshUser response:", response);
 
       // eslint-disable-next-line no-mixed-operators
       if (!response.ok || response.status !== 200) {
@@ -149,18 +139,7 @@ const UserTable = ({
         return { success: false, error: "Failed to unassign user" };
       }
       const responseData = await response.text();
-      console.log("refreshUser  " + responseData);
       const result = JSON.parse(responseData);
-      console.log("refreshUser result : " + result);
-      console.log("refreshUser emulatorCount : " + result.emulatorCount);
-      console.log(
-        "refreshUser allEmulatorsCount : " +
-          result.emulatorCount?.allEmulatorsCount
-      );
-      console.log(
-        "refreshUser activeEmulatorsCount : " +
-          result.emulatorCount?.activeEmulatorsCount
-      );
       const updatedData = userData.map((item) => {
         if (item.id === result.id) {
           return {
@@ -177,7 +156,7 @@ const UserTable = ({
       showToast(`Updated user table!`, "success");
       setUserData(updatedData);
     } catch (error) {
-      console.log("refreshUser error : " + error);
+      console.error("refreshUser error : " + error);
       showToast(`Failed to update user table ${error}`, "error");
     }
   };
@@ -203,7 +182,7 @@ const UserTable = ({
         return { success: true, error: null };
       }
     } catch (error) {
-      console.log("User Data Error: " + error);
+      console.error("User Data Error: " + error);
       setError(error.message);
       setLoading(false);
     }

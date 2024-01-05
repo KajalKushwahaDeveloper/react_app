@@ -7,8 +7,6 @@ import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_URL } from "../../../../constants.js";
 
 export function StopComponents(props) {
-  console.log("StopComponents refreshed");
-
   const { showToast } = useStates();
   const tripData = useEmulatorStore(
     (state) => state.tripData,
@@ -38,13 +36,7 @@ export function StopComponents(props) {
 
   let stopNewLatLng = null;
 
-  const handleStopDragEnd = (e, index, stop) => {
-    // get new lat lng of the marker
-    console.info("event: ", e);
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-    console.info(`stop index ${stop.tripPointIndex} lat: ${lat} lng: ${lng}`);
-    console.info("stopRefs: ", stopRefs.current[index]);
+  const handleStopDragEnd = (index) => {
     const marker = stopRefs.current[index];
     if (stopNewLatLng !== null) {
       marker.setPosition({ lat: stopNewLatLng.lat, lng: stopNewLatLng.lng });
@@ -53,15 +45,9 @@ export function StopComponents(props) {
   };
 
   const handleStopDragged = (e, index, stop) => {
-    console.info("stopRefs: ", stopRefs.current[index]);
     // get new lat lng of the marker
-    console.info("event: ", e);
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
-    console.info(
-      `stop index: ${index} tripPointIndex: ${stop.tripPointIndex} lat: ${lat} lng: ${lng}`
-    );
-
     //snap to closest path lat lng
     const clickedLatLng = { lat: lat, lng: lng };
     const findClosestPointIndex = (path) => {
@@ -88,7 +74,6 @@ export function StopComponents(props) {
       return;
     }
 
-    console.log("Closest point in pathTraveled: ", totalPath[closestIndexPath]);
     // snap the marker from markerRef to the closest point in pathTraveled
     const marker = stopRefs.current[index];
     marker.setPosition({
@@ -105,13 +90,21 @@ export function StopComponents(props) {
 
   async function requestNewStopCreation(marker, newLatLng, index) {
     // confirm from window alert
-    const confirm = window.confirm(`Change stop S${index + 1} location to this?}`);
+    const confirm = window.confirm(
+      `Change stop S${index + 1} location to this?}`
+    );
     if (!confirm) {
       stopNewLatLng = null;
       //reset marker position to original
-      if(tripData?.stops !== null && tripData?.stops !== undefined && tripData?.stops.length > 0) {
-        console.log("tripData.stops[index]: ", tripData.stops[index].lat, tripData.stops[index].lng);
-        marker.setPosition({ lat : tripData.stops[index].lat, lng: tripData.stops[index].lng})
+      if (
+        tripData?.stops !== null &&
+        tripData?.stops !== undefined &&
+        tripData?.stops.length > 0
+      ) {
+        marker.setPosition({
+          lat: tripData.stops[index].lat,
+          lng: tripData.stops[index].lng,
+        });
       }
       return;
     }
@@ -127,12 +120,11 @@ export function StopComponents(props) {
     );
     if (success) {
       showToast("Stop updated!", "success");
-      console.log("LOG 1 - created Stop: ", data);
       setTripData(data);
       stopNewLatLng = null;
     } else {
       showToast("Error updating Stop!", "error");
-      console.log("LOG 1 - error creating Stop: ", error);
+      console.error("LOG 1 - error creating Stop: ", error);
       stopNewLatLng = null;
     }
   }
@@ -155,7 +147,7 @@ export function StopComponents(props) {
               label={`S${index + 1}`}
               draggable={true}
               onClick={() => props.handleMarkerClick(stop)}
-              onDragEnd={(event) => handleStopDragEnd(event, index, stop)}
+              onDragEnd={(event) => handleStopDragEnd(index)}
               onDrag={(event) => handleStopDragged(event, index, stop)}
             />
             {stop.tripPoints && stop.tripPoints?.length > 0 && (
