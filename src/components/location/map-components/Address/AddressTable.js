@@ -380,8 +380,14 @@ const AddressTable = () => {
         </div>
       ) : (
         <table
-          class="column_resize_table"
+          className="column_resize_table"
           style={{
+             
+display:"flex",
+flexDirection:"row",
+alignItems:"center",
+justifyContent:"center",
+
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
                 ? "lightpink"
@@ -390,12 +396,13 @@ const AddressTable = () => {
                 : "white",
           }}
         >
-          <thead>
+          <thead> 
             <tr>
               {/* CURRENT ADDRESS*/}
               <div
                 style={{
                   border: "2px solid",
+                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">Current location</div>
@@ -426,6 +433,7 @@ const AddressTable = () => {
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">From address</div>
@@ -451,6 +459,7 @@ const AddressTable = () => {
                   border: "2px solid",
                   alignItems: "center",
                   padding: "0",
+                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">To address</div>
@@ -477,6 +486,7 @@ const AddressTable = () => {
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">Final Arrival time </div>
@@ -511,6 +521,7 @@ const AddressTable = () => {
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">Total Time</div>
@@ -545,6 +556,7 @@ const AddressTable = () => {
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>

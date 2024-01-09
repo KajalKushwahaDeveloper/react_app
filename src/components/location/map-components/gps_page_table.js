@@ -429,6 +429,7 @@ const GpsTable = () => {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                     style={{overflow:"hidden"}}
                   />
                 </tr>
               </tfoot>
@@ -487,8 +488,8 @@ const CustomTablePagination = styled(TablePagination)(
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content:space-around;
-        gap: 10px;
+        // justify-content:space-around;
+        gap: 0px;
       }
     
       /* Update the select label styles */
@@ -528,7 +529,7 @@ const CustomTablePagination = styled(TablePagination)(
     
       /* Update the displayed rows styles */
       & .${classes.displayedRows} {
-        margin-left: 2rem;
+        margin-left: 1rem;
       }
       `
 );
