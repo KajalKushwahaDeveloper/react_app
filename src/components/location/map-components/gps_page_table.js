@@ -41,6 +41,9 @@ import {
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
+
+
+
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
@@ -429,6 +432,7 @@ const GpsTable = () => {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                     style={{overflow:"hidden"}}
                   />
                 </tr>
               </tfoot>
@@ -487,13 +491,20 @@ const CustomTablePagination = styled(TablePagination)(
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content:space-around;
-        gap: 10px;
+        // justify-content:space-around;
+        gap: 0px;
       }
     
       /* Update the select label styles */
       & .${classes.selectLabel} {
         margin: 0;
+        @media (max-width: 425px) {
+          flex-shrink: 1;
+        }
+  
+        @media (min-width: 426px) {
+          flex-shrink: 0;
+        }
       }
     
       /* Update the select styles */
@@ -528,7 +539,7 @@ const CustomTablePagination = styled(TablePagination)(
     
       /* Update the displayed rows styles */
       & .${classes.displayedRows} {
-        margin-left: 2rem;
+        margin-left: 1rem;
       }
       `
 );

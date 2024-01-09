@@ -453,6 +453,7 @@ export default function EmulatorTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          style={{overflow:"hidden"}}
         />
       </Paper>
     </Box>

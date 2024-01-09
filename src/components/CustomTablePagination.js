@@ -1,4 +1,7 @@
-import { TablePagination , tablePaginationClasses as classes } from "@mui/material";
+import {
+  TablePagination,
+  tablePaginationClasses as classes,
+} from "@mui/material";
 import { styled } from "@mui/system";
 
 const blue = {
@@ -43,6 +46,7 @@ export const Root = styled("div")(
               }
               `
 );
+
 export const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
                 & .${classes.toolbar} {
@@ -50,8 +54,8 @@ export const CustomTablePagination = styled(TablePagination)(
                   display: flex;
                   flex-direction: row;
                   align-items: end;
-                  justify-content:space-around;
-                  gap: 10px;
+                  // justify-content:space-around;
+                  gap: 0px;
                   margin: 5px;
                 }
                 
@@ -62,6 +66,13 @@ export const CustomTablePagination = styled(TablePagination)(
                 /* Update the select label styles */
                 & .${classes.selectLabel} {
                   margin: 0;
+                  @media (max-width: 425px) {
+                    flex-shrink: 1;
+                  }
+            
+                  @media (min-width: 426px) {
+                    flex-shrink: 0;
+                  }
                 }
                 
                 /* Update the select styles */
@@ -88,7 +99,7 @@ export const CustomTablePagination = styled(TablePagination)(
                 
                 /* Update the displayed rows styles */
                 & .${classes.displayedRows} {
-                  margin-left: 2rem;
+                  // margin-left: 2rem;
                 }
                 `
 );

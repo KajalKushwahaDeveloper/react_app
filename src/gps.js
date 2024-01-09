@@ -64,11 +64,11 @@ const GPS = () => {
             className="bottom_sheet"
             open={true}
             blocking={false}
-            header={
-              <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
-                INFO
-              </div>
-            }
+            // header={
+            //   <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
+            //     INFO
+            //   </div>
+            // }
             snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.45]}
           >
             <GpsTable />

@@ -382,6 +382,7 @@ export default function UserTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          style={{overflow:"hidden"}}
         />
       </Paper>
     </Box>
