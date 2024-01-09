@@ -41,6 +41,9 @@ import {
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
+
+
+
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
@@ -495,6 +498,13 @@ const CustomTablePagination = styled(TablePagination)(
       /* Update the select label styles */
       & .${classes.selectLabel} {
         margin: 0;
+        @media (max-width: 425px) {
+          flex-shrink: 1;
+        }
+  
+        @media (min-width: 426px) {
+          flex-shrink: 0;
+        }
       }
     
       /* Update the select styles */
