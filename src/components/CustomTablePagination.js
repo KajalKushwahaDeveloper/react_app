@@ -53,10 +53,10 @@ export const CustomTablePagination = styled(TablePagination)(
                   width: 100%;
                   display: flex;
                   flex-direction: row;
-                  align-items: end;
+                  align-items: center;
                   // justify-content:space-around;
                   gap: 0px;
-                  margin: 5px;
+                  margin: 0 5px;
                 }
                 
                 /* Update the select label styles */
