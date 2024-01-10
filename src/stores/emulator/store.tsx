@@ -12,6 +12,7 @@ import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { TripDataResponse } from "../../model/response.tsx";
 import { TwillioDevice } from "../call/types.tsx";
+import { debounce } from 'lodash';
 
 export interface EmulatorsSlice {
   eventSource: AbortController | null;
@@ -86,7 +87,7 @@ const createEmulatorsSlice: StateCreator<
     set({ selectedEmulator: emulator });
     get().fetchTripData(emulator);
   },
-  updateEmulators: (newEmulators) => {
+  updateEmulators: debounce((newEmulators) => {
     const isUpdatedEmulators = compareEmulatorsCompletely(
       get().emulators,
       newEmulators
@@ -114,7 +115,7 @@ const createEmulatorsSlice: StateCreator<
       }
     }
     set({ emulators: newEmulators });
-  },
+  }, 500),
   hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
   dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
 });
