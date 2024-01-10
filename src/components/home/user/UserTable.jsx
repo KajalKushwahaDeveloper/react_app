@@ -64,14 +64,14 @@ export default function UserTable({
         return { success: false, error: "Failed to unassign user" };
       }
     };
-    if (userEditedId != null) {
+    if (userEditedId !== null) {
       if (userEditedId === 0) {
         fetchUsers();
       } else {
         refreshEditedUser(userEditedId);
       }
     }
-  }, [userEditedId, updatedData, userData, showToast]);
+  }, [userEditedId]);
 
   React.useEffect(() => {
     // Fetch data from API
@@ -119,10 +119,10 @@ export default function UserTable({
     if (userAssingedEmulator != null) {
       refreshUser(userAssingedEmulator.user?.id);
     }
-  }, [showToast, userAssingedEmulator, userData]);
+  }, [userAssingedEmulator]);
 
   const handleActionButtonClick = async (id, status) => {
-    if (status == "ENABLED") {
+    if (status === "ENABLED") {
       status = "DISABLED";
     } else {
       status = "ENABLED";
@@ -214,6 +214,7 @@ export default function UserTable({
       showToast(error, "error");
     }
   }, []);
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");

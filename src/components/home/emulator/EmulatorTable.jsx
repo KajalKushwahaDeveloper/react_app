@@ -91,16 +91,16 @@ export default function EmulatorTable({
         }
         return item;
       });
-      showToast(`Updated user table!`, "success");
+      showToast(`Updated Emulator table!`, "success");
       setEmulators(updatedData);
     } else {
-      showToast("Failed to update user table" + error, "error");
+      showToast("Failed to update Emulator table" + error, "error");
       return { success: false, error: "Failed to unassign user" };
     }
   };
 
   //assign/unassign button
-  const handleActionButtonClick = async (row) => {
+  const handleAssignButtonClick = async (row) => {
     if (row.user != null) {
       const token = localStorage.getItem("token");
       try {
@@ -295,7 +295,7 @@ export default function EmulatorTable({
                                 row.user === null ? "green" : "red",
                               color: "white",
                             }}
-                            onClick={() => handleActionButtonClick(row)}
+                            onClick={() => handleAssignButtonClick(row)}
                           >
                             {row.user === null ? "ASSIGN__" : "UNASSIGN"}
                           </button>
