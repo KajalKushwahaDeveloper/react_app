@@ -382,11 +382,11 @@ const AddressTable = () => {
         <table
           className="column_resize_table"
           style={{
-             
-display:"flex",
-flexDirection:"row",
-alignItems:"center",
-justifyContent:"center",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            resize: "horizontal",
 
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
@@ -396,13 +396,23 @@ justifyContent:"center",
                 : "white",
           }}
         >
-          <thead> 
-            <tr>
+          <thead>
+            <tr
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width:"100%"
+              }}
+            >
               {/* CURRENT ADDRESS*/}
               <div
+                className="col d-flex flex-column"
                 style={{
                   border: "2px solid",
-                  height:"60px",
+                  height: "60px",
+                  resize: "horizontal",
+                  overflow: "hidden",
                 }}
               >
                 <div className="address-table-heading">Current location</div>
@@ -423,17 +433,20 @@ justifyContent:"center",
                   </Tooltip>
                 </div>
               </div>
-              <ColumnResizer
+              {/* <ColumnResizer
                 id={1}
                 className="columnResizer"
                 minWidth={window.innerWidth / 7}
-              />
+              /> */}
               {/* FROM ADDRESS*/}
               <div
+                className="col d-flex flex-column"
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
+                  resize: "horizontal",
+                  overflow: "hidden",
                 }}
               >
                 <div className="address-table-heading">From address</div>
@@ -447,11 +460,11 @@ justifyContent:"center",
                   </Tooltip>
                 </div>
               </div>
-              <ColumnResizer
+              {/* <ColumnResizer
                 id={2}
                 className="columnResizer"
                 minWidth={window.innerWidth / 7}
-              />
+              /> */}
               {/* TO ADDRESS*/}
               <div
                 className="col d-flex flex-column"
@@ -459,7 +472,9 @@ justifyContent:"center",
                   border: "2px solid",
                   alignItems: "center",
                   padding: "0",
-                  height:"60px",
+                  height: "60px",
+                  resize: "horizontal",
+                  overflow: "hidden",
                 }}
               >
                 <div className="address-table-heading">To address</div>
@@ -476,17 +491,19 @@ justifyContent:"center",
                   </Tooltip>
                 </div>
               </div>
-              <ColumnResizer
+              {/* <ColumnResizer
                 id={3}
                 className="columnResizer"
                 minWidth={window.innerWidth / 7}
-              />
+              /> */}
               {/* ARRIVAL TIME */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
+                  resize: "horizontal",
+                  overflow: "hidden",
                 }}
               >
                 <div className="address-table-heading">Final Arrival time </div>
@@ -511,17 +528,19 @@ justifyContent:"center",
                   <div className="addressTable">N/A</div>
                 )}
               </div>
-              <ColumnResizer
+              {/* <ColumnResizer
                 id={4}
                 className="columnResizer"
                 minWidth={window.innerWidth / 7}
-              />
+              /> */}
               {/* TIME */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
+                  resize: "horizontal",
+                  overflow: "hidden",
                 }}
               >
                 <div className="address-table-heading">Total Time</div>
@@ -546,17 +565,19 @@ justifyContent:"center",
                   <div className="addressTable">N/A</div>
                 )}
               </div>
-              <ColumnResizer
+              {/* <ColumnResizer
                 id={5}
                 className="columnResizer"
                 minWidth={window.innerWidth / 7}
-              />
+              /> */}
               {/* REMAING DISTANCE */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
+                  resize: "horizontal",
+                  overflow: "hidden",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>
@@ -581,11 +602,11 @@ justifyContent:"center",
                   <div className="addressTable">N/A</div>
                 )}
               </div>
-              <ColumnResizer
+              {/* <ColumnResizer
                 id={6}
                 className="columnResizer"
                 minWidth={window.innerWidth / 7}
-              />
+              /> */}
               {/* PLUS MINUS ICONS */}
               <div>
                 <div>
@@ -611,11 +632,11 @@ justifyContent:"center",
                   </IconButton>
                 </div>
               </div>
-              <ColumnResizer
+              {/* <ColumnResizer
                 id={7}
                 className="columnResizer"
                 minWidth={window.innerWidth / 7}
-              />
+              /> */}
             </tr>
           </thead>
         </table>
