@@ -387,6 +387,7 @@ const AddressTable = () => {
             alignItems: "center",
             justifyContent: "center",
             resize: "horizontal",
+            width: "100%",
 
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
@@ -402,7 +403,7 @@ const AddressTable = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width:"100%"
+                width: "100%",
               }}
             >
               {/* CURRENT ADDRESS*/}
@@ -578,6 +579,7 @@ const AddressTable = () => {
                   height: "60px",
                   resize: "horizontal",
                   overflow: "hidden",
+                  marginRight: "1rem",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>
@@ -608,30 +610,31 @@ const AddressTable = () => {
                 minWidth={window.innerWidth / 7}
               /> */}
               {/* PLUS MINUS ICONS */}
+
               <div>
-                <div>
-                  <IconButton
-                    aria-label="close"
-                    sx={{
-                      borderRadius: "0px",
-                      color: "#ffffff",
-                      backgroundColor: "#00ff00",
-                    }}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="close"
-                    sx={{
-                      borderRadius: "0px",
-                      color: "#ffffff",
-                      backgroundColor: "#ff0000",
-                    }}
-                  >
-                    <RemoveIcon />
-                  </IconButton>
-                </div>
+                <IconButton
+                  aria-label="close"
+                  sx={{
+                    borderRadius: "0px",
+                    color: "#ffffff",
+                    backgroundColor: "#00ff00",
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="close"
+                  sx={{
+                    borderRadius: "0px",
+                    color: "#ffffff",
+                    backgroundColor: "#ff0000",
+                    marginRight:"1rem",
+                  }}
+                >
+                  <RemoveIcon />
+                </IconButton>
               </div>
+
               {/* <ColumnResizer
                 id={7}
                 className="columnResizer"
