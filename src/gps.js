@@ -1,8 +1,7 @@
 import "./scss/map.scss";
 import { ToastContainer } from "react-toastify";
 import React from "react";
-import CreateTripButton from "./components/location/map-components/CreateTripButton.jsx";
-import CreateTripOverlay from "./components/location/map-components/CreateTripOverlay";
+import CreateTripButton from "./components/location/map-components/CreateTrip/CreateTripButton";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
@@ -10,6 +9,7 @@ import GpsTable from "./components/location/map-components/gps_page_table.js";
 import AddressTable from "./components/location/map-components/Address/AddressTable.js";
 import { DragDialog } from "./components/location/map-components/DragDialog.jsx";
 import GoogleMapContainer from "./components/location/map-components/GoogleMapContainer.jsx";
+import CreateTripDialog from "./components/location/map-components/CreateTrip/CreateTripDialog.js";
 
 const GPS = () => {
   const { width } = useViewPort();
@@ -20,7 +20,7 @@ const GPS = () => {
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
       <DragDialog />
-      <CreateTripOverlay />
+      <CreateTripDialog />
       {!isMobile && (
         <>
           <div style={{ display: "flex", flexDirection: "column" }}>

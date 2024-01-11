@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useViewPort } from "../../../../ViewportProvider.js";
-import CreateTripButton from "../CreateTripButton.jsx";
+import CreateTripButton from "../CreateTrip/CreateTripButton";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import Tooltip from "@mui/material/Tooltip";
 import {
