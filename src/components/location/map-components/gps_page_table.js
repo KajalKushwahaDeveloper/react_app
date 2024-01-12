@@ -481,65 +481,58 @@ const grey = {
 
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
-      /* Remove the spacer element */
-      & .${classes.spacer} {
-        display: none;
-      }
-    
-      /* Update the toolbar styles */
-      & .${classes.toolbar} {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        // justify-content:space-around;
-        gap: 0px;
-      }
-    
-      /* Update the select label styles */
-      & .${classes.selectLabel} {
-        margin: 0;
-        @media (max-width: 425px) {
-          flex-shrink: 1;
-        }
+  & .${classes.toolbar} {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    // justify-content:space-around;
+    gap: 0px;
+    margin: 0 5px;
+  }
   
-        @media (min-width: 426px) {
-          flex-shrink: 0;
-        }
-      }
+  /* Update the select label styles */
+  & .${classes.displayedRows} {
+    margin: 0;
+  }
+  /* Update the select label styles */
+  & .${classes.selectLabel} {
+    margin: 0;
+    @media (max-width: 425px) {
+      flex-shrink: 1;
+    }
+
+    @media (min-width: 426px) {
+      flex-shrink: 0;
+    }
+  }
+  
+  /* Update the select styles */
+  & .${classes.select} {
+    padding: 2px;
+    border: 1px solid ${
+      theme.palette.mode === "dark" ? grey[800] : grey[200]
+    };
+    border-radius: 50px;
+    background-color: transparent;
     
-      /* Update the select styles */
-      & .${classes.select} {
-        padding: 2px;
-        border: 1px solid ${
-          theme.palette.mode === "dark" ? grey[800] : grey[200]
-        };
-        border-radius: 50px;
-        background-color: transparent;
+    &:hover {
+      background-color: ${
+        theme.palette.mode === "dark" ? grey[800] : grey[50]
+      };
+    }
     
-        &:hover {
-          background-color: ${
-            theme.palette.mode === "dark" ? grey[800] : grey[50]
-          };
-        }
-    
-        &:focus {
-          outline: 1px solid ${
-            theme.palette.mode === "dark" ? blue[400] : blue[200]
-          };
-        }
-      }
-    
-      /* Update the actions styles */
-      .${classes.actions} {
-        padding: 2px;
-        border-radius: 50px;
-        text-align: center;
-        display: flex;
-      }
-    
-      /* Update the displayed rows styles */
-      & .${classes.displayedRows} {
-        margin-left: 1rem;
-      }
-      `
+    &:focus {
+      outline: 1px solid ${
+        theme.palette.mode === "dark" ? blue[400] : blue[200]
+      };
+    }
+  }
+  
+  /* Update the displayed rows styles */
+  & .${classes.displayedRows} {
+    // margin-left: 2rem;
+  }
+  `
 );
+
