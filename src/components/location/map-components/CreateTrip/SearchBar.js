@@ -70,7 +70,7 @@ const SearchBar = (props) => {
               <div className="Demo__search-input-container">
                 <TextField
                   id="filled-basic"
-                  label="Search Location"
+                  label={props.label}
                   variant="filled"
                   value={inputValue}
                   onChange={handleInputChange}
@@ -109,15 +109,6 @@ const SearchBar = (props) => {
                       </div>
                     );
                   })}
-
-                  <div className="Demo__dropdown-footer">
-                    <div>
-                      <img
-                        style={{ width: "2rem" }}
-                        className="Demo__dropdown-footer-image"
-                      />
-                    </div>
-                  </div>
                 </div>
               )}
             </div>

@@ -12,6 +12,8 @@ import { compareSelectedEmulator } from "../../../../stores/emulator/types_maps.
 
 import "../../../../scss/map.scss";
 import "../../../../scss/button.scss";
+import DateTimePickerValue from "./DateTimeFieldValue.tsx";
+import dayjs from 'dayjs';
 
 const CreateTripDialog = () => {
   const { isTableVisible } = useStates();
@@ -30,6 +32,8 @@ const CreateTripDialog = () => {
   const [fromAddress, setFromAddress] = useState();
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
+
+  const [dateTime, setDateTime] = React.useState(dayjs('2023-01-12T15:30'));
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -51,7 +55,6 @@ const CreateTripDialog = () => {
 
     setError("");
 
-    const token = localStorage.getItem("token");
     let confirmed = false;
     if (
       selectedEmulator.startLat !== null &&
@@ -74,9 +77,10 @@ const CreateTripDialog = () => {
         toAddress: toAddress,
         speed: 60,
         emulatorDetailsId: selectedEmulator.id,
+        arrivalTime: dateTime.unix() * 1000,
       };
-
-      const { success, data, error } = await ApiService.makeApiCall(
+      const token = localStorage.getItem("token");
+      const { success, error } = await ApiService.makeApiCall(
         CREATE_TRIP_URL,
         "POST",
         payload,
@@ -86,11 +90,11 @@ const CreateTripDialog = () => {
         setIsLoading(true);
         showToast("Trip Added successfully", "success");
         fetchEmulators();
+        handleClose();
       } else {
         showToast(error, "error");
       }
       setIsLoading(false);
-      handleClose();
     }
   };
 
@@ -162,15 +166,9 @@ const CreateTripDialog = () => {
                     inputValue={inputValue}
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
+                    label="From Address"
                   />
                 </div>
-                {isLoading ? (
-                  <div style={{ position: "absolute", top: "40%" }}>
-                    <CircularProgress color="primary" />
-                  </div>
-                ) : (
-                  ""
-                )}
                 <div style={{ margin: "1rem 0" }}>
                   <SearchBar
                     setLat={setToLat}
@@ -179,27 +177,42 @@ const CreateTripDialog = () => {
                     inputValue={inputValue}
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
+                    label="To Address"
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
+                <div style={{ margin: "1rem 0" }}>
+                  <DateTimePickerValue value={dateTime} setValue={setDateTime}/>
+                  {error && <p className="error">{error}</p>}
+                </div>
+                <div style={{ margin: "1rem 0" }}>
+                  <Button
+                    onClick={handleAddClick}
+                    style={{
+                      cursor: "pointer",
+                      width: "auto",
+                      textAlign: "center",
+                      float: "right",
+                      backgroundColor: "#1976d2",
+                      color: "white",
+                      marginRight: "0.7rem",
+                    }}
+                    disabled={isLoading ? true : false}
+                  >
+                    Add
+                  </Button>
+                  {error && <p className="error">{error}</p>}
+                </div>
+
+                <div style={{ margin: "0" }}>
+                  {isLoading ? (
+                    <CircularProgress color="primary" />
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
-            </div>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button
-                onClick={handleAddClick}
-                style={{
-                  cursor: "pointer",
-                  width: "auto",
-                  textAlign: "center",
-                  float: "right",
-                  backgroundColor: "#1976d2",
-                  color: "white",
-                  marginRight: "0.7rem",
-                }}
-                disabled={isLoading ? true : false}
-              >
-                Add
-              </Button>
+
             </div>
           </Box>
         </Modal>
