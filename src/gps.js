@@ -1,4 +1,5 @@
 import "./scss/map.scss";
+import "./scss/button.scss";
 import { ToastContainer } from "react-toastify";
 import React from "react";
 import CreateTripButton from "./components/location/map-components/CreateTrip/CreateTripButton";
@@ -24,17 +25,16 @@ const GPS = () => {
       {!isMobile && (
         <>
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div>
               <AddressTable />
-            </div>
             <div
               style={{
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "wrap",
+                width: "100%",
               }}
             >
-              <div style={{ minWidth: "390px", height: "100vh" }}>
+              <div className="gps-page-table" style={{ minWidth: "390px", height: "100vh" }}>
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}

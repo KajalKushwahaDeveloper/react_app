@@ -10,8 +10,6 @@ import { useStates } from "../../../../StateProvider.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../../stores/emulator/types_maps.tsx";
 
-import "../../../../scss/map.scss";
-import "../../../../scss/button.scss";
 import DateTimePickerValue from "./DateTimeFieldValue.tsx";
 import dayjs from 'dayjs';
 

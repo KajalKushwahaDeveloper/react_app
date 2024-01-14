@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
-import "../../../scss/map.scss";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
 import EmulatorMarkers from "./Markers/EmulatorMarkers.jsx";

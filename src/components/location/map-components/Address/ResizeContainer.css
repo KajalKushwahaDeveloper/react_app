@@ -1,0 +1,21 @@
+.resizeContainer {
+  width: 100vw;
+}
+
+.resize-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.resize {
+  box-sizing: initial;
+}
+
+.resize-horizon {
+  flex: 1 1 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
