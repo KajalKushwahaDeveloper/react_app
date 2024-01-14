@@ -31,7 +31,7 @@ const EmulatorMarker = React.memo(({ emulator }) => {
 
   const isHovered = hoveredMarker?.id === emulator?.id;
   //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
-  var icon_url = `images/${emulator.tripStatus}/`;
+  var icon_url = `images/${emulator?.tripStatus}/`;
   if (isHovered) {
     icon_url = icon_url + "HOVER";
   } else if (isSelected) {
@@ -39,7 +39,7 @@ const EmulatorMarker = React.memo(({ emulator }) => {
   } else {
     icon_url = icon_url + "DEFAULT";
   }
-  icon_url = `${icon_url}/${emulator.status}.svg`;
+  icon_url = `${icon_url}/${emulator?.status}.svg`;
 
   const emulatorIcon = {
     url: icon_url,
@@ -61,7 +61,7 @@ const EmulatorMarker = React.memo(({ emulator }) => {
       lat: emulator.latitude,
       lng: emulator.longitude,
     });
-  }, [emulator, emulator.latitude, emulator.longitude, markerRef]);
+  }, [emulator, markerRef]);
 
   // https://stackoverflow.com/a/55043218/9058905
   function animateMarkerTo(marker, newPosition) {
@@ -161,13 +161,13 @@ const EmulatorMarker = React.memo(({ emulator }) => {
 
   return (
     <Marker
-      key={emulator.id}
+      key={emulator?.id}
       icon={emulatorIcon}
-      position={{ lat: emulator.latitude, lng: emulator.longitude }}
+      position={{ lat: emulator?.latitude, lng: emulator?.longitude }}
       onLoad={(marker) => {
         markerRef.current = marker;
       }}
-      title={`${emulator.telephone} ${emulator.tripStatus}(${emulator.status})`}
+      title={`${emulator?.telephone} ${emulator?.tripStatus}(${emulator?.status})`}
       labelStyle={{
         textAlign: "center",
         width: "auto",

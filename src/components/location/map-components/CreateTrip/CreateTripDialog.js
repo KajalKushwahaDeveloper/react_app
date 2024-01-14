@@ -33,7 +33,7 @@ const CreateTripDialog = () => {
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
 
-  const [dateTime, setDateTime] = React.useState(dayjs('2023-01-12T15:30'));
+  const [dateTime, setDateTime] = React.useState(dayjs('2024-01-30T15:30'));
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 

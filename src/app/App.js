@@ -17,7 +17,7 @@ function App() {
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const connectSse = useEmulatorStore((state) => state.connectSse);
+  const connectEmulatorsSSE = useEmulatorStore((state) => state.connectEmulatorsSSE);
 
   const checkToken = async () => {
     if (
@@ -95,9 +95,9 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      connectSse();
+      connectEmulatorsSSE();
     }
-  }, [connectSse, localStorage.getItem("token")]);
+  }, [connectEmulatorsSSE, localStorage.getItem("token")]);
 
   return (
     <>

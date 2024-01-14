@@ -49,13 +49,18 @@ export interface User {
   accountNonLocked: boolean;
   credentialsNonExpired: boolean;
 }
-
 export interface TripData {
+  emulatorDetails: Emulator;
   id: string;
+  historyId: string;
   velocity: number;
   distance: number;
+  time: number;
+  length: number;
+  cost: number;
   fromAddress: FromAddress[];
   toAddress: ToAddress[];
+  shape: string;
   tripPoints: TripPoint[];
   stops: Stop[];
 }

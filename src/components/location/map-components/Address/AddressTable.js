@@ -42,21 +42,21 @@ const AddressTable = () => {
   function setTableValues(emulator, tripData) {
     const fromAddress =
       tripData.fromAddress[0]?.long_name +
-        ", " +
-        tripData.fromAddress[1]?.long_name +
-        ", " +
-        tripData.fromAddress[2]?.long_name +
-        ", " +
-        tripData.fromAddress[3]?.long_name || "N/A";
+      ", " +
+      tripData.fromAddress[1]?.long_name +
+      ", " +
+      tripData.fromAddress[2]?.long_name +
+      ", " +
+      tripData.fromAddress[3]?.long_name || "N/A";
 
     const toAddress =
       tripData.toAddress[0]?.long_name +
-        ", " +
-        tripData.toAddress[1]?.long_name +
-        ", " +
-        tripData.toAddress[2]?.long_name +
-        " ," +
-        tripData.toAddress[3]?.long_name || "N/A";
+      ", " +
+      tripData.toAddress[1]?.long_name +
+      ", " +
+      tripData.toAddress[2]?.long_name +
+      " ," +
+      tripData.toAddress[3]?.long_name || "N/A";
     const arrivalTime = "TODO";
     const totalTime = "TODO";
     const remainingDistance = "TODO";
@@ -154,8 +154,8 @@ const AddressTable = () => {
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
                 ? "lightpink"
                 : selectedEmulator
-                ? "lightblue"
-                : "white",
+                  ? "lightblue"
+                  : "white",
             textAlign: "center",
             justifyContent: "center",
           }}
@@ -382,27 +382,27 @@ const AddressTable = () => {
         <table
           className="column_resize_table"
           style={{
-             
-display:"flex",
-flexDirection:"row",
-alignItems:"center",
-justifyContent:"center",
+
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
 
             background:
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
                 ? "lightpink"
                 : selectedEmulator
-                ? "lightblue"
-                : "white",
+                  ? "lightblue"
+                  : "white",
           }}
         >
-          <thead> 
+          <thead>
             <tr>
               {/* CURRENT ADDRESS*/}
               <div
                 style={{
                   border: "2px solid",
-                  height:"60px",
+                  height: "60px",
                 }}
               >
                 <div className="address-table-heading">Current location</div>
@@ -433,7 +433,7 @@ justifyContent:"center",
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
                 }}
               >
                 <div className="address-table-heading">From address</div>
@@ -459,7 +459,7 @@ justifyContent:"center",
                   border: "2px solid",
                   alignItems: "center",
                   padding: "0",
-                  height:"60px",
+                  height: "60px",
                 }}
               >
                 <div className="address-table-heading">To address</div>
@@ -486,7 +486,7 @@ justifyContent:"center",
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
                 }}
               >
                 <div className="address-table-heading">Final Arrival time </div>
@@ -521,7 +521,7 @@ justifyContent:"center",
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
                 }}
               >
                 <div className="address-table-heading">Total Time</div>
@@ -556,7 +556,7 @@ justifyContent:"center",
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
+                  height: "60px",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>

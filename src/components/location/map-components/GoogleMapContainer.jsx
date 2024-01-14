@@ -88,11 +88,8 @@ const GoogleMapContainer = () => {
           saturation: 36,
         },
         {
-          color: "#000000",
-        },
-        {
-          lightness: 40,
-        },
+          color: "#7E7E7E",
+        }
       ],
     },
     {
@@ -103,11 +100,8 @@ const GoogleMapContainer = () => {
           visibility: "on",
         },
         {
-          color: "#000000",
-        },
-        {
-          lightness: 16,
-        },
+          color: "#ffffff",
+        }
       ],
     },
     {
@@ -124,7 +118,7 @@ const GoogleMapContainer = () => {
       elementType: "geometry.fill",
       stylers: [
         {
-          color: "#000000",
+          color: "#dae2ec",
         },
         {
           lightness: 20,
@@ -136,7 +130,7 @@ const GoogleMapContainer = () => {
       elementType: "geometry.stroke",
       stylers: [
         {
-          color: "#000000",
+          color: "#BEBEBEBE",
         },
         {
           lightness: 17,
@@ -151,11 +145,8 @@ const GoogleMapContainer = () => {
       elementType: "geometry",
       stylers: [
         {
-          color: "#000000",
-        },
-        {
-          lightness: 20,
-        },
+          color: "#dae2ec",
+        }
       ],
     },
     {
@@ -163,11 +154,8 @@ const GoogleMapContainer = () => {
       elementType: "geometry",
       stylers: [
         {
-          color: "#000000",
-        },
-        {
-          lightness: 21,
-        },
+          color: "#e9eef3",
+        }
       ],
     },
     {
@@ -175,11 +163,8 @@ const GoogleMapContainer = () => {
       elementType: "geometry.fill",
       stylers: [
         {
-          color: "#000000",
-        },
-        {
-          lightness: 17,
-        },
+          color: "#ffffff",
+        }
       ],
     },
     {
@@ -187,13 +172,10 @@ const GoogleMapContainer = () => {
       elementType: "geometry.stroke",
       stylers: [
         {
-          color: "#000000",
+          color: "#8F8F8F",
         },
         {
-          lightness: 29,
-        },
-        {
-          weight: 0.2,
+          weight: 0.5,
         },
       ],
     },
@@ -202,7 +184,7 @@ const GoogleMapContainer = () => {
       elementType: "geometry",
       stylers: [
         {
-          color: "#000000",
+          color: "#BEBEBE",
         },
         {
           lightness: 18,
@@ -214,7 +196,7 @@ const GoogleMapContainer = () => {
       elementType: "geometry",
       stylers: [
         {
-          color: "#000000",
+          color: "#DDDDDDBE",
         },
         {
           lightness: 16,
@@ -226,7 +208,7 @@ const GoogleMapContainer = () => {
       elementType: "geometry",
       stylers: [
         {
-          color: "#000000",
+          color: "#BEBEBEBE",
         },
         {
           lightness: 19,
@@ -238,7 +220,7 @@ const GoogleMapContainer = () => {
       elementType: "geometry",
       stylers: [
         {
-          color: "#000000",
+          color: "#BEBEBE",
         },
         {
           lightness: 17,
