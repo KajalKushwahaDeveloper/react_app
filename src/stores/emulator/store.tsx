@@ -7,13 +7,14 @@ import {
   defaultLng,
   defaultLat,
 } from "./types_maps.tsx";
-import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
+import { BASE_URL, EMULATOR_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { TwillioDevice } from "../call/types.tsx";
 import { EmulatorEvent } from "../../model/EmulatorEvent.tsx";
 
 export interface EmulatorsSlice {
+  isLoading: boolean;
   emulatorsEventSource: AbortController | null;
   selectedEmulatorEventSource: AbortController | null;
   selectedEmulator: Emulator | null;
@@ -51,6 +52,7 @@ const createEmulatorsSlice: StateCreator<
   [],
   EmulatorsSlice
 > = (set, get) => ({
+  isLoading: false,
   emulatorsEventSource: null,
   selectedEmulatorEventSource: null,
   emulators: [],
@@ -137,7 +139,6 @@ const createTripDataSlice: StateCreator<
   pathNotTraveled: null,
   connectedEmulator: null,
   connectSelectedEmulatorSSE: (selectedEmulator: Emulator | null) => {
-    console.log("connectEmulatorSSE", selectedEmulator?.id);
     const selectedEmulatorEventSource = get().selectedEmulatorEventSource;
     if ((selectedEmulator === null || selectedEmulator === undefined)) {
       selectedEmulatorEventSource?.abort(); // abort the emulatorsEventSource
@@ -148,6 +149,7 @@ const createTripDataSlice: StateCreator<
     const token = localStorage.getItem("token");
     const ctrl = new AbortController();
     console.log("Connecting to SSE", `${BASE_URL}/sse/${selectedEmulator?.id}`);
+    set({ isLoading: true });
     fetchEventSource(`${BASE_URL}/sse/${selectedEmulator?.id}`, {
       method: "GET",
       headers: {
@@ -158,6 +160,7 @@ const createTripDataSlice: StateCreator<
         if (res.status >= 400 && res.status < 500 && res.status !== 429) {
           console.error("Client side error ", res);
         }
+        set({ isLoading: false });
       },
       onmessage(event) {
         console.log("onmessage", event.event);
@@ -180,10 +183,12 @@ const createTripDataSlice: StateCreator<
       },
       onclose() {
         console.warn("Connection closed by the server");
+        set({ isLoading: false });
       },
       onerror(err) {
         console.log("err", err)
         console.error("There was an error from the server", err);
+        set({ isLoading: false });
       },
       signal: ctrl.signal,
     });

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import "../scss/navbar.scss";
+import "../../scss/navbar.scss";
 import MenuIcon from "@mui/icons-material/Menu";
-import { CLIENT_CURRENT } from "../constants";
-import { useEmulatorStore } from "../stores/emulator/store.tsx";
+import { CLIENT_CURRENT } from "../../constants.js";
+import { useEmulatorStore } from "../../stores/emulator/store.tsx";
+import LinearProgressBar from "./StyledLinearProgressBar.js";
 
 const Navbar = ({ isAdmin, setIsAdmin }) => {
   const [menuIcon, setMenuIcon] = useState(false);
   const [data, setData] = useState();
-  const [error, setError] = useState();
 
   const logout = useEmulatorStore((state) => state.logout);
   const navigate = useNavigate();
@@ -40,12 +40,11 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
       }
     } catch (error) {
       console.error("Data Error: " + error);
-      setError(error.message);
     }
   };
 
   useEffect(() => {
-    const { success, error } = fetchClientData();
+    fetchClientData();
   }, []);
 
   return (
@@ -115,6 +114,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
             </div>
           </div>
         </div>
+        <LinearProgressBar />
       </div>
     </>
   );
