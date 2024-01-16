@@ -145,9 +145,9 @@ const createTripDataSlice: StateCreator<
       set({ connectedEmulator: null, tripData: null, pathTraveled: null, pathNotTraveled: null, selectedEmulatorEventSource: null }); // clear trip data
       return
     }
-    if(selectedEmulator.id !== get().connectedEmulator?.id) {
+    if (selectedEmulator.id !== get().connectedEmulator?.id) {
       selectedEmulatorEventSource?.abort(); // abort the emulatorsEventSource
-      set({ selectedEmulatorEventSource: null, tripData: null, pathNotTraveled: null, pathTraveled:null }); // clear trip data
+      set({ selectedEmulatorEventSource: null, tripData: null, pathNotTraveled: null, pathTraveled: null }); // clear trip data
     }
     // We connect to the emulator's SSE
     const token = localStorage.getItem("token");
@@ -205,13 +205,6 @@ const createTripDataSlice: StateCreator<
     console.log("count", tripPoints, "expected : 30859");
     const tripPointCombinedDistance = tripPoints.reduce((acc, tripPoint) => acc + tripPoint.distance, 0);
     console.log("distance", tripPointCombinedDistance, "expected : 4799824/4798271.0");
-    // WITH SUB POINTS
-    // points size: 81056
-    // distance: 5314352
-
-    // WITHOUT SUB POINTS
-    // points size: 38197
-    // distance: 4799123
     set({ connectedEmulator: selectedEmulatorData?.emulatorDetails, tripData: tripData });
     get().setPaths(selectedEmulatorData?.emulatorDetails, tripData);
   },
