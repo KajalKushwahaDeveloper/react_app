@@ -1,5 +1,5 @@
 import { Outlet, Navigate } from "react-router-dom";
-import Navbar from "../../components/navbar.js";
+import Navbar from "../root/navbar.js";
 
 import GPS from "../../gps.js";
 

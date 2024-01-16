@@ -1,12 +1,11 @@
-// CreateTripButton.jsx
 import React, { useEffect, useState } from "react";
 import SyncIcon from "@mui/icons-material/Sync";
-import ApiService from "../../../ApiService";
-import { EMULATOR_DRAG_URL } from "../../../constants";
-import { useViewPort } from "../../../ViewportProvider.js";
-import { useStates } from "../../../StateProvider.js";
-import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
-import { compareSelectedEmulator } from "../../../stores/emulator/types_maps.tsx";
+import ApiService from "../../../../ApiService.js";
+import { EMULATOR_DRAG_URL } from "../../../../constants.js";
+import { useViewPort } from "../../../../ViewportProvider.js";
+import { useStates } from "../../../../StateProvider.js";
+import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import { compareSelectedEmulator } from "../../../../stores/emulator/types_maps.tsx";
 
 const CreateTripButton = () => {
   const { width } = useViewPort();

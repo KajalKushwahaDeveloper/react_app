@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
-} from "../../autocomplete";
-import { classnames } from "../../helpers";
-import "../../css/auto_complete.css";
+} from "./autocomplete";
+import { classnames } from "../../../../helpers";
+import "./autocomplete/auto_complete.css";
 import TextField from "@mui/material/TextField";
 
 const SearchBar = (props) => {
@@ -70,7 +70,7 @@ const SearchBar = (props) => {
               <div className="Demo__search-input-container">
                 <TextField
                   id="filled-basic"
-                  label="Search Location"
+                  label={props.label}
                   variant="filled"
                   value={inputValue}
                   onChange={handleInputChange}
@@ -109,16 +109,6 @@ const SearchBar = (props) => {
                       </div>
                     );
                   })}
-
-                  <div className="Demo__dropdown-footer">
-                    <div>
-                      <img
-                        style={{ width: "2rem" }}
-                        src={require("../../images/powered_by_google_default.png")}
-                        className="Demo__dropdown-footer-image"
-                      />
-                    </div>
-                  </div>
                 </div>
               )}
             </div>

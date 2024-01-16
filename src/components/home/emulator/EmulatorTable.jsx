@@ -242,6 +242,7 @@ export default function EmulatorTable({
         <div className="error">
           <h1>Something went wrong!</h1>
           <p>Error: {error}</p>
+          <EnhancedTableToolbar handleOpen={handleCreateEmulator} />
         </div>
       </>
     );
@@ -453,7 +454,7 @@ export default function EmulatorTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          style={{overflow:"hidden"}}
+          style={{ overflow: "hidden" }}
         />
       </Paper>
     </Box>

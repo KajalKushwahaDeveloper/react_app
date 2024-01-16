@@ -1,16 +1,17 @@
 import React, { useEffect, useRef } from "react";
 import { useViewPort } from "../../../../ViewportProvider.js";
-import CreateTripButton from "../CreateTripButton.jsx";
+import CreateTripButton from "../CreateTrip/CreateTripButton";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
-import Tooltip from "@mui/material/Tooltip";
 import {
   compareTripDataChangedNullOrId,
   compareSelectedEmulatorChangedNullOrId,
 } from "./utils.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_URL } from "../../../../constants.js";
-import "./AddressTable.css";
-import ColumnResizer from "react-table-column-resizer";
+import { Resize, ResizeHorizon } from 'react-resize-layout';
+import "./ResizeContainer.css";
+import { Tooltip } from '@mui/material';
+
 import AddIcon from "@mui/icons-material/Add";
 import { IconButton } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -42,21 +43,21 @@ const AddressTable = () => {
   function setTableValues(emulator, tripData) {
     const fromAddress =
       tripData.fromAddress[0]?.long_name +
-        ", " +
-        tripData.fromAddress[1]?.long_name +
-        ", " +
-        tripData.fromAddress[2]?.long_name +
-        ", " +
-        tripData.fromAddress[3]?.long_name || "N/A";
+      ", " +
+      tripData.fromAddress[1]?.long_name +
+      ", " +
+      tripData.fromAddress[2]?.long_name +
+      ", " +
+      tripData.fromAddress[3]?.long_name || "N/A";
 
     const toAddress =
       tripData.toAddress[0]?.long_name +
-        ", " +
-        tripData.toAddress[1]?.long_name +
-        ", " +
-        tripData.toAddress[2]?.long_name +
-        " ," +
-        tripData.toAddress[3]?.long_name || "N/A";
+      ", " +
+      tripData.toAddress[1]?.long_name +
+      ", " +
+      tripData.toAddress[2]?.long_name +
+      " ," +
+      tripData.toAddress[3]?.long_name || "N/A";
     const arrivalTime = "TODO";
     const totalTime = "TODO";
     const remainingDistance = "TODO";
@@ -154,8 +155,8 @@ const AddressTable = () => {
               hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
                 ? "lightpink"
                 : selectedEmulator
-                ? "lightblue"
-                : "white",
+                  ? "lightblue"
+                  : "white",
             textAlign: "center",
             justifyContent: "center",
           }}
@@ -165,7 +166,6 @@ const AddressTable = () => {
       </div>
     );
   }
-
   return (
     <div className="main-address-table">
       {isMobile ? (
@@ -379,30 +379,20 @@ const AddressTable = () => {
           <CreateTripButton />
         </div>
       ) : (
-        <table
-          className="column_resize_table"
-          style={{
-             
-display:"flex",
-flexDirection:"row",
-alignItems:"center",
-justifyContent:"center",
-
-            background:
-              hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
-                ? "lightpink"
-                : selectedEmulator
-                ? "lightblue"
-                : "white",
-          }}
-        >
-          <thead> 
-            <tr>
+        <div className={'resizeContainer'}>
+          <Resize className={'resize-container'}
+            handleWidth={'5px'}
+            handleColor={'#007dc6'}
+          >
+            <ResizeHorizon
+              width={'100px'}
+              minWidth={'100px'}
+            >
               {/* CURRENT ADDRESS*/}
               <div
                 style={{
                   border: "2px solid",
-                  height:"60px",
+                  height: "60px",
                 }}
               >
                 <div className="address-table-heading">Current location</div>
@@ -423,17 +413,16 @@ justifyContent:"center",
                   </Tooltip>
                 </div>
               </div>
-              <ColumnResizer
-                id={1}
-                className="columnResizer"
-                minWidth={window.innerWidth / 7}
-              />
+            </ResizeHorizon>
+            <ResizeHorizon
+              width={'auto'}
+              minWidth={'100px'}
+            >
               {/* FROM ADDRESS*/}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">From address</div>
@@ -447,11 +436,12 @@ justifyContent:"center",
                   </Tooltip>
                 </div>
               </div>
-              <ColumnResizer
-                id={2}
-                className="columnResizer"
-                minWidth={window.innerWidth / 7}
-              />
+            </ResizeHorizon>
+            <ResizeHorizon
+              width={'auto'}
+              minWidth={'200px'}
+            >
+
               {/* TO ADDRESS*/}
               <div
                 className="col d-flex flex-column"
@@ -459,7 +449,6 @@ justifyContent:"center",
                   border: "2px solid",
                   alignItems: "center",
                   padding: "0",
-                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">To address</div>
@@ -476,17 +465,17 @@ justifyContent:"center",
                   </Tooltip>
                 </div>
               </div>
-              <ColumnResizer
-                id={3}
-                className="columnResizer"
-                minWidth={window.innerWidth / 7}
-              />
+            </ResizeHorizon>
+            <ResizeHorizon
+              width={'auto'}
+              minWidth={'100px'}
+            >
+
               {/* ARRIVAL TIME */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">Final Arrival time </div>
@@ -494,7 +483,6 @@ justifyContent:"center",
                   <div
                     style={{
                       marginTop: "5px !important",
-                      height: "30px",
                       textAlign: "center",
                       maxWidth: "20vw",
                     }}
@@ -511,17 +499,17 @@ justifyContent:"center",
                   <div className="addressTable">N/A</div>
                 )}
               </div>
-              <ColumnResizer
-                id={4}
-                className="columnResizer"
-                minWidth={window.innerWidth / 7}
-              />
+            </ResizeHorizon>
+            <ResizeHorizon
+              width={'auto'}
+              minWidth={'100px'}
+            >
+
               {/* TIME */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">Total Time</div>
@@ -529,7 +517,6 @@ justifyContent:"center",
                   <div
                     style={{
                       marginTop: "5px !important",
-                      height: "30px",
                       textAlign: "center",
                       maxWidth: "20vw",
                     }}
@@ -546,17 +533,17 @@ justifyContent:"center",
                   <div className="addressTable">N/A</div>
                 )}
               </div>
-              <ColumnResizer
-                id={5}
-                className="columnResizer"
-                minWidth={window.innerWidth / 7}
-              />
+            </ResizeHorizon>
+            <ResizeHorizon
+              width={'auto'}
+              minWidth={'100px'}
+            >
+
               {/* REMAING DISTANCE */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  height:"60px",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>
@@ -581,11 +568,12 @@ justifyContent:"center",
                   <div className="addressTable">N/A</div>
                 )}
               </div>
-              <ColumnResizer
-                id={6}
-                className="columnResizer"
-                minWidth={window.innerWidth / 7}
-              />
+            </ResizeHorizon>
+            <ResizeHorizon
+              width={'auto'}
+              minWidth={'100px'}
+            >
+
               {/* PLUS MINUS ICONS */}
               <div>
                 <div>
@@ -611,14 +599,9 @@ justifyContent:"center",
                   </IconButton>
                 </div>
               </div>
-              <ColumnResizer
-                id={7}
-                className="columnResizer"
-                minWidth={window.innerWidth / 7}
-              />
-            </tr>
-          </thead>
-        </table>
+            </ResizeHorizon>
+          </Resize>
+        </div>
       )}
     </div>
   );

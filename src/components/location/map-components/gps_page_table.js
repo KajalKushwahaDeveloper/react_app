@@ -11,11 +11,6 @@ import {
   TRIP_TOGGLE,
 } from "../../../constants";
 
-//scss
-import "../../../scss/map.scss";
-import "../../../scss/button.scss";
-import "../../../scss/global.scss";
-
 //icons
 import IconButton from "@mui/material/IconButton";
 import HistoryIcon from "@mui/icons-material/History";
