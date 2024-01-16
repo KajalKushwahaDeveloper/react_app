@@ -43,7 +43,6 @@ import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.t
 import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
 
 
-
 const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
@@ -82,7 +81,7 @@ const GpsTable = () => {
   const isMobileThreeTwenty = width <= breakpointThreeTwenty;
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(8);
   const [loading, setLoading] = useState(true);
   const [messageLoading, setMessageLoading] = useState(false);
 
@@ -268,7 +267,13 @@ const GpsTable = () => {
   }
 
   return (
-    <div style={{ position: "relative" }}>
+    <div
+      style={{
+        position: "relative",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
       <Backdrop color="primary" style={{ zIndex: 4 }} open={messageLoading}>
         <CircularProgress color="primary" />
       </Backdrop>
@@ -278,7 +283,7 @@ const GpsTable = () => {
           flexDirection: "column",
           position: isMobile ? "static" : "absolute",
           marginTop: isMobile ? "1px" : "0",
-          top: isMobile ? "0px" : isTabBreakpoint ? "143px" : "125px",
+          top: isMobile ? "0px" : isTabBreakpoint ? "143px" : "128px",
           paddingRight: isMobile && "0px",
           paddingLeft: isMobile && "0px",
         }}
@@ -306,6 +311,7 @@ const GpsTable = () => {
                   <tr
                     key={emulator.id || "N/A"}
                     style={{
+                      borderTop:"1px solid 	#E0E0E0",
                       background:
                         selectedEmulator?.id === emulator.id
                           ? "lightblue"
@@ -335,7 +341,7 @@ const GpsTable = () => {
 
                     {/* TELEPHONE */}
                     <td>
-                      <div style={{ width: "100%" }}>
+                      <div style={{ width: "100%", display:"flex", flexDirection:"column", alignItems:"center" }}>
                         <Tooltip
                           title={emulator.telephone || "N/A"}
                           placement="top"
@@ -377,7 +383,9 @@ const GpsTable = () => {
                           </div>
                         </Tooltip>
                         {/* custom notes */}
-                        <CustomNoteComponent emulator={emulator} />
+                      <div style={{marginBottom:"0.2rem"}}>
+                      <CustomNoteComponent emulator={emulator} />
+                      </div>
                       </div>
                     </td>
                     <td align="right">
@@ -417,27 +425,36 @@ const GpsTable = () => {
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="table_footer">
-                <tr>
-                  <CustomTablePagination
-                    rowsPerPageOptions={[
-                      20,
-                      40,
-                      60,
-                      { label: "All", value: -1 },
-                    ]}
-                    colSpan={6}
-                    count={emulators.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                     style={{overflow:"hidden"}}
-                  />
-                </tr>
-              </tfoot>
+              <div
+                style={{
+                  position: "fixed",
+                  bottom: 0,
+                  backgroundColor: "#fff",
+                  zIndex: 7,
+                }}
+              >
+                <tfoot className="table_footer">
+                  <tr>
+                    <CustomTablePagination
+                      rowsPerPageOptions={[
+                        20,
+                        40,
+                        60,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={6}
+                      count={emulators.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      labelRowsPerPage={null}
+                      style={{ overflow: "hidden", width: "315px" , borderTop:"1px solid #C8C8C8"}}
+                    />
+                  </tr>
+                </tfoot>
+              </div>
             </table>
-
             <PopUpEmulatorHistory
               showToast={showToast}
               handleClose={handleHistoryClose}
@@ -490,36 +507,38 @@ const CustomTablePagination = styled(TablePagination)(
     gap: 0px;
     margin: 0 5px;
   }
-  
+
   /* Update the select label styles */
   & .${classes.displayedRows} {
     margin: 0;
   }
-  /* Update the select label styles */
-  & .${classes.selectLabel} {
-    margin: 0;
-    @media (max-width: 425px) {
-      flex-shrink: 1;
-    }
-
-    @media (min-width: 426px) {
-      flex-shrink: 0;
-    }
-  }
   
+  /* Additional styles to hide "Rows per page" label and dropdown */
+  & .MuiTablePagination-actions {
+    justify-content: flex-end;
+  }
+
+  & .MuiTypography-caption {
+    display: none; // Hide the "Rows per page" label
+  }
+
+  & .MuiSelect-select {
+    display: none; // Hide the dropdown
+  }
+
+  & .MuiTablePagination-select {
+    display: none; // Hide the select wrapper
+  }
+
   /* Update the select styles */
   & .${classes.select} {
     padding: 2px;
-    border: 1px solid ${
-      theme.palette.mode === "dark" ? grey[800] : grey[200]
-    };
+    border: 1px solid ${theme.palette.mode === "dark" ? grey[800] : grey[200]};
     border-radius: 50px;
     background-color: transparent;
     
     &:hover {
-      background-color: ${
-        theme.palette.mode === "dark" ? grey[800] : grey[50]
-      };
+      background-color: ${theme.palette.mode === "dark" ? grey[800] : grey[50]};
     }
     
     &:focus {
@@ -535,4 +554,3 @@ const CustomTablePagination = styled(TablePagination)(
   }
   `
 );
-
