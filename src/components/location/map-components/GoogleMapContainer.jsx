@@ -58,9 +58,26 @@ const GoogleMapContainer = () => {
       return;
     }
     const bounds = new window.google.maps.LatLngBounds();
-    tripData?.tripPoints?.forEach((element) => {
-      bounds.extend(new window.google.maps.LatLng(element.lat, element.lng));
-    });
+    console.log(tripData.tripPoints);
+    // extend bound for first middle and last element.
+    bounds.extend(
+      new window.google.maps.LatLng(
+        tripData.tripPoints[0].lat,
+        tripData.tripPoints[0].lng
+      )
+    );
+    bounds.extend(
+      new window.google.maps.LatLng(
+        tripData.tripPoints[tripData.tripPoints.length - 1].lat,
+        tripData.tripPoints[tripData.tripPoints.length - 1].lng
+      )
+    );
+    bounds.extend(
+      new window.google.maps.LatLng(
+        tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lat,
+        tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lng
+      )
+    );
     mapRef.current.fitBounds(bounds);
   }, [mapRef, tripData]);
 
