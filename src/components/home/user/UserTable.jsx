@@ -214,7 +214,7 @@ export default function UserTable({
       showToast(error, "error");
     }
   }, []);
-  
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -248,6 +248,7 @@ export default function UserTable({
       <>
         <h3>loading Users...</h3>
         <CircularProgress />
+        <EnhancedTableToolbar handleOpen={handleOpen} />
       </>
     );
   }
@@ -258,6 +259,7 @@ export default function UserTable({
         <div className="error">
           <h1>Something went wrong!</h1>
           <p>Error: {error}</p>
+          <EnhancedTableToolbar handleOpen={handleOpen} />
         </div>
       </>
     );
@@ -383,7 +385,7 @@ export default function UserTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          style={{overflow:"hidden"}}
+          style={{ overflow: "hidden" }}
         />
       </Paper>
     </Box>

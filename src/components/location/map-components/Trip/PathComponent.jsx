@@ -4,17 +4,15 @@ import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_URL } from "../../../../constants.js";
 import { useStates } from "../../../../StateProvider.js";
+import EmulatorMarker from "../Markers/EmulatorMarker2.jsx";
+import EmulatorMarkerDirection from "../Markers/EmulatorMarkerDirection2.jsx";
 
 export function PathComponent() {
   const { showToast } = useStates();
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
 
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
-
-  const setTripData = useEmulatorStore((state) => state.setTripData);
-
-  //TODO upon clicking a path, get the info and hit ApiService to create a new Stop.
+  const connectedEmulator = useEmulatorStore((state) => state.connectedEmulator);
 
   function onPolyLineClickTraveled(e) {
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
@@ -28,7 +26,7 @@ export function PathComponent() {
           closestIndex === -1
             ? Infinity
             : Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) +
-              Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
+            Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
         return d1 < d2 ? index : closestIndex;
       }, -1);
     };
@@ -51,7 +49,7 @@ export function PathComponent() {
           closestIndex === -1
             ? Infinity
             : Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) +
-              Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
+            Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
         return d1 < d2 ? index : closestIndex;
       }, -1);
     };
@@ -76,26 +74,42 @@ export function PathComponent() {
       "POST",
       tripPoint,
       token,
-      selectedEmulator.id
+      connectedEmulator.id
     );
     if (success) {
       showToast("Stop created!", "success");
-      setTripData(data);
+      // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
     } else {
       showToast("Error creating Stop!", "error");
       console.error("Error creating Stop: ", error);
     }
   }
 
+  console.log("Connected emulator: ", connectedEmulator);
+  console.log("Path traveled: ", pathTraveled);
+  console.log("Path not traveled: ", pathNotTraveled);
   return (
     <>
+      {connectedEmulator && connectedEmulator?.latitude !== null && connectedEmulator?.longitude !== null && (
+        <>
+          <EmulatorMarker emulator={connectedEmulator} />
+          <EmulatorMarkerDirection
+            latLng={{
+              lat: connectedEmulator?.latitude,
+              lng: connectedEmulator?.longitude,
+            }}
+            rotationAngle={connectedEmulator?.bearing}
+          />
+        </>
+      )}
+
       {pathTraveled != null && (
         <Polyline
           path={pathTraveled}
           options={{
-            strokeColor: "#559900",
-            strokeWeight: 6,
-            strokeOpacity: 0.6,
+            strokeColor: "#0058A5",
+            strokeWeight: 3,
+            strokeOpacity: 1,
             defaultVisible: true,
           }}
           onClick={onPolyLineClickTraveled}
@@ -105,9 +119,9 @@ export function PathComponent() {
         <Polyline
           path={pathNotTraveled}
           options={{
-            strokeColor: "#0088FF",
-            strokeWeight: 6,
-            strokeOpacity: 0.6,
+            strokeColor: "#0058A5",
+            strokeWeight: 3,
+            strokeOpacity: 0.3,
             defaultVisible: true,
           }}
           onClick={onPolyLineClickNotTraveled}

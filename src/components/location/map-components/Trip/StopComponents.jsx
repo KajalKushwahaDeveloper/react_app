@@ -16,7 +16,6 @@ export function StopComponents(props) {
   );
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
-  const setTripData = useEmulatorStore((state) => state.setTripData);
 
   const startLat = tripData?.tripPoints ? tripData?.tripPoints[0].lat : null;
   const startLng = tripData?.tripPoints ? tripData?.tripPoints[0].lng : null;
@@ -120,7 +119,6 @@ export function StopComponents(props) {
     );
     if (success) {
       showToast("Stop updated!", "success");
-      setTripData(data);
       stopNewLatLng = null;
     } else {
       showToast("Error updating Stop!", "error");

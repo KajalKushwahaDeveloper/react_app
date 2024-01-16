@@ -1,21 +1,22 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 import { DragEmulator, Emulator, TripData, TripPoint } from "./types.tsx";
+import { SelectedEmulatorData, toTripData } from "./SelectedEmulatorData.tsx";
 import {
   Center,
   defaultLng,
   defaultLat,
-  compareEmulatorsCompletely,
 } from "./types_maps.tsx";
-import { BASE_URL, EMULATOR_URL, TRIP_URL } from "../../constants";
+import { BASE_URL, EMULATOR_URL } from "../../constants";
 import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import { TripDataResponse } from "../../model/response.tsx";
 import { TwillioDevice } from "../call/types.tsx";
-import { debounce } from 'lodash';
+import { EmulatorEvent } from "../../model/EmulatorEvent.tsx";
 
 export interface EmulatorsSlice {
-  eventSource: AbortController | null;
+  isLoading: boolean;
+  emulatorsEventSource: AbortController | null;
+  selectedEmulatorEventSource: AbortController | null;
   selectedEmulator: Emulator | null;
   emulators: Emulator[] | [];
   hoveredEmulator: Emulator | null;
@@ -29,17 +30,18 @@ export interface EmulatorsSlice {
 
 export interface TripDataSlice {
   // latitude: number | null
+  connectedEmulator: Emulator | null;
   center: Center;
   tripData: TripData | null;
   pathTraveled: TripPoint[] | null;
   pathNotTraveled: TripPoint[] | null;
-  fetchTripData: (selectedEmulator: Emulator | null) => Promise<void>;
-  setTripData: (tripData: TripData | null) => void;
-  setPaths: (tripData: TripData | null) => void;
+  connectSelectedEmulatorSSE: (selectedEmulator: Emulator | null) => void;
+  setSelectedEmulatorSSEData: (selectedEmulatorData: SelectedEmulatorData | null) => void;
+  setPaths: (emulator: Emulator, tripData: TripData) => void;
 }
 
 interface SharedSlice {
-  connectSse: () => void;
+  connectEmulatorsSSE: () => void;
   logout: () => void;
   getBoth: () => void;
 }
@@ -50,7 +52,9 @@ const createEmulatorsSlice: StateCreator<
   [],
   EmulatorsSlice
 > = (set, get) => ({
-  eventSource: null,
+  isLoading: false,
+  emulatorsEventSource: null,
+  selectedEmulatorEventSource: null,
   emulators: [],
   selectedEmulator: null,
   hoveredEmulator: null,
@@ -66,10 +70,6 @@ const createEmulatorsSlice: StateCreator<
         },
       });
       const emulators = await response.json();
-      const selectedEmulator = get().selectedEmulator;
-      if (selectedEmulator !== null) {
-        get().fetchTripData(selectedEmulator);
-      }
       set({ emulators });
     } catch (error) {
       console.error("V2 Failed to fetch emulators:", error);
@@ -82,42 +82,49 @@ const createEmulatorsSlice: StateCreator<
       emulator.latitude !== null &&
       emulator.longitude !== null
     ) {
-      get().center = { lat: emulator.latitude, lng: emulator.longitude };
+      set({ center: { lat: emulator.latitude, lng: emulator.longitude } });
     }
-    set({ selectedEmulator: emulator });
-    get().fetchTripData(emulator);
-  },
-  updateEmulators: debounce((newEmulators) => {
-    const isUpdatedEmulators = compareEmulatorsCompletely(
-      get().emulators,
-      newEmulators
-    );
-
-    if (isUpdatedEmulators === false) {
+    // if same as selectedEmulator, then do nothing..
+    if (emulator === get().selectedEmulator || emulator?.id === get().selectedEmulator?.id) {
       return;
     }
 
-    const selectedEmulatorOld = get().selectedEmulator;
-    if (selectedEmulatorOld !== null && selectedEmulatorOld !== undefined) {
-      const selectedEmulatorNew = newEmulators?.find(
-        (newEmulator) => selectedEmulatorOld.id === newEmulator.id
-      );
-      if (selectedEmulatorNew && selectedEmulatorNew !== undefined) {
-        if (
-          selectedEmulatorNew.currentTripPointIndex !== null &&
-          selectedEmulatorOld.currentTripPointIndex !== null &&
-          selectedEmulatorNew.currentTripPointIndex !==
-            selectedEmulatorOld.currentTripPointIndex
-        ) {
-          get().fetchTripData(selectedEmulatorNew);
-        }
-        set({ selectedEmulator: selectedEmulatorNew });
-      }
-    }
-    set({ emulators: newEmulators });
-  }, 500),
+    set({ selectedEmulator: emulator });
+    get().connectSelectedEmulatorSSE(emulator);
+  },
   hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
   dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
+  updateEmulators: (newEmulators) => {
+    // NOTE: Realistically, there will be emulators being updated all the time.. Don't need to check if they are the same
+    // const isUpdatedEmulators = compareEmulatorsCompletely(
+    //   get().emulators,
+    //   newEmulators
+    // );
+
+    // if (isUpdatedEmulators === false) {
+    //   return;
+    // }
+
+    // TODO: This will be changed to SSE fetching selected Emulator Details
+    // const selectedEmulatorOld = get().selectedEmulator;
+    // if (selectedEmulatorOld !== null && selectedEmulatorOld !== undefined) {
+    //   const selectedEmulatorNew = newEmulators?.find(
+    //     (newEmulator) => selectedEmulatorOld.id === newEmulator.id
+    //   );
+    //   if (selectedEmulatorNew && selectedEmulatorNew !== undefined) {
+    //     if (
+    //       selectedEmulatorNew.currentTripPointIndex !== null &&
+    //       selectedEmulatorOld.currentTripPointIndex !== null &&
+    //       selectedEmulatorNew.currentTripPointIndex !==
+    //         selectedEmulatorOld.currentTripPointIndex
+    //     ) {
+    //       get().fetchTripData(selectedEmulatorNew);
+    //     }
+    //     set({ selectedEmulator: selectedEmulatorNew });
+    //   }
+    // }
+    set({ emulators: newEmulators });
+  },
 });
 
 const createTripDataSlice: StateCreator<
@@ -130,68 +137,88 @@ const createTripDataSlice: StateCreator<
   tripData: null,
   pathTraveled: null,
   pathNotTraveled: null,
-  fetchTripData: async (selectedEmulator: Emulator | null) => {
+  connectedEmulator: null,
+  connectSelectedEmulatorSSE: (selectedEmulator: Emulator | null) => {
+    const selectedEmulatorEventSource = get().selectedEmulatorEventSource;
+    if ((selectedEmulator === null || selectedEmulator === undefined)) {
+      selectedEmulatorEventSource?.abort(); // abort the emulatorsEventSource
+      set({ connectedEmulator: null, tripData: null, pathTraveled: null, pathNotTraveled: null, selectedEmulatorEventSource: null }); // clear trip data
+      return
+    }
+    // We connect to the emulator's SSE
     const token = localStorage.getItem("token");
-    if (
-      selectedEmulator === null ||
-      selectedEmulator === undefined ||
-      token === null
-    ) {
-      //clear trip Data
-      set({ tripData: null, pathTraveled: null, pathNotTraveled: null });
-    } else {
-      try {
-        const tripDataOld = get().tripData;
-        var tripDataOldDistance = 0;
-        if (
-          tripDataOld !== null &&
-          tripDataOld !== undefined &&
-          tripDataOld.distance !== null &&
-          tripDataOld.distance !== undefined
-        ) {
-          tripDataOldDistance = tripDataOld.distance;
+    const ctrl = new AbortController();
+    console.log("Connecting to SSE", `${BASE_URL}/sse/${selectedEmulator?.id}`);
+    set({ isLoading: true });
+    fetchEventSource(`${BASE_URL}/sse/${selectedEmulator?.id}`, {
+      method: "GET",
+      headers: {
+        Accept: "text/event-stream",
+        Authorization: `Bearer ${token}`,
+      },
+      onopen: async (res: Response) => {
+        if (res.status >= 400 && res.status < 500 && res.status !== 429) {
+          console.error("Client side error ", res);
         }
-        // pass tripDataOldDistance as a query parameter
-        const response = await fetch(TRIP_URL + `/${selectedEmulator.id}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ distance: tripDataOldDistance }),
-        });
-        // can return either the TripData or a string
-        const tripDataResp: TripDataResponse = await response.json();
-        if (tripDataResp.data === null || tripDataResp.data === undefined) {
-          console.warn(
-            "TripData is null",
-            tripDataResp.status + " " + tripDataResp.statusText
-          );
-          set({ tripData: tripDataOld });
-          get().setPaths(tripDataOld);
-        } else {
-          const tripData = tripDataResp.data;
-          set({ tripData });
-          get().setPaths(tripData);
+        set({ isLoading: false });
+      },
+      onmessage(event) {
+        console.log("onmessage", event.event);
+        // check event.event with EmulatorEvent
+        if (event.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
+          const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
+          set({ connectedEmulator: emulatorData.emulatorDetails });
+        } else if (event.event === EmulatorEvent.EMULATOR_CONNECTED || event.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED) {
+          const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
+          get().setSelectedEmulatorSSEData(emulatorData);
+          set({ center: { lat: emulatorData?.emulatorDetails?.latitude, lng: emulatorData?.emulatorDetails?.longitude } });
+        } else if (event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
+          const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
+          set({ connectedEmulator: emulatorData?.emulatorDetails });
+          var tripData = get().tripData;
+          if (tripData !== null) {
+            get().setPaths(emulatorData?.emulatorDetails, tripData);
+          }
         }
-      } catch (error) {
-        console.error("Failed to fetch trip data:", error);
-        set({ tripData: null, pathTraveled: null, pathNotTraveled: null });
-      }
-    }
+      },
+      onclose() {
+        console.warn("Connection closed by the server");
+        set({ isLoading: false });
+      },
+      onerror(err) {
+        console.log("err", err)
+        console.error("There was an error from the server", err);
+        set({ isLoading: false });
+      },
+      signal: ctrl.signal,
+    });
+    get().selectedEmulatorEventSource = ctrl;
   },
-  setTripData: (tripData: TripData | null) => {
-    set({ tripData });
-    get().setPaths(tripData);
-  },
-  setPaths: (tripData: TripData | null) => {
-    const selectedEmulator = get().selectedEmulator;
-    if (selectedEmulator === null || tripData === null) {
-      return;
+  setSelectedEmulatorSSEData: (selectedEmulatorData: SelectedEmulatorData | null) => {
+    if (selectedEmulatorData === null) {
+      // TODO: Handle this case
+      return
     }
-    let pathTraveledIndex = selectedEmulator.currentTripPointIndex + 1;
-    let pathNotTraveledIndex = selectedEmulator?.currentTripPointIndex;
-    if (selectedEmulator?.currentTripPointIndex < 0) {
+    const tripData = toTripData(selectedEmulatorData);
+    const tripPoints = tripData?.tripPoints;
+    console.log("tripPoints", tripPoints.length, "expected : 69053");
+    console.log("count", tripPoints, "expected : 30859");
+    const tripPointCombinedDistance = tripPoints.reduce((acc, tripPoint) => acc + tripPoint.distance, 0);
+    console.log("distance", tripPointCombinedDistance, "expected : 4799824/4798271.0");
+    // WITH SUB POINTS
+    // points size: 81056
+    // distance: 5314352
+
+    // WITHOUT SUB POINTS
+    // points size: 38197
+    // distance: 4799123
+    set({ connectedEmulator: selectedEmulatorData?.emulatorDetails, tripData: tripData });
+    get().setPaths(selectedEmulatorData?.emulatorDetails, tripData);
+  },
+  setPaths: (sseEmulator: Emulator, tripData: TripData) => {
+    let pathTraveledIndex = sseEmulator.currentTripPointIndex + 1;
+    let pathNotTraveledIndex = sseEmulator?.currentTripPointIndex;
+    if (sseEmulator?.currentTripPointIndex < 0) {
       pathTraveledIndex = 1;
       pathNotTraveledIndex = 0;
     }
@@ -207,7 +234,7 @@ const createSharedSlice: StateCreator<
   [],
   SharedSlice
 > = (set, get) => ({
-  connectSse: () => {
+  connectEmulatorsSSE: () => {
     // Run this when we are logged in. i.e. when we have a token
     const token = localStorage.getItem("token");
     const ctrl = new AbortController();
@@ -235,12 +262,12 @@ const createSharedSlice: StateCreator<
       },
       signal: ctrl.signal,
     });
-    get().eventSource = ctrl;
+    get().emulatorsEventSource = ctrl;
   },
   logout: () => {
     localStorage.removeItem("token");
-    get().eventSource?.abort();
-    set({ eventSource: null, emulators: [], selectedEmulator: null });
+    get().emulatorsEventSource?.abort();
+    set({ emulatorsEventSource: null, emulators: [], selectedEmulator: null });
     set({
       tripData: null,
       pathTraveled: null,

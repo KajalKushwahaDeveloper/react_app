@@ -23,7 +23,6 @@ export function SelectedStopInfo(props) {
     (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
   );
 
-  const setTripData = useEmulatorStore((state) => state.setTripData);
 
   const totalTime = useRef(null);
 
@@ -95,7 +94,7 @@ export function SelectedStopInfo(props) {
       showToast("Error deleting stop", "error");
       console.error("handleDeleteStop error : ", error);
     } else {
-      setTripData(data);
+      // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
       showToast("Stop deleted", "success");
       props.handleInfoWindowClose();
     }
