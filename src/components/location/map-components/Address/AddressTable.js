@@ -384,15 +384,17 @@ const AddressTable = () => {
             handleWidth={'5px'}
             handleColor={'#007dc6'}
           >
+            {/* CURRENT ADDRESS*/}
             <ResizeHorizon
               width={'100px'}
-              minWidth={'100px'}
+              minWidth={'150px'}
             >
-              {/* CURRENT ADDRESS*/}
               <div
+               className="col d-flex flex-column"
                 style={{
                   border: "2px solid",
-                  height: "60px",
+                  height: "62px",
+                  padding:"0 .3rem",
                 }}
               >
                 <div className="address-table-heading">Current location</div>
@@ -414,20 +416,22 @@ const AddressTable = () => {
                 </div>
               </div>
             </ResizeHorizon>
+            {/* FROM ADDRESS*/}
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'150px'}
             >
-              {/* FROM ADDRESS*/}
               <div
+               className="col d-flex flex-column"
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  padding:"0 .3rem",
                 }}
               >
                 <div className="address-table-heading">From address</div>
                 <div className="addressTable ellipsisText">
-                  <Tooltip title={tableValues.current} placement="top">
+                  <Tooltip title={tableValues.current} >
                     <div>
                       {tableValues.current
                         ? tableValues.current.fromAddress
@@ -437,18 +441,17 @@ const AddressTable = () => {
                 </div>
               </div>
             </ResizeHorizon>
+            {/* TO ADDRESS*/}
             <ResizeHorizon
               width={'auto'}
               minWidth={'200px'}
             >
-
-              {/* TO ADDRESS*/}
               <div
                 className="col d-flex flex-column"
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  padding: "0",
+                  padding:"0 .3rem",
                 }}
               >
                 <div className="address-table-heading">To address</div>
@@ -466,16 +469,16 @@ const AddressTable = () => {
                 </div>
               </div>
             </ResizeHorizon>
+            {/* ARRIVAL TIME */}
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'152px'}
             >
-
-              {/* ARRIVAL TIME */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  padding:"0 .3rem",
                 }}
               >
                 <div className="address-table-heading">Final Arrival time </div>
@@ -500,16 +503,16 @@ const AddressTable = () => {
                 )}
               </div>
             </ResizeHorizon>
+            {/* TIME */}
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'150px'}
             >
-
-              {/* TIME */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  padding:"0 .3rem",
                 }}
               >
                 <div className="address-table-heading">Total Time</div>
@@ -534,16 +537,16 @@ const AddressTable = () => {
                 )}
               </div>
             </ResizeHorizon>
+            {/* REMAING DISTANCE */}
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'170px'}
             >
-
-              {/* REMAING DISTANCE */}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  padding:"0 .3rem",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>
@@ -551,11 +554,11 @@ const AddressTable = () => {
                   <div
                     style={{
                       marginTop: "5px !important",
-                      height: "30px",
+                      height: "40px",
                       textAlign: "center",
                       maxWidth: "20vw",
                     }}
-                    className=""
+                    className="addressTable"
                   >
                     <div
                       className="addressTable"
@@ -569,12 +572,11 @@ const AddressTable = () => {
                 )}
               </div>
             </ResizeHorizon>
+            {/* PLUS MINUS ICONS */}
             <ResizeHorizon
               width={'auto'}
               minWidth={'100px'}
             >
-
-              {/* PLUS MINUS ICONS */}
               <div>
                 <div>
                   <IconButton
