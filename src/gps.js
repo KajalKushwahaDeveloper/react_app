@@ -32,6 +32,8 @@ const GPS = () => {
                 flexDirection: "row",
                 flexWrap: "wrap",
                 width: "100%",
+                height:"100vh",
+                overflowY:"hidden"
               }}
             >
               <div className="gps-page-table" style={{ minWidth: "315px", height: "100vh" }}>
