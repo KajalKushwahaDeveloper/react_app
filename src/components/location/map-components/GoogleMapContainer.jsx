@@ -3,23 +3,94 @@ import React, { useEffect, useRef } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
-import { compareTripData } from "../../../stores/emulator/types_maps.tsx";
+import { defaultLat, defaultLng } from "../../../stores/emulator/types_maps.tsx";
 import EmulatorMarkers from "./Markers/EmulatorMarkers.jsx";
 import { StopComponents } from "./Trip/StopComponents.jsx";
 import { SelectedStopInfo } from "./Trip/SelectedStopInfo.jsx";
 import { PathComponent } from "./Trip/PathComponent.jsx";
 import useFetch from "../../../hooks/useFetch.js";
 import { EMULATOR_URL } from "../../../constants.js";
+import { defaultMapStyle, roadMapStyle } from "./MapStyles.js";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
 const GoogleMapContainer = () => {
-  const center = useEmulatorStore((state) => state.center);
-  const tripData = useEmulatorStore(
-    (state) => state.tripData,
-    (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
-  );
+  console.log("rendering google map container");
   const mapRef = useRef(null);
+  const styleRef = useRef("default");
+
+  useEffect(() => useEmulatorStore.subscribe(
+    state => state.draggedEmulator, (draggedEmulator) => {
+      console.log("draggedEmulator changed", draggedEmulator);
+      if (mapRef.current === null || mapRef.current === undefined) {
+        return;
+      }
+      // not-dragged
+      if (draggedEmulator && !draggedEmulator?.isDragMarkerDropped) {
+        if (styleRef.current === "roadmap") {
+          return;
+        }
+        styleRef.current = "roadmap";
+        mapRef.current?.setOptions({ styles: roadMapStyle });
+      }
+      // dragged
+      else if (!draggedEmulator || draggedEmulator?.isDragMarkerDropped) {
+        if (styleRef.current === "default") {
+          return;
+        }
+        styleRef.current = "default";
+        mapRef.current?.setOptions({ styles: defaultMapStyle });
+      }
+    },
+  ), [])
+
+  useEffect(() => useEmulatorStore.subscribe(
+    state => state.center, (center) => {
+      console.log("center changed", center);
+      if (mapRef.current === null || mapRef.current === undefined) {
+        return;
+      }
+      // center changed
+      if (center && center.lat && center.lng) {
+        mapRef.current?.setCenter(center);
+      }
+    }
+  ), [])
+
+  useEffect(() => useEmulatorStore.subscribe(
+    state => state.tripData, (tripData) => {
+      console.log("tripData changed", tripData);
+      if (mapRef.current === null || mapRef.current === undefined) {
+        return;
+      }
+      if (tripData && tripData.tripPoints && tripData.tripPoints.length > 0) {
+        const bounds = new window.google.maps.LatLngBounds();
+        // extend bound for first middle and last element.
+        bounds.extend(
+          new window.google.maps.LatLng(
+            tripData.tripPoints[0].lat,
+            tripData.tripPoints[0].lng
+          )
+        );
+        bounds.extend(
+          new window.google.maps.LatLng(
+            tripData.tripPoints[tripData.tripPoints.length - 1].lat,
+            tripData.tripPoints[tripData.tripPoints.length - 1].lng
+          )
+        );
+        bounds.extend(
+          new window.google.maps.LatLng(
+            tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lat,
+            tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lng
+          )
+        );
+        console.log("fitting bounds", bounds);
+        mapRef.current.fitBounds(bounds);
+      }
+    }
+  ), [])
+
+
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -45,41 +116,6 @@ const GoogleMapContainer = () => {
   const handleInfoWindowClose = () => {
     setSelectedStop(null);
   };
-  useEffect(() => {
-    if (
-      tripData === null ||
-      mapRef.current === null ||
-      mapRef.current === null ||
-      mapRef.current === undefined
-    ) {
-      return;
-    }
-    if (tripData.tripPoints === null || tripData.tripPoints.length <= 0) {
-      return;
-    }
-    const bounds = new window.google.maps.LatLngBounds();
-    console.log(tripData.tripPoints);
-    // extend bound for first middle and last element.
-    bounds.extend(
-      new window.google.maps.LatLng(
-        tripData.tripPoints[0].lat,
-        tripData.tripPoints[0].lng
-      )
-    );
-    bounds.extend(
-      new window.google.maps.LatLng(
-        tripData.tripPoints[tripData.tripPoints.length - 1].lat,
-        tripData.tripPoints[tripData.tripPoints.length - 1].lng
-      )
-    );
-    bounds.extend(
-      new window.google.maps.LatLng(
-        tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lat,
-        tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lng
-      )
-    );
-    mapRef.current.fitBounds(bounds);
-  }, [mapRef, tripData]);
 
   const containerStyle = {
     position: "unset !important",
@@ -95,164 +131,14 @@ const GoogleMapContainer = () => {
     mapRef.current = null;
   }, []);
 
-  const darkMapStyle = [
-    {
-      featureType: "all",
-      elementType: "labels.text.fill",
-      stylers: [
-        {
-          saturation: 36,
-        },
-        {
-          color: "#7E7E7E",
-        }
-      ],
-    },
-    {
-      featureType: "all",
-      elementType: "labels.text.stroke",
-      stylers: [
-        {
-          visibility: "on",
-        },
-        {
-          color: "#ffffff",
-        }
-      ],
-    },
-    {
-      featureType: "all",
-      elementType: "labels.icon",
-      stylers: [
-        {
-          visibility: "off",
-        },
-      ],
-    },
-    {
-      featureType: "administrative",
-      elementType: "geometry.fill",
-      stylers: [
-        {
-          color: "#dae2ec",
-        },
-        {
-          lightness: 20,
-        },
-      ],
-    },
-    {
-      featureType: "administrative",
-      elementType: "geometry.stroke",
-      stylers: [
-        {
-          color: "#BEBEBEBE",
-        },
-        {
-          lightness: 17,
-        },
-        {
-          weight: 1.2,
-        },
-      ],
-    },
-    {
-      featureType: "landscape",
-      elementType: "geometry",
-      stylers: [
-        {
-          color: "#dae2ec",
-        }
-      ],
-    },
-    {
-      featureType: "poi",
-      elementType: "geometry",
-      stylers: [
-        {
-          color: "#e9eef3",
-        }
-      ],
-    },
-    {
-      featureType: "road.highway",
-      elementType: "geometry.fill",
-      stylers: [
-        {
-          color: "#ffffff",
-        }
-      ],
-    },
-    {
-      featureType: "road.highway",
-      elementType: "geometry.stroke",
-      stylers: [
-        {
-          color: "#8F8F8F",
-        },
-        {
-          weight: 0.5,
-        },
-      ],
-    },
-    {
-      featureType: "road.arterial",
-      elementType: "geometry",
-      stylers: [
-        {
-          color: "#BEBEBE",
-        },
-        {
-          lightness: 18,
-        },
-      ],
-    },
-    {
-      featureType: "road.local",
-      elementType: "geometry",
-      stylers: [
-        {
-          color: "#DDDDDDBE",
-        },
-        {
-          lightness: 16,
-        },
-      ],
-    },
-    {
-      featureType: "transit",
-      elementType: "geometry",
-      stylers: [
-        {
-          color: "#BEBEBEBE",
-        },
-        {
-          lightness: 19,
-        },
-      ],
-    },
-    {
-      featureType: "water",
-      elementType: "geometry",
-      stylers: [
-        {
-          color: "#BEBEBE",
-        },
-        {
-          lightness: 17,
-        },
-      ],
-    },
-  ];
-
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       zoom={4}
-      center={center}
+      center={{ lat: defaultLat, lng: defaultLng }}
       gestureHandling="none"
       zoomControl={false}
-      options={{ scrollwheel: true, styles: darkMapStyle }}
+      options={{ scrollwheel: true, styles: defaultMapStyle, disableDefaultUI: true }}
       onLoad={onLoad}
       onUnmount={onUnmount}
     >

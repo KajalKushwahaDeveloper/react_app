@@ -1,5 +1,5 @@
 import { create, StateCreator } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, subscribeWithSelector } from "zustand/middleware";
 import { DragEmulator, Emulator, TripData, TripPoint } from "./types.tsx";
 import { SelectedEmulatorData, toTripData } from "./SelectedEmulatorData.tsx";
 import {
@@ -21,7 +21,7 @@ export interface EmulatorsSlice {
   selectedEmulator: Emulator | null;
   emulators: Emulator[] | [];
   hoveredEmulator: Emulator | null;
-  dragEmulatorRequest: DragEmulator | null;
+  draggedEmulator: DragEmulator | null;
   updateEmulators: (emulators: Emulator[]) => void;
   fetchEmulators: () => Promise<void>;
   selectEmulator: (emulator: Emulator | null) => void;
@@ -32,7 +32,7 @@ export interface EmulatorsSlice {
 export interface TripDataSlice {
   // latitude: number | null
   connectedEmulator: Emulator | null;
-  center: Center;
+  center: Center | null;
   tripData: TripData | null;
   pathTraveled: TripPoint[] | null;
   pathNotTraveled: TripPoint[] | null;
@@ -60,7 +60,7 @@ const createEmulatorsSlice: StateCreator<
   emulatorsCount: 0,
   selectedEmulator: null,
   hoveredEmulator: null,
-  dragEmulatorRequest: null,
+  draggedEmulator: null,
   fetchEmulators: async () => {
     const token = localStorage.getItem("token");
     try {
@@ -85,6 +85,8 @@ const createEmulatorsSlice: StateCreator<
       emulator.longitude !== null
     ) {
       set({ center: { lat: emulator.latitude, lng: emulator.longitude } });
+    } else {
+      set({ center: null });
     }
     // if same as selectedEmulator, then do nothing..
     if (emulator === get().selectedEmulator || emulator?.id === get().selectedEmulator?.id) {
@@ -95,10 +97,10 @@ const createEmulatorsSlice: StateCreator<
     get().connectSelectedEmulatorSSE(emulator);
   },
   hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
-  dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
-  updateEmulators: (newEmulators) => {
-    useMarkerStore.getState().advance(newEmulators);
+  dragEmulator: (draggedEmulator) => set({ draggedEmulator: draggedEmulator }),
+  updateEmulators: async (newEmulators) => {
     set({ emulators: newEmulators });
+    await useMarkerStore.getState().advance(newEmulators);
   },
 });
 
@@ -257,10 +259,10 @@ const createSharedSlice: StateCreator<
 export const useEmulatorStore = create<
   EmulatorsSlice & TripDataSlice & SharedSlice & deviceStore
 >()(
-  devtools((...args) => ({
+  subscribeWithSelector(devtools((...args) => ({
     ...createEmulatorsSlice(...args),
     ...createTripDataSlice(...args),
     ...createSharedSlice(...args),
     ...createDeviceSlice(...args),
-  }))
+  })))
 );

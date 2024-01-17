@@ -16,9 +16,10 @@ const MAX_DISTANCE_SNAP = 10;
 
 export function DragDialog() {
   const { showToast } = useStates();
-  const dragEmulatorRequest = useEmulatorStore(
-    (state) => state.dragEmulatorRequest
+  const draggedEmulator = useEmulatorStore(
+    (state) => state.draggedEmulator
   );
+
   const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
@@ -29,10 +30,10 @@ export function DragDialog() {
 
   const closeDragDialog = React.useCallback(() => {
     setOpenDialog(false);
-    if (dragEmulatorRequest !== null) dragEmulator(null);
+    if (draggedEmulator !== null) dragEmulator(null);
     if (payload !== null) setPayload(null);
     if (dialogText !== "") setDialogText("");
-  }, [dragEmulatorRequest, dragEmulator, payload, dialogText]);
+  }, [draggedEmulator, dragEmulator, payload, dialogText]);
 
   function handleDialog(payload, text) {
     setPayload(payload);
@@ -56,21 +57,20 @@ export function DragDialog() {
           const payload = {
             emulatorId: dragEmulatorRequest.emulator.id,
             cancelTrip: false,
-            newTripIndex: -1,
-            latitude: requestedLatitude,
-            longitude: requestedLongitude,
+            newTripIndex: null,
+            latitude: dragEmulatorRequest.latitude,
+            longitude: dragEmulatorRequest.longitude,
           };
           handleDialog(
             payload,
             "Do you want to set new Location of this emulator?"
           );
         }
-
         return;
       }
       // got Trip Point, now check if it is selected emulator's trip else show toast to select emulator first!
       if (
-        requestedEmulator.id !== selectedEmulator?.id &&
+        dragEmulatorRequest.emulator.id !== selectedEmulator?.id &&
         data !== null &&
         data !== undefined &&
         data.data.tripPoints !== null &&
@@ -87,13 +87,13 @@ export function DragDialog() {
       // else find nearest point or cancelation point
       const { nearestTripPoint, nearestDistance } = findNearestTripPoint(
         data.data.tripPoints,
-        requestedLatitude,
-        requestedLongitude
+        dragEmulatorRequest.latitude,
+        dragEmulatorRequest.longitude
       );
 
       if (nearestDistance <= MAX_DISTANCE_SNAP) {
         const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(
-          requestedEmulator.currentTripPointIndex,
+          dragEmulatorRequest.emulator.currentTripPointIndex,
           data.data.tripPoints
         );
 
@@ -104,16 +104,16 @@ export function DragDialog() {
 
         const previousTimeToReachStop =
           calculateTimeFromTripPointIndexToStopPoint(
-            requestedEmulator.currentTripPointIndex,
+            dragEmulatorRequest.emulator.currentTripPointIndex,
             emulatorCurrentTripPointStopPoint,
-            requestedEmulator.speed,
+            dragEmulatorRequest.emulator.speed,
             data.data.tripPoints
           );
 
         const newTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(
           nearestTripPoint.tripPointIndex,
           nearestTripPointStopPoint,
-          requestedEmulator.speed,
+          dragEmulatorRequest.emulator.speed,
           data.data.tripPoints
         );
 
@@ -142,8 +142,8 @@ export function DragDialog() {
           emulatorId: dragEmulatorRequest.emulator.id,
           cancelTrip: true,
           newTripIndex: -1,
-          latitude: requestedLatitude,
-          longitude: requestedLongitude,
+          latitude: dragEmulatorRequest.latitude,
+          longitude: dragEmulatorRequest.longitude,
         };
 
         handleDialog(
@@ -207,20 +207,31 @@ export function DragDialog() {
       }, { nearestDistance: Infinity, nearestTripPoint: null });
     }
 
-    if (dragEmulatorRequest === null) {
-      closeDragDialog();
+    // 1. check if draggedEmulator is null or not, if null then close dialog
+    if (draggedEmulator === null) {
+      return;
+    }
+    // 2. if not yet dropped then close dialog
+    if (draggedEmulator.isDragMarkerDropped === false) {
+      return;
+    }
+    // 3. if isDragMarkerDropped is true then check if emulator, lat and long is present or not
+    if (
+      draggedEmulator.isDragMarkerDropped === true && (
+      draggedEmulator.emulator === null ||
+      draggedEmulator.latitude === null ||
+      draggedEmulator.longitude === null)
+    ) {
       return;
     }
 
-    const { emulator: requestedEmulator, latitude: requestedLatitude, longitude: requestedLongitude } = dragEmulatorRequest;
-
-    if (!requestedEmulator || !requestedLatitude || !requestedLongitude) {
-      closeDragDialog();
-      return;
-    }
-
-    tryUpdatingTrip(dragEmulatorRequest);
-  }, [dragEmulatorRequest, closeDragDialog, selectedEmulator?.id, showToast]);
+    // 4. if emulator, lat and long is present and isDragMarkerDropped is true then try to update trip
+    if(draggedEmulator.emulator && draggedEmulator.latitude && draggedEmulator.longitude && draggedEmulator.isDragMarkerDropped === true) {
+      // send copy of draggedEmulator to tryUpdatingTrip function
+      tryUpdatingTrip({ ...draggedEmulator });
+      dragEmulator(null);
+    }   
+  }, [draggedEmulator, closeDragDialog, showToast, selectedEmulator?.id, dragEmulator]);
 
   function haversine(lat1, lon1, lat2, lon2) {
     // Convert latitude and longitude from degrees to radians
@@ -257,6 +268,7 @@ export function DragDialog() {
       closeDragDialog();
     }
   };
+
   return (
     <Dialog open={openDialog} onClose={closeDragDialog}>
       <DialogTitle id="alert-dialog-title">{"logbook gps"}</DialogTitle>

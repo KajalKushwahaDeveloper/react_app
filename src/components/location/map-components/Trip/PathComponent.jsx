@@ -85,9 +85,6 @@ export function PathComponent() {
     }
   }
 
-  console.log("Connected emulator: ", connectedEmulator);
-  console.log("Path traveled: ", pathTraveled);
-  console.log("Path not traveled: ", pathNotTraveled);
   return (
     <>
       {connectedEmulator && connectedEmulator?.latitude !== null && connectedEmulator?.longitude !== null && (

@@ -6,6 +6,8 @@ const EmulatorMarkers = () => {
   console.log('app only render once')
   const items = useMarkerStore((state) => state.items)
 
+  
+  console.log('items : ', items)
   return (
     <>
       {items?.map((id) => {

@@ -29,15 +29,8 @@ const useMarkerStore = create((set) => ({
     }
     set(() => {
       const coords = {}
-      const itemsMap = {}
       for (let i = 0; i < emulators.length; i++) {
-        coords[emulators[i].id] = { latitude: emulators[i].latitude , longitude: emulators[i].longitude }
-        if(itemsMap[emulators[i].id] !== emulators[i].id) {
-         itemsMap[emulators[i].id] = emulators[i]
-        }
-      }
-      if(itemsMap.length > 0) {
-        return { coords, itemsMap }
+        coords[emulators[i].id] = emulators[i]
       }
       return coords
     })
