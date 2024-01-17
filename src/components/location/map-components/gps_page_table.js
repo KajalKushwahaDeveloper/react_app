@@ -67,17 +67,13 @@ const GpsTable = () => {
   // State variables
   const { staticEmulators, showToast } = useStates();
 
-  const { width } = useViewPort();
+  const { width, height } = useViewPort();
   const breakpoint = 620;
-  const breakpointThreeTwenty = 320;
-  const breakpointTab = 992;
-  const isTabBreakpoint = width < breakpointTab;
 
   const isMobile = width < breakpoint;
-  const isMobileThreeTwenty = width <= breakpointThreeTwenty;
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, setRowsPerPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [messageLoading, setMessageLoading] = useState(false);
 
@@ -103,7 +99,7 @@ const GpsTable = () => {
     (oldSelectedDevice, newSelectedDevice) =>
       compareSelectedDeviceForDialog(oldSelectedDevice, newSelectedDevice)
   );
-
+    
   useEffect(() => {
     // When call comes/ ends.
     if (selectedDevice === null || selectedDevice.state === null) {
@@ -183,13 +179,18 @@ const GpsTable = () => {
     }
   }, [emulators, page, rowsPerPage, selectedEmulator, hoveredEmulator]);
 
+  const tablePaginationRef = React.useRef(null);
+  // get max rows we can get within the screen height - 128px - 50px
+  useEffect(() => {
+    const maxRowsPerPage = Math.floor(
+      (height - 128 - 50) / 80
+    );
+    tablePaginationRef.current?.setRowsPerPage(maxRowsPerPage);
+    setRowsPerPage(maxRowsPerPage);
+  }, [height]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 20));
-    setPage(0);
   };
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
@@ -263,7 +264,8 @@ const GpsTable = () => {
   }
 
   return (
-    <div style={{ position: "relative" }}>
+    <div
+    >
       <Backdrop color="primary" style={{ zIndex: 4 }} open={messageLoading}>
         <CircularProgress color="primary" />
       </Backdrop>
@@ -272,10 +274,7 @@ const GpsTable = () => {
           display: "flex",
           flexDirection: "column",
           position: isMobile ? "static" : "absolute",
-          marginTop: isMobile ? "1px" : "0",
-          top: isMobile ? "0px" : isTabBreakpoint ? "143px" : "125px",
-          paddingRight: isMobile && "0px",
-          paddingLeft: isMobile && "0px",
+          top: isMobile ? "0px" : "128px",
         }}
       >
         <div
@@ -289,36 +288,41 @@ const GpsTable = () => {
             <table
               aria-label="custom pagination table"
               className=" shadow mb-0 n="
+              style={{ width: "100%" }}
             >
               <tbody>
                 {(rowsPerPage > 0
                   ? emulators.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
                   : emulators
                 )?.map((emulator, index) => (
                   <tr
                     key={emulator.id || "N/A"}
                     style={{
+                      height: isMobile? 'auto' : '80px',
+                      minHeight: isMobile? 'auto' : '80px',
+                      maxHeight: isMobile? 'auto' : '80px',
+                      border: '2px solid #E6E6E6',
                       background:
                         selectedEmulator?.id === emulator.id
-                          ? "lightblue"
+                          ? 'lightblue'
                           : hoveredEmulator?.id === emulator.id
-                          ? "lightpink"
-                          : "white",
+                            ? 'lightpink'
+                            : 'transparent'
                     }}
                     onClick={() => handleEmulatorCheckboxChange(emulator)}
                   >
                     <td
                       style={{
                         background:
-                          emulator.status === "ACTIVE"
-                            ? "#16BA00"
-                            : emulator.status === "INACTIVE"
-                            ? "#FFA500"
-                            : "#ff4d4d",
-                        textAlign: "center",
+                          emulator.status === 'ACTIVE'
+                            ? '#16BA00'
+                            : emulator.status === 'INACTIVE'
+                              ? '#FFA500'
+                              : '#ff4d4d',
+                        textAlign: 'center'
                       }}
                     >
                       {/* Restart/Reset Button */}
@@ -330,7 +334,7 @@ const GpsTable = () => {
 
                     {/* TELEPHONE */}
                     <td>
-                      <div style={{ width: "100%" }}>
+                      <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <Tooltip
                           title={emulator.telephone || "N/A"}
                           placement="top"
@@ -372,7 +376,9 @@ const GpsTable = () => {
                           </div>
                         </Tooltip>
                         {/* custom notes */}
-                        <CustomNoteComponent emulator={emulator} />
+                        <div style={{ marginBottom: "0.2rem" }}>
+                          <CustomNoteComponent emulator={emulator} />
+                        </div>
                       </div>
                     </td>
                     <td align="right">
@@ -412,27 +418,8 @@ const GpsTable = () => {
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="table_footer">
-                <tr>
-                  <CustomTablePagination
-                    rowsPerPageOptions={[
-                      20,
-                      40,
-                      60,
-                      { label: "All", value: -1 },
-                    ]}
-                    colSpan={6}
-                    count={emulators.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                     style={{overflow:"hidden"}}
-                  />
-                </tr>
-              </tfoot>
-            </table>
 
+            </table>
             <PopUpEmulatorHistory
               showToast={showToast}
               handleClose={handleHistoryClose}
@@ -448,8 +435,25 @@ const GpsTable = () => {
             />
           </>
         </div>
-        <div></div>
       </div>
+      <CustomTablePagination
+        onLoad={(ref) => {tablePaginationRef.current = ref}}
+        rowsPerPageOptions={[1]}
+        colSpan={6}
+        count={emulators.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        labelRowsPerPage={null}
+        style={{
+          overflow: "hidden", borderTop: "1px solid #C8C8C8",
+          position: isMobile ? "static" : "absolute",
+          bottom: 0,
+          backgroundColor: "#fff",
+          zIndex: 2,
+          height: "50px",
+        }}
+      />
     </div>
   );
 };
@@ -490,37 +494,38 @@ const CustomTablePagination = styled(TablePagination)(
   & .${classes.displayedRows} {
     margin: 0;
   }
-  /* Update the select label styles */
-  & .${classes.selectLabel} {
-    margin: 0;
-    @media (max-width: 425px) {
-      flex-shrink: 1;
-    }
-
-    @media (min-width: 426px) {
-      flex-shrink: 0;
-    }
-  }
   
+  /* Additional styles to hide "Rows per page" label and dropdown */
+  & .MuiTablePagination-actions {
+    justify-content: flex-end;
+  }
+
+  & .MuiTypography-caption {
+    display: none; // Hide the "Rows per page" label
+  }
+
+  & .MuiSelect-select {
+    display: none; // Hide the dropdown
+  }
+
+  & .MuiTablePagination-select {
+    display: none; // Hide the select wrapper
+  }
+
   /* Update the select styles */
   & .${classes.select} {
     padding: 2px;
-    border: 1px solid ${
-      theme.palette.mode === "dark" ? grey[800] : grey[200]
-    };
+    border: 1px solid ${theme.palette.mode === "dark" ? grey[800] : grey[200]};
     border-radius: 50px;
     background-color: transparent;
     
     &:hover {
-      background-color: ${
-        theme.palette.mode === "dark" ? grey[800] : grey[50]
-      };
+      background-color: ${theme.palette.mode === "dark" ? grey[800] : grey[50]};
     }
     
     &:focus {
-      outline: 1px solid ${
-        theme.palette.mode === "dark" ? blue[400] : blue[200]
-      };
+      outline: 1px solid ${theme.palette.mode === "dark" ? blue[400] : blue[200]
+    };
     }
   }
   
@@ -530,4 +535,3 @@ const CustomTablePagination = styled(TablePagination)(
   }
   `
 );
-

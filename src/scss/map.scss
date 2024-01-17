@@ -50,7 +50,6 @@ body {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 
   @media screen and (max-width: 620px) {
     .address-table-heading{
@@ -77,30 +76,7 @@ body {
     hyphens: auto;
     height: 40px;
   }
-}
 
-.table-responsive {
-  max-height: 80vh;
-  max-width: 640px ; 
-  position: "absolute";
-  top: 90;
-}
-
-.table-responsive-mobile {
-  max-height: 36vh;
-  max-width: 640px;
-  position: "absolute";
-  overflow-y: auto !important;
-  overflow-x: hidden;
-  top: 90;
-  // margin-top: 0.5rem;
-}
-
-.table-responsive-laptop {
-  max-height: 10vh;
-  max-width: 640px ; 
-  position: "absolute";
-  top: 90;
 }
 
 @media screen and (max-width: 768px) {
@@ -127,12 +103,4 @@ body {
   justify-content: center;
   align-items: center;
   background: $background-color;
-}
-
-.gps-page-table {
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }

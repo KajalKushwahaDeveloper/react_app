@@ -175,7 +175,6 @@ const createTripDataSlice: StateCreator<
         } else if (event.event === EmulatorEvent.EMULATOR_CONNECTED || event.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           get().setSelectedEmulatorSSEData(emulatorData);
-          set({ center: { lat: emulatorData?.emulatorDetails?.latitude, lng: emulatorData?.emulatorDetails?.longitude } });
         } else if (event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           set({ connectedEmulator: emulatorData?.emulatorDetails });

@@ -386,13 +386,13 @@ const AddressTable = () => {
           >
             <ResizeHorizon
               width={'100px'}
-              minWidth={'100px'}
+              minWidth={'50px'}
             >
               {/* CURRENT ADDRESS*/}
               <div
                 style={{
                   border: "2px solid",
-                  height: "60px",
+                  height: "64px",
                 }}
               >
                 <div className="address-table-heading">Current location</div>
@@ -416,13 +416,14 @@ const AddressTable = () => {
             </ResizeHorizon>
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'50px'}
             >
               {/* FROM ADDRESS*/}
               <div
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height: "64px",
                 }}
               >
                 <div className="address-table-heading">From address</div>
@@ -439,7 +440,7 @@ const AddressTable = () => {
             </ResizeHorizon>
             <ResizeHorizon
               width={'auto'}
-              minWidth={'200px'}
+              minWidth={'50px'}
             >
 
               {/* TO ADDRESS*/}
@@ -449,6 +450,7 @@ const AddressTable = () => {
                   border: "2px solid",
                   alignItems: "center",
                   padding: "0",
+                  height: "64px",
                 }}
               >
                 <div className="address-table-heading">To address</div>
@@ -468,7 +470,7 @@ const AddressTable = () => {
             </ResizeHorizon>
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'50px'}
             >
 
               {/* ARRIVAL TIME */}
@@ -476,6 +478,7 @@ const AddressTable = () => {
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height: "64px",
                 }}
               >
                 <div className="address-table-heading">Final Arrival time </div>
@@ -502,7 +505,7 @@ const AddressTable = () => {
             </ResizeHorizon>
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'50px'}
             >
 
               {/* TIME */}
@@ -510,6 +513,7 @@ const AddressTable = () => {
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height: "64px",
                 }}
               >
                 <div className="address-table-heading">Total Time</div>
@@ -536,7 +540,7 @@ const AddressTable = () => {
             </ResizeHorizon>
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'50px'}
             >
 
               {/* REMAING DISTANCE */}
@@ -544,6 +548,7 @@ const AddressTable = () => {
                 style={{
                   border: "2px solid",
                   alignItems: "center",
+                  height: "64px",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>
@@ -571,7 +576,7 @@ const AddressTable = () => {
             </ResizeHorizon>
             <ResizeHorizon
               width={'auto'}
-              minWidth={'100px'}
+              minWidth={'50px'}
             >
 
               {/* PLUS MINUS ICONS */}
