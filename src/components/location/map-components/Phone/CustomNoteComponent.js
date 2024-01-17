@@ -7,11 +7,7 @@ import { useStates } from "../../../../StateProvider";
 const CustomNoteComponent = ({ emulator }) => {
   const { showToast } = useStates();
 
-  const [noteText, setNoteText] = useState("");
-
-  useEffect(() => {
-    setNoteText(emulator?.note);
-  }, [emulator]);
+  const [noteText, setNoteText] = useState(emulator?.note);
 
   // FIXME: not updating notes correctly.
   const handleNoteChange = (e) => {
@@ -19,14 +15,14 @@ const CustomNoteComponent = ({ emulator }) => {
     const newText = e.target.value.slice(0, 25);
     setNoteText(newText);
     if (newText !== emulator.note) {
-      handleSaveNote();
+      handleSaveNote(newText);
     }
   };
 
-  const handleSaveNote = async () => {
+  const handleSaveNote = async (noteTextParam) => {
     showToast(" Saving Note... ", "info");
     const token = localStorage.getItem("token");
-    const payload = { noteText, emulatorId: emulator.id };
+    const payload = { noteText: noteTextParam, emulatorId: emulator.id };
     const { success, data, error } = await ApiService.makeApiCall(
       EMULATOR_NOTE_URL,
       "POST",
@@ -34,7 +30,7 @@ const CustomNoteComponent = ({ emulator }) => {
       token
     );
     if (success) {
-      showToast("Note Updated! ", "success");
+      //showToast("Note Updated! ", "success");
     } else {
       showToast(" Failed to update Note! ", "error");
     }
