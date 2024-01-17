@@ -20,7 +20,7 @@ const CustomNoteComponent = ({ emulator }) => {
   };
 
   const handleSaveNote = async (noteTextParam) => {
-    showToast(" Saving Note... ", "info");
+    //showToast(" Saving Note... ", "info");
     const token = localStorage.getItem("token");
     const payload = { noteText: noteTextParam, emulatorId: emulator.id };
     const { success, data, error } = await ApiService.makeApiCall(
@@ -30,7 +30,7 @@ const CustomNoteComponent = ({ emulator }) => {
       token
     );
     if (success) {
-      //showToast("Note Updated! ", "success");
+      showToast("Note Updated! ", "success");
     } else {
       showToast(" Failed to update Note! ", "error");
     }
