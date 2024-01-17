@@ -4,8 +4,8 @@ import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_URL } from "../../../../constants.js";
 import { useStates } from "../../../../StateProvider.js";
-import EmulatorMarker from "../Markers/EmulatorMarker2.jsx";
 import EmulatorMarkerDirection from "../Markers/EmulatorMarkerDirection2.jsx";
+import EmulatorMarkerSelected from "../Markers/EmulatorMarkerSelected.jsx";
 
 export function PathComponent() {
   const { showToast } = useStates();
@@ -92,7 +92,7 @@ export function PathComponent() {
     <>
       {connectedEmulator && connectedEmulator?.latitude !== null && connectedEmulator?.longitude !== null && (
         <>
-          <EmulatorMarker emulator={connectedEmulator} />
+          <EmulatorMarkerSelected emulator={connectedEmulator} />
           <EmulatorMarkerDirection
             latLng={{
               lat: connectedEmulator?.latitude,

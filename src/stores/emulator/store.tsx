@@ -12,6 +12,7 @@ import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { TwillioDevice } from "../call/types.tsx";
 import { EmulatorEvent } from "../../model/EmulatorEvent.tsx";
+import useMarkerStore from "./markerStore.js";
 
 export interface EmulatorsSlice {
   isLoading: boolean;
@@ -56,6 +57,7 @@ const createEmulatorsSlice: StateCreator<
   emulatorsEventSource: null,
   selectedEmulatorEventSource: null,
   emulators: [],
+  emulatorsCount: 0,
   selectedEmulator: null,
   hoveredEmulator: null,
   dragEmulatorRequest: null,
@@ -95,34 +97,7 @@ const createEmulatorsSlice: StateCreator<
   hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
   dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
   updateEmulators: (newEmulators) => {
-    // NOTE: Realistically, there will be emulators being updated all the time.. Don't need to check if they are the same
-    // const isUpdatedEmulators = compareEmulatorsCompletely(
-    //   get().emulators,
-    //   newEmulators
-    // );
-
-    // if (isUpdatedEmulators === false) {
-    //   return;
-    // }
-
-    // TODO: This will be changed to SSE fetching selected Emulator Details
-    // const selectedEmulatorOld = get().selectedEmulator;
-    // if (selectedEmulatorOld !== null && selectedEmulatorOld !== undefined) {
-    //   const selectedEmulatorNew = newEmulators?.find(
-    //     (newEmulator) => selectedEmulatorOld.id === newEmulator.id
-    //   );
-    //   if (selectedEmulatorNew && selectedEmulatorNew !== undefined) {
-    //     if (
-    //       selectedEmulatorNew.currentTripPointIndex !== null &&
-    //       selectedEmulatorOld.currentTripPointIndex !== null &&
-    //       selectedEmulatorNew.currentTripPointIndex !==
-    //         selectedEmulatorOld.currentTripPointIndex
-    //     ) {
-    //       get().fetchTripData(selectedEmulatorNew);
-    //     }
-    //     set({ selectedEmulator: selectedEmulatorNew });
-    //   }
-    // }
+    useMarkerStore.getState().advance(newEmulators);
     set({ emulators: newEmulators });
   },
 });

@@ -16,9 +16,30 @@ import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import _ from "lodash";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import useMarkerStore from "../../../../stores/emulator/markerStore.js";
 
-const EmulatorMarker = React.memo(({ emulator }) => {
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+const EmulatorMarker = React.memo(({ id }) => {
+  const emulatorRef = useRef({
+    id: id,
+    telephone: `+1 000 000 0000`,
+    tripStatus: `PAUSED`,
+    status: `OFFLINE`,
+    latitude: 37.7749,
+    longitude: -122.4194,
+  })
+  useEffect(() => useMarkerStore.subscribe(state => emulatorRef.current = state[id]), [id])
+  console.log('i only render once')
+  
+
+  function SelectEmulatorId() {
+    // const emulator = emulators.find((emulator) => emulator.id === id);
+    // selectEmulator(emulator);
+  }
+
+  function HoverEmulatorId() {
+    // const emulator = emulators.find((emulator) => emulator.id === id);
+    // hoverEmulator(emulator);
+  }
 
   const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
 
@@ -27,19 +48,15 @@ const EmulatorMarker = React.memo(({ emulator }) => {
 
   const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
 
-  const isSelected = selectedEmulator?.id === emulator?.id;
-
-  const isHovered = hoveredMarker?.id === emulator?.id;
+  const isHovered = hoveredMarker?.id === id;
   //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
-  var icon_url = `images/${emulator?.tripStatus}/`;
+  var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
   if (isHovered) {
     icon_url = icon_url + "HOVER";
-  } else if (isSelected) {
-    icon_url = icon_url + "SELECT";
   } else {
     icon_url = icon_url + "DEFAULT";
   }
-  icon_url = `${icon_url}/${emulator?.status}.svg`;
+  icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
 
   const emulatorIcon = {
     url: icon_url,
@@ -48,20 +65,6 @@ const EmulatorMarker = React.memo(({ emulator }) => {
   };
 
   const markerRef = useRef(null);
-  // copy latLng to initialPosition but don't update it on latLng change
-  useEffect(() => {
-    if (
-      markerRef.current === null ||
-      markerRef.current === undefined ||
-      emulator === undefined
-    ) {
-      return;
-    }
-    animateMarkerTo(markerRef.current, {
-      lat: emulator.latitude,
-      lng: emulator.longitude,
-    });
-  }, [emulator, markerRef]);
 
   // https://stackoverflow.com/a/55043218/9058905
   function animateMarkerTo(marker, newPosition) {
@@ -112,11 +115,11 @@ const EmulatorMarker = React.memo(({ emulator }) => {
           lat:
             marker.AT_startPosition_lat +
             (newPosition_lat - marker.AT_startPosition_lat) *
-              easingDurationRatio,
+            easingDurationRatio,
           lng:
             marker.AT_startPosition_lng +
             (newPosition_lng - marker.AT_startPosition_lng) *
-              easingDurationRatio,
+            easingDurationRatio,
         });
 
         // use requestAnimationFrame if it exists on this browser. If not, use setTimeout with ~60 fps
@@ -147,27 +150,42 @@ const EmulatorMarker = React.memo(({ emulator }) => {
   }
 
   const handleEmulatorMarkerDragEnd = (event) => {
-    if (emulator === undefined) {
-      console.error("DRAG Emulator not found in data");
-      return;
-    }
-    const { latLng } = event;
-    dragEmulator({
-      emulator: emulator,
-      latitude: latLng.lat(),
-      longitude: latLng.lng(),
-    });
+    // if (!emulators || !id) {
+    //   console.error("DRAG Emulator not found in data");
+    //   return;
+    // }
+    // const { latLng } = event;
+    // dragEmulator({
+    //   emulator: emulators.find((emulator) => emulator.id === id),
+    //   latitude: latLng.lat(),
+    //   longitude: latLng.lng(),
+    // });
   };
+
+  // loop every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // animateMarkerTo(markerRef.current, {
+      //   lat: emulatorRef.current?.latitude,
+      //   lng: emulatorRef.current?.longitude,
+      // });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  //log all values
+  console.log('emulator', emulatorRef.current)
+  console.log('emulatorIcon', emulatorIcon)
+  console.log('markerRefs', markerRef.current)
 
   return (
     <Marker
-      key={emulator?.id}
+      key={id}
       icon={emulatorIcon}
-      position={{ lat: emulator?.latitude, lng: emulator?.longitude }}
+      position={{ lat: emulatorRef.current?.latitude, lng: emulatorRef.current?.longitude }}
       onLoad={(marker) => {
         markerRef.current = marker;
       }}
-      title={`${emulator?.telephone} ${emulator?.tripStatus}(${emulator?.status})`}
+      title={`${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`}
       labelStyle={{
         textAlign: "center",
         width: "auto",
@@ -176,8 +194,8 @@ const EmulatorMarker = React.memo(({ emulator }) => {
         padding: "0px",
       }}
       labelAnchor={{ x: "auto", y: "auto" }}
-      onClick={() => selectEmulator(emulator)}
-      onMouseOver={() => hoverEmulator(emulator)}
+      onClick={() => SelectEmulatorId()}
+      onMouseOver={() => HoverEmulatorId()}
       onMouseOut={() => hoverEmulator(null)}
       draggable={true}
       onDragEnd={(event) => {

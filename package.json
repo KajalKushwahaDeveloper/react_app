@@ -28,6 +28,7 @@
     "react-resize-layout": "^0.2.3",
     "react-router-dom": "^6.13.0",
     "react-scripts": "^5.0.1",
+    "react-spring": "^9.7.3",
     "react-spring-bottom-sheet": "^3.4.1",
     "react-stomp": "^5.1.0",
     "react-toastify": "^9.1.3",

@@ -1,31 +1,19 @@
 import React from "react";
-import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
-import { compareEmulatorsForMarkers } from "./utils.tsx";
-import EmulatorMarker from "./EmulatorMarker2.jsx";
+import EmulatorMarker from "./EmulatorMarker.jsx";
+import useMarkerStore from "../../../../stores/emulator/markerStore.js";
 
 const EmulatorMarkers = () => {
-  const markers = useEmulatorStore(
-    (state) => state.emulators,
-    (oldEmulators, newEmulators) => {
-      compareEmulatorsForMarkers(oldEmulators, newEmulators);
-    }
-  );
+  console.log('app only render once')
+  const items = useMarkerStore((state) => state.items)
 
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
-  
   return (
     <>
-      {markers !== null &&
-        markers.length > 0 &&
-        markers
-          ?.filter(
-            (emulator) =>
-              emulator.latitude !== null && emulator.longitude !== null && emulator.id !== selectedEmulator?.id
-          )
-          .map((emulator) => {
+      {items?.map((id) => {
             return (
-              <EmulatorMarker key = {emulator.id} 
-              emulator={emulator} />
+              <EmulatorMarker
+                key={id}
+                id={id}
+              />
             );
           })}
     </>
