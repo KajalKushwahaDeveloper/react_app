@@ -3,51 +3,93 @@ import React, { useEffect, useRef } from "react";
 import _ from "lodash";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 
-const EmulatorMarkerSelected = React.memo(({ emulator }) => {
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
+const EmulatorMarkerSelected = () => {
+  console.log("rendering emulator marker selected");
+  const markerRef = useRef(null);
+  const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
+  const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator);
+  const hoveredMarkerRef = useRef(useEmulatorStore.getState().hoveredMarker);
+  const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator);
 
   const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
 
-  const hoveredMarker = useEmulatorStore((state) => state.hoveredEmulator);
-  const hoverEmulator = useEmulatorStore((state) => state.hoverEmulator);
+  useEffect(() => useEmulatorStore.subscribe(
+    state => state.movedEmulator, (movedEmulator) => {
+      console.log("movedEmulator changed", movedEmulator.latitude, movedEmulator.longitude);
+      if (markerRef.current === null || markerRef.current === undefined) {
+        return
+      }
+      if(emulatorRef.current === null || emulatorRef.current === undefined){
+        return
+      }
+      // moved
+      if (movedEmulator && movedEmulator.moveMarker === true) {
+        const movedToPosition = new window.google.maps.LatLng(movedEmulator.latitude, movedEmulator.longitude);
+        markerRef.current?.setPosition(movedToPosition);
+        markerRef.current?.setAnimation(window.google.maps.Animation.BOUNCE);
 
-  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
+        // do something maybe
+      }
+      // un-moved..
+      else if(movedEmulator && movedEmulator.moveMarker === false) {
+       // reset markerRef
+        const newPosition = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
+        markerRef.current?.setPosition(newPosition);
+        markerRef.current?.setAnimation(null); 
+      }
+      movedEmulatorRef.current = movedEmulator
+    },
+  ), [])
 
-  const isSelected = selectedEmulator?.id === emulator?.id;
-
-  const isHovered = hoveredMarker?.id === emulator?.id;
-  //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
-  var icon_url = `images/${emulator?.tripStatus}/`;
-  if (isHovered) {
-    icon_url = icon_url + "HOVER";
-  } else if (isSelected) {
-    icon_url = icon_url + "SELECT";
-  } else {
-    icon_url = icon_url + "DEFAULT";
-  }
-  icon_url = `${icon_url}/${emulator?.status}.svg`;
-
-  const emulatorIcon = {
-    url: icon_url,
-    scaledSize: new window.google.maps.Size(20, 20),
-    anchor: new window.google.maps.Point(10, 10),
-  };
-
-  const markerRef = useRef(null);
-  // copy latLng to initialPosition but don't update it on latLng change
-  useEffect(() => {
-    if (
-      markerRef.current === null ||
-      markerRef.current === undefined ||
-      emulator === undefined
-    ) {
-      return;
+  useEffect(() => useEmulatorStore.subscribe(state => state.hoveredMarker, (hoveredMarker) => {
+    if (markerRef.current === null || markerRef.current === undefined) {
+      return
     }
-    animateMarkerTo(markerRef.current, {
-      lat: emulator.latitude,
-      lng: emulator.longitude,
-    });
-  }, [emulator, markerRef]);
+    hoveredMarkerRef.current = hoveredMarker
+  }), [])
+
+  useEffect(() => useEmulatorStore.subscribe(state => state.draggedEmulator, (draggedEmulator) => {
+    if (markerRef.current === null || markerRef.current === undefined) {
+      return
+    }
+    draggedEmulatorRef.current = draggedEmulator
+  }), [])
+  
+  useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
+    if (markerRef.current === null || markerRef.current === undefined) {
+      return
+    }
+    if (!connectedEmulator || connectedEmulator === undefined) {
+      return
+    }
+    // if current marker is being hovered or dragged or moved, skip
+    if (hoveredMarkerRef.current?.id === connectedEmulator.id || draggedEmulatorRef.current?.emulator?.id === connectedEmulator.id || movedEmulatorRef?.emulator?.id === connectedEmulator.id) {
+      return
+    }
+
+    emulatorRef.current = connectedEmulator
+
+    const newPosition = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
+    markerRef.current?.setPosition(newPosition);
+    //TODO: use animation instead
+
+    var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
+    icon_url = icon_url + "SELECT";
+    icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
+
+    const emulatorIcon = {
+      url: icon_url,
+      scaledSize: new window.google.maps.Size(20, 20),
+      anchor: new window.google.maps.Point(10, 10),
+    };
+
+    markerRef.current?.setIcon(emulatorIcon);
+
+    // Update marker title
+    const title = `${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`;
+    markerRef.current?.setTitle(title);
+  }
+  ), [])
 
   // https://stackoverflow.com/a/55043218/9058905
   function animateMarkerTo(marker, newPosition) {
@@ -98,11 +140,11 @@ const EmulatorMarkerSelected = React.memo(({ emulator }) => {
           lat:
             marker.AT_startPosition_lat +
             (newPosition_lat - marker.AT_startPosition_lat) *
-              easingDurationRatio,
+            easingDurationRatio,
           lng:
             marker.AT_startPosition_lng +
             (newPosition_lng - marker.AT_startPosition_lng) *
-              easingDurationRatio,
+            easingDurationRatio,
         });
 
         // use requestAnimationFrame if it exists on this browser. If not, use setTimeout with ~60 fps
@@ -132,46 +174,59 @@ const EmulatorMarkerSelected = React.memo(({ emulator }) => {
     animateStep(marker, new Date().getTime());
   }
 
-  const handleEmulatorMarkerDragEnd = (event) => {
-    if (emulator === undefined) {
-      console.error("DRAG Emulator not found in data");
-      return;
-    }
-    const { latLng } = event;
-    dragEmulator({
-      emulator: emulator,
-      latitude: latLng.lat(),
-      longitude: latLng.lng(),
-    });
+  var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
+  icon_url = icon_url + "SELECT";
+  icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
+
+  const emulatorIcon = {
+    url: icon_url,
+    scaledSize: new window.google.maps.Size(20, 20),
+    anchor: new window.google.maps.Point(10, 10),
   };
 
+
   return (
-    <Marker
-      key={emulator?.id}
-      icon={emulatorIcon}
-      position={{ lat: emulator?.latitude, lng: emulator?.longitude }}
-      onLoad={(marker) => {
-        markerRef.current = marker;
-      }}
-      title={`${emulator?.telephone} ${emulator?.tripStatus}(${emulator?.status})`}
-      labelStyle={{
-        textAlign: "center",
-        width: "auto",
-        color: "#037777777777",
-        fontSize: "11px",
-        padding: "0px",
-      }}
-      labelAnchor={{ x: "auto", y: "auto" }}
-      onClick={() => selectEmulator(emulator)}
-      onMouseOver={() => hoverEmulator(emulator)}
-      onMouseOut={() => hoverEmulator(null)}
-      draggable={true}
-      onDragEnd={(event) => {
-        handleEmulatorMarkerDragEnd(event);
-      }}
-      zIndex={1}
-    />
+    <>
+      <Marker
+        key={emulatorRef.current?.id}
+        icon={emulatorIcon}
+        position={{ lat: emulatorRef.current?.latitude, lng: emulatorRef.current?.longitude }}
+        onLoad={marker => markerRef.current = marker}
+        title={`${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`}
+        labelStyle={{
+          textAlign: "center",
+          width: "auto",
+          color: "#037777777777",
+          fontSize: "11px",
+          padding: "0px",
+        }}
+        labelAnchor={{ x: "auto", y: "auto" }}
+        // onClick={() => selectEmulator(emulator)}
+        draggable={true}
+        onDragStart={(event) => {
+          // remove any animation on marker
+          markerRef.current?.setAnimation(null);
+          const { latLng } = event;
+          dragEmulator({
+            emulator: emulatorRef.current,
+            latitude: latLng.lat(),
+            longitude: latLng.lng(),
+            isDragMarkerDropped: false,
+          });
+        }}
+        onDragEnd={(event) => {
+          const { latLng } = event;
+          dragEmulator({
+            emulator: emulatorRef.current,
+            latitude: latLng.lat(),
+            longitude: latLng.lng(),
+            isDragMarkerDropped: true,
+          });
+        }}
+        zIndex={1}
+      />
+    </>
   );
-});
+}
 
 export default EmulatorMarkerSelected;

@@ -45,6 +45,24 @@ const GoogleMapContainer = () => {
   ), [])
 
   useEffect(() => useEmulatorStore.subscribe(
+    state => state.movedEmulator, (movedEmulator) => {
+      console.log("movedEmulator changed", movedEmulator);
+      if (mapRef.current === null || mapRef.current === undefined) {
+        return;
+      }
+      // moved
+      if (movedEmulator && movedEmulator.moveMarker) {
+        mapRef.current?.setCenter({ lat: movedEmulator.latitude, lng: movedEmulator.longitude });
+        mapRef.current?.setZoom(10);
+        // do something maybe
+      }
+      // un-moved..
+      else if (!movedEmulator || movedEmulator?.isDragMarkerDropped) {
+        // do something maybe
+      }
+    },
+  ), [])
+  useEffect(() => useEmulatorStore.subscribe(
     state => state.center, (center) => {
       console.log("center changed", center);
       if (mapRef.current === null || mapRef.current === undefined) {

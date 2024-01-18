@@ -30,10 +30,13 @@ export function DragDialog() {
 
   const closeDragDialog = React.useCallback(() => {
     setOpenDialog(false);
-    if (draggedEmulator !== null) dragEmulator(null);
+    if (draggedEmulator !== null) {
+      // create copy of draggedEmulator and set isDragMarkerDropped to false
+      dragEmulator(null);
+    }
     if (payload !== null) setPayload(null);
     if (dialogText !== "") setDialogText("");
-  }, [draggedEmulator, dragEmulator, payload, dialogText]);
+  }, [draggedEmulator, payload, dialogText, dragEmulator]);
 
   function handleDialog(payload, text) {
     setPayload(payload);

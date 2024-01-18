@@ -3,11 +3,12 @@ import { Polyline } from "@react-google-maps/api";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_URL } from "../../../../constants.js";
-import { useStates } from "../../../../StateProvider.js";
-import EmulatorMarkerDirection from "../Markers/EmulatorMarkerDirection2.jsx";
+import EmulatorMarkerDirection from "../Markers/EmulatorMarkerDirection.jsx";
 import EmulatorMarkerSelected from "../Markers/EmulatorMarkerSelected.jsx";
+import { useStates } from "../../../../StateProvider.js";
 
 export function PathComponent() {
+  console.log("path component refreshed!")
   const { showToast } = useStates();
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
@@ -68,7 +69,7 @@ export function PathComponent() {
     }
 
     const token = localStorage.getItem("token");
-    showToast("Creating Stop...", "info");
+    // showToast("Creating Stop...", "info");
     const { success, data, error } = await ApiService.makeApiCall(
       TRIP_STOPS_URL,
       "POST",
@@ -87,16 +88,10 @@ export function PathComponent() {
 
   return (
     <>
-      {connectedEmulator && connectedEmulator?.latitude !== null && connectedEmulator?.longitude !== null && (
+      {connectedEmulator && (
         <>
-          <EmulatorMarkerSelected emulator={connectedEmulator} />
-          <EmulatorMarkerDirection
-            latLng={{
-              lat: connectedEmulator?.latitude,
-              lng: connectedEmulator?.longitude,
-            }}
-            rotationAngle={connectedEmulator?.bearing}
-          />
+          <EmulatorMarkerSelected />
+          <EmulatorMarkerDirection />
         </>
       )}
 

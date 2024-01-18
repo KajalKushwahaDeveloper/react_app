@@ -40,6 +40,8 @@ import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
 
 
 const GpsTable = () => {
+  // console.log("gps table only render once");
+  // TODO fix table rerendering.
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
   const emulators = useEmulatorStore(

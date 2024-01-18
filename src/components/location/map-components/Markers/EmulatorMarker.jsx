@@ -63,6 +63,18 @@ const EmulatorMarker = React.memo(({ id }) => {
   }
   ), [draggedEmulator?.emulator?.id, hoveredMarker?.id, id])
 
+  useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
+    if (connectedEmulator?.id === id) {
+      // hide the marker
+      markerRef.current?.setVisible(false);
+    } else {
+      // show the marker
+      markerRef.current?.setVisible(true);
+    }
+  }
+  ), [id])
+
+
   return (
     <Marker
       key={id}

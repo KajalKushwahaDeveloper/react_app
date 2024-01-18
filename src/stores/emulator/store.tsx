@@ -1,6 +1,6 @@
 import { create, StateCreator } from "zustand";
 import { devtools, subscribeWithSelector } from "zustand/middleware";
-import { DragEmulator, Emulator, TripData, TripPoint } from "./types.tsx";
+import { DragEmulator, Emulator, MoveEmulator, TripData, TripPoint } from "./types.tsx";
 import { SelectedEmulatorData, toTripData } from "./SelectedEmulatorData.tsx";
 import {
   Center,
@@ -22,11 +22,13 @@ export interface EmulatorsSlice {
   emulators: Emulator[] | [];
   hoveredEmulator: Emulator | null;
   draggedEmulator: DragEmulator | null;
+  movedEmulator: MoveEmulator | null;
   updateEmulators: (emulators: Emulator[]) => void;
   fetchEmulators: () => Promise<void>;
   selectEmulator: (emulator: Emulator | null) => void;
   hoverEmulator: (emulator: Emulator | null) => void;
   dragEmulator: (emulator: DragEmulator | null) => void;
+  moveEmulator: (emulator: MoveEmulator | null) => void;
 }
 
 export interface TripDataSlice {
@@ -61,6 +63,11 @@ const createEmulatorsSlice: StateCreator<
   selectedEmulator: null,
   hoveredEmulator: null,
   draggedEmulator: null,
+  movedEmulator: null,
+  updateEmulators: async (newEmulators) => {
+    set({ emulators: newEmulators });
+    await useMarkerStore.getState().advance(newEmulators);
+  },
   fetchEmulators: async () => {
     const token = localStorage.getItem("token");
     try {
@@ -98,10 +105,7 @@ const createEmulatorsSlice: StateCreator<
   },
   hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
   dragEmulator: (draggedEmulator) => set({ draggedEmulator: draggedEmulator }),
-  updateEmulators: async (newEmulators) => {
-    set({ emulators: newEmulators });
-    await useMarkerStore.getState().advance(newEmulators);
-  },
+  moveEmulator: (movedEmulator) => set({ movedEmulator: movedEmulator }),
 });
 
 const createTripDataSlice: StateCreator<
