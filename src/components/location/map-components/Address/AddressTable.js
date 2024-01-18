@@ -40,8 +40,6 @@ const AddressTable = () => {
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [dynamicWidth, setDynamicWidth] = React.useState("200px");
-  
-  console.log("Checking_shubham:",dynamicWidth);
 
   function setTableValues(emulator, tripData) {
     const fromAddress =
