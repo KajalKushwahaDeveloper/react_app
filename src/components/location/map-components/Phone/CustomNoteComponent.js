@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import ApiService from "../../../../ApiService";
 import { EMULATOR_NOTE_URL } from "../../../../constants";
@@ -8,6 +8,21 @@ const CustomNoteComponent = ({ emulator }) => {
   const { showToast } = useStates();
 
   const [noteText, setNoteText] = useState(emulator?.note);
+
+  const udateNotes = useRef(true);
+  useLayoutEffect(() => {
+    if (udateNotes.current) {
+      udateNotes.current = false;
+      return;
+    }
+    else {
+      const delayDebounceNotes = setTimeout(() => {
+        showToast("Note Updated! ", "success");
+      }, 2000);
+      return () => clearTimeout(delayDebounceNotes)
+    }
+
+  },[noteText,showToast]);
 
   // FIXME: not updating notes correctly.
   const handleNoteChange = (e) => {
@@ -29,9 +44,13 @@ const CustomNoteComponent = ({ emulator }) => {
       payload,
       token
     );
-    if (success) {
-      showToast("Note Updated! ", "success");
-    } else {
+    try {
+      if (success) {
+        //showToast("Note Updated! ", "success");
+        return;
+      }
+    }
+    catch (error) {
       showToast(" Failed to update Note! ", "error");
     }
   };
