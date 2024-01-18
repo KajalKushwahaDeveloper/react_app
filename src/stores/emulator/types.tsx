@@ -113,4 +113,11 @@ export interface DragEmulator {
   emulator: Emulator;
   latitude: number;
   longitude: number;
+  isDragMarkerDropped: boolean;
+}
+export interface MoveEmulator {
+  emulator: Emulator;
+  latitude: number;
+  longitude: number;
+  moveMarker: boolean;
 }

@@ -1,6 +1,6 @@
 import { create, StateCreator } from "zustand";
-import { devtools } from "zustand/middleware";
-import { DragEmulator, Emulator, TripData, TripPoint } from "./types.tsx";
+import { devtools, subscribeWithSelector } from "zustand/middleware";
+import { DragEmulator, Emulator, MoveEmulator, TripData, TripPoint } from "./types.tsx";
 import { SelectedEmulatorData, toTripData } from "./SelectedEmulatorData.tsx";
 import {
   Center,
@@ -12,6 +12,7 @@ import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { TwillioDevice } from "../call/types.tsx";
 import { EmulatorEvent } from "../../model/EmulatorEvent.tsx";
+import useMarkerStore from "./markerStore.js";
 
 export interface EmulatorsSlice {
   isLoading: boolean;
@@ -20,18 +21,20 @@ export interface EmulatorsSlice {
   selectedEmulator: Emulator | null;
   emulators: Emulator[] | [];
   hoveredEmulator: Emulator | null;
-  dragEmulatorRequest: DragEmulator | null;
+  draggedEmulator: DragEmulator | null;
+  movedEmulator: MoveEmulator | null;
   updateEmulators: (emulators: Emulator[]) => void;
   fetchEmulators: () => Promise<void>;
   selectEmulator: (emulator: Emulator | null) => void;
   hoverEmulator: (emulator: Emulator | null) => void;
   dragEmulator: (emulator: DragEmulator | null) => void;
+  moveEmulator: (emulator: MoveEmulator | null) => void;
 }
 
 export interface TripDataSlice {
   // latitude: number | null
   connectedEmulator: Emulator | null;
-  center: Center;
+  center: Center | null;
   tripData: TripData | null;
   pathTraveled: TripPoint[] | null;
   pathNotTraveled: TripPoint[] | null;
@@ -56,9 +59,15 @@ const createEmulatorsSlice: StateCreator<
   emulatorsEventSource: null,
   selectedEmulatorEventSource: null,
   emulators: [],
+  emulatorsCount: 0,
   selectedEmulator: null,
   hoveredEmulator: null,
-  dragEmulatorRequest: null,
+  draggedEmulator: null,
+  movedEmulator: null,
+  updateEmulators: async (newEmulators) => {
+    set({ emulators: newEmulators });
+    await useMarkerStore.getState().advance(newEmulators);
+  },
   fetchEmulators: async () => {
     const token = localStorage.getItem("token");
     try {
@@ -83,6 +92,8 @@ const createEmulatorsSlice: StateCreator<
       emulator.longitude !== null
     ) {
       set({ center: { lat: emulator.latitude, lng: emulator.longitude } });
+    } else {
+      set({ center: null });
     }
     // if same as selectedEmulator, then do nothing..
     if (emulator === get().selectedEmulator || emulator?.id === get().selectedEmulator?.id) {
@@ -93,38 +104,8 @@ const createEmulatorsSlice: StateCreator<
     get().connectSelectedEmulatorSSE(emulator);
   },
   hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
-  dragEmulator: (dragEmulatorRequest) => set({ dragEmulatorRequest }),
-  updateEmulators: (newEmulators) => {
-    // NOTE: Realistically, there will be emulators being updated all the time.. Don't need to check if they are the same
-    // const isUpdatedEmulators = compareEmulatorsCompletely(
-    //   get().emulators,
-    //   newEmulators
-    // );
-
-    // if (isUpdatedEmulators === false) {
-    //   return;
-    // }
-
-    // TODO: This will be changed to SSE fetching selected Emulator Details
-    // const selectedEmulatorOld = get().selectedEmulator;
-    // if (selectedEmulatorOld !== null && selectedEmulatorOld !== undefined) {
-    //   const selectedEmulatorNew = newEmulators?.find(
-    //     (newEmulator) => selectedEmulatorOld.id === newEmulator.id
-    //   );
-    //   if (selectedEmulatorNew && selectedEmulatorNew !== undefined) {
-    //     if (
-    //       selectedEmulatorNew.currentTripPointIndex !== null &&
-    //       selectedEmulatorOld.currentTripPointIndex !== null &&
-    //       selectedEmulatorNew.currentTripPointIndex !==
-    //         selectedEmulatorOld.currentTripPointIndex
-    //     ) {
-    //       get().fetchTripData(selectedEmulatorNew);
-    //     }
-    //     set({ selectedEmulator: selectedEmulatorNew });
-    //   }
-    // }
-    set({ emulators: newEmulators });
-  },
+  dragEmulator: (draggedEmulator) => set({ draggedEmulator: draggedEmulator }),
+  moveEmulator: (movedEmulator) => set({ movedEmulator: movedEmulator }),
 });
 
 const createTripDataSlice: StateCreator<
@@ -282,10 +263,10 @@ const createSharedSlice: StateCreator<
 export const useEmulatorStore = create<
   EmulatorsSlice & TripDataSlice & SharedSlice & deviceStore
 >()(
-  devtools((...args) => ({
+  subscribeWithSelector(devtools((...args) => ({
     ...createEmulatorsSlice(...args),
     ...createTripDataSlice(...args),
     ...createSharedSlice(...args),
     ...createDeviceSlice(...args),
-  }))
+  })))
 );

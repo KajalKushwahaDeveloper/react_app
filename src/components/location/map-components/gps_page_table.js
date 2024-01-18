@@ -40,6 +40,8 @@ import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
 
 
 const GpsTable = () => {
+  // console.log("gps table only render once");
+  // TODO fix table rerendering.
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
 
   const emulators = useEmulatorStore(
@@ -99,7 +101,7 @@ const GpsTable = () => {
     (oldSelectedDevice, newSelectedDevice) =>
       compareSelectedDeviceForDialog(oldSelectedDevice, newSelectedDevice)
   );
-    
+
   useEffect(() => {
     // When call comes/ ends.
     if (selectedDevice === null || selectedDevice.state === null) {
@@ -301,9 +303,9 @@ const GpsTable = () => {
                   <tr
                     key={emulator.id || "N/A"}
                     style={{
-                      height: isMobile? 'auto' : '80px',
-                      minHeight: isMobile? 'auto' : '80px',
-                      maxHeight: isMobile? 'auto' : '80px',
+                      height: isMobile ? 'auto' : '80px',
+                      minHeight: isMobile ? 'auto' : '80px',
+                      maxHeight: isMobile ? 'auto' : '80px',
                       border: '2px solid #E6E6E6',
                       background:
                         selectedEmulator?.id === emulator.id
@@ -396,21 +398,23 @@ const GpsTable = () => {
                           onClick={() => handleActionButtonClick(emulator)}
                         >
                           <Tooltip title={emulator.tripStatus}>
-                            {emulator.tripStatus === "RUNNING" && (
-                              <PauseCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === "PAUSED" && (
-                              <PlayCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === "STOP" && (
-                              <PlayCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === "RESTING" && (
-                              <PlayCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === "FINISHED" && (
-                              <CheckCircleOutlineIcon fontSize="small" />
-                            )}
+                            <div style={{ width: 20, height: 20 }}>
+                              {emulator.tripStatus === "RUNNING" && (
+                                <PauseCircleOutlineIcon fontSize="small" />
+                              )}
+                              {emulator.tripStatus === "PAUSED" && (
+                                <PlayCircleOutlineIcon fontSize="small" />
+                              )}
+                              {emulator.tripStatus === "STOP" && (
+                                <PlayCircleOutlineIcon fontSize="small" />
+                              )}
+                              {emulator.tripStatus === "RESTING" && (
+                                <PlayCircleOutlineIcon fontSize="small" />
+                              )}
+                              {emulator.tripStatus === "FINISHED" && (
+                                <CheckCircleOutlineIcon fontSize="small" />
+                              )}
+                            </div>
                           </Tooltip>
                         </IconButton>
                       </div>
@@ -418,8 +422,8 @@ const GpsTable = () => {
                   </tr>
                 ))}
               </tbody>
-
             </table>
+
             <PopUpEmulatorHistory
               showToast={showToast}
               handleClose={handleHistoryClose}
@@ -437,7 +441,7 @@ const GpsTable = () => {
         </div>
       </div>
       <CustomTablePagination
-        onLoad={(ref) => {tablePaginationRef.current = ref}}
+        onLoad={(ref) => { tablePaginationRef.current = ref }}
         rowsPerPageOptions={[1]}
         colSpan={6}
         count={emulators.length}

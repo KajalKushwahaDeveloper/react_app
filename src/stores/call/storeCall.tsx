@@ -145,7 +145,6 @@ export const createDeviceSlice: StateCreator<
         })
       );
       set({ devices: newDevices });
-      console.error("DEVICES created Devices:", get().devices);
     } catch (error) {
       console.error("DEVICES Failed to create Devices:", error);
     }

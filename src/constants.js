@@ -7,7 +7,7 @@ export const LIVE_API = "http://64.226.101.239:8080";
 export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 export const LIVE_API_CLIENT_HTTPS = "https://www.logbookgps.com/api";  
 
-export const LOCAL_API_SAURABH = "http://192.168.1.127:8080";
+export const LOCAL_API_SAURABH = "http://192.168.1.132:8080";
 
 export const BASE_URL = LIVE_API_CLIENT_HTTPS;
 
