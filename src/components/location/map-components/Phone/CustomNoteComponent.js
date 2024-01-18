@@ -10,7 +10,7 @@ const CustomNoteComponent = ({ emulator }) => {
   const [noteText, setNoteText] = useState("");
 
   useEffect(() => {
-    setNoteText(emulator?.note);
+    setNoteText(emulator?.note? emulator.note : "");
   }, [emulator]);
 
   // FIXME: not updating notes correctly.

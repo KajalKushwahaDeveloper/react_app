@@ -11,6 +11,8 @@ const useStates = () => {
     staticEmulators,
     isTableVisible,
     setIsTableVisible,
+    isMoveDialogVisible,
+    setIsMoveDialogVisible,
     hoveredMarker,
     setHoveredMarker,
     showToast,
@@ -19,6 +21,8 @@ const useStates = () => {
     staticEmulators,
     isTableVisible,
     setIsTableVisible,
+    isMoveDialogVisible,
+    setIsMoveDialogVisible,
     hoveredMarker,
     setHoveredMarker,
     showToast,
@@ -29,6 +33,8 @@ export { useStates };
 
 export const StateProvider = ({ children }) => {
   const { data: staticEmulators } = useFetch(EMULATOR_URL);
+
+  const [isMoveDialogVisible, setIsMoveDialogVisible] = useState(false);
 
   const [isTableVisible, setIsTableVisible] = useState(false);
 
@@ -44,6 +50,8 @@ export const StateProvider = ({ children }) => {
         staticEmulators,
         isTableVisible,
         setIsTableVisible,
+        isMoveDialogVisible,
+        setIsMoveDialogVisible,
         hoveredMarker,
         setHoveredMarker,
         showToast,

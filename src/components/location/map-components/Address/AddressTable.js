@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useViewPort } from "../../../../ViewportProvider.js";
-import CreateTripButton from "../CreateTrip/CreateTripButton";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import {
   compareTripDataChangedNullOrId,
@@ -15,6 +14,7 @@ import { Tooltip } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import { IconButton } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
+import CreateTripButton from "../MapButtons.jsx";
 
 const AddressTable = () => {
   const tableValues = useRef(null);
