@@ -39,6 +39,9 @@ const AddressTable = () => {
   const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator);
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [dynamicWidth, setDynamicWidth] = React.useState("200px");
+  
+  console.log("Checking_shubham:",dynamicWidth);
 
   function setTableValues(emulator, tripData) {
     const fromAddress =
@@ -70,6 +73,11 @@ const AddressTable = () => {
       remainingDistance,
     };
   }
+
+
+  const handleResizeHorizonChange = (newWidth) => {
+    console.log("width:", newWidth);
+  };
 
   useEffect(() => {
     async function updateTableValues(hoveredEmulator) {
@@ -379,14 +387,15 @@ const AddressTable = () => {
           <CreateTripButton />
         </div>
       ) : (
-        <div className={'resizeContainer'}>
+        
           <Resize className={'resize-container'}
             handleWidth={'5px'}
             handleColor={'#007dc6'}
           >
             <ResizeHorizon
-              width={'100px'}
-              minWidth={'50px'}
+              width={dynamicWidth}
+              minWidth={'150px'}
+              onResize={(width) => handleResizeHorizonChange(width)}
             >
               {/* CURRENT ADDRESS*/}
               <div
@@ -415,8 +424,9 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
-              minWidth={'50px'}
+              width={dynamicWidth}
+              minWidth={'150px'}
+              onResize={(width) => handleResizeHorizonChange(width)}
             >
               {/* FROM ADDRESS*/}
               <div
@@ -439,8 +449,9 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
-              minWidth={'50px'}
+              width={dynamicWidth}
+              minWidth={'150px'}
+              onResize={(width) => handleResizeHorizonChange(width)}
             >
 
               {/* TO ADDRESS*/}
@@ -469,8 +480,9 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
-              minWidth={'50px'}
+              width={dynamicWidth}
+              minWidth={'150px'}
+              onResize={(width) => handleResizeHorizonChange(width)}
             >
 
               {/* ARRIVAL TIME */}
@@ -504,8 +516,9 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
-              minWidth={'50px'}
+              width={dynamicWidth}
+              minWidth={'150px'}
+              onResize={(width) => handleResizeHorizonChange(width)}
             >
 
               {/* TIME */}
@@ -539,8 +552,9 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
-              minWidth={'50px'}
+              width={dynamicWidth}
+              minWidth={'150px'}
+              onResize={(width) => handleResizeHorizonChange(width)}
             >
 
               {/* REMAING DISTANCE */}
@@ -575,8 +589,9 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
-              minWidth={'50px'}
+              width={dynamicWidth}
+              minWidth={'150px'}
+              onResize={(width) => handleResizeHorizonChange(width)}
             >
 
               {/* PLUS MINUS ICONS */}
@@ -606,7 +621,7 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
           </Resize>
-        </div>
+  
       )}
     </div>
   );
