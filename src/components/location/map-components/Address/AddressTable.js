@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useViewPort } from "../../../../ViewportProvider.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import {
@@ -10,10 +10,6 @@ import { TRIP_URL } from "../../../../constants.js";
 import { Resize, ResizeHorizon } from 'react-resize-layout';
 import "./ResizeContainer.css";
 import { Tooltip } from '@mui/material';
-
-import AddIcon from "@mui/icons-material/Add";
-import { IconButton } from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
 import CreateTripButton from "../MapButtons.jsx";
 
 const AddressTable = () => {
@@ -145,6 +141,46 @@ const AddressTable = () => {
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
+  const arrWidth = width - 25;// 25 is the width of the handles between each 
+  const widthArr =new Array(6).fill(arrWidth / 6);
+  for (let i = 0; i < 6; i++) {
+    let savedAddressWithI = localStorage.getItem(`addressWidth${i}`);
+    if (savedAddressWithI === null || savedAddressWithI === undefined) {
+      savedAddressWithI = arrWidth / 6;
+      localStorage.setItem(`addressWidth${i}`, arrWidth / 6);
+    }
+    widthArr[i] = savedAddressWithI;
+  }
+  const elementRefs = useRef([React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef()]);
+
+  // Start observing the elements when the component is mounted
+  useEffect(() => {
+    let initialLoad = true;
+    const observer = new ResizeObserver(entries => {
+      if (initialLoad) {
+        initialLoad = false;
+        return;
+      }
+      for (let entry of entries) {
+        // save the width in local storage unless they go to 0
+        if (entry.target.clientWidth === 0) {
+          return;
+        }
+        localStorage.setItem(`addressWidth${entry.target.id}`, entry.target.clientWidth);
+      }
+    });
+
+    elementRefs.current.forEach(ref => {
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+    });
+
+    return () => {
+      // Cleanup the observer by unobserving all elements
+      observer.disconnect();
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -379,17 +415,23 @@ const AddressTable = () => {
           <CreateTripButton />
         </div>
       ) : (
-        <div className={'resizeContainer'}>
-          <Resize className={'resize-container'}
+        <div
+          style={{
+            width: "100vw",
+          }}>
+          <Resize
             handleWidth={'5px'}
-            handleColor={'#007dc6'}
+            handleColor={'#007DC66F'}
           >
             <ResizeHorizon
-              width={'100px'}
+              // on size change, call a function with new size
+              width={`${widthArr[0]}px`}
               minWidth={'50px'}
             >
               {/* CURRENT ADDRESS*/}
               <div
+                id="0"
+                ref={elementRefs.current[0]}
                 style={{
                   border: "2px solid",
                   height: "64px",
@@ -415,11 +457,13 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
+              width={`${widthArr[1]}px`}
               minWidth={'50px'}
             >
               {/* FROM ADDRESS*/}
               <div
+                id="1"
+                ref={elementRefs.current[1]}
                 style={{
                   border: "2px solid",
                   alignItems: "center",
@@ -439,12 +483,14 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
+              width={`${widthArr[2]}px`}
               minWidth={'50px'}
             >
 
               {/* TO ADDRESS*/}
               <div
+                id="2"
+                ref={elementRefs.current[2]}
                 className="col d-flex flex-column"
                 style={{
                   border: "2px solid",
@@ -469,12 +515,14 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
+              width={`${widthArr[3]}px`}
               minWidth={'50px'}
             >
 
               {/* ARRIVAL TIME */}
               <div
+                id="3"
+                ref={elementRefs.current[3]}
                 style={{
                   border: "2px solid",
                   alignItems: "center",
@@ -504,12 +552,14 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
+              width={`${widthArr[4]}px`}
               minWidth={'50px'}
             >
 
               {/* TIME */}
               <div
+                id="4"
+                ref={elementRefs.current[4]}
                 style={{
                   border: "2px solid",
                   alignItems: "center",
@@ -539,12 +589,14 @@ const AddressTable = () => {
               </div>
             </ResizeHorizon>
             <ResizeHorizon
-              width={'auto'}
+              width={`${widthArr[5]}px`}
               minWidth={'50px'}
             >
 
               {/* REMAING DISTANCE */}
               <div
+                id="5"
+                ref={elementRefs.current[5]}
                 style={{
                   border: "2px solid",
                   alignItems: "center",
@@ -574,40 +626,10 @@ const AddressTable = () => {
                 )}
               </div>
             </ResizeHorizon>
-            <ResizeHorizon
-              width={'auto'}
-              minWidth={'50px'}
-            >
-
-              {/* PLUS MINUS ICONS */}
-              <div>
-                <div>
-                  <IconButton
-                    aria-label="close"
-                    sx={{
-                      borderRadius: "0px",
-                      color: "#ffffff",
-                      backgroundColor: "#00ff00",
-                    }}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="close"
-                    sx={{
-                      borderRadius: "0px",
-                      color: "#ffffff",
-                      backgroundColor: "#ff0000",
-                    }}
-                  >
-                    <RemoveIcon />
-                  </IconButton>
-                </div>
-              </div>
-            </ResizeHorizon>
           </Resize>
         </div>
-      )}
+      )
+      }
     </div>
   );
 };

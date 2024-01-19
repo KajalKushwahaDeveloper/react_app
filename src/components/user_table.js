@@ -220,7 +220,7 @@ const UserTable = ({
 
   return (
     <Root sx={{ width: "auto", maxWidth: "100%" }}>
-      <div className="table-responsive">
+      <div>
         <table aria-label="custom pagination table" className="w-100 shadow">
           <tbody>
             {(rowsPerPage > 0

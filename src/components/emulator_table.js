@@ -199,7 +199,7 @@ const EmulatorTable = ({
   }
 
   return (
-    <div className="table-responsive tableBox">
+    <div className="tableBox">
       <table
         aria-label="custom pagination table"
         className="table shadow mb-0 n="

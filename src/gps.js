@@ -36,7 +36,7 @@ const GPS = () => {
                 width: "100%",
               }}
             >
-              <div style={{ minWidth: "308px", height: "100vh" }}>
+              <div style={{ width: "320px", height: "100vh" }}>
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}

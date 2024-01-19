@@ -8,7 +8,6 @@ import EmulatorMarkerSelected from "../Markers/EmulatorMarkerSelected.jsx";
 // import { useStates } from "../../../../StateProvider.js";
 
 export function PathComponent() {
-  console.log("path component refreshed!")
   // const { showToast } = useStates();
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);

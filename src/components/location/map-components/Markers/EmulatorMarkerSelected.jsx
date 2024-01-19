@@ -4,10 +4,10 @@ import _ from "lodash";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 
 const EmulatorMarkerSelected = () => {
-  console.log("rendering emulator marker selected");
   const markerRef = useRef(null);
-  const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
-  
+  const dragEmulator = useEmulatorStore.getState().dragEmulator;
+  const moveEmulator = useEmulatorStore.getState().moveEmulator;
+
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
   const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator);
   const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator);
@@ -15,7 +15,6 @@ const EmulatorMarkerSelected = () => {
 
   useEffect(() => useEmulatorStore.subscribe(
     state => state.movedEmulator, (movedEmulator) => {
-      console.log("movedEmulator changed", movedEmulator.latitude, movedEmulator.longitude);
       if (markerRef.current === null || markerRef.current === undefined) {
         return
       }
@@ -43,6 +42,13 @@ const EmulatorMarkerSelected = () => {
   
   useEffect(() => useEmulatorStore.subscribe(state => state.draggedEmulator, (draggedEmulator) => {
     draggedEmulatorRef.current = draggedEmulator
+    if(markerRef.current === null || markerRef.current === undefined){
+      return
+    }
+    if(draggedEmulator === null || draggedEmulator === undefined){
+      const position = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
+      markerRef.current?.setPosition(position);
+    }
   }), [])
   
   useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
@@ -203,6 +209,15 @@ const EmulatorMarkerSelected = () => {
             longitude: latLng.lng(),
             isDragMarkerDropped: false,
           });
+          // if drag started from a MovedEmulator, reset moveMarker to false
+          if (movedEmulatorRef.current?.emulator?.id === emulatorRef.current?.id && movedEmulatorRef.current?.moveMarker === true) {
+            moveEmulator({
+              emulator: emulatorRef.current,
+              latitude: emulatorRef.current.latitude,
+              longitude: emulatorRef.current.longitude,
+              moveMarker: false,
+            });
+          }
         }}
         onDragEnd={(event) => {
           const { latLng } = event;

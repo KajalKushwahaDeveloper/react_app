@@ -16,13 +16,11 @@ import useFetch from "../../../hooks/useFetch.js";
 const libraries = ["drawing", "places", "autocomplete"];
 
 const GoogleMapContainer = () => {
-  console.log("rerendered");
   const mapRef = useRef(null);
   const styleRef = useRef("default");
 
   useEffect(() => useEmulatorStore.subscribe(
     state => state.draggedEmulator, (draggedEmulator) => {
-      console.log("draggedEmulator changed", draggedEmulator);
       if (mapRef.current === null || mapRef.current === undefined) {
         return;
       }
@@ -47,7 +45,6 @@ const GoogleMapContainer = () => {
 
   useEffect(() => useEmulatorStore.subscribe(
     state => state.movedEmulator, (movedEmulator) => {
-      console.log("movedEmulator changed", movedEmulator);
       if (mapRef.current === null || mapRef.current === undefined) {
         return;
       }
@@ -65,7 +62,6 @@ const GoogleMapContainer = () => {
   ), [])
   useEffect(() => useEmulatorStore.subscribe(
     state => state.center, (center) => {
-      console.log("center changed", center);
       if (mapRef.current === null || mapRef.current === undefined) {
         return;
       }
@@ -78,7 +74,6 @@ const GoogleMapContainer = () => {
 
   useEffect(() => useEmulatorStore.subscribe(
     state => state.tripData, (tripData) => {
-      console.log("tripData changed", tripData);
       if (mapRef.current === null || mapRef.current === undefined) {
         return;
       }
@@ -103,7 +98,6 @@ const GoogleMapContainer = () => {
             tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lng
           )
         );
-        console.log("fitting bounds", bounds);
         mapRef.current.fitBounds(bounds);
       }
     }
@@ -177,4 +171,4 @@ const GoogleMapContainer = () => {
   );
 };
 
-export default GoogleMapContainer;
+export default React.memo(GoogleMapContainer);

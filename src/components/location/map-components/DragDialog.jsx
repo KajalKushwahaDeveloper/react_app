@@ -20,7 +20,11 @@ export function DragDialog() {
     (state) => state.draggedEmulator
   );
 
+  const showLoader = useEmulatorStore.getState().showLoader;
+  const hideLoader = useEmulatorStore.getState().hideLoader;
+
   const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
+  const movedEmulator = useEmulatorStore((state) => state.movedEmulator);
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
 
@@ -31,12 +35,15 @@ export function DragDialog() {
   const closeDragDialog = React.useCallback(() => {
     setOpenDialog(false);
     if (draggedEmulator !== null) {
-      // create copy of draggedEmulator and set isDragMarkerDropped to false
+      dragEmulator(null);
+    }
+    if (movedEmulator !== null) {
       dragEmulator(null);
     }
     if (payload !== null) setPayload(null);
     if (dialogText !== "") setDialogText("");
-  }, [draggedEmulator, payload, dialogText, dragEmulator]);
+    hideLoader();
+  }, [draggedEmulator, movedEmulator, payload, dialogText, hideLoader, dragEmulator]);
 
   function handleDialog(payload, text) {
     setPayload(payload);
@@ -46,6 +53,7 @@ export function DragDialog() {
 
   useEffect(() => {
     async function tryUpdatingTrip(dragEmulatorRequest) {
+      showLoader();
       const token = localStorage.getItem("token");
       const { success, data, error } = await ApiService.makeApiCall(
         TRIP_URL,

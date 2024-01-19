@@ -5,7 +5,6 @@ import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import { set } from "lodash";
 
 const EmulatorMarker = React.memo(({ id }) => {
-  console.log("EmulatorMarker render");
   const dragEmulator = useEmulatorStore.getState().dragEmulator;
   const hoverEmulator = useEmulatorStore.getState().hoverEmulator;
   const selectEmulator = useEmulatorStore.getState().selectEmulator;
@@ -37,29 +36,31 @@ const EmulatorMarker = React.memo(({ id }) => {
   const markerRef = useRef(null);
 
   useEffect(() => useEmulatorStore.subscribe(state => state.hoveredEmulator, (hoveredEmulator) => {
-    if(hoveredEmulator && hoveredEmulator.id === id) { // if the hoveredEmulator is the same as this marker (id), we set the hoveredEmulatorRef to only this marker
+    if (hoveredEmulator && hoveredEmulator.id === id) { // if the hoveredEmulator is the same as this marker (id), we set the hoveredEmulatorRef to only this marker
       hoveredEmulatorRef.current = hoveredEmulator
-      console.log(`The Marker with id ${id} is being hovered`)
       return
     }
-    //NOTE: This will have hoveredEmulator as null and will also set all EmulatorMarkers' hoveredEmulator to null
-    hoveredEmulatorRef.current = hoveredEmulator
+    if (hoveredEmulator === null || hoveredEmulator === undefined) { // if the hoveredEmulator is null, we set the hoveredEmulatorRef to null
+      hoveredEmulatorRef.current = hoveredEmulator
+    }
   }), [id])
 
   useEffect(() => useEmulatorStore.subscribe(state => state.draggedEmulator, (draggedEmulator) => {
-    if(draggedEmulator && draggedEmulator.emulator.id === id) { // if the draggedEmulator is the same as this marker (id), we set the draggedEmulatorRef to only this marker
+    if (draggedEmulator && draggedEmulator.emulator.id === id) { // if the draggedEmulator is the same as this marker (id), we set the draggedEmulatorRef to only this marker
       draggedEmulatorRef.current = draggedEmulator
-      console.log(`The Marker with id ${id} is being dragged`)
       return
     }
+    if (draggedEmulator === null || draggedEmulator === undefined) { // if the draggedEmulator is null, we set the draggedEmulatorRef to null
+      draggedEmulatorRef.current = draggedEmulator
+    }
   }), [id])
-  
+
   useEffect(() => useMarkerStore.subscribe(state => {
     if (markerRef.current === null || markerRef.current === undefined) {
       return
     }
-    // if current marker (non selected!) is being hovered or dragged, skip
-    if (hoveredEmulatorRef.current?.id === id || draggedEmulatorRef.current?.emulator?.id === id) {
+    // if current marker (non selected!) is being  dragged, skip
+    if (draggedEmulatorRef.current?.emulator?.id === id) {
       return
     }
     // if current marker is the connectedEmulator, skip
@@ -100,7 +101,7 @@ const EmulatorMarker = React.memo(({ id }) => {
   }
   ), [id])
 
-// function to set Marker to be visible or not after checking it's existing visibility
+  // function to set Marker to be visible or not after checking it's existing visibility
   const setMarkerVisibility = (isVisible) => {
     if (markerRef.current?.getVisible() !== isVisible) {
       markerRef.current.setVisible(isVisible);
@@ -128,7 +129,6 @@ const EmulatorMarker = React.memo(({ id }) => {
         if (draggedEmulatorRef.current?.emulator?.id === id || hoveredEmulatorRef.current?.id === id) {
           return
         }
-        console.log("hoverEmulator", emulatorRef.current)
         hoverEmulator(emulatorRef.current)
       }}
       onMouseOut={() => {

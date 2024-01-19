@@ -47,6 +47,8 @@ interface SharedSlice {
   connectEmulatorsSSE: () => void;
   logout: () => void;
   getBoth: () => void;
+  showLoader: () => void;
+  hideLoader: () => void;
 }
 
 const createEmulatorsSlice: StateCreator<
@@ -133,7 +135,6 @@ const createTripDataSlice: StateCreator<
     // We connect to the emulator's SSE
     const token = localStorage.getItem("token");
     const ctrl = new AbortController();
-    console.log("Connecting to SSE", `${BASE_URL}/sse/${selectedEmulator?.id}`);
     set({ isLoading: true });
     fetchEventSource(`${BASE_URL}/sse/${selectedEmulator?.id}`, {
       method: "GET",
@@ -148,7 +149,6 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false });
       },
       onmessage(event) {
-        console.log("onmessage", event.event);
         // check event.event with EmulatorEvent
         if (event.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
@@ -170,7 +170,6 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false });
       },
       onerror(err) {
-        console.log("err", err)
         console.error("There was an error from the server", err);
         set({ isLoading: false });
       },
@@ -180,11 +179,6 @@ const createTripDataSlice: StateCreator<
   },
   setSelectedEmulatorSSEData: (selectedEmulatorData: SelectedEmulatorData) => {
     const tripData = toTripData(selectedEmulatorData);
-    const tripPoints = tripData?.tripPoints;
-    console.log("tripPoints", tripPoints.length, "expected : 69053");
-    console.log("count", tripPoints, "expected : 30859");
-    const tripPointCombinedDistance = tripPoints.reduce((acc, tripPoint) => acc + tripPoint.distance, 0);
-    console.log("distance", tripPointCombinedDistance, "expected : 4799824/4798271.0");
     set({ connectedEmulator: selectedEmulatorData?.emulatorDetails, tripData: tripData });
     get().setPaths(selectedEmulatorData?.emulatorDetails, tripData);
   },
@@ -257,6 +251,12 @@ const createSharedSlice: StateCreator<
   },
   getBoth: () => {
     // get().bears + get().fishes
+  },
+  showLoader: () => {
+    set({ isLoading: true });
+  },
+  hideLoader: () => {
+    set({ isLoading: false });
   },
 });
 

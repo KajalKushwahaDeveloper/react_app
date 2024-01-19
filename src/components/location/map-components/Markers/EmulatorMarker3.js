@@ -13,11 +13,9 @@ function ItemFast({ id }) {
   const stateRef = useRef()
   const ref = useRef()
   useEffect(() => useMarkerStore.subscribe(state => stateRef.current = state[id]), [id])
-  console.log('i only render once')
 
   useEffect(() => {
     function renderLoop() {
-      console.log('xy', stateRef.current)
       requestAnimationFrame(renderLoop)
     }
     ref.current.innerText = 'xy ' + stateRef.current? `lat: ${stateRef.current?.lat}, lng: ${stateRef.current?.lat}` : 'no data'
@@ -28,7 +26,6 @@ function ItemFast({ id }) {
 }
 
 export default function EmulatorMarker3() {
-  console.log('app only render once')
   const items = useMarkerStore((state) => state.items)
 
   return (

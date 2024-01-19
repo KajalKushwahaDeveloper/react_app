@@ -7,7 +7,6 @@ import { useStates } from "../../../StateProvider.js";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
 
 const MapButtons = () => {
-  console.log("CreateTripButton refreshed");
   const { width } = useViewPort();
   const { showToast, setIsTableVisible, isTableVisible, isMoveDialogVisible, setIsMoveDialogVisible } = useStates();
 
