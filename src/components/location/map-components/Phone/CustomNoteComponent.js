@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import ApiService from "../../../../ApiService";
 import { EMULATOR_NOTE_URL } from "../../../../constants";
@@ -7,22 +7,11 @@ import { useStates } from "../../../../StateProvider";
 const CustomNoteComponent = ({ emulator }) => {
   const { showToast } = useStates();
 
-  const [noteText, setNoteText] = useState(emulator?.note);
+  const [noteText, setNoteText] = useState("");
 
-  const udateNotes = useRef(true);
-  useLayoutEffect(() => {
-    if (udateNotes.current) {
-      udateNotes.current = false;
-      return;
-    }
-    else {
-      const delayDebounceNotes = setTimeout(() => {
-        showToast("Note Updated! ", "success");
-      }, 2000);
-      return () => clearTimeout(delayDebounceNotes)
-    }
-
-  },[noteText,showToast]);
+  useEffect(() => {
+    setNoteText(emulator?.note? emulator.note : "");
+  }, [emulator]);
 
   // FIXME: not updating notes correctly.
   const handleNoteChange = (e) => {
@@ -30,27 +19,23 @@ const CustomNoteComponent = ({ emulator }) => {
     const newText = e.target.value.slice(0, 25);
     setNoteText(newText);
     if (newText !== emulator.note) {
-      handleSaveNote(newText);
+      handleSaveNote();
     }
   };
 
-  const handleSaveNote = async (noteTextParam) => {
-    //showToast(" Saving Note... ", "info");
+  const handleSaveNote = async () => {
+    showToast(" Saving Note... ", "info");
     const token = localStorage.getItem("token");
-    const payload = { noteText: noteTextParam, emulatorId: emulator.id };
+    const payload = { noteText, emulatorId: emulator.id };
     const { success, data, error } = await ApiService.makeApiCall(
       EMULATOR_NOTE_URL,
       "POST",
       payload,
       token
     );
-    try {
-      if (success) {
-        //showToast("Note Updated! ", "success");
-        return;
-      }
-    }
-    catch (error) {
+    if (success) {
+      showToast("Note Updated! ", "success");
+    } else {
       showToast(" Failed to update Note! ", "error");
     }
   };
