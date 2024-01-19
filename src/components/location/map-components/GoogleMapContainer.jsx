@@ -8,14 +8,15 @@ import EmulatorMarkers from "./Markers/EmulatorMarkers.jsx";
 import { StopComponents } from "./Trip/StopComponents.jsx";
 import { SelectedStopInfo } from "./Trip/SelectedStopInfo.jsx";
 import { PathComponent } from "./Trip/PathComponent.jsx";
-import useFetch from "../../../hooks/useFetch.js";
 import { EMULATOR_URL } from "../../../constants.js";
 import { defaultMapStyle, roadMapStyle } from "./MapStyles.js";
+import ApiService from "../../../ApiService.js";
+import useFetch from "../../../hooks/useFetch.js";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
 const GoogleMapContainer = () => {
-  console.log("rendering google map container");
+  console.log("rerendered");
   const mapRef = useRef(null);
   const styleRef = useRef("default");
 
@@ -108,20 +109,19 @@ const GoogleMapContainer = () => {
     }
   ), [])
 
-
-
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E",
     libraries: libraries,
   });
+
   const [selectedStop, setSelectedStop] = React.useState(null);
 
   const handleMarkerClick = (stop) => {
     setSelectedStop(stop);
   };
 
-  const createDevices = useEmulatorStore((state) => state.createDevices);
+  const createDevices = useEmulatorStore.getState().createDevices;
 
   const { data } = useFetch(EMULATOR_URL);
 
@@ -177,4 +177,4 @@ const GoogleMapContainer = () => {
   );
 };
 
-export default React.memo(GoogleMapContainer);
+export default GoogleMapContainer;

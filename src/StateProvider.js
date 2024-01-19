@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 import useFetch from "./hooks/useFetch";
 import { toast } from "react-toastify";
 import { EMULATOR_URL } from "./constants.js";
 
 export const StatesContext = React.createContext({});
+
+//FIXME: Need to get rid of this or somehow make these(need to check other states behavior. showToast is confirmed to cause rerenders)
+// stop causing rerenders like showToast is causing
 
 const useStates = () => {
   const {
@@ -40,9 +43,9 @@ export const StateProvider = ({ children }) => {
 
   const [hoveredMarker, setHoveredMarker] = useState(null);
 
-  const showToast = (message, type) => {
+  const showToast = useCallback((message, type) => {
     toast[type](message); // Use the 'type' argument to determine the toast type
-  };
+  }, []);
 
   return (
     <StatesContext.Provider

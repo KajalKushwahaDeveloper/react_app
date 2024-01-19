@@ -1,10 +1,13 @@
+import { res } from "pino-std-serializers";
+import { EMULATOR_URL } from "./constants";
+
 class ApiService {
   static async makeApiCall(url, method, payload, token, pathVariable, params) {
     try {
-      if(pathVariable!=null) {
-        url = url+ "/" + pathVariable
+      if (pathVariable != null) {
+        url = url + "/" + pathVariable
       }
-      if(params!=null) {
+      if (params != null) {
         url = url + "?" + params
       }
       const headers = {
@@ -41,7 +44,6 @@ class ApiService {
         }
         throw new Error(errorData || "Request failed");
       }
-
       let result;
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
@@ -49,9 +51,11 @@ class ApiService {
       } else {
         result = await response.text();
       }
-
+      if (url === EMULATOR_URL) {
+        console.log("response", result);
+      }
       return { success: true, data: result, error: null };
-      
+
     } catch (error) {
       console.error("Error occurred during API call:", error);
       return {

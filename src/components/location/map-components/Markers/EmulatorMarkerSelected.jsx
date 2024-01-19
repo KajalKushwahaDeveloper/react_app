@@ -6,12 +6,12 @@ import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 const EmulatorMarkerSelected = () => {
   console.log("rendering emulator marker selected");
   const markerRef = useRef(null);
+  const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
+  
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
   const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator);
-  const hoveredMarkerRef = useRef(useEmulatorStore.getState().hoveredMarker);
   const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator);
 
-  const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
 
   useEffect(() => useEmulatorStore.subscribe(
     state => state.movedEmulator, (movedEmulator) => {
@@ -40,18 +40,8 @@ const EmulatorMarkerSelected = () => {
       movedEmulatorRef.current = movedEmulator
     },
   ), [])
-
-  useEffect(() => useEmulatorStore.subscribe(state => state.hoveredMarker, (hoveredMarker) => {
-    if (markerRef.current === null || markerRef.current === undefined) {
-      return
-    }
-    hoveredMarkerRef.current = hoveredMarker
-  }), [])
-
+  
   useEffect(() => useEmulatorStore.subscribe(state => state.draggedEmulator, (draggedEmulator) => {
-    if (markerRef.current === null || markerRef.current === undefined) {
-      return
-    }
     draggedEmulatorRef.current = draggedEmulator
   }), [])
   
@@ -62,8 +52,8 @@ const EmulatorMarkerSelected = () => {
     if (!connectedEmulator || connectedEmulator === undefined) {
       return
     }
-    // if current marker is being hovered or dragged or moved, skip
-    if (hoveredMarkerRef.current?.id === connectedEmulator.id || draggedEmulatorRef.current?.emulator?.id === connectedEmulator.id || movedEmulatorRef?.emulator?.id === connectedEmulator.id) {
+    // if current marker is being dragged or moved, skip
+    if (draggedEmulatorRef.current?.emulator?.id === connectedEmulator.id || movedEmulatorRef?.emulator?.id === connectedEmulator.id) {
       return
     }
 

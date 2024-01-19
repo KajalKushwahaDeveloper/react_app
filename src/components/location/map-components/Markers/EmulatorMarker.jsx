@@ -2,13 +2,17 @@ import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import useMarkerStore from "../../../../stores/emulator/markerStore.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import { set } from "lodash";
 
 const EmulatorMarker = React.memo(({ id }) => {
-  const dragEmulator = useEmulatorStore((state) => state.dragEmulator);
-  const draggedEmulator = useEmulatorStore((state) => state.draggedEmulator);
-  const hoveredMarker = useEmulatorStore((state) => state.hoveredEmulator);
-  const hoverEmulator = useEmulatorStore((state) => state.hoverEmulator);
-  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
+  console.log("EmulatorMarker render");
+  const dragEmulator = useEmulatorStore.getState().dragEmulator;
+  const hoverEmulator = useEmulatorStore.getState().hoverEmulator;
+  const selectEmulator = useEmulatorStore.getState().selectEmulator;
+
+  const hoveredEmulatorRef = useRef(useEmulatorStore.getState().hoveredMarker);
+  const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator);
+  const connectedEmulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
 
   const emulatorRef = useRef({
     id: id,
@@ -32,16 +36,37 @@ const EmulatorMarker = React.memo(({ id }) => {
 
   const markerRef = useRef(null);
 
+  useEffect(() => useEmulatorStore.subscribe(state => state.hoveredEmulator, (hoveredEmulator) => {
+    if(hoveredEmulator && hoveredEmulator.id === id) { // if the hoveredEmulator is the same as this marker (id), we set the hoveredEmulatorRef to only this marker
+      hoveredEmulatorRef.current = hoveredEmulator
+      console.log(`The Marker with id ${id} is being hovered`)
+      return
+    }
+    //NOTE: This will have hoveredEmulator as null and will also set all EmulatorMarkers' hoveredEmulator to null
+    hoveredEmulatorRef.current = hoveredEmulator
+  }), [id])
+
+  useEffect(() => useEmulatorStore.subscribe(state => state.draggedEmulator, (draggedEmulator) => {
+    if(draggedEmulator && draggedEmulator.emulator.id === id) { // if the draggedEmulator is the same as this marker (id), we set the draggedEmulatorRef to only this marker
+      draggedEmulatorRef.current = draggedEmulator
+      console.log(`The Marker with id ${id} is being dragged`)
+      return
+    }
+  }), [id])
+  
   useEffect(() => useMarkerStore.subscribe(state => {
     if (markerRef.current === null || markerRef.current === undefined) {
       return
     }
-    // if current marker is being hovered or dragged, skip
-    if (hoveredMarker?.id === id || draggedEmulator?.emulator?.id === id) {
+    // if current marker (non selected!) is being hovered or dragged, skip
+    if (hoveredEmulatorRef.current?.id === id || draggedEmulatorRef.current?.emulator?.id === id) {
       return
     }
-
-    emulatorRef.current = state[id]
+    // if current marker is the connectedEmulator, skip
+    if (connectedEmulatorRef.current?.id === id) {
+      return
+    }
+    emulatorRef.current = state[id];
     const newPosition = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
     markerRef.current?.setPosition(newPosition);
 
@@ -54,26 +79,33 @@ const EmulatorMarker = React.memo(({ id }) => {
       scaledSize: new window.google.maps.Size(20, 20),
       anchor: new window.google.maps.Point(10, 10),
     };
-
+    // can further optimize by checking if the icon and title is the same
     markerRef.current?.setIcon(emulatorIcon);
-
     // Update marker title
     const title = `${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`;
     markerRef.current?.setTitle(title);
   }
-  ), [draggedEmulator?.emulator?.id, hoveredMarker?.id, id])
+  ), [id])
 
   useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
     if (connectedEmulator?.id === id) {
+      // set ConnectedEmulatorRef to only this marker
+      connectedEmulatorRef.current = connectedEmulator
       // hide the marker
-      markerRef.current?.setVisible(false);
-    } else {
-      // show the marker
-      markerRef.current?.setVisible(true);
+      setMarkerVisibility(false);
+      return
     }
+    // show the marker
+    setMarkerVisibility(true);
   }
   ), [id])
 
+// function to set Marker to be visible or not after checking it's existing visibility
+  const setMarkerVisibility = (isVisible) => {
+    if (markerRef.current?.getVisible() !== isVisible) {
+      markerRef.current.setVisible(isVisible);
+    }
+  };
 
   return (
     <Marker
@@ -93,14 +125,15 @@ const EmulatorMarker = React.memo(({ id }) => {
       onClick={() => selectEmulator(emulatorRef.current)}
       onMouseOver={() => {
         //check if the same marker is being dragged or hovered already
-        if (draggedEmulator?.emulator?.id === id || hoveredMarker?.id === id) {
+        if (draggedEmulatorRef.current?.emulator?.id === id || hoveredEmulatorRef.current?.id === id) {
           return
         }
+        console.log("hoverEmulator", emulatorRef.current)
         hoverEmulator(emulatorRef.current)
       }}
       onMouseOut={() => {
         //check if the same marker is being dragged
-        if (draggedEmulator?.emulator?.id === id) {
+        if (draggedEmulatorRef.current?.emulator?.id === id) {
           return
         }
         hoverEmulator(null)

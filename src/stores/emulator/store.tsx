@@ -103,7 +103,7 @@ const createEmulatorsSlice: StateCreator<
     set({ selectedEmulator: emulator });
     get().connectSelectedEmulatorSSE(emulator);
   },
-  hoverEmulator: (emulator) => set({ hoveredEmulator: emulator }),
+  hoverEmulator: (hoveredEmulator) => set({ hoveredEmulator: hoveredEmulator }),
   dragEmulator: (draggedEmulator) => set({ draggedEmulator: draggedEmulator }),
   moveEmulator: (movedEmulator) => set({ movedEmulator: movedEmulator }),
 });

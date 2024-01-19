@@ -5,11 +5,11 @@ import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_URL } from "../../../../constants.js";
 import EmulatorMarkerDirection from "../Markers/EmulatorMarkerDirection.jsx";
 import EmulatorMarkerSelected from "../Markers/EmulatorMarkerSelected.jsx";
-import { useStates } from "../../../../StateProvider.js";
+// import { useStates } from "../../../../StateProvider.js";
 
 export function PathComponent() {
   console.log("path component refreshed!")
-  const { showToast } = useStates();
+  // const { showToast } = useStates();
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
 
@@ -78,10 +78,10 @@ export function PathComponent() {
       connectedEmulator.id
     );
     if (success) {
-      showToast("Stop created!", "success");
+      // showToast("Stop created!", "success");
       // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
     } else {
-      showToast("Error creating Stop!", "error");
+      // showToast("Error creating Stop!", "error");
       console.error("Error creating Stop: ", error);
     }
   }
