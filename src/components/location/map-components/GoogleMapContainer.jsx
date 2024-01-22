@@ -10,12 +10,13 @@ import { SelectedStopInfo } from "./Trip/SelectedStopInfo.jsx";
 import { PathComponent } from "./Trip/PathComponent.jsx";
 import { EMULATOR_URL } from "../../../constants.js";
 import { defaultMapStyle, roadMapStyle } from "./MapStyles.js";
-import ApiService from "../../../ApiService.js";
 import useFetch from "../../../hooks/useFetch.js";
+import { ConnectedEmulatorComponent } from "./Trip/ConnectedEmulatorComponent.jsx";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
 const GoogleMapContainer = () => {
+  console.log("Google Map Rendered!")
   const mapRef = useRef(null);
   const styleRef = useRef("default");
 
@@ -60,6 +61,7 @@ const GoogleMapContainer = () => {
       }
     },
   ), [])
+  
   useEffect(() => useEmulatorStore.subscribe(
     state => state.center, (center) => {
       if (mapRef.current === null || mapRef.current === undefined) {
@@ -155,7 +157,7 @@ const GoogleMapContainer = () => {
       onUnmount={onUnmount}
     >
       <PathComponent />
-
+      <ConnectedEmulatorComponent />
       <StopComponents handleMarkerClick={handleMarkerClick}></StopComponents>
       {selectedStop && (
         <SelectedStopInfo

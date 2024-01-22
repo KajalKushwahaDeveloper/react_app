@@ -11,13 +11,16 @@ import { useNavigate } from "react-router-dom";
 import PrivateRoutes from "../components/utils/privateRoutes.js";
 import PageNotFound from "../view/pageNotFound.js";
 import { useEmulatorStore } from "../stores/emulator/store.tsx";
+import useMarkerStore from "../stores/emulator/markerStore.js";
 
 function App() {
+  console.log("App rendered!")
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const connectEmulatorsSSE = useEmulatorStore((state) => state.connectEmulatorsSSE);
+  const connectEmulatorsSSE = useEmulatorStore.getState().connectEmulatorsSSE;
+  const initMarkers = useMarkerStore.getState().initMarkers;
 
   const checkToken = async () => {
     if (
@@ -96,8 +99,9 @@ function App() {
     const token = localStorage.getItem("token");
     if (token) {
       connectEmulatorsSSE();
+      initMarkers();
     }
-  }, [connectEmulatorsSSE, localStorage.getItem("token")]);
+  }, [connectEmulatorsSSE, initMarkers, localStorage.getItem("token")]);
 
   return (
     <>

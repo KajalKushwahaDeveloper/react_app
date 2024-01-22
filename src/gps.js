@@ -14,6 +14,7 @@ import MovePositionDialog from "./components/location/map-components/CreateTrip/
 import CreateTripButton from "./components/location/map-components/MapButtons.jsx";
 
 const GPS = () => {
+  console.log("GPS rendered!")
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;

@@ -144,8 +144,8 @@ const EmulatorMarkerDirection = () => {
       }}
       rotation={emulatorRef.current?.bearing}
       position={{
-        lat: emulatorRef.current.latitude,
-        lng: emulatorRef.current.longitude,
+        lat: emulatorRef.current?.latitude,
+        lng: emulatorRef.current?.longitude,
       }}
       zIndex={0}
     />

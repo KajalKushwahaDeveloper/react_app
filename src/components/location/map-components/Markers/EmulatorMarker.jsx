@@ -11,7 +11,6 @@ const EmulatorMarker = React.memo(({ id }) => {
 
   const hoveredEmulatorRef = useRef(useEmulatorStore.getState().hoveredMarker);
   const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator);
-  const connectedEmulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
 
   const emulatorRef = useRef({
     id: id,
@@ -61,12 +60,10 @@ const EmulatorMarker = React.memo(({ id }) => {
     }
     // if current marker (non selected!) is being  dragged, skip
     if (draggedEmulatorRef.current?.emulator?.id === id) {
+      console.log("skipping due to draggedEmulator")
       return
     }
-    // if current marker is the connectedEmulator, skip
-    if (connectedEmulatorRef.current?.id === id) {
-      return
-    }
+
     emulatorRef.current = state[id];
     const newPosition = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
     markerRef.current?.setPosition(newPosition);
@@ -90,14 +87,14 @@ const EmulatorMarker = React.memo(({ id }) => {
 
   useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
     if (connectedEmulator?.id === id) {
-      // set ConnectedEmulatorRef to only this marker
-      connectedEmulatorRef.current = connectedEmulator
       // hide the marker
       setMarkerVisibility(false);
       return
     }
-    // show the marker
-    setMarkerVisibility(true);
+    if (connectedEmulator === null || connectedEmulator === undefined) {
+      // show the marker
+      setMarkerVisibility(true);
+    }
   }
   ), [id])
 

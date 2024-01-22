@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { EMULATOR_URL } from "../../constants";
 
-async function fetchEmulators() {
+async function initItems() {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(EMULATOR_URL, {
@@ -19,10 +19,11 @@ async function fetchEmulators() {
   }
 }
 
-fetchEmulators();
-
 const useMarkerStore = create((set) => ({
   items: [],
+  initMarkers() {
+    initItems();
+  },
   advance(emulators) {
     if( !emulators ) {
       return

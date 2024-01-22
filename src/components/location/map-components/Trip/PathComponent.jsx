@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Polyline } from "@react-google-maps/api";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_URL } from "../../../../constants.js";
-import EmulatorMarkerDirection from "../Markers/EmulatorMarkerDirection.jsx";
-import EmulatorMarkerSelected from "../Markers/EmulatorMarkerSelected.jsx";
-// import { useStates } from "../../../../StateProvider.js";
 
 export function PathComponent() {
+  console.log("Path component Created!")
   // const { showToast } = useStates();
   const pathTraveled = useEmulatorStore((state) => state.pathTraveled);
   const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled);
 
-  const connectedEmulator = useEmulatorStore((state) => state.connectedEmulator);
+  const pathTraveledRef = useRef(null)
+  const pathNotTraveledRef = useRef(null)
+  const connectedEmulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
+  useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
+    connectedEmulatorRef.current = connectedEmulator;
+  }));
 
   function onPolyLineClickTraveled(e) {
+    if (connectedEmulatorRef.current === null || connectedEmulatorRef.current === undefined) {
+      return;
+    }
+    const emulatorId = connectedEmulatorRef.current.id;
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
 
     const findClosestPointIndex = (path) => {
@@ -33,11 +40,15 @@ export function PathComponent() {
 
     const closestIndexPath = findClosestPointIndex(pathTraveled);
     if (closestIndexPath && closestIndexPath !== -1) {
-      requestNewStopCreation(pathTraveled[closestIndexPath]);
+      requestNewStopCreation(pathTraveled[closestIndexPath], emulatorId);
     }
   }
 
   function onPolyLineClickNotTraveled(e) {
+    if (connectedEmulatorRef.current === null || connectedEmulatorRef.current === undefined) {
+      return;
+    }
+    const emulatorId = connectedEmulatorRef.current.id;
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() };
 
     const findClosestPointIndex = (path) => {
@@ -56,11 +67,11 @@ export function PathComponent() {
 
     const closestIndexPath = findClosestPointIndex(pathNotTraveled);
     if (closestIndexPath && closestIndexPath !== -1) {
-      requestNewStopCreation(pathNotTraveled[closestIndexPath]);
+      requestNewStopCreation(pathNotTraveled[closestIndexPath], emulatorId);
     }
   }
 
-  async function requestNewStopCreation(tripPoint) {
+  async function requestNewStopCreation(tripPoint, emulatorId) {
     // confirm from window alert
     const confirm = window.confirm("Create a new Stop at this location?");
     if (!confirm) {
@@ -69,12 +80,12 @@ export function PathComponent() {
 
     const token = localStorage.getItem("token");
     // showToast("Creating Stop...", "info");
-    const { success, data, error } = await ApiService.makeApiCall(
+    const { success, error } = await ApiService.makeApiCall(
       TRIP_STOPS_URL,
       "POST",
       tripPoint,
       token,
-      connectedEmulator.id
+      emulatorId
     );
     if (success) {
       // showToast("Stop created!", "success");
@@ -87,15 +98,9 @@ export function PathComponent() {
 
   return (
     <>
-      {connectedEmulator && (
-        <>
-          <EmulatorMarkerSelected />
-          <EmulatorMarkerDirection />
-        </>
-      )}
-
       {pathTraveled != null && (
         <Polyline
+        onLoad={polyline => pathTraveledRef.current = polyline}
           path={pathTraveled}
           options={{
             strokeColor: "#0058A5",
@@ -108,6 +113,7 @@ export function PathComponent() {
       )}
       {pathNotTraveled != null && (
         <Polyline
+          onLoad={polyline => pathNotTraveledRef.current = polyline}
           path={pathNotTraveled}
           options={{
             strokeColor: "#0058A5",
