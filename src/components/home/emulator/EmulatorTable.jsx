@@ -76,7 +76,6 @@ export default function EmulatorTable({
 
   // Fetch data from API
   const refreshEditedEmulator = async (emulatorEditedId) => {
-    console.log("Loading_Emulator")
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
       EMULATOR_URL,
