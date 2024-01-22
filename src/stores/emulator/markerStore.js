@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { EMULATOR_URL } from "../../constants";
 
-async function fetchEmulators() {
+export async function fetchEmulators() {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(EMULATOR_URL, {
@@ -18,8 +18,6 @@ async function fetchEmulators() {
     console.error("V2 Failed to fetch emulators:", error);
   }
 }
-
-fetchEmulators();
 
 const useMarkerStore = create((set) => ({
   items: [],

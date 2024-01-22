@@ -12,6 +12,7 @@ import { EMULATOR_URL } from "../../../constants.js";
 import { defaultMapStyle, roadMapStyle } from "./MapStyles.js";
 import ApiService from "../../../ApiService.js";
 import useFetch from "../../../hooks/useFetch.js";
+import { fetchEmulators } from "../../../stores/emulator/markerStore.js";
 
 const libraries = ["drawing", "places", "autocomplete"];
 
@@ -41,6 +42,7 @@ const GoogleMapContainer = () => {
         mapRef.current?.setOptions({ styles: defaultMapStyle });
       }
     },
+    fetchEmulators()
   ), [])
 
   useEffect(() => useEmulatorStore.subscribe(
