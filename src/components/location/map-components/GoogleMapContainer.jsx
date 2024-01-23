@@ -61,7 +61,7 @@ const GoogleMapContainer = () => {
       }
     },
   ), [])
-  
+
   useEffect(() => useEmulatorStore.subscribe(
     state => state.center, (center) => {
       if (mapRef.current === null || mapRef.current === undefined) {
@@ -137,14 +137,6 @@ const GoogleMapContainer = () => {
     height: "100%",
   };
 
-  const onLoad = React.useCallback(function callback(map) {
-    mapRef.current = map;
-  }, []);
-
-  const onUnmount = React.useCallback(function callback(map) {
-    mapRef.current = null;
-  }, []);
-
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
@@ -153,8 +145,8 @@ const GoogleMapContainer = () => {
       gestureHandling="none"
       zoomControl={false}
       options={{ scrollwheel: true, styles: defaultMapStyle, disableDefaultUI: true }}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
+      onLoad={(ref) => { mapRef.current = ref }}
+      onUnmount={() => { mapRef.current = null }}
     >
       <PathComponent />
       <ConnectedEmulatorComponent />
@@ -173,4 +165,4 @@ const GoogleMapContainer = () => {
   );
 };
 
-export default React.memo(GoogleMapContainer);
+export default GoogleMapContainer;

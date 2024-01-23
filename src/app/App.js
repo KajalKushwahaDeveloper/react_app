@@ -21,79 +21,78 @@ function App() {
 
   const connectEmulatorsSSE = useEmulatorStore.getState().connectEmulatorsSSE;
   const initMarkers = useMarkerStore.getState().initMarkers;
+  useEffect(() => {
+    const checkToken = async () => {
+      if (
+        location.pathname !== "/login" &&
+        location.pathname !== "/" &&
+        location.pathname !== "/home" &&
+        location.pathname !== "/redirect" &&
+        location.pathname !== "/gps" &&
+        location.pathname !== "/page404"
+      ) {
+        navigate("/page404");
+        return;
+      }
 
-  const checkToken = async () => {
-    if (
-      location.pathname !== "/login" &&
-      location.pathname !== "/" &&
-      location.pathname !== "/home" &&
-      location.pathname !== "/redirect" &&
-      location.pathname !== "/gps" &&
-      location.pathname !== "/page404"
-    ) {
-      navigate("/page404");
-      return;
-    }
-
-    const token = localStorage.getItem("token");
-    if (token != null) {
-      try {
-        const { success, data, error } = await ApiService.makeApiCall(
-          CLIENT_CURRENT,
-          "GET",
-          null,
-          token
-        );
-        if (success) {
-          const authorities = data.authorities;
-          let isRoleAdmin = false;
-          authorities.forEach((authority) => {
-            if (authority.authority === "ROLE_ADMIN") {
-              isRoleAdmin = true;
-              return; // Exit the loop early if ROLE_ADMIN is found
+      const token = localStorage.getItem("token");
+      if (token != null) {
+        try {
+          const { success, data, error } = await ApiService.makeApiCall(
+            CLIENT_CURRENT,
+            "GET",
+            null,
+            token
+          );
+          if (success) {
+            const authorities = data.authorities;
+            let isRoleAdmin = false;
+            authorities.forEach((authority) => {
+              if (authority.authority === "ROLE_ADMIN") {
+                isRoleAdmin = true;
+                return; // Exit the loop early if ROLE_ADMIN is found
+              }
+            });
+            setIsAdmin(isRoleAdmin);
+            if (location.pathname === "/redirect") {
+              if (isRoleAdmin) {
+                navigate("/home");
+              } else {
+                navigate("/gps");
+              }
+              return;
             }
-          });
-          setIsAdmin(isRoleAdmin);
-          if (location.pathname === "/redirect") {
+
             if (isRoleAdmin) {
-              navigate("/home");
+              if (location.pathname === "/login" || location.pathname === "/") {
+                navigate("/home");
+              }
             } else {
-              navigate("/gps");
-            }
-            return;
-          }
-
-          if (isRoleAdmin) {
-            if (location.pathname === "/login" || location.pathname === "/") {
-              navigate("/home");
+              if (
+                location.pathname === "/login" ||
+                location.pathname === "/" ||
+                location.pathname === "/home"
+              ) {
+                navigate("/gps");
+              }
             }
           } else {
-            if (
-              location.pathname === "/login" ||
-              location.pathname === "/" ||
-              location.pathname === "/home"
-            ) {
-              navigate("/gps");
-            }
+            console.error("CLIENT_CURRENT Error: ", error);
+            localStorage.removeItem("token");
+            navigate("/login");
           }
-        } else {
-          console.error("CLIENT_CURRENT Error: ", error);
+        } catch (error) {
+          console.error("CLIENT_CURRENT 2 Error: ", error);
           localStorage.removeItem("token");
           navigate("/login");
         }
-      } catch (error) {
-        console.error("CLIENT_CURRENT 2 Error: ", error);
-        localStorage.removeItem("token");
+      } else {
         navigate("/login");
       }
-    } else {
-      navigate("/login");
-    }
-  };
+    };
 
-  useEffect(() => {
     checkToken();
-  }, [location.pathname]);
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");

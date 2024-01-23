@@ -1,75 +1,113 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useViewPort } from "../../../../ViewportProvider.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
-import {
-  compareTripDataChangedNullOrId,
-  compareSelectedEmulatorChangedNullOrId,
-} from "./utils.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_URL } from "../../../../constants.js";
 import { Resize, ResizeHorizon } from 'react-resize-layout';
 import "./ResizeContainer.css";
-import { Tooltip } from '@mui/material';
 import CreateTripButton from "../MapButtons.jsx";
 
 const AddressTable = () => {
-  const tableValues = useRef(null);
-
-  const tripData = useEmulatorStore(
-    (state) => state.tripData,
-    (oldTripData, newTripData) => {
-      compareTripDataChangedNullOrId(oldTripData, newTripData);
+  console.log("AddressTable");
+  const elementParentRefs = useRef([React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef()]);
+  const elementRefs = useRef([React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef()]);
+  const { width } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
+  const arrWidth = width - 25;// 25 is the width of the handles between each 
+  const widthArr = new Array(6).fill(arrWidth / 6);
+  
+  for (let i = 0; i < 6; i++) {
+    let savedAddressWithI = localStorage.getItem(`addressWidth${i}`);
+    if (savedAddressWithI === null || savedAddressWithI === undefined) {
+      savedAddressWithI = arrWidth / 6;
+      localStorage.setItem(`addressWidth${i}`, arrWidth / 6);
     }
-  );
+    widthArr[i] = savedAddressWithI;
+  }
 
-  const selectedEmulator = useEmulatorStore(
-    (state) => state.selectedEmulator,
-    (oldSelectedEmulator, newSelectedEmulator) => {
-      compareSelectedEmulatorChangedNullOrId(
-        oldSelectedEmulator,
-        newSelectedEmulator
-      );
-    }
-  );
+  const setValues = useCallback((emulator, tripData, isHover) => {
 
-  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator);
+    const currentAddress = emulator ? emulator.currentAddress : "N/A";
 
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  function setTableValues(emulator, tripData) {
-    const fromAddress =
+    const fromAddress = tripData ?
       tripData.fromAddress[0]?.long_name +
       ", " +
       tripData.fromAddress[1]?.long_name +
       ", " +
       tripData.fromAddress[2]?.long_name +
       ", " +
-      tripData.fromAddress[3]?.long_name || "N/A";
+      tripData.fromAddress[3]?.long_name : "N/A";
 
-    const toAddress =
+    const toAddress = tripData ?
       tripData.toAddress[0]?.long_name +
       ", " +
       tripData.toAddress[1]?.long_name +
       ", " +
       tripData.toAddress[2]?.long_name +
       " ," +
-      tripData.toAddress[3]?.long_name || "N/A";
-    const arrivalTime = "TODO";
-    const totalTime = "TODO";
-    const remainingDistance = "TODO";
+      tripData.toAddress[3]?.long_name : "N/A";
 
-    tableValues.current = {
-      fromAddress,
-      toAddress,
-      arrivalTime,
-      totalTime,
-      remainingDistance,
-    };
+    const arrivalTime = tripData ? "TODO" : "N/A";
+    const totalTime = tripData ? "TODO" : "N/A";
+    const remainingDistance = tripData ? "TODO" : "N/A";
+
+    setStringToElementRef(currentAddress, elementRefs.current[0]);
+    setStringToElementRef(fromAddress, elementRefs.current[1]);
+    setStringToElementRef(toAddress, elementRefs.current[2]);
+    setStringToElementRef(arrivalTime, elementRefs.current[3]);
+    setStringToElementRef(totalTime, elementRefs.current[4]);
+    setStringToElementRef(remainingDistance, elementRefs.current[5]);
+
+    //loop through the element refs and set their background color to lightblue
+    elementParentRefs.current.forEach((elementRef) => {
+      if (elementRef.current) {
+        if (isHover) {
+          elementRef.current.style.backgroundColor = "lightpink";
+        } else {
+          elementRef.current.style.backgroundColor = "white";
+        }
+      }
+    })
+  }, []);
+
+  // function which sets the string to the passed element ref
+  function setStringToElementRef(string, elementRef) {
+    if (elementRef.current) {
+      elementRef.current.innerHTML = string;
+    }
   }
+  //function which sets the element ref's value to a loader
+  function showLoaders() {
+    elementRefs.current.forEach((elementRef) => {
+      if (elementRef.current) {
+        elementRef.current.innerHTML =
+          `<div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>`;
+      }
+    })
+  };
 
-  useEffect(() => {
-    async function updateTableValues(hoveredEmulator) {
-      setIsLoading(true);
+  const connectedEmulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
+  const hoveredEmulatorRef = useRef(useEmulatorStore.getState().hoveredEmulator);
+  const tripDataRef = useRef(useEmulatorStore.getState().tripData);
+
+  useEffect(() => useEmulatorStore.subscribe(state => state.tripData, (tripData) => {
+    tripDataRef.current = tripData;
+    if (hoveredEmulatorRef.current !== null && hoveredEmulatorRef.current !== undefined) {
+      return;
+    }
+    setValues(connectedEmulatorRef.current ? connectedEmulatorRef.current : useEmulatorStore.getState().selectedEmulator, tripData);
+  }), [setValues])
+
+  useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
+    connectedEmulatorRef.current = connectedEmulator;
+  }), [])
+
+  useEffect(() => useEmulatorStore.subscribe(state => state.hoveredEmulator, (hoveredEmulator) => {
+    async function fetchAndUpdateTableValues(hoveredEmulator) {
+      showLoaders();
       const token = localStorage.getItem("token");
       const { data, error } = await ApiService.makeApiCall(
         TRIP_URL,
@@ -80,14 +118,12 @@ const AddressTable = () => {
       );
       if (error) {
         console.error("Error fetching trip data", error);
-        tableValues.current = null;
-        setIsLoading(false);
+        setValues(hoveredEmulator, null, true);
         return;
       }
       if (data === null || data === undefined) {
         console.error("Data is null or undefined");
-        tableValues.current = null;
-        setIsLoading(false);
+        setValues(hoveredEmulator, null, true);
         return;
       }
       if (
@@ -96,62 +132,32 @@ const AddressTable = () => {
         data.data.tripPoints.length === 0
       ) {
         console.error("Trip points are null or undefined or empty");
-        tableValues.current = null;
-        setIsLoading(false);
+        setValues(hoveredEmulator, null, true);
         return;
       }
       if (hoveredEmulator !== null) {
-        setTableValues(hoveredEmulator, data.data);
+        setValues(hoveredEmulator, data.data, true);
       }
-      setIsLoading(false);
     }
 
-    if (hoveredEmulator === null && selectedEmulator === null) {
-      tableValues.current = null;
-      setIsLoading(false);
+    hoveredEmulatorRef.current = hoveredEmulator;
+    if (hoveredEmulator && hoveredEmulator.id !== connectedEmulatorRef.current?.id) {
+      fetchAndUpdateTableValues(hoveredEmulator, true);
       return;
     }
-    // handle hovered emulator
-    if (hoveredEmulator !== null && hoveredEmulator !== undefined) {
-      //if hovered emulator is not selected emulator
-      if (
-        selectedEmulator === null ||
-        selectedEmulator === undefined ||
-        selectedEmulator.id !== hoveredEmulator.id
-      ) {
-        updateTableValues(hoveredEmulator);
+    // if null or undefined, set the values to the connected emulator if it exists
+    if (hoveredEmulator === null || hoveredEmulator === undefined) {
+      if (connectedEmulatorRef.current !== null && connectedEmulatorRef.current !== undefined) {
+        setValues(connectedEmulatorRef.current, tripDataRef.current, false);
+        return;
       }
-      // else do nothing
+      // if both hovered and connected are null or undefined, set the values to null
+      if ((connectedEmulatorRef.current === null || connectedEmulatorRef.current === undefined) && (hoveredEmulator === null || hoveredEmulator === undefined)) {
+        setValues(null, null, false);
+        return;
+      }
     }
-  }, [selectedEmulator, hoveredEmulator]);
-
-  useEffect(() => {
-    if (
-      selectedEmulator === null ||
-      selectedEmulator === undefined ||
-      tripData === null ||
-      tripData === undefined
-    ) {
-      tableValues.current = null;
-      return;
-    }
-    setTableValues(selectedEmulator, tripData);
-  }, [selectedEmulator, tripData]);
-
-  const { width } = useViewPort();
-  const breakpoint = 620;
-  const isMobile = width < breakpoint;
-  const arrWidth = width - 25;// 25 is the width of the handles between each 
-  const widthArr =new Array(6).fill(arrWidth / 6);
-  for (let i = 0; i < 6; i++) {
-    let savedAddressWithI = localStorage.getItem(`addressWidth${i}`);
-    if (savedAddressWithI === null || savedAddressWithI === undefined) {
-      savedAddressWithI = arrWidth / 6;
-      localStorage.setItem(`addressWidth${i}`, arrWidth / 6);
-    }
-    widthArr[i] = savedAddressWithI;
-  }
-  const elementRefs = useRef([React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef(), React.createRef()]);
+  }), [setValues])
 
   // Start observing the elements when the component is mounted
   useEffect(() => {
@@ -182,26 +188,6 @@ const AddressTable = () => {
     };
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="main-address-table">
-        <div
-          style={{
-            background:
-              hoveredEmulator && hoveredEmulator !== selectedEmulator?.id
-                ? "lightpink"
-                : selectedEmulator
-                  ? "lightblue"
-                  : "white",
-            textAlign: "center",
-            justifyContent: "center",
-          }}
-        >
-          Loading...
-        </div>
-      </div>
-    );
-  }
   return (
     <div className="main-address-table">
       {isMobile ? (
@@ -231,7 +217,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {tableValues.current ? tableValues.current.address : "N/A"}
+              N/A
             </div>
           </div>
           {/* FROM ADDRESS*/}
@@ -252,7 +238,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {tableValues.current ? tableValues.current.fromAddress : "N/A"}
+              N/A
             </div>
           </div>
           {/* TO ADDRESS*/}
@@ -273,7 +259,7 @@ const AddressTable = () => {
                 width: "calc(100% - 5px)",
               }}
             >
-              {tableValues.current ? tableValues.current.toAddress : "N/A"}
+              N/A
             </div>
           </div>
 
@@ -287,26 +273,22 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Arrival Time</div>
-            {tableValues.current ? (
+            <div
+              style={{
+                marginTop: "5px !important",
+                height: "30px",
+                textAlign: "center",
+                maxWidth: "20vw",
+              }}
+              className="totalTimeSubContent"
+            >
               <div
-                style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
-                }}
-                className="totalTimeSubContent"
+                className="addressTable"
+                style={{ wordWrap: "break-word" }}
               >
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}
-                >
-                  {tableValues.current.arrivalTime}
-                </div>
+                N/A
               </div>
-            ) : (
-              <div className="addressTable">N/A</div>
-            )}
+            </div>
           </div>
 
           {/* TIME */}
@@ -319,30 +301,24 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Total Time</div>
-            {tableValues.current ? (
+            <div
+              style={{
+                marginTop: "5px !important",
+              }}
+              className="totalTimeSubContent"
+            >
               <div
+                className="addressTable"
                 style={{
-                  marginTop: "5px !important",
+                  wordWrap: "break-word",
+                  height: "auto",
+                  fontSize: "10px",
+                  width: "calc(100% - 5px)",
                 }}
-                className="totalTimeSubContent"
               >
-                <div
-                  className="addressTable"
-                  style={{
-                    wordWrap: "break-word",
-                    height: "auto",
-                    fontSize: "10px",
-                    width: "calc(100% - 5px)",
-                  }}
-                >
-                  {tableValues.current.totalTime}
-                </div>
-              </div>
-            ) : (
-              <div className="addressTable" style={{ height: "50px" }}>
                 N/A
               </div>
-            )}
+            </div>
           </div>
 
           {/* REMAING DISTANCE */}
@@ -355,26 +331,23 @@ const AddressTable = () => {
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
-            {tableValues.current ? (
+
+            <div
+              style={{
+                marginTop: "5px !important",
+                height: "30px",
+                textAlign: "center",
+                maxWidth: "20vw",
+              }}
+              className=""
+            >
               <div
-                style={{
-                  marginTop: "5px !important",
-                  height: "30px",
-                  textAlign: "center",
-                  maxWidth: "20vw",
-                }}
-                className=""
+                className="addressTable"
+                style={{ wordWrap: "break-word" }}
               >
-                <div
-                  className="addressTable"
-                  style={{ wordWrap: "break-word" }}
-                >
-                  {tableValues.current.remainingDistance} miles
-                </div>
+                N/A miles
               </div>
-            ) : (
-              <div className="addressTable">N/A</div>
-            )}
+            </div>
           </div>
 
           {/* PLUS MINUS ICONS */}
@@ -423,47 +396,31 @@ const AddressTable = () => {
             handleWidth={'5px'}
             handleColor={'#007DC66F'}
           >
+            {/* CURRENT ADDRESS*/}
             <ResizeHorizon
-              // on size change, call a function with new size
               width={`${widthArr[0]}px`}
               minWidth={'50px'}
             >
-              {/* CURRENT ADDRESS*/}
               <div
-                id="0"
-                ref={elementRefs.current[0]}
+                ref={elementParentRefs.current[0]}
                 style={{
                   border: "2px solid",
                   height: "64px",
                 }}
               >
                 <div className="address-table-heading">Current location</div>
-                <div className="addressTable ellipsisText">
-                  <Tooltip
-                    title={
-                      tableValues.current &&
-                      tableValues.current.address &&
-                      tableValues.current.address
-                    }
-                    placement="top"
-                  >
-                    <div>
-                      {tableValues.current && tableValues.current.address
-                        ? tableValues.current.address
-                        : "N/A"}
-                    </div>
-                  </Tooltip>
+                <div className="addressTable" ref={elementRefs.current[0]} id="0">
+                  N/A
                 </div>
               </div>
             </ResizeHorizon>
+            {/* FROM ADDRESS*/}
             <ResizeHorizon
               width={`${widthArr[1]}px`}
               minWidth={'50px'}
             >
-              {/* FROM ADDRESS*/}
               <div
-                id="1"
-                ref={elementRefs.current[1]}
+                ref={elementParentRefs.current[1]}
                 style={{
                   border: "2px solid",
                   alignItems: "center",
@@ -471,58 +428,37 @@ const AddressTable = () => {
                 }}
               >
                 <div className="address-table-heading">From address</div>
-                <div className="addressTable ellipsisText">
-                  <Tooltip title={tableValues.current} placement="top">
-                    <div>
-                      {tableValues.current
-                        ? tableValues.current.fromAddress
-                        : "N/A"}
-                    </div>
-                  </Tooltip>
+                <div className="addressTable" id="1" ref={elementRefs.current[1]}>
+                  N/A
                 </div>
               </div>
             </ResizeHorizon>
+            {/* TO ADDRESS*/}
             <ResizeHorizon
               width={`${widthArr[2]}px`}
               minWidth={'50px'}
             >
-
-              {/* TO ADDRESS*/}
               <div
-                id="2"
-                ref={elementRefs.current[2]}
-                className="col d-flex flex-column"
+                ref={elementParentRefs.current[2]}
                 style={{
                   border: "2px solid",
                   alignItems: "center",
-                  padding: "0",
                   height: "64px",
                 }}
               >
                 <div className="address-table-heading">To address</div>
-                <div className="addressTable ellipsisText">
-                  <Tooltip
-                    title={tableValues.current && tableValues.current.toAddress}
-                    placement="top"
-                  >
-                    <div>
-                      {tableValues.current
-                        ? tableValues.current.toAddress
-                        : "N/A"}
-                    </div>
-                  </Tooltip>
+                <div className="addressTable" id="2" ref={elementRefs.current[2]}>
+                  N/A
                 </div>
               </div>
             </ResizeHorizon>
+            {/* ARRIVAL TIME */}
             <ResizeHorizon
               width={`${widthArr[3]}px`}
               minWidth={'50px'}
             >
-
-              {/* ARRIVAL TIME */}
               <div
-                id="3"
-                ref={elementRefs.current[3]}
+                ref={elementParentRefs.current[3]}
                 style={{
                   border: "2px solid",
                   alignItems: "center",
@@ -530,100 +466,46 @@ const AddressTable = () => {
                 }}
               >
                 <div className="address-table-heading">Final Arrival time </div>
-                {tableValues.current ? (
-                  <div
-                    style={{
-                      marginTop: "5px !important",
-                      textAlign: "center",
-                      maxWidth: "20vw",
-                    }}
-                    className="totalTimeSubContent"
-                  >
-                    <div
-                      className="addressTable"
-                      style={{ wordWrap: "break-word" }}
-                    >
-                      {tableValues.current.arrivalTime}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="addressTable">N/A</div>
-                )}
+                <div className="addressTable" id="3" ref={elementRefs.current[3]}>
+                  N/A
+                </div>
               </div>
             </ResizeHorizon>
+            {/* TIME */}
             <ResizeHorizon
               width={`${widthArr[4]}px`}
               minWidth={'50px'}
             >
-
-              {/* TIME */}
               <div
-                id="4"
-                ref={elementRefs.current[4]}
+                ref={elementParentRefs.current[4]}
                 style={{
                   border: "2px solid",
-                  alignItems: "center",
                   height: "64px",
                 }}
               >
                 <div className="address-table-heading">Total Time</div>
-                {tableValues.current ? (
-                  <div
-                    style={{
-                      marginTop: "5px !important",
-                      textAlign: "center",
-                      maxWidth: "20vw",
-                    }}
-                    className="totalTimeSubContent"
-                  >
-                    <div
-                      className="addressTable"
-                      style={{ wordWrap: "break-word" }}
-                    >
-                      {tableValues.current.totalTime}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="addressTable">N/A</div>
-                )}
+                <div className="addressTable" id="4" ref={elementRefs.current[4]}>
+                  N/A
+                </div>
               </div>
             </ResizeHorizon>
+
+            {/* REMAING DISTANCE */}
             <ResizeHorizon
               width={`${widthArr[5]}px`}
               minWidth={'50px'}
             >
-
-              {/* REMAING DISTANCE */}
               <div
-                id="5"
-                ref={elementRefs.current[5]}
+                ref={elementParentRefs.current[5]}
                 style={{
                   border: "2px solid",
-                  alignItems: "center",
                   height: "64px",
                 }}
               >
                 <div className="address-table-heading">Remaining Distance</div>
-                {tableValues.current ? (
-                  <div
-                    style={{
-                      marginTop: "5px !important",
-                      height: "30px",
-                      textAlign: "center",
-                      maxWidth: "20vw",
-                    }}
-                    className=""
-                  >
-                    <div
-                      className="addressTable"
-                      style={{ wordWrap: "break-word" }}
-                    >
-                      {tableValues.current.remainingDistance} miles
-                    </div>
-                  </div>
-                ) : (
-                  <div className="addressTable">N/A</div>
-                )}
+                <div className="addressTable" id="5" ref={elementRefs.current[5]}>
+                  N/A
+                </div>
               </div>
             </ResizeHorizon>
           </Resize>

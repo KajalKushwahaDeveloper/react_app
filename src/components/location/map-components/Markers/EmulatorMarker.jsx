@@ -2,7 +2,6 @@ import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import useMarkerStore from "../../../../stores/emulator/markerStore.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
-import { set } from "lodash";
 
 const EmulatorMarker = React.memo(({ id }) => {
   const dragEmulator = useEmulatorStore.getState().dragEmulator;
