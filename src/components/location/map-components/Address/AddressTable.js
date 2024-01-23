@@ -16,6 +16,15 @@ const AddressTable = () => {
   const isMobile = width < breakpoint;
   const arrWidth = width - 25;// 25 is the width of the handles between each 
   const widthArr = new Array(6).fill(arrWidth / 6);
+  
+  for (let i = 0; i < 6; i++) {
+    let savedAddressWithI = localStorage.getItem(`addressWidth${i}`);
+    if (savedAddressWithI === null || savedAddressWithI === undefined) {
+      savedAddressWithI = arrWidth / 6;
+      localStorage.setItem(`addressWidth${i}`, arrWidth / 6);
+    }
+    widthArr[i] = savedAddressWithI;
+  }
 
   const setValues = useCallback((emulator, tripData, isHover) => {
 
