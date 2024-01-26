@@ -240,10 +240,6 @@ const GpsTable = () => {
       showToast("Trip already Finished!", "error");
       return;
     }
-    if (row.tripStatus === "STOP") {
-      showToast("No Trip Created yet!", "error");
-      return;
-    }
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
       TRIP_TOGGLE + "/" + row.id,
