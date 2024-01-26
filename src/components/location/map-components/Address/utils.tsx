@@ -1,4 +1,4 @@
-import { Emulator, TripData } from "../../../../stores/emulator/types";
+import { TripData } from "../../../../stores/emulator/types";
 
 // custom equality function for Emulators
 export function compareTripDataChangedNullOrId(oldTripData : TripData | null, newTripData : TripData | null) {
@@ -14,30 +14,5 @@ export function compareTripDataChangedNullOrId(oldTripData : TripData | null, ne
   if (oldTripData?.distance !== newTripData?.distance ) {
     return true;
   }
-  return false;
-}
-
-//custom equality function for selectedEmulator
-export function compareSelectedEmulatorChangedNullOrId(
-  oldSelectedEmulator : Emulator | null,
-  newSelectedEmulator: Emulator | null
-) {
-  // either one was null
-  if (
-    (oldSelectedEmulator === null && newSelectedEmulator !== null) ||
-    (oldSelectedEmulator !== null && newSelectedEmulator === null)
-  ) {
-    return true;
-  }
-
-  // neither was null but id was different
-  if (oldSelectedEmulator?.id !== newSelectedEmulator?.id) {
-    return true;
-  }
-
-  if(oldSelectedEmulator?.address !== newSelectedEmulator?.address) {
-    return true;
-  }
-
   return false;
 }

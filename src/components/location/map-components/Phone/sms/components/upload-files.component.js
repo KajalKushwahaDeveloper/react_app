@@ -170,6 +170,18 @@ export default class UploadFiles extends Component {
               fileInfos.map((file, index) => (
                 <li className="list-group-item" key={index}>
                   <div className="d-flex justify-content-between align-items-center">
+                    {/* //image */}
+                    {file.url.includes(".jpg") ||
+                      file.url.includes(".jpeg") ||
+                      file.url.includes(".png") ? (
+                      <img
+                        className="card_list"
+                        src={file.url}
+                        alt={file.name}
+                        style={{ width: 100 }}
+                      />
+                    ) : null}
+                    {/* //video */}
                     <a
                       className="card_list"
                       href={file.url}
