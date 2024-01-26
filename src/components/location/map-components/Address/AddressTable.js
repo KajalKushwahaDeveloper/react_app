@@ -191,13 +191,7 @@ const AddressTable = () => {
   return (
     <div className="main-address-table">
       {isMobile ? (
-        <div
-          className="row"
-          style={{
-            height: "35px !important",
-            background: "white",
-          }}
-        >
+        <div className="row">
           {/* CURRENT ADDRESS*/}
           <div
             className="col-6 d-flex flex-column"
@@ -206,6 +200,7 @@ const AddressTable = () => {
               color: "black",
               alignItems: "center",
               padding: "0",
+              width: "200px",
             }}
           >
             <div className="address-table-heading">Current location</div>
@@ -227,6 +222,7 @@ const AddressTable = () => {
               border: "2px solid",
               alignItems: "center",
               padding: "0",
+              width: "200px",
             }}
           >
             <div className="address-table-heading">From address</div>
@@ -243,11 +239,12 @@ const AddressTable = () => {
           </div>
           {/* TO ADDRESS*/}
           <div
-            className="col-5 d-flex flex-column"
+            className="col-6 d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
               padding: "0",
+              width: "200px",
             }}
           >
             <div className="address-table-heading">To address</div>
@@ -265,11 +262,12 @@ const AddressTable = () => {
 
           {/* ARRIVAL TIME */}
           <div
-            className="col d-flex flex-column"
+            className="col-6 d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
               padding: "0px !important",
+              width: "200px",
             }}
           >
             <div className="address-table-heading">Arrival Time</div>
@@ -282,10 +280,7 @@ const AddressTable = () => {
               }}
               className="totalTimeSubContent"
             >
-              <div
-                className="addressTable"
-                style={{ wordWrap: "break-word" }}
-              >
+              <div className="addressTable" style={{ wordWrap: "break-word" }}>
                 N/A
               </div>
             </div>
@@ -293,11 +288,12 @@ const AddressTable = () => {
 
           {/* TIME */}
           <div
-            className="col-5 d-flex flex-column"
+            className="col-6 d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
               padding: "0px !important",
+              width: "200px",
             }}
           >
             <div className="address-table-heading">Total Time</div>
@@ -313,7 +309,7 @@ const AddressTable = () => {
                   wordWrap: "break-word",
                   height: "auto",
                   fontSize: "10px",
-                  width: "calc(100% - 5px)",
+                  width: "calc(100% - 0px)",
                 }}
               >
                 N/A
@@ -323,11 +319,12 @@ const AddressTable = () => {
 
           {/* REMAING DISTANCE */}
           <div
-            className="col d-flex flex-column"
+            className="col-6 d-flex flex-column"
             style={{
               border: "2px solid",
               alignItems: "center",
               padding: "0px !important",
+              width: "200px",
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
@@ -341,50 +338,15 @@ const AddressTable = () => {
               }}
               className=""
             >
-              <div
-                className="addressTable"
-                style={{ wordWrap: "break-word" }}
-              >
+              <div className="addressTable" style={{ wordWrap: "break-word" }}>
                 N/A miles
               </div>
             </div>
           </div>
 
           {/* PLUS MINUS ICONS */}
-          <div
-            className="col-2 d-flex flex-column"
-            style={{
-              padding: "0",
-            }}
-          >
-            <div className="btn-group">
-              <button
-                type="button"
-                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
-                style={{
-                  backgroundColor: "#ff0000",
-                  margin: 0,
-                  width: "50%",
-                  height: "100%",
-                }}
-              >
-                <i className="fa-solid fa-plus text-dark fa-lg plusIcon"></i>
-              </button>
-              <button
-                type="button"
-                className="btn border-dark border-2 rounded-0 d-flex align-items-center justify-content-center"
-                style={{
-                  backgroundColor: "#39e600",
-                  margin: 0,
-                  width: "50%",
-                  height: "100%",
-                }}
-              >
-                <i className="fa-solid fa-minus text-dark fa-lg minusIcon"></i>
-              </button>
-            </div>
-          </div>
-
+      
+          
           <CreateTripButton />
         </div>
       ) : (
