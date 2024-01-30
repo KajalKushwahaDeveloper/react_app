@@ -27,8 +27,7 @@ const AddressTable = () => {
   }
 
   const setValues = useCallback((emulator, tripData, isHover) => {
-
-    const currentAddress = emulator ? emulator.currentAddress : "N/A";
+    const currentAddress = emulator ? emulator.address : "N/A";
 
     const fromAddress = tripData ?
       tripData.fromAddress[0]?.long_name +
