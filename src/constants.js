@@ -9,7 +9,7 @@ export const LIVE_API_CLIENT_HTTPS = "https://www.logbookgps.com/api";
 
 export const LOCAL_API_SAURABH = "http://192.168.1.132:8080";
 
-export const BASE_URL = LOCAL_API_LOCAL;
+export const BASE_URL = LIVE_API_CLIENT_HTTPS;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";

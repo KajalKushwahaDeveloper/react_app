@@ -11,7 +11,7 @@ import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../../stores/emulator/types_maps.tsx";
 
 import DateTimePickerValue from "./DateTimeFieldValue.tsx";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 const CreateTripDialog = () => {
   const { isTableVisible } = useStates();
@@ -31,7 +31,7 @@ const CreateTripDialog = () => {
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
 
-  const [dateTime, setDateTime] = React.useState(dayjs('2024-01-30T15:30'));
+  const [dateTime, setDateTime] = React.useState(dayjs("2024-01-30T15:30"));
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -140,7 +140,7 @@ const CreateTripDialog = () => {
               variant="h6"
               component="h2"
               style={{
-                paddingBottom: "10px",
+                padding: "10px",
                 backgroundColor: "#007dc6",
                 color: "white",
               }}
@@ -165,9 +165,19 @@ const CreateTripDialog = () => {
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
                     label="From Address"
+                    style={{
+                      width: "80vw !important",
+                      background: "white !important",
+                    }}
                   />
                 </div>
-                <div style={{ margin: "1rem 0" }}>
+                <div
+                  style={{
+                    margin: "1rem 0",
+                    width: "80vw !important",
+                    background: "white !important",
+                  }}
+                >
                   <SearchBar
                     setLat={setToLat}
                     setLong={setToLong}
@@ -176,11 +186,15 @@ const CreateTripDialog = () => {
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
                     label="To Address"
+                   style={{ width:"80vw !important", background:"white !important"}}
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
                 <div style={{ margin: "1rem 0" }}>
-                  <DateTimePickerValue value={dateTime} setValue={setDateTime}/>
+                  <DateTimePickerValue
+                    value={dateTime}
+                    setValue={setDateTime}
+                  />
                   {error && <p className="error">{error}</p>}
                 </div>
                 <div style={{ margin: "1rem 0" }}>
@@ -203,14 +217,9 @@ const CreateTripDialog = () => {
                 </div>
 
                 <div style={{ margin: "0" }}>
-                  {isLoading ? (
-                    <CircularProgress color="primary" />
-                  ) : (
-                    ""
-                  )}
+                  {isLoading ? <CircularProgress color="primary" /> : ""}
                 </div>
               </div>
-
             </div>
           </Box>
         </Modal>

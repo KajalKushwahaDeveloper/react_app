@@ -10,3 +10,20 @@
 .pac-item:hover {
   background: #6666;
 }
+.Demo__search-bar-container{
+  width:100%;
+
+}
+.Demo__search-input-container > div{
+  width:100%;
+  background-color: white !important;
+  padding: 0 1rem;
+}
+.Demo__search-input-container > div > div{
+  width:100%;
+  background-color: white !important;
+  padding: 0 1rem;
+}
+.Demo__search-input-container > div > label{
+  padding: 0 .4rem;
+} 
