@@ -9,11 +9,18 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useStates } from "../../../../StateProvider.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../../stores/emulator/types_maps.tsx";
+import { useViewPort } from "../../../.././ViewportProvider.js";
 
 import DateTimePickerValue from "./DateTimeFieldValue.tsx";
 import dayjs from "dayjs";
 
 const CreateTripDialog = () => {
+
+  const { width } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
+
+
   const { isTableVisible } = useStates();
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   const selectedEmulator = useEmulatorStore(
@@ -111,7 +118,7 @@ const CreateTripDialog = () => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: isMobile ? "90vw" : "50vw",
               bgcolor: "background.paper",
               boxShadow: 24,
               p: 4,
@@ -120,6 +127,7 @@ const CreateTripDialog = () => {
               paddingRight: "0px",
               paddingBottom: "1rem",
               zIndex: "0px !important",
+              borderRadius:"1rem",
             }}
           >
             <IconButton
@@ -129,7 +137,7 @@ const CreateTripDialog = () => {
               aria-label="close"
               sx={{
                 position: "absolute",
-                top: 0,
+                top: 10,
                 right: 10,
                 color: "white",
               }}
@@ -143,6 +151,9 @@ const CreateTripDialog = () => {
                 padding: "10px",
                 backgroundColor: "#007dc6",
                 color: "white",
+                lineHeight: 2.6,
+                borderTopLeftRadius: "1rem",
+                borderTopRightRadius: "1rem",
               }}
             >
               Create Trip
@@ -190,7 +201,7 @@ const CreateTripDialog = () => {
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
-                <div style={{ margin: "1rem 0" }}>
+                <div style={{ margin: "1rem 0" ,width: isMobile ? "85vw" : "48vw" }}>
                   <DateTimePickerValue
                     value={dateTime}
                     setValue={setDateTime}
@@ -208,6 +219,7 @@ const CreateTripDialog = () => {
                       backgroundColor: "#1976d2",
                       color: "white",
                       marginRight: "0.7rem",
+                      float:"right",
                     }}
                     disabled={isLoading ? true : false}
                   >

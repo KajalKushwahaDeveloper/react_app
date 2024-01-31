@@ -92,7 +92,7 @@ const SearchBar = (props) => {
                     width: "100%",
                     paddingLeft: "1rem",
                     cursor: "pointer",
-                    fontSize:".8rem"
+                    fontSize:".9rem"
                   }}
                 >
                   {suggestions.map((suggestion) => {

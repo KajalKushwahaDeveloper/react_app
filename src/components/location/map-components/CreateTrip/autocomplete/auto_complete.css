@@ -12,18 +12,27 @@
 }
 .Demo__search-bar-container{
   width:100%;
-
 }
 .Demo__search-input-container > div{
-  width:100%;
+  width:50vw;
   background-color: white !important;
   padding: 0 1rem;
+}
+.Demo__search-input-container > div > div > input{
+ margin:0;
+ padding-left: .1rem;
+ padding-right: 0rem;
 }
 .Demo__search-input-container > div > div{
   width:100%;
   background-color: white !important;
-  padding: 0 1rem;
 }
-.Demo__search-input-container > div > label{
+.Demo__search-input-container > div  > label{
   padding: 0 .4rem;
 } 
+
+@media screen and (max-width: 620px) {
+  .Demo__search-input-container > div{
+    width:90vw;
+  }
+}
