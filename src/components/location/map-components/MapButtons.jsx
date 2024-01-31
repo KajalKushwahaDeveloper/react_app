@@ -102,6 +102,8 @@ const MapButtons = () => {
         style={{
           display: "flex",
           justifyContent: "space-around",
+          flexShrink:"1",
+          padding:"0",
         }}>
         {connectedEmulator && (
           <>

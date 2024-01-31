@@ -43,6 +43,17 @@ body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
+  .row {
+    height:12vh;
+    background: white;
+    margin: 0rem;
+    overflow-y: hidden;
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    padding: 0rem !important;
+    flex-shrink: 1 !important;
+}
+
   @media screen and (max-width: 620px) {
     .address-table-heading{
       font-size: 12px;
