@@ -9,11 +9,18 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useStates } from "../../../../StateProvider.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import { compareSelectedEmulator } from "../../../../stores/emulator/types_maps.tsx";
+import { useViewPort } from "../../../.././ViewportProvider.js";
 
 import DateTimePickerValue from "./DateTimeFieldValue.tsx";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 const CreateTripDialog = () => {
+
+  const { width } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
+
+
   const { isTableVisible } = useStates();
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
   const selectedEmulator = useEmulatorStore(
@@ -31,7 +38,7 @@ const CreateTripDialog = () => {
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
 
-  const [dateTime, setDateTime] = React.useState(dayjs('2024-01-30T15:30'));
+  const [dateTime, setDateTime] = React.useState(dayjs("2024-01-30T15:30"));
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -111,7 +118,7 @@ const CreateTripDialog = () => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: isMobile ? "90vw" : "50vw",
               bgcolor: "background.paper",
               boxShadow: 24,
               p: 4,
@@ -120,6 +127,7 @@ const CreateTripDialog = () => {
               paddingRight: "0px",
               paddingBottom: "1rem",
               zIndex: "0px !important",
+              borderRadius:"1rem",
             }}
           >
             <IconButton
@@ -129,7 +137,7 @@ const CreateTripDialog = () => {
               aria-label="close"
               sx={{
                 position: "absolute",
-                top: 0,
+                top: 10,
                 right: 10,
                 color: "white",
               }}
@@ -140,9 +148,12 @@ const CreateTripDialog = () => {
               variant="h6"
               component="h2"
               style={{
-                paddingBottom: "10px",
+                padding: "10px",
                 backgroundColor: "#007dc6",
                 color: "white",
+                lineHeight: 2.6,
+                borderTopLeftRadius: "1rem",
+                borderTopRightRadius: "1rem",
               }}
             >
               Create Trip
@@ -165,9 +176,19 @@ const CreateTripDialog = () => {
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
                     label="From Address"
+                    style={{
+                      width: "80vw !important",
+                      background: "white !important",
+                    }}
                   />
                 </div>
-                <div style={{ margin: "1rem 0" }}>
+                <div
+                  style={{
+                    margin: "1rem 0",
+                    width: "80vw !important",
+                    background: "white !important",
+                  }}
+                >
                   <SearchBar
                     setLat={setToLat}
                     setLong={setToLong}
@@ -176,11 +197,15 @@ const CreateTripDialog = () => {
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
                     label="To Address"
+                   style={{ width:"80vw !important", background:"white !important"}}
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
-                <div style={{ margin: "1rem 0" }}>
-                  <DateTimePickerValue value={dateTime} setValue={setDateTime}/>
+                <div style={{ margin: "1rem 0" ,width: isMobile ? "85vw" : "48vw" }}>
+                  <DateTimePickerValue
+                    value={dateTime}
+                    setValue={setDateTime}
+                  />
                   {error && <p className="error">{error}</p>}
                 </div>
                 <div style={{ margin: "1rem 0" }}>
@@ -194,6 +219,7 @@ const CreateTripDialog = () => {
                       backgroundColor: "#1976d2",
                       color: "white",
                       marginRight: "0.7rem",
+                      float:"right",
                     }}
                     disabled={isLoading ? true : false}
                   >
@@ -203,14 +229,9 @@ const CreateTripDialog = () => {
                 </div>
 
                 <div style={{ margin: "0" }}>
-                  {isLoading ? (
-                    <CircularProgress color="primary" />
-                  ) : (
-                    ""
-                  )}
+                  {isLoading ? <CircularProgress color="primary" /> : ""}
                 </div>
               </div>
-
             </div>
           </Box>
         </Modal>

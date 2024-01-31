@@ -67,7 +67,8 @@ const SearchBar = (props) => {
         {({ getInputProps, suggestions, getSuggestionItemProps }) => {
           return (
             <div className="Demo__search-bar-container">
-              <div className="Demo__search-input-container">
+              <div className="Demo__search-input-container"
+              >
                 <TextField
                   id="filled-basic"
                   label={props.label}
@@ -88,8 +89,10 @@ const SearchBar = (props) => {
                     flexDirection: "column",
                     overflowY: "scroll",
                     maxHeight: "70px",
-                    width: "210px",
+                    width: "100%",
+                    paddingLeft: "1rem",
                     cursor: "pointer",
+                    fontSize:".9rem"
                   }}
                 >
                   {suggestions.map((suggestion) => {
