@@ -90,10 +90,8 @@ const EmulatorMarker = React.memo(({ id }) => {
       setMarkerVisibility(false);
       return
     }
-    if (connectedEmulator === null || connectedEmulator === undefined) {
       // show the marker
       setMarkerVisibility(true);
-    }
   }
   ), [id])
 

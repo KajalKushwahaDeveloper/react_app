@@ -16,7 +16,7 @@ const AddressTable = () => {
   const isMobile = width < breakpoint;
   const arrWidth = width - 25;// 25 is the width of the handles between each 
   const widthArr = new Array(6).fill(arrWidth / 6);
-  
+
   for (let i = 0; i < 6; i++) {
     let savedAddressWithI = localStorage.getItem(`addressWidth${i}`);
     if (savedAddressWithI === null || savedAddressWithI === undefined) {
@@ -27,8 +27,7 @@ const AddressTable = () => {
   }
 
   const setValues = useCallback((emulator, tripData, isHover) => {
-
-    const currentAddress = emulator ? emulator.currentAddress : "N/A";
+    const currentAddress = emulator ? emulator.address : "N/A";
 
     const fromAddress = tripData ?
       tripData.fromAddress[0]?.long_name +
@@ -118,12 +117,16 @@ const AddressTable = () => {
       );
       if (error) {
         console.error("Error fetching trip data", error);
-        setValues(hoveredEmulator, null, true);
+        if (hoveredEmulatorRef.current !== null) {
+          setValues(hoveredEmulator, null, true);
+        }
         return;
       }
       if (data === null || data === undefined) {
         console.error("Data is null or undefined");
-        setValues(hoveredEmulator, null, true);
+        if (hoveredEmulatorRef.current !== null) {
+          setValues(hoveredEmulator, null, true);
+        }
         return;
       }
       if (
@@ -132,15 +135,18 @@ const AddressTable = () => {
         data.data.tripPoints.length === 0
       ) {
         console.error("Trip points are null or undefined or empty");
-        setValues(hoveredEmulator, null, true);
+        if (hoveredEmulatorRef.current !== null) {
+          setValues(hoveredEmulator, null, true);
+        }
         return;
       }
-      if (hoveredEmulator !== null) {
+      if (hoveredEmulatorRef.current !== null) {
         setValues(hoveredEmulator, data.data, true);
       }
     }
 
     hoveredEmulatorRef.current = hoveredEmulator;
+
     if (hoveredEmulator && hoveredEmulator.id !== connectedEmulatorRef.current?.id) {
       fetchAndUpdateTableValues(hoveredEmulator, true);
       return;
