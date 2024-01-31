@@ -10,23 +10,29 @@
 .pac-item:hover {
   background: #6666;
 }
+
+/* create Trip dialog css */
 .Demo__search-bar-container{
   width:100%;
 }
+
 .Demo__search-input-container > div{
   width:50vw;
   background-color: white !important;
   padding: 0 1rem;
 }
+
 .Demo__search-input-container > div > div > input{
  margin:0;
  padding-left: .1rem;
  padding-right: 0rem;
 }
+
 .Demo__search-input-container > div > div{
   width:100%;
   background-color: white !important;
 }
+
 .Demo__search-input-container > div  > label{
   padding: 0 .4rem;
 } 
