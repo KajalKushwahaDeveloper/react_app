@@ -15,33 +15,58 @@
 
 
 /* create Trip dialog css */
-.Demo__search-bar-container{
-  width:100%;
+.Demo__search-bar-container {
+  width: 100%;
 }
 
-.Demo__search-input-container > div{
-  width:50vw;
+.Demo__search-input-container>div {
+  width: 50vw;
   background-color: white !important;
   padding: 0 1rem;
 }
 
-.Demo__search-input-container > div > div > input{
- margin:0;
- padding-left: .1rem;
- padding-right: 0rem;
+.Demo__search-input-container>div>div>input {
+  margin: 0;
+  padding-left: .1rem;
+  padding-right: 0rem;
 }
 
-.Demo__search-input-container > div > div{
-  width:100%;
+.Demo__search-input-container>div>div {
+  width: 100%;
   background-color: white !important;
 }
 
-.Demo__search-input-container > div  > label{
+.Demo__search-input-container>div>label {
   padding: 0 .4rem;
-} 
+}
+
+.Demo__autocomplete-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  max-height: 150px;
+  width: 100%;
+  padding-left: 1rem;
+  cursor: pointer;
+  font-size: .9rem;
+}
+
+.location_icon {
+  color: grey;
+  font-size: 1.5rem;
+  margin-bottom: .4rem;
+  margin-right: 1rem;
+}
+
+.small_text {
+  color: grey;
+  margin-left: .3rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 @media screen and (max-width: 620px) {
-  .Demo__search-input-container > div{
-    width:90vw;
+  .Demo__search-input-container>div {
+    width: 90vw;
   }
 }

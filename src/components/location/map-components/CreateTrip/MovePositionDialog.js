@@ -5,6 +5,7 @@ import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
 
 import { useStates } from "../../../../StateProvider.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import { useViewPort } from "../../../.././ViewportProvider.js";
 
 const MovePositionDialog = () => {
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator);
@@ -19,6 +20,9 @@ const MovePositionDialog = () => {
 
   const { isMoveDialogVisible, setIsMoveDialogVisible, showToast } = useStates();
 
+  const { width } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
 
   const handleClose = () => {
     setIsMoveDialogVisible(false);
@@ -57,11 +61,11 @@ const MovePositionDialog = () => {
         >
           <Box
             sx={{
-              position: "absolute",
+             position: "absolute",
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "300px",
+              width: isMobile ? "90vw" : "50vw",
               bgcolor: "background.paper",
               boxShadow: 24,
               p: 4,
@@ -70,6 +74,7 @@ const MovePositionDialog = () => {
               paddingRight: "0px",
               paddingBottom: "1rem",
               zIndex: "0px !important",
+              borderRadius:"1rem",
             }}
           >
             <IconButton
@@ -79,7 +84,7 @@ const MovePositionDialog = () => {
               aria-label="close"
               sx={{
                 position: "absolute",
-                top: 0,
+                top: 10,
                 right: 10,
                 color: "white",
               }}
@@ -90,9 +95,11 @@ const MovePositionDialog = () => {
               variant="h6"
               component="h2"
               style={{
-                paddingBottom: "10px",
+                padding: "1rem",
                 backgroundColor: "#007dc6",
                 color: "white",
+                borderTopRightRadius:"1rem",
+                borderTopLeftRadius:"1rem"
               }}
             >
               Create Trip
