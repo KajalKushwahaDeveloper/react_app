@@ -48,7 +48,7 @@
   width: 100%;
   padding-left: 1rem;
   cursor: pointer;
-  font-size: .9rem;
+  font-size: 1rem;
 }
 
 .location_icon {
@@ -68,5 +68,8 @@
 @media screen and (max-width: 620px) {
   .Demo__search-input-container>div {
     width: 90vw;
+  }
+  .Demo__autocomplete-container {
+    font-size: .9rem;
   }
 }
