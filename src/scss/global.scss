@@ -1,8 +1,8 @@
 @import "./variables.scss";
 @import "./mixins.scss";
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Slab&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Slab&display=swap"); */
 
-@font-face {
+/* @font-face {
   font-family: "Gotham-Bold";
   src: url("../../public/fonts/Gotham-Black.eot");
   src: url("../../public/fonts/Gotham-Bold.eot?#iefix")
@@ -13,22 +13,22 @@
   font-weight: bold;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 @font-face {
-  font-family: "Gotham-Black";
-  src: url("../../public/fonts/Gotham-Black.eot");
-  src: url("../../public/fonts/Gotham-Black.eot?#iefix")
+  font-family: "SF-Compact-Text-Regular";
+  src: url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf");
+  src: url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf?#iefix")
       format("embedded-opentype"),
-    url("../../public/fonts/Gotham-Black.woff2") format("woff2"),
-    url("../../public/fonts/Gotham-Black.woff") format("woff"),
-    url("../../public/fonts/Gotham-Black.ttf") format("truetype");
-  font-weight: 500;
+    url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf") format("embedded-opentype"),
+    url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf") format("otf"),
+    url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf") format("truetype");
+  
   font-style: normal;
-  font-display: swap;
+ 
 }
 
-@font-face {
+/* @font-face {
   font-family: "Gotham-Book";
   src: url("../../public/fonts/Gotham-Book.eot");
   src: url("../../public/fonts/Gotham-Book.eot?#iefix")
@@ -65,11 +65,10 @@
   font-weight: 300;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 * {
-  font-family: "Gotham-Book";
-  font-weight: 500;
+  font-family: "SF-Compact-Text-Regular" !important;
 }
 
 
