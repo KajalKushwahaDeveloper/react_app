@@ -113,6 +113,11 @@ body {
     }
   }
 }
+.alignSubmit{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
 
 @media only screen and (max-width: 768px) {
   .authScreen {

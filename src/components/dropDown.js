@@ -71,6 +71,7 @@ const DropDown = (props) => {
   const [phoneNumber, setPhoneNumber] = useState();
   const [twilioPhoneNumber, setTwilioPhoneNumber] = useState([]);
   const [teleError, setTeleError] = useState("");
+  const [audioFile, setAudioFile] = useState(undefined);
 
   useEffect(() => {
     // const defaultCountryCode = "US";
@@ -80,6 +81,26 @@ const DropDown = (props) => {
       setAlternateNumber(alternateNumber);
     }
   }, []);
+
+  const selectFile = (event) => {
+    const allowedAudioTypes = ["audio/mpeg"];
+
+    const selectedFiles = event.target.files;
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const fileType = selectedFiles[i].type;
+
+      if (
+        allowedAudioTypes.includes(fileType)
+      ) {
+        console.log("audioFileTestResponse:",event.target.files);
+        setAudioFile(event.target.files)
+      }
+      else {
+        console.log("Upload audio file only");
+      }
+    }
+  }
 
   const handleChange = (e) => {
     const {
@@ -137,7 +158,7 @@ const DropDown = (props) => {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, width: 300, margin: "2rem" }}>
+      <FormControl sx={{ m: 1, margin: "0rem" }}>
         <InputLabel id="tel-number-label" style={{ borderRadius: "2rem" }}>
           Tel. No.
         </InputLabel>
@@ -175,7 +196,15 @@ const DropDown = (props) => {
           </p>
         )}
 
-        <TextField
+        <label className="btn btn-default" style={{ width: "100%" }}>
+          <input
+            style={{backgroundColor:"white", border:"0px"}}
+            type="file"
+            onChange={selectFile}
+          />
+        </label>
+
+        {/* <TextField
           id="voice-message-basic"
           label="Voice Message"
           variant="outlined"
@@ -184,7 +213,8 @@ const DropDown = (props) => {
           onChange={(e) => setVoiceMsg(e.target.value)}
           defaultValue={voiceMsg}
           multiline
-        />
+        /> */}
+        
       </FormControl>
     </div>
   );

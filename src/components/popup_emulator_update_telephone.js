@@ -143,18 +143,26 @@ const PopUpEmulatorTelephone = ({
               setVoiceMsg={setVoiceMsg}
             />
 
-            <button
-              type="submit"
-              style={{
-                width: "6rem",
-                float: "right",
-                marginRight: "0px",
-                padding: ".5rem 0",
-              }}
-            >
-              Add
-            </button>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div className="alignSubmit">
+              <button
+                type="submit"
+                style={{
+                  width: "6rem",
+                  float: "right",
+                  marginRight: "0px",
+                  padding: ".5rem 0",
+                }}
+              >
+                Add
+              </button>
+              </div>
             {error && <p className="error">{error}</p>}
+
+            <div className="card sms_list_card">
+              <div className="card-header">List of Files</div>
+            </div>
+        </div>
           </form>
         </Box>
       </Modal>
