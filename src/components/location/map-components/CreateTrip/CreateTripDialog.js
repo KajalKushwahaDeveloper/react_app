@@ -72,6 +72,13 @@ const CreateTripDialog = () => {
       confirmed = true;
     }
     if (confirmed) {
+    
+    // Get the current date
+    const currentDate = dayjs();
+
+    // Add four days
+      const futureDate = currentDate.add(4, 'day');
+      
       setIsLoading(true);
       const payload = {
         startLat: fromLat,
@@ -82,7 +89,7 @@ const CreateTripDialog = () => {
         toAddress: toAddress,
         speed: 60,
         emulatorDetailsId: selectedEmulator.id,
-        arrivalTime: dateTime.unix() * 1000,
+        arrivalTime: futureDate.unix() * 1000,
       };
       const token = localStorage.getItem("token");
       const { success, error } = await ApiService.makeApiCall(
@@ -201,13 +208,13 @@ const CreateTripDialog = () => {
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
-                <div style={{ margin: "1rem 0" ,width: isMobile ? "85vw" : "48vw" }}>
+                {/* <div style={{ margin: "1rem 0" ,width: isMobile ? "85vw" : "48vw" }}>
                   <DateTimePickerValue
                     value={dateTime}
                     setValue={setDateTime}
                   />
                   {error && <p className="error">{error}</p>}
-                </div>
+                </div> */}
                 <div style={{ margin: "1rem 0" }}>
                   <Button
                     onClick={handleAddClick}
