@@ -205,7 +205,7 @@ const DropDown = (props) => {
           ))}
         </Select>
 
-        <div style={{ marginTop: "2rem" }}>Enter an Alternate Number</div>
+        <div style={{ marginTop: "1rem" }}>Enter an Alternate Number</div>
 
         <PhoneInput
           international
