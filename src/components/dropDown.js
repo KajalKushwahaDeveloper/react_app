@@ -106,10 +106,7 @@ const DropDown = (props) => {
           ...prevState,
           selectedFiles: event.target.files
         }));
-      }
-      else {
-        console.log("Upload audio file only");
-      }
+
       let currentFile = selectedFiles[0];
 
       UploadService.upload(currentFile, (event) => {
@@ -120,11 +117,17 @@ const DropDown = (props) => {
       })
         .then((response) => {
           toast.success("File uploaded sucessfully");
+          setVoiceMsg(event.target.files);
         })
         .catch((err) => {
           toast.error("File already present");
+          setVoiceMsg("filePresent");
         })
-        setVoiceMsg(event.target.files);
+
+      }
+      else {
+        toast.error("Upload audio file only");
+      }
     }
   }
 

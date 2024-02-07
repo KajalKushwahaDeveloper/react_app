@@ -6,6 +6,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import "../scss/login.scss";
 import { EMULATOR_TELEPHONE_UPDATE_URL } from "../constants";
 import DropDown from "./dropDown";
+import { toast } from "react-toastify";
 
 const style = {
   position: "absolute",
@@ -50,7 +51,7 @@ const PopUpEmulatorTelephone = ({
 
     try {
       const { success, error } = await addUser();
-
+      console.log("success, error:",success, error);
       if (success) {
         if (userToEdit != null) {
           handleClose(null, userToEdit?.id);
@@ -71,7 +72,17 @@ const PopUpEmulatorTelephone = ({
   };
 
   const addUser = async () => {
-    const audioFile = voiceMsg[0];
+    if (voiceMsg === null) {
+      toast.error("Please upload file");
+      return;
+    }
+    else if (voiceMsg === "filePresent") {
+      toast.error("File already present");
+      return;
+    }
+    else {
+      const audioFile = voiceMsg[0]; 
+    }
 
     /* let formData = new FormData();
     formData.append("id", id);
