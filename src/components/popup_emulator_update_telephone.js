@@ -31,7 +31,7 @@ const PopUpEmulatorTelephone = ({
   const [alternateNumber, setAlternateNumber] = useState("");
   const [error, setError] = useState("");
   const [selectedDropdownValue, setSelectedDropdownValue] = useState(null);
-  const [voiceMsg, setVoiceMsg] = useState("");
+  const [voiceMsg, setVoiceMsg] = useState();
 
   useEffect(() => {
     if (userToEdit) {
@@ -71,11 +71,19 @@ const PopUpEmulatorTelephone = ({
   };
 
   const addUser = async () => {
+    const audioFile = voiceMsg[0];
+
+    /* let formData = new FormData();
+    formData.append("id", id);
+    formData.append("telephone", twilioNumber);
+    formData.append("alternateTelephone", alternateNumber);
+    formData.append("voiceMsg", ""); */
+
     const user = {
       id: id,
       telephone: twilioNumber,
       alternateTelephone: alternateNumber,
-      voiceMsg: voiceMsg,
+      voiceMsg: "",
     };
 
     const token = localStorage.getItem("token");
@@ -157,11 +165,8 @@ const PopUpEmulatorTelephone = ({
                 Add
               </button>
               </div>
-            {error && <p className="error">{error}</p>}
-
-            <div className="card sms_list_card">
-              <div className="card-header">List of Files</div>
-            </div>
+              {/* {error && <p className="error">{error}</p>} */}
+              
         </div>
           </form>
         </Box>

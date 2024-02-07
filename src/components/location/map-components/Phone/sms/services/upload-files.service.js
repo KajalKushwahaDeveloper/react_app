@@ -2,6 +2,7 @@ import http from "../http-common.js";
 
 class UploadFilesService {
   upload(file, onUploadProgress) {
+    console.log("FileData:",file, onUploadProgress);
     const token = localStorage.getItem("token");
   
     let formData = new FormData();

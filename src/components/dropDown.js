@@ -17,7 +17,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { PHONE_GET_AVAILABLE_NUMBERS_URL } from "../constants";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-
+import UploadService from "./location/map-components/Phone/sms/services/upload-files.service";
+import { ToastContainer, toast } from "react-toastify";
 function BootstrapDialogTitle(props) {
   const { children, onClose, ...other } = props;
 
@@ -71,7 +72,15 @@ const DropDown = (props) => {
   const [phoneNumber, setPhoneNumber] = useState();
   const [twilioPhoneNumber, setTwilioPhoneNumber] = useState([]);
   const [teleError, setTeleError] = useState("");
-  const [audioFile, setAudioFile] = useState(undefined);
+  const [state, setState] = useState({
+    selectedFiles: undefined,
+    currentFile: undefined,
+    progress: 0,
+    message: "",
+    fileInfos: [],
+  });
+
+  const [uploadToast, setUploadToast] = useState();
 
   useEffect(() => {
     // const defaultCountryCode = "US";
@@ -93,12 +102,29 @@ const DropDown = (props) => {
       if (
         allowedAudioTypes.includes(fileType)
       ) {
-        console.log("audioFileTestResponse:",event.target.files);
-        setAudioFile(event.target.files)
+        setState(prevState => ({
+          ...prevState,
+          selectedFiles: event.target.files
+        }));
       }
       else {
         console.log("Upload audio file only");
       }
+      let currentFile = selectedFiles[0];
+
+      UploadService.upload(currentFile, (event) => {
+        setState(prevState => ({
+          ...prevState,
+          progress: Math.round((100 * event.loaded) / event.total),
+        }));
+      })
+        .then((response) => {
+          toast.success("File uploaded sucessfully");
+        })
+        .catch((err) => {
+          toast.error("File already present");
+        })
+        setVoiceMsg(event.target.files);
     }
   }
 
@@ -196,14 +222,13 @@ const DropDown = (props) => {
           </p>
         )}
 
-        <label className="btn btn-default" style={{ width: "100%" }}>
+        <div style={{ width: "100%", marginBottom:"15px", border:"1px solid #cacaca", borderRadius:"5px"}}>
           <input
-            style={{backgroundColor:"white", border:"0px"}}
+            style={{ backgroundColor: "white", border: "0px", margin:"10px 20px 10px 0px" }}
             type="file"
-            onChange={selectFile}
+            onChange={e => selectFile(e)}
           />
-        </label>
-
+        </div>
         {/* <TextField
           id="voice-message-basic"
           label="Voice Message"
