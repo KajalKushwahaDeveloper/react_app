@@ -23,27 +23,54 @@ const GPS = () => {
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
+  console.log("windowsLocation:", window.location.pathname);
+
   useEffect(() => {
-    // Check if the browser supports getUserMedia
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      // Attempt to access the user's media devices (microphone)
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(() => {
-          // Microphone access granted
-          setIsMicrophoneConnected(true);
-        })
-        .catch((error) => {
-          // Microphone access denied or no microphone detected
-          setIsMicrophoneConnected(false);
-          // Open a popup to notify the user
-          //alert('Please connect a microphone or grant access to your microphone to use this feature.');
-        });
-    } else {
-      // Browser doesn't support getUserMedia
-      setIsMicrophoneConnected(false);
-      // Open a popup to notify the user
-     // alert('Your browser does not support accessing the microphone. Please use a different browser.');
-    }
+    if (window.location.pathname === "/gps") {
+      let mediaStream = null;
+      const handleMicrophoneStatusChange = () => {
+        console.log("HelloData");
+        setIsMicrophoneConnected(false);
+      };
+
+      // Check if the browser supports getUserMedia
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Attempt to access the user's media devices (microphone)
+
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then((stream) => {
+            // Microphone access granted
+            console.log("respAudio", stream);
+            setIsMicrophoneConnected(true);
+
+            // Store the media stream
+            mediaStream = stream;
+
+            // Listen for the microphone status change event
+            mediaStream.getAudioTracks()[0].addEventListener('ended', handleMicrophoneStatusChange);
+          })
+          .catch((error) => {
+            // Microphone access denied or no microphone detected
+            setIsMicrophoneConnected(false);
+            // Open a popup to notify the user
+            // alert('Please connect a microphone or grant access to your microphone to use this feature.');
+          });
+
+      } else {
+        // Browser doesn't support getUserMedia
+        setIsMicrophoneConnected(false);
+        // Open a popup to notify the user
+        // alert('Your browser does not support accessing the microphone. Please use a different browser.');
+      }
+
+      // Cleanup function to remove event listener and close media stream
+      return () => {
+        if (mediaStream !== null) {
+          mediaStream.getAudioTracks()[0].removeEventListener('ended', handleMicrophoneStatusChange);
+          mediaStream.getTracks().forEach(track => track.stop());
+        }
+      };
+      }
   }, []);
 
   console.log("CheckMicrophone:",isMicrophoneConnected);
