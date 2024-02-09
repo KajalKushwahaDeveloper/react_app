@@ -114,6 +114,9 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
             </div>
           </div>
         </div>
+        {/* <div>
+          Error
+        </div> */}
         <LinearProgressBar />
       </div>
     </>

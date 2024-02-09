@@ -17,21 +17,16 @@ import { useEmulatorStore } from "./stores/emulator/store.tsx";
 const GPS = () => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
   const [isMicrophoneConnected, setIsMicrophoneConnected] = useState(false);
+  const [microphonePermission, setMicrophonePermission] = useState('prompt');
 
   console.log("GPS rendered!",selectedDevice)
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
-  console.log("windowsLocation:", window.location.pathname);
 
   useEffect(() => {
     if (window.location.pathname === "/gps") {
-      let mediaStream = null;
-      const handleMicrophoneStatusChange = () => {
-        console.log("HelloData");
-        setIsMicrophoneConnected(false);
-      };
 
       // Check if the browser supports getUserMedia
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -40,41 +35,40 @@ const GPS = () => {
         navigator.mediaDevices.getUserMedia({ audio: true })
           .then((stream) => {
             // Microphone access granted
-            console.log("respAudio", stream);
+
             setIsMicrophoneConnected(true);
-
-            // Store the media stream
-            mediaStream = stream;
-
-            // Listen for the microphone status change event
-            mediaStream.getAudioTracks()[0].addEventListener('ended', handleMicrophoneStatusChange);
+            const checkMicrophonePermission = async () => {
+              try {
+                // Check microphone permission status
+                const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+                setMicrophonePermission(permissionStatus.state);
+        
+                // Listen for changes in permission status
+                permissionStatus.onchange = () => {
+                  setMicrophonePermission(permissionStatus.state);
+                };
+              } catch (error) {
+                console.error('Error checking microphone permission:', error);
+              }
+            };
+        
+            checkMicrophonePermission();
+            return () => {
+              // Cleanup if necessary
+            };
           })
           .catch((error) => {
-            // Microphone access denied or no microphone detected
             setIsMicrophoneConnected(false);
-            // Open a popup to notify the user
-            // alert('Please connect a microphone or grant access to your microphone to use this feature.');
           });
 
       } else {
-        // Browser doesn't support getUserMedia
         setIsMicrophoneConnected(false);
-        // Open a popup to notify the user
-        // alert('Your browser does not support accessing the microphone. Please use a different browser.');
       }
-
-      // Cleanup function to remove event listener and close media stream
-      return () => {
-        if (mediaStream !== null) {
-          mediaStream.getAudioTracks()[0].removeEventListener('ended', handleMicrophoneStatusChange);
-          mediaStream.getTracks().forEach(track => track.stop());
-        }
-      };
       }
   }, []);
 
-  console.log("CheckMicrophone:",isMicrophoneConnected);
-
+  console.log("microphonePermission:", microphonePermission);
+  
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
