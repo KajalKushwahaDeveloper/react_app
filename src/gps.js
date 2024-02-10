@@ -16,7 +16,6 @@ import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const GPS = () => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
-  const [isMicrophoneConnected, setIsMicrophoneConnected] = useState(false);
   const [microphonePermission, setMicrophonePermission] = useState('prompt');
 
   console.log("GPS rendered!",selectedDevice)
@@ -28,46 +27,49 @@ const GPS = () => {
   useEffect(() => {
     if (window.location.pathname === "/gps") {
 
-      // Check if the browser supports getUserMedia
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Attempt to access the user's media devices (microphone)
-
         navigator.mediaDevices.getUserMedia({ audio: true })
           .then((stream) => {
-            // Microphone access granted
-
-            setIsMicrophoneConnected(true);
-            const checkMicrophonePermission = async () => {
-              try {
-                // Check microphone permission status
-                const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
-                setMicrophonePermission(permissionStatus.state);
-        
-                // Listen for changes in permission status
-                permissionStatus.onchange = () => {
-                  setMicrophonePermission(permissionStatus.state);
-                };
-              } catch (error) {
-                console.error('Error checking microphone permission:', error);
-              }
-            };
-        
-            checkMicrophonePermission();
-            return () => {
-              // Cleanup if necessary
-            };
+            console.log(stream);
           })
           .catch((error) => {
-            setIsMicrophoneConnected(false);
+            console.log(error);
           });
-
-      } else {
-        setIsMicrophoneConnected(false);
       }
+
+      // For granted and denied status
+      const checkMicrophonePermission = async () => {
+        try {
+          // Check microphone permission status
+          const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+          setMicrophonePermission(permissionStatus.state);
+  
+          // Listen for changes in permission status
+          permissionStatus.onchange = () => {
+            setMicrophonePermission(permissionStatus.state);
+          };
+        } catch (error) {
+          console.error('Error checking microphone permission:', error);
+        }
+      };
+  
+      checkMicrophonePermission();
+      return () => {
+        // Cleanup if necessary
+      };
+
       }
   }, []);
 
-  console.log("microphonePermission:", microphonePermission);
+  if( microphonePermission == "granted")
+  {
+    console.log("microphonePermission:","true");
+  }
+  else{
+    console.log("microphonePermission:","false");
+  }
+  //console.log("microphonePermission:", microphonePermission);
   
   return (
     <>
