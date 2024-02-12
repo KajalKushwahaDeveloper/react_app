@@ -13,7 +13,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
   const logout = useEmulatorStore((state) => state.logout);
   const navigate = useNavigate();
 
-  const selectMicStatus = useEmulatorStore((state) => state.micCheck);
+  const isMicEnabled = useEmulatorStore((state) => state.isMicEnabled);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -61,7 +61,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
               src="images/logo/logbookgps_logo.png"
               alt="logo"
             />
-            {window.location.pathname === "/gps" && selectMicStatus === false && (
+            {window.location.pathname === "/gps" && isMicEnabled !== null && isMicEnabled !== undefined && isMicEnabled === false && (
               <div className="microstyle">
                 Microphone is not connected!
               </div>

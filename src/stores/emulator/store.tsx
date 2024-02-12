@@ -8,7 +8,7 @@ import {
   defaultLat,
 } from "./types_maps.tsx";
 import { BASE_URL, EMULATOR_URL } from "../../constants";
-import { deviceStore, createDeviceSlice, microphonestatus, checkMicrophonecheck } from "../call/storeCall.tsx";
+import { deviceStore, createDeviceSlice, microphoneStatus, microphoneCheckSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { TwillioDevice } from "../call/types.tsx";
 import { EmulatorEvent } from "../../model/EmulatorEvent.tsx";
@@ -267,13 +267,13 @@ const createSharedSlice: StateCreator<
 });
 
 export const useEmulatorStore = create<
-  EmulatorsSlice & TripDataSlice & SharedSlice & deviceStore & microphonestatus
+  EmulatorsSlice & TripDataSlice & SharedSlice & deviceStore & microphoneStatus
 >()(
   subscribeWithSelector(devtools((...args) => ({
     ...createEmulatorsSlice(...args),
     ...createTripDataSlice(...args),
     ...createSharedSlice(...args),
     ...createDeviceSlice(...args),
-    ...checkMicrophonecheck(...args)
+    ...microphoneCheckSlice(...args)
   })))
 );
