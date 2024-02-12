@@ -61,13 +61,12 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
               src="images/logo/logbookgps_logo.png"
               alt="logo"
             />
+            {window.location.pathname === "/gps" && selectMicStatus === false && (
+              <div className="microstyle">
+                Microphone is not connected!
+              </div>
+            )}
           </div>
-
-          {window.location.pathname === "/gps" && selectMicStatus === false && (
-            <div style={{color:"red", fontWeight:"bold"}}>
-              Microphone is not connected!
-            </div>
-          )}
 
           {/* 2nd menu part  */}
           <div
