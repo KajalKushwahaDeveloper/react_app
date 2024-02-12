@@ -150,17 +150,18 @@ const createTripDataSlice: StateCreator<
       },
       onmessage(event) {
         // check event.event with EmulatorEvent
-        console.log("event: ", event.event)
-        if (event.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
+        const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
+        console.log("emulatorData: ", emulatorData.event)
+        if (emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           set({ connectedEmulator: emulatorData.emulatorDetails });
-        } else if (event.event === EmulatorEvent.EMULATOR_CONNECTED || event.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED) {
+        } else if (emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED || emulatorData.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           get().setSelectedEmulatorSSEData(emulatorData);
-        } else if(event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED) {
+        } else if (emulatorData.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           set({ connectedEmulator: emulatorData.emulatorDetails, tripData: null, pathTraveled: null, pathNotTraveled: null });
-        } else if (event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
+        } else if (emulatorData.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           set({ connectedEmulator: emulatorData?.emulatorDetails });
           var tripData = get().tripData;
@@ -174,6 +175,7 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false });
       },
       onerror(err) {
+        console.log(err)
         console.error("There was an error from the server", err);
         set({ isLoading: false });
       },

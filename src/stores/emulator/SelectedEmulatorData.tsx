@@ -15,6 +15,7 @@ export interface SelectedEmulatorData {
   toAddress: ToAddress[];
   shape: string;
   stops: SelectedEmulatorStop[];
+  event: string;
 }
 
 export interface SelectedEmulatorStop {
