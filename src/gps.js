@@ -18,7 +18,6 @@ const GPS = () => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
   
   const setMicCheck = useEmulatorStore((state) => state.setMicCheck);
-  const selectMicStatus = useEmulatorStore((state) => state.micCheck);
 
   const [microphonePermission, setMicrophonePermission] = useState('prompt');
 
