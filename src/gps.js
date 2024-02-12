@@ -16,6 +16,10 @@ import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const GPS = () => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
+  
+  const setMicCheck = useEmulatorStore((state) => state.setMicCheck);
+  const selectMicStatus = useEmulatorStore((state) => state.micCheck);
+
   const [microphonePermission, setMicrophonePermission] = useState('prompt');
 
   console.log("GPS rendered!",selectedDevice)
@@ -62,14 +66,13 @@ const GPS = () => {
       }
   }, []);
 
-  if( microphonePermission == "granted")
+  if( microphonePermission === "granted")
   {
-    console.log("microphonePermission:","true");
+    setMicCheck(true);
   }
   else{
-    console.log("microphonePermission:","false");
+    setMicCheck(false);
   }
-  //console.log("microphonePermission:", microphonePermission);
   
   return (
     <>
