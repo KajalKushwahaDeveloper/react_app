@@ -18,6 +18,7 @@ const GPS = () => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
 
   const setMicCheck = useEmulatorStore((state) => state.setMicEnabled);
+  const isMicEnabled = useEmulatorStore((state) => state.isMicEnabled);
 
   console.log("GPS rendered!", selectedDevice)
   const { width } = useViewPort();
@@ -46,16 +47,12 @@ const GPS = () => {
         try {
           // Check microphone permission status
           const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
-
-          if (permissionStatus.state === "granted") {
-            setMicCheck(true);
-          }
+          
+          permissionStatus.state === "granted" ? setMicCheck(true) : setMicCheck(false);
 
           // Listen for changes in permission status
           permissionStatus.onchange = () => {
-            if (permissionStatus.state === "granted") {
-              setMicCheck(true);
-            }
+            permissionStatus.state === "granted" ? setMicCheck(true) : setMicCheck(false);
           };
         } catch (error) {
           console.error('Error checking microphone permission:', error);
@@ -68,7 +65,7 @@ const GPS = () => {
       };
 
     }
-  }, [setMicCheck]);
+  }, [isMicEnabled]);
 
 
   return (
