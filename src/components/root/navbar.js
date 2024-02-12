@@ -13,6 +13,8 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
   const logout = useEmulatorStore((state) => state.logout);
   const navigate = useNavigate();
 
+  const selectMicStatus = useEmulatorStore((state) => state.micCheck);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsAdmin(false);
@@ -59,6 +61,11 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
               src="images/logo/logbookgps_logo.png"
               alt="logo"
             />
+            {window.location.pathname === "/gps" && selectMicStatus === false && (
+              <div className="microstyle">
+                Microphone is not connected!
+              </div>
+            )}
           </div>
 
           {/* 2nd menu part  */}
@@ -114,6 +121,9 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
             </div>
           </div>
         </div>
+        {/* <div>
+          Error
+        </div> */}
         <LinearProgressBar />
       </div>
     </>

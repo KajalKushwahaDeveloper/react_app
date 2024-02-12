@@ -16,6 +16,16 @@ export interface deviceStore {
   deleteAllDevices: () => void;
 }
 
+export interface microphonestatus {
+  micCheck: boolean;
+  setMicCheck: (value: boolean) => void;
+}
+
+export const checkMicrophonecheck: StateCreator<microphonestatus> = (set, get) => ({
+  micCheck: false,
+  setMicCheck: (value: boolean) => set((state) => ({ micCheck: value })),
+});
+
 export const createDeviceSlice: StateCreator<
   deviceStore,
   [],

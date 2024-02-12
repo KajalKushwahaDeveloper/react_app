@@ -1,7 +1,7 @@
 import "./scss/map.scss";
 import "./scss/button.scss";
 import { ToastContainer } from "react-toastify";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
@@ -12,13 +12,67 @@ import GoogleMapContainer from "./components/location/map-components/GoogleMapCo
 import CreateTripDialog from "./components/location/map-components/CreateTrip/CreateTripDialog.js";
 import MovePositionDialog from "./components/location/map-components/CreateTrip/MovePositionDialog.js";
 import CreateTripButton from "./components/location/map-components/MapButtons.jsx";
+import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const GPS = () => {
-  console.log("GPS rendered!")
+  const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
+  
+  const setMicCheck = useEmulatorStore((state) => state.setMicCheck);
+
+  const [microphonePermission, setMicrophonePermission] = useState('prompt');
+
+  console.log("GPS rendered!",selectedDevice)
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
+
+  useEffect(() => {
+    if (window.location.pathname === "/gps") {
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Attempt to access the user's media devices (microphone)
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then((stream) => {
+            console.log(stream);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+      // For granted and denied status
+      const checkMicrophonePermission = async () => {
+        try {
+          // Check microphone permission status
+          const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+          setMicrophonePermission(permissionStatus.state);
+  
+          // Listen for changes in permission status
+          permissionStatus.onchange = () => {
+            setMicrophonePermission(permissionStatus.state);
+          };
+        } catch (error) {
+          console.error('Error checking microphone permission:', error);
+        }
+      };
+  
+      checkMicrophonePermission();
+      return () => {
+        // Cleanup if necessary
+      };
+
+      }
+  }, []);
+
+  if( microphonePermission === "granted")
+  {
+    setMicCheck(true);
+  }
+  else{
+    setMicCheck(false);
+  }
+  
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
