@@ -18,7 +18,6 @@ const GPS = () => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
 
   const setMicCheck = useEmulatorStore((state) => state.setMicEnabled);
-  const isMicEnabled = useEmulatorStore((state) => state.isMicEnabled);
 
   console.log("GPS rendered!", selectedDevice)
   const { width } = useViewPort();
@@ -65,7 +64,7 @@ const GPS = () => {
       };
 
     }
-  }, [isMicEnabled]);
+  }, [setMicCheck]);
 
 
   return (
