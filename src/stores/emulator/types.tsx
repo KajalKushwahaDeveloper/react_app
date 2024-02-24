@@ -18,7 +18,9 @@ export interface Emulator {
   startLong: number;
   endLat: number;
   endLong: number;
-  speed: number;
+  velocity: number;
+  arrivalTime: number;
+  departTime: number;
   currentTripPointIndex: number;
   tripStatus: string;
   tripTime: number;

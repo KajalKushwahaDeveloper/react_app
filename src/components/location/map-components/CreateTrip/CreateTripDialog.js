@@ -55,7 +55,7 @@ const CreateTripDialog = () => {
     setInputValue(event.target.value);
   };
 
-  const handleAddClick = async () => {
+  const handleCreateTripClick = async () => {
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
       showToast("Please fill both locations!", "error");
       return;
@@ -84,7 +84,6 @@ const CreateTripDialog = () => {
         endLong: toLong,
         fromAddress: fromAddress,
         toAddress: toAddress,
-        speed: 60,
         emulatorDetailsId: selectedEmulator.id,
         departTime: departNow? dayjs().unix() * 1000 : departTime.unix() * 1000,
         arrivalTime: arrivalTime.unix() * 1000,
@@ -240,7 +239,7 @@ const CreateTripDialog = () => {
 
                 <div style={{ margin: "1rem 0" }}>
                   <Button
-                    onClick={handleAddClick}
+                    onClick={handleCreateTripClick}
                     style={{
                       cursor: "pointer",
                       width: "auto",

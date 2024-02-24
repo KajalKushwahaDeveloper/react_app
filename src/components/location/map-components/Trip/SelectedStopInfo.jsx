@@ -1,70 +1,54 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { InfoWindow } from "@react-google-maps/api";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
-import {
-  compareSelectedEmulator,
-  compareTripData,
-} from "../../../../stores/emulator/types_maps.tsx";
+
 import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_DELETE_URL } from "../../../../constants.js";
-import { useStates } from "../../../../StateProvider.js";
+import { toHumanReadableTime } from "./utils.tsx";
+// import { useStates } from "../../../../StateProvider.js";
 
 export function SelectedStopInfo(props) {
-  const { showToast } = useStates();
-  const selectedEmulator = useEmulatorStore(
-    (state) => state.selectedEmulator,
-    (oldSelectedEmulator, newSelectedEmulator) => {
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
-    }
-  );
+  // const { showToast } = useStates();
 
-  const tripData = useEmulatorStore(
-    (state) => state.tripData,
-    (oldTripData, newTripData) => compareTripData(oldTripData, newTripData)
-  );
+  const connectedEmulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
+  const tripDataRef = useRef(useEmulatorStore.getState().tripData);
 
+  useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
+    connectedEmulatorRef.current = connectedEmulator;
+  }), [])
+
+  useEffect(() => useEmulatorStore.subscribe(state => state.tripData, (tripData) => {
+    tripDataRef.current = tripData;
+  }), [])
+
+
+  console.log("TEST@ info : ", props.selectedStop, connectedEmulatorRef.current, tripDataRef.current);
 
   const totalTime = useRef(null);
 
-  const getTimeToReachStopPoint = useCallback(
-    (startIndex, stop, velocity) => {
-      if (
-        startIndex == null ||
-        stop == null ||
-        velocity == null ||
-        tripData?.tripPoints == null
-      ) {
-        return `N/A`;
-      }
-      let distance = 0;
-      tripData?.tripPoints.forEach((path) => {
-        if (
-          path.tripPointIndex >= startIndex &&
-          path.tripPointIndex <= stop.tripPointIndex
-        ) {
-          distance += path.distance;
-        }
-      });
-      // Assuming you calculate time by dividing distance by velocity
-      return distance / velocity;
-    },
-    [tripData]
-  );
+  const connectedEmulator = connectedEmulatorRef.current;
+  const tripData = tripDataRef.current;
+  const stop = props.selectedStop;
+  let timeToReachThisStop = null;
+  let distanceToThisStop = null;
+  if (connectedEmulator == null || stop == null || tripData == null) {
+    console.log("TEST@ getTimeToReachStopPoint : N/A");
+    timeToReachThisStop = `N/A`;
+    distanceToThisStop = `N/A`;
+  } else {
+    // take the currentTripPointIndex from connectedEmulator, and add all distances till stop's currentTripPointIndex
+    let distance = 0;
+    for (let i = connectedEmulator.currentTripPointIndex; i < stop.tripPointIndex; i++) {
+      if(i < 0) continue; // skip -1 index
+      distance += tripData.tripPoints[i].distance;
+    }
+    const velocity = connectedEmulator.velocity;
+    const time = (distance / velocity) + Date.now(); // in milliseconds
+    // meters to miles round to 2 decimal places
+    distanceToThisStop = (distance * 0.000621371).toFixed(2) + " miles";
+    timeToReachThisStop = toHumanReadableTime(time);
+  }
 
-  const timeToReachNextStop = useRef(
-    () =>
-      getTimeToReachStopPoint(
-        selectedEmulator.currentTripPointIndex,
-        props.selectedStop,
-        selectedEmulator.speed
-      ),
-    [
-      getTimeToReachStopPoint,
-      selectedEmulator.currentTripPointIndex,
-      selectedEmulator.speed,
-      props.selectedStop,
-    ]
-  );
 
   const handleDeleteStop = async () => {
     // request on window for confirmation
@@ -77,25 +61,25 @@ export function SelectedStopInfo(props) {
     if (!shouldDelete) {
       return;
     }
-    showToast("Deleting stop...", "info");
+    // showToast("Deleting stop...", "info");
     const token = localStorage.getItem("token");
     const { success, data, error } = await ApiService.makeApiCall(
       TRIP_STOPS_DELETE_URL,
       "GET",
       null,
       token,
-      selectedEmulator.id,
+      connectedEmulatorRef.current?.id,
       new URLSearchParams({
         stopTripPointIndex: props.selectedStop.tripPointIndex,
       })
     );
 
     if (!success) {
-      showToast("Error deleting stop", "error");
+      // showToast("Error deleting stop", "error");
       console.error("handleDeleteStop error : ", error);
     } else {
       // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
-      showToast("Stop deleted", "success");
+      // showToast("Stop deleted", "success");
       props.handleInfoWindowClose();
     }
   };
@@ -159,7 +143,7 @@ export function SelectedStopInfo(props) {
             color: "black",
           }}
         >
-          Arrival Time:{" "}
+          Distance || Time for Arrival:
         </h6>
         <p
           style={{
@@ -167,7 +151,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {timeToReachNextStop.current ? timeToReachNextStop.current : "N/A"}
+          { distanceToThisStop ? distanceToThisStop : "N/A" } || {timeToReachThisStop ? timeToReachThisStop : "N/A"}
         </p>
 
         <h6
@@ -199,7 +183,7 @@ export function SelectedStopInfo(props) {
             fontSize: "11px",
           }}
         >
-          {timeToReachNextStop.current ? timeToReachNextStop.current : "N/A"}
+          {timeToReachThisStop ? timeToReachThisStop : "N/A"}
         </p>
         {/* Delete Button */}
         <button
