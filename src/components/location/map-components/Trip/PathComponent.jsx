@@ -116,9 +116,9 @@ export function PathComponent() {
           onLoad={polyline => pathNotTraveledRef.current = polyline}
           path={pathNotTraveled}
           options={{
-            strokeColor: "#0058A5",
+            strokeColor: "#0058A54D",
             strokeWeight: 3,
-            strokeOpacity: 0.3,
+            strokeOpacity: 1,
             defaultVisible: true,
           }}
           onClick={onPolyLineClickNotTraveled}

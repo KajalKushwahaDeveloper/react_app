@@ -5,6 +5,7 @@ import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_DELETE_URL } from "../../../../constants.js";
 import { toHumanReadableTime } from "./utils.tsx";
+import EditableWaitingTimeComponent from "./EditableWaitingTimeComponent.jsx";
 // import { useStates } from "../../../../StateProvider.js";
 
 export function SelectedStopInfo(props) {
@@ -21,9 +22,6 @@ export function SelectedStopInfo(props) {
     tripDataRef.current = tripData;
   }), [])
 
-
-  console.log("TEST@ info : ", props.selectedStop, connectedEmulatorRef.current, tripDataRef.current);
-
   const totalTime = useRef(null);
 
   const connectedEmulator = connectedEmulatorRef.current;
@@ -32,7 +30,6 @@ export function SelectedStopInfo(props) {
   let timeToReachThisStop = null;
   let distanceToThisStop = null;
   if (connectedEmulator == null || stop == null || tripData == null) {
-    console.log("TEST@ getTimeToReachStopPoint : N/A");
     timeToReachThisStop = `N/A`;
     distanceToThisStop = `N/A`;
   } else {
@@ -185,6 +182,12 @@ export function SelectedStopInfo(props) {
         >
           {timeToReachThisStop ? timeToReachThisStop : "N/A"}
         </p>
+        {/* Edit Button */}
+        <EditableWaitingTimeComponent
+          tripPointIndex={props.selectedStop.tripPointIndex}
+          waitTime = {props.selectedStop.waitTime}
+          connectedEmulatorId = {connectedEmulatorRef.current?.id}
+        />
         {/* Delete Button */}
         <button
           style={{

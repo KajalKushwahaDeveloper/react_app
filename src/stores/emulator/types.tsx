@@ -96,6 +96,7 @@ export interface Stop {
   address: Address[];
   gasStation: GasStation[];
   tripPoints: TripPoint[];
+  waitTime: number;
   reachedTime: string | null;
 }
 

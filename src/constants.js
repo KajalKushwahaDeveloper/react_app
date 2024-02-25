@@ -51,6 +51,7 @@ export const TRIP_POINTS_URL = TRIP_URL + "/trip-points";
 export const CREATE_TRIP_URL = TRIP_URL + "/create";
 export const TRIP_STOPS_URL = TRIP_URL + "/stops";
 export const TRIP_STOPS_DELETE_URL = TRIP_STOPS_URL + "/delete";
+export const TRIP_STOPS_UPDATE_WAIT_TIME_URL = TRIP_STOPS_URL + "/updateWaitTime";
 
 export const TRIP_TOGGLE = TRIP_URL + "/toggle";
 export const TRIP_HISTORY = TRIP_URL + "/history";
