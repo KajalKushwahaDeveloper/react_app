@@ -8,8 +8,9 @@ export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
 export const LIVE_API_CLIENT_HTTPS = "https://www.logbookgps.com/api";  
 
 export const LOCAL_API_SAURABH = "http://192.168.1.132:8080";
+export const LIVE_AWS_SPRING_URL = "http://react-app-lb-260499273.us-east-1.elb.amazonaws.com:8080"
 
-export const BASE_URL = LOCAL_API_LOCAL;
+export const BASE_URL = LIVE_AWS_SPRING_URL;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
