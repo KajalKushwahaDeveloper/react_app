@@ -14,6 +14,7 @@ const Speedometer = () => {
     const [currentValueText, setCurrentValueText] = useState("N/A MPH");
 
     useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
+        console.log("Speedometer connectedEmulator: ", connectedEmulator.velocity);
         if (connectedEmulator === null || connectedEmulator === undefined || connectedEmulator.velocity === null || connectedEmulator.velocity === undefined) {
             return;
         }

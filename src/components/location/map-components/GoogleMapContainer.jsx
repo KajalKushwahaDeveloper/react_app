@@ -113,17 +113,7 @@ const GoogleMapContainer = () => {
     libraries: libraries,
   });
 
-
-
-  const createDevices = useEmulatorStore.getState().createDevices;
-
-  const { data } = useFetch(EMULATOR_URL);
-
-  useEffect(() => {
-    if (data !== null) {
-      createDevices(data);
-    }
-  }, [createDevices, data]);
+  console.log("TEST@ GoogleMapContainer rendered")
 
   const containerStyle = {
     position: "unset !important",

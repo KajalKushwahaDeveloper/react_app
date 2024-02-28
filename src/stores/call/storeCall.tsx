@@ -4,13 +4,13 @@ import { Emulator } from "../emulator/types";
 
 import { Device, Connection } from "twilio-client";
 import ApiService from "../../ApiService.js";
-import { VOICE_GET_TOKEN_URL } from "../../constants.js";
+import { EMULATOR_URL, VOICE_GET_TOKEN_URL } from "../../constants.js";
 import states from "../../components/location/map-components/Phone/twilio/states.js";
 
 export interface deviceStore {
   devices: TwillioDevice[] | [];
   selectedDevice: TwillioDevice | null;
-  createDevices: (emulators: Emulator[]) => Promise<void>;
+  createDevices: () => Promise<void>;
   selectDevice: (selectedDevice: TwillioDevice | null) => void;
   updateDeviceState: (updatedDevice: TwillioDevice) => void;
   deleteAllDevices: () => void;
@@ -34,129 +34,20 @@ export const createDeviceSlice: StateCreator<
 > = (set, get) => ({
   devices: [],
   selectedDevice: null,
-  createDevices: async (emulators: Emulator[]) => {
+  createDevices: async () => {
     try {
-      const newDevices: TwillioDevice[] = [];
-      await Promise.all(
-        emulators.map(async (emulator) => {
-          if (emulator.telephone === null || emulator.telephone === undefined) {
-            return null;
-          }
-          const userToken = localStorage.getItem("token");
-          const { data: token, error } = await ApiService.makeApiCall(
-            VOICE_GET_TOKEN_URL,
-            "GET",
-            null,
-            userToken,
-            emulator.telephone
-          );
-
-          if (error) {
-            console.error(error);
-            return;
-          }
-
-          const deviceDataModel: TwillioDevice = {
-            emulatorId: emulator.id,
-            token: token,
-            state: states.CONNECTING,
-            conn: null,
-            device: new Device(),
-            number: emulator.telephone,
-          };
-
-          newDevices.push(deviceDataModel);
-
-          deviceDataModel.device.setup(deviceDataModel.token, {
-            codecPreferences: [Connection.Codec.Opus, Connection.Codec.PCMU],
-            fakeLocalDTMF: true,
-            enableRingingState: true,
-            debug: true,
-          });
-
-          deviceDataModel.device.on("ready", () => {
-            const deviceDataModelReady: TwillioDevice = {
-              emulatorId: emulator.id,
-              token: deviceDataModel.token,
-              state: states.READY,
-              conn: deviceDataModel.conn,
-              device: deviceDataModel.device,
-              number: emulator.telephone,
-            };
-            get().updateDeviceState(deviceDataModelReady);
-          });
-          deviceDataModel.device.on("connect", (connection) => {
-            const deviceDataModelConnect: TwillioDevice = {
-              emulatorId: deviceDataModel.emulatorId,
-              token: deviceDataModel.token,
-              state: states.ON_CALL,
-              conn: connection,
-              device: deviceDataModel.device,
-              number: emulator.telephone,
-            };
-            get().updateDeviceState(deviceDataModelConnect);
-          });
-          deviceDataModel.device.on("disconnect", () => {
-            const deviceDataModelDisconnect = {
-              emulatorId: emulator.id,
-              token: deviceDataModel.token,
-              state: states.READY,
-              conn: null,
-              device: deviceDataModel.device,
-              number: emulator.telephone,
-            };
-            get().updateDeviceState(deviceDataModelDisconnect);
-          });
-          deviceDataModel.device.on("incoming", (incomingConnection) => {
-            const deviceDataModelIncoming = {
-              emulatorId: emulator.id,
-              token: deviceDataModel.token,
-              state: states.INCOMING,
-              conn: incomingConnection,
-              device: deviceDataModel.device,
-              number: emulator.telephone,
-            };
-            get().updateDeviceState(deviceDataModelIncoming);
-
-            incomingConnection.on("reject", () => {
-              const deviceDataModelReject = {
-                emulatorId: emulator.id,
-                token: deviceDataModel.token,
-                state: states.READY,
-                conn: null,
-                device: deviceDataModel.device,
-                number: emulator.telephone,
-              };
-              get().updateDeviceState(deviceDataModelReject);
-            });
-          });
-          deviceDataModel.device.on("cancel", () => {
-            const deviceDataModelCancel = {
-              emulatorId: emulator.id,
-              token: deviceDataModel.token,
-              state: states.READY,
-              conn: null,
-              device: deviceDataModel.device,
-              number: emulator.telephone,
-            };
-            get().updateDeviceState(deviceDataModelCancel);
-          });
-          deviceDataModel.device.on("reject", () => {
-            const deviceDataModelReject = {
-              emulatorId: emulator.id,
-              token: deviceDataModel.token,
-              state: states.READY,
-              conn: null,
-              device: deviceDataModel.device,
-              number: emulator.telephone,
-            };
-            get().updateDeviceState(deviceDataModelReject);
-          });
-        })
-      );
-      set({ devices: newDevices });
+      const token = localStorage.getItem("token");
+      const response = await fetch(EMULATOR_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const emulators = await response.json(); 
+      await createDevicesFromEmulators(emulators, get, set);
     } catch (error) {
-      console.error("DEVICES Failed to create Devices:", error);
+      console.error("V2 Failed to fetch emulators:", error);
     }
   },
   selectDevice: (selectedDevice) => {
@@ -190,6 +81,132 @@ export const createDeviceSlice: StateCreator<
     get().selectDevice(null);
   },
 });
+
+async function createDevicesFromEmulators(emulators: Emulator[], get: () => deviceStore, set: (partial: deviceStore | Partial<deviceStore> | ((state: deviceStore) => deviceStore | Partial<deviceStore>), replace?: boolean | undefined) => void) {
+  try {
+    const newDevices: TwillioDevice[] = [];
+    await Promise.all(
+      emulators.map(async (emulator) => {
+        if (emulator.telephone === null || emulator.telephone === undefined) {
+          return null;
+        }
+        const userToken = localStorage.getItem("token");
+        const { data: token, error } = await ApiService.makeApiCall(
+          VOICE_GET_TOKEN_URL,
+          "GET",
+          null,
+          userToken,
+          emulator.telephone
+        );
+
+        if (error) {
+          console.error(error);
+          return;
+        }
+
+        const deviceDataModel: TwillioDevice = {
+          emulatorId: emulator.id,
+          token: token,
+          state: states.CONNECTING,
+          conn: null,
+          device: new Device(),
+          number: emulator.telephone,
+        };
+
+        newDevices.push(deviceDataModel);
+
+        deviceDataModel.device.setup(deviceDataModel.token, {
+          codecPreferences: [Connection.Codec.Opus, Connection.Codec.PCMU],
+          fakeLocalDTMF: true,
+          enableRingingState: true,
+          debug: true,
+        });
+
+        deviceDataModel.device.on("ready", () => {
+          const deviceDataModelReady: TwillioDevice = {
+            emulatorId: emulator.id,
+            token: deviceDataModel.token,
+            state: states.READY,
+            conn: deviceDataModel.conn,
+            device: deviceDataModel.device,
+            number: emulator.telephone,
+          };
+          get().updateDeviceState(deviceDataModelReady);
+        });
+        deviceDataModel.device.on("connect", (connection) => {
+          const deviceDataModelConnect: TwillioDevice = {
+            emulatorId: deviceDataModel.emulatorId,
+            token: deviceDataModel.token,
+            state: states.ON_CALL,
+            conn: connection,
+            device: deviceDataModel.device,
+            number: emulator.telephone,
+          };
+          get().updateDeviceState(deviceDataModelConnect);
+        });
+        deviceDataModel.device.on("disconnect", () => {
+          const deviceDataModelDisconnect = {
+            emulatorId: emulator.id,
+            token: deviceDataModel.token,
+            state: states.READY,
+            conn: null,
+            device: deviceDataModel.device,
+            number: emulator.telephone,
+          };
+          get().updateDeviceState(deviceDataModelDisconnect);
+        });
+        deviceDataModel.device.on("incoming", (incomingConnection) => {
+          const deviceDataModelIncoming = {
+            emulatorId: emulator.id,
+            token: deviceDataModel.token,
+            state: states.INCOMING,
+            conn: incomingConnection,
+            device: deviceDataModel.device,
+            number: emulator.telephone,
+          };
+          get().updateDeviceState(deviceDataModelIncoming);
+
+          incomingConnection.on("reject", () => {
+            const deviceDataModelReject = {
+              emulatorId: emulator.id,
+              token: deviceDataModel.token,
+              state: states.READY,
+              conn: null,
+              device: deviceDataModel.device,
+              number: emulator.telephone,
+            };
+            get().updateDeviceState(deviceDataModelReject);
+          });
+        });
+        deviceDataModel.device.on("cancel", () => {
+          const deviceDataModelCancel = {
+            emulatorId: emulator.id,
+            token: deviceDataModel.token,
+            state: states.READY,
+            conn: null,
+            device: deviceDataModel.device,
+            number: emulator.telephone,
+          };
+          get().updateDeviceState(deviceDataModelCancel);
+        });
+        deviceDataModel.device.on("reject", () => {
+          const deviceDataModelReject = {
+            emulatorId: emulator.id,
+            token: deviceDataModel.token,
+            state: states.READY,
+            conn: null,
+            device: deviceDataModel.device,
+            number: emulator.telephone,
+          };
+          get().updateDeviceState(deviceDataModelReject);
+        });
+      })
+    );
+    set({ devices: newDevices });
+  } catch (error) {
+    console.error("DEVICES Failed to create Devices:", error);
+  }
+}
 
 // NOTE:: SPECIFICALLY FOR GPS_PAGE_TABLE to open/close dialog incoming/disconnect calls
 export function compareSelectedDeviceForDialog(

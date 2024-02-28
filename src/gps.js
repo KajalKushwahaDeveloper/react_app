@@ -15,19 +15,15 @@ import CreateTripButton from "./components/location/map-components/MapButtons.js
 import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const GPS = () => {
-  const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
-
   const setMicCheck = useEmulatorStore((state) => state.setMicEnabled);
 
-  console.log("GPS rendered!", selectedDevice)
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
 
-
+  console.log("TEST@ GPS rendered")
   useEffect(() => {
     if (window.location.pathname === "/gps") {
-
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Attempt to access the user's media devices (microphone)
         navigator.mediaDevices.getUserMedia({ audio: true })
