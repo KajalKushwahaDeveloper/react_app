@@ -75,7 +75,6 @@ const GoogleMapContainer = () => {
       useEmulatorStore.subscribe(
         (state) => state.center,
         (center) => {
-          console.log('TEST@ center changed')
           if (mapRef.current === null || mapRef.current === undefined) {
             return
           }
@@ -125,7 +124,6 @@ const GoogleMapContainer = () => {
                 ].lng
               )
             )
-            console.log('TEST@ tripData changed')
             mapRef.current.fitBounds(bounds)
           }
         }
@@ -138,8 +136,6 @@ const GoogleMapContainer = () => {
     googleMapsApiKey: 'AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E',
     libraries
   })
-
-  console.log('TEST@ GoogleMapContainer rendered')
 
   const containerStyle = {
     position: 'unset !important',

@@ -4,7 +4,6 @@ import GPS from '../../gps.js'
 import Navbar from '../root/navbar.js'
 
 const PrivateRoutes = ({ isAdmin, setIsAdmin }) => {
-  console.log('TEST@ PrivateRoutes rendered')
   const auth = localStorage.getItem('token')
   return auth ? (
     <>

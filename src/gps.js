@@ -21,7 +21,6 @@ const GPS = () => {
   const breakpoint = 620
   const isMobile = width < breakpoint
 
-  console.log('TEST@ GPS rendered')
   useEffect(() => {
     if (window.location.pathname === '/gps') {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {

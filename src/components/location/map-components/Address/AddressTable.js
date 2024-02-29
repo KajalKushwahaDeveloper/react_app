@@ -40,33 +40,23 @@ const AddressTable = () => {
     widthArr[i] = savedAddressWithI
   }
 
+  const getAddress = (address) =>
+    address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
+
   const setValues = useCallback((emulator, tripData, isHover) => {
+    console.log('emulator', emulator)
+    console.log('tripData', tripData)
+    console.log('isHover', isHover)
+
     function readableTime(time) {
       const date = new Date(time)
       return date.toLocaleString()
     }
 
-    const currentAddress = emulator ? emulator.address : 'N/A'
+    const currentAddress = emulator && emulator.address ? emulator.address : 'N/A'
 
-    const fromAddress = tripData
-      ? tripData.fromAddress[0]?.long_name +
-        ', ' +
-        tripData.fromAddress[1]?.long_name +
-        ', ' +
-        tripData.fromAddress[2]?.long_name +
-        ', ' +
-        tripData.fromAddress[3]?.long_name
-      : 'N/A'
-
-    const toAddress = tripData
-      ? tripData.toAddress[0]?.long_name +
-        ', ' +
-        tripData.toAddress[1]?.long_name +
-        ', ' +
-        tripData.toAddress[2]?.long_name +
-        ' ,' +
-        tripData.toAddress[3]?.long_name
-      : 'N/A'
+    const fromAddress = tripData ? getAddress(tripData.fromAddress) : 'N/A'
+    const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
     const arrivalTime = tripData?.emulatorDetails
       ? readableTime(tripData.emulatorDetails.departTime) +

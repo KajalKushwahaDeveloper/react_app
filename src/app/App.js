@@ -13,7 +13,6 @@ import { useEmulatorStore } from '../stores/emulator/store.tsx'
 import PageNotFound from '../view/pageNotFound.js'
 
 function App() {
-  console.log('TEST@ App rendered!')
   const navigate = useNavigate()
   const location = useLocation()
   const [isAdmin, setIsAdmin] = useState(false)

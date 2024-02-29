@@ -116,7 +116,6 @@ const EmulatorMarkerSelected = () => {
             iconUrl = `${iconUrl}/FLASH`
           }
           iconUrl = `${iconUrl}/${emulatorRef.current?.status}.svg`
-          console.log(iconUrl)
           const emulatorIcon = {
             url: iconUrl,
             scaledSize: new window.google.maps.Size(20, 20),

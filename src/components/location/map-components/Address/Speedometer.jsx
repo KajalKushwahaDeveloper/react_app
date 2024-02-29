@@ -10,18 +10,24 @@ import './styles.css'
 const Speedometer = () => {
   // meters per millisecond to miles per hour
 
-  const [speed, setSpeed] = useState(0)
+  const [speed, setSpeed] = useState()
   const [currentValueText, setCurrentValueText] = useState('N/A MPH')
+  const emulator = useEmulatorStore.getState().connectedEmulator
+
+  useEffect(() => {
+    console.log('TEST@ emulator useEffect : ', emulator?.velocity)
+    if (emulator) {
+      const speed = (emulator.velocity * 2236.94).toFixed(2)
+      setSpeed(speed)
+      setCurrentValueText(speed + ' MPH')
+    }
+  }, [emulator])
 
   useEffect(
     () =>
       useEmulatorStore.subscribe(
         (state) => state.connectedEmulator,
         (connectedEmulator) => {
-          console.log(
-            'Speedometer connectedEmulator: ',
-            connectedEmulator?.velocity
-          )
           if (
             connectedEmulator === null ||
             connectedEmulator === undefined ||

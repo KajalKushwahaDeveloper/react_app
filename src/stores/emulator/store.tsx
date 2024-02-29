@@ -135,6 +135,7 @@ const createTripDataSlice: StateCreator<
   pathNotTraveled: null,
   connectedEmulator: null,
   connectSelectedEmulatorSSE: (selectedEmulator: Emulator | null) => {
+    console.log('TEST@ connectSelectedEmulatorSSE')
     const selectedEmulatorEventSource = get().selectedEmulatorEventSource
     if (selectedEmulator === null || selectedEmulator === undefined) {
       selectedEmulatorEventSource?.abort() // abort the emulatorsEventSource
@@ -173,37 +174,46 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false })
       },
       onmessage(event) {
-        // check event.event with EmulatorEvent
-        const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
-        console.log('emulatorData: ', emulatorData.event)
-        if (emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
+          console.log('TEST@ event: ', event)
+        // if heartbeat, then return
+        if (event.data === 'heartbeat') {
+          return
+        }
+        try {
+          // check event.event with EmulatorEvent
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
-          set({ connectedEmulator: emulatorData.emulatorDetails })
-        } else if (
-          emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED ||
-          emulatorData.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED
-        ) {
-          const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
-          get().setSelectedEmulatorSSEData(emulatorData)
-        } else if (
-          emulatorData.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED
-        ) {
-          const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
-          set({
-            connectedEmulator: emulatorData.emulatorDetails,
-            tripData: null,
-            pathTraveled: null,
-            pathNotTraveled: null
-          })
-        } else if (
-          emulatorData.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED
-        ) {
-          const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
-          set({ connectedEmulator: emulatorData?.emulatorDetails })
-          var tripData = get().tripData
-          if (tripData !== null) {
-            get().setPaths(emulatorData?.emulatorDetails, tripData)
+          console.log('TEST@ emulatorData: ', emulatorData)
+          if (emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
+            const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
+            set({ connectedEmulator: emulatorData.emulatorDetails })
+          } else if (
+            emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED ||
+            emulatorData.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED
+          ) {
+            const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
+            get().setSelectedEmulatorSSEData(emulatorData)
+          } else if (
+            emulatorData.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED
+          ) {
+            const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
+            set({
+              connectedEmulator: emulatorData.emulatorDetails,
+              tripData: null,
+              pathTraveled: null,
+              pathNotTraveled: null
+            })
+          } else if (
+            emulatorData.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED
+          ) {
+            const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
+            set({ connectedEmulator: emulatorData?.emulatorDetails })
+            var tripData = get().tripData
+            if (tripData !== null) {
+              get().setPaths(emulatorData?.emulatorDetails, tripData)
+            }
           }
+        } catch (error) {
+          console.error('Error parsing event data', error)
         }
       },
       onclose() {
@@ -211,7 +221,7 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false })
       },
       onerror(err) {
-        console.log(err)
+        console.log('TEST@', err)
         console.error('There was an error from the server', err)
         set({ isLoading: false })
       },
@@ -222,7 +232,7 @@ const createTripDataSlice: StateCreator<
   setSelectedEmulatorSSEData: (selectedEmulatorData: SelectedEmulatorData) => {
     const tripData = toTripData(selectedEmulatorData)
     set({
-      connectedEmulator: selectedEmulatorData?.emulatorDetails,
+      connectedEmulator: selectedEmulatorData.emulatorDetails,
       tripData: tripData
     })
     get().setPaths(selectedEmulatorData?.emulatorDetails, tripData)
