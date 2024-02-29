@@ -2,6 +2,7 @@ import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import useMarkerStore from "../../../../stores/emulator/markerStore.js";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import { MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS, MINIMUM_VELOCITY_METERS_PER_MILLISECONDS } from "../../../../MetricsConstants.js";
 
 const EmulatorMarker = React.memo(({ id }) => {
   const dragEmulator = useEmulatorStore.getState().dragEmulator;
@@ -23,7 +24,7 @@ const EmulatorMarker = React.memo(({ id }) => {
   //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
   var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
   icon_url = icon_url + "DEFAULT";
-  if (emulatorRef.current?.velocity < 30 || emulatorRef.current?.velocity > 60) {
+  if (emulatorRef.current?.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) {
     icon_url = `${icon_url}/FLASH`;
   }
   icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
@@ -73,13 +74,15 @@ const EmulatorMarker = React.memo(({ id }) => {
     // Update marker icon
     var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
     icon_url = icon_url + "DEFAULT";
-    // check velocity and add flash if velocity is greater than 60 or less than 30
-    if (emulatorRef.current?.velocity > 60 || emulatorRef.current?.velocity < 30) {
+    // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
+    if (emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulatorRef.current?.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS) {
       icon_url = `${icon_url}/FLASH`;
     }
     icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
-    console.log(icon_url);
 
+    if (emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulatorRef.current?.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS) {
+      console.log(icon_url);
+    }
     const emulatorIcon = {
       url: icon_url,
       scaledSize: new window.google.maps.Size(20, 20),

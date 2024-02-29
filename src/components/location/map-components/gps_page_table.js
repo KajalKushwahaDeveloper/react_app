@@ -11,6 +11,8 @@ import {
   TRIP_TOGGLE,
 } from "../../../constants";
 
+import { MINIMUM_VELOCITY_METERS_PER_MILLISECONDS, MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS } from "../../../MetricsConstants.js";
+
 //icons
 import IconButton from "@mui/material/IconButton";
 import HistoryIcon from "@mui/icons-material/History";
@@ -295,9 +297,9 @@ const GpsTable = () => {
                     maxHeight: isMobile ? 'auto' : '80px',
                     border: '2px solid #E6E6E6',
                   }}
-                  className={`${(emulator.velocity < 30 || emulator.velocity > 60) && emulator.id === selectedEmulator?.id ? 'blink-selected' :
-                      (emulator.velocity < 30 || emulator.velocity > 60) && emulator.id === hoveredEmulator?.id ? 'blink-hovered' :
-                        (emulator.velocity < 30 || emulator.velocity > 60) ? 'blink' : ''
+                  className={`${(emulator.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulator.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) && emulator.id === selectedEmulator?.id ? 'blink-selected' :
+                      (emulator.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulator.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) && emulator.id === hoveredEmulator?.id ? 'blink-hovered' :
+                        (emulator.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulator.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) ? 'blink' : ''
                     } ${emulator.id === selectedEmulator?.id ? 'selected' : ''
                     } ${emulator.id === hoveredEmulator?.id ? 'hovered' : ''
                     }`}

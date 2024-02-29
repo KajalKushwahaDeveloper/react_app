@@ -2,6 +2,7 @@ import { Marker } from "@react-google-maps/api";
 import React, { useEffect, useRef } from "react";
 import _ from "lodash";
 import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import { MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS, MINIMUM_VELOCITY_METERS_PER_MILLISECONDS } from "../../../../MetricsConstants.js";
 
 const EmulatorMarkerSelected = () => {
   console.log("Selected Marker Created!")
@@ -71,8 +72,8 @@ const EmulatorMarkerSelected = () => {
     //TODO: use animation instead
 
     var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
-    icon_url = icon_url + "SELECT";   // check velocity and add flash if velocity is greater than 60 or less than 30
-    if (emulatorRef.current?.velocity > 60 || emulatorRef.current?.velocity < 30) {
+    icon_url = icon_url + "SELECT";   // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
+    if (emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulatorRef.current?.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS) {
       icon_url = `${icon_url}/FLASH`;
     }
     icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
@@ -176,7 +177,7 @@ const EmulatorMarkerSelected = () => {
 
   var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
   icon_url = icon_url + "SELECT";
-  if (emulatorRef.current?.velocity > 60 || emulatorRef.current?.velocity < 30) {
+  if (emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulatorRef.current?.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS) {
     icon_url = `${icon_url}/FLASH`;
   }
   icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
