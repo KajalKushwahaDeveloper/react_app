@@ -5,8 +5,10 @@ import { EMULATOR_DRAG_URL } from "../../../constants.js";
 import { useViewPort } from "../../../ViewportProvider.js";
 import { useStates } from "../../../StateProvider.js";
 import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import Speedometer from "./Address/Speedometer.jsx";
 
 const MapButtons = () => {
+  console.log("MapButtons Rendered!");
   const { showToast, setIsTableVisible, isTableVisible, isMoveDialogVisible, setIsMoveDialogVisible } = useStates();
   
   //Initiate fetchEmulators from store
@@ -110,6 +112,7 @@ const MapButtons = () => {
         }}>
         {connectedEmulator && (
           <>
+            <Speedometer />
             {movedEmulator && movedEmulator.moveMarker === true ? (
               <button
                 style={{

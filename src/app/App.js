@@ -14,13 +14,15 @@ import { useEmulatorStore } from "../stores/emulator/store.tsx";
 import useMarkerStore from "../stores/emulator/markerStore.js";
 
 function App() {
-  console.log("App rendered!")
+  console.log("TEST@ App rendered!")
   const navigate = useNavigate();
   const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
 
   const connectEmulatorsSSE = useEmulatorStore.getState().connectEmulatorsSSE;
   const initMarkers = useMarkerStore.getState().initMarkers;
+  const createDevices = useEmulatorStore.getState().createDevices;
+
   useEffect(() => {
     const checkToken = async () => {
       if (
@@ -99,6 +101,7 @@ function App() {
     if (token) {
       connectEmulatorsSSE();
       initMarkers();
+      createDevices();
     }
   }, [connectEmulatorsSSE, initMarkers, localStorage.getItem("token")]);
 

@@ -15,6 +15,7 @@ export interface SelectedEmulatorData {
   toAddress: ToAddress[];
   shape: string;
   stops: SelectedEmulatorStop[];
+  event: string;
 }
 
 export interface SelectedEmulatorStop {
@@ -26,6 +27,7 @@ export interface SelectedEmulatorStop {
   address: Address[];
   gasStation: GasStation[];
   shape: string;
+  waitTime: number;
   reachedTime: string | null;
 }
 
@@ -52,8 +54,8 @@ export function toTripData(data: SelectedEmulatorData): TripData {
         address: stop.address,
         gasStation: stop.gasStation,
         tripPoints: generateTripPoint(stop.shape),
+        waitTime: stop.waitTime,
         reachedTime: stop.reachedTime,
-
       };
       return stopPoints;
     }),

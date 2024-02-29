@@ -5,9 +5,17 @@ import { compareTripDataChangedNullOrId } from "./utils.tsx";
 import { useStates } from "../../../../StateProvider.js";
 import ApiService from "../../../../ApiService.js";
 import { TRIP_STOPS_URL } from "../../../../constants.js";
+import { SelectedStopInfo } from "./SelectedStopInfo.jsx";
 
 export function StopComponents(props) {
   const { showToast } = useStates();
+  const [selectedStop, setSelectedStop] = React.useState(null);
+  const handleMarkerClick = (stop) => {
+    setSelectedStop(stop);
+  };
+  const handleInfoWindowClose = () => {
+    setSelectedStop(null);
+  };
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => {
@@ -58,7 +66,7 @@ export function StopComponents(props) {
           closestIndex === -1
             ? Infinity
             : Math.pow(path[closestIndex].lat - clickedLatLng.lat, 2) +
-              Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
+            Math.pow(path[closestIndex].lng - clickedLatLng.lng, 2);
         return d1 < d2 ? index : closestIndex;
       }, -1);
     };
@@ -129,38 +137,37 @@ export function StopComponents(props) {
 
   return (
     <React.Fragment>
-      {tripData?.stops != null &&
-        tripData?.stops.map((stop, index) => (
-          <React.Fragment key={stop.currentTripPointIndex}>
-            <Marker
-              onLoad={(marker) => {
-                stopRefs.current[index] = marker;
+      {tripData?.stops != null && tripData?.stops.map((stop, index) => (
+        <React.Fragment key={stop.currentTripPointIndex}>
+          <Marker
+            onLoad={(marker) => {
+              stopRefs.current[index] = marker;
+            }}
+            id={stop.tripPointIndex}
+            key={stop.tripPointIndex}
+            position={{
+              lat: stop.lat,
+              lng: stop.lng,
+            }}
+            label={`S${index + 1}`}
+            draggable={true}
+            onClick={() => handleMarkerClick(stop)}
+            onDragEnd={(event) => handleStopDragEnd(index)}
+            onDrag={(event) => handleStopDragged(event, index, stop)}
+          />
+          {stop.tripPoints && stop.tripPoints?.length > 0 && (
+            <Polyline
+              path={stop.tripPoints}
+              options={{
+                strokeColor: "#FF2200",
+                strokeWeight: 6,
+                strokeOpacity: 0.6,
+                defaultVisible: true,
               }}
-              id={stop.tripPointIndex}
-              key={stop.tripPointIndex}
-              position={{
-                lat: stop.lat,
-                lng: stop.lng,
-              }}
-              label={`S${index + 1}`}
-              draggable={true}
-              onClick={() => props.handleMarkerClick(stop)}
-              onDragEnd={(event) => handleStopDragEnd(index)}
-              onDrag={(event) => handleStopDragged(event, index, stop)}
             />
-            {stop.tripPoints && stop.tripPoints?.length > 0 && (
-              <Polyline
-                path={stop.tripPoints}
-                options={{
-                  strokeColor: "#FF2200",
-                  strokeWeight: 6,
-                  strokeOpacity: 0.6,
-                  defaultVisible: true,
-                }}
-              />
-            )}
-          </React.Fragment>
-        ))}
+          )}
+        </React.Fragment>
+      ))}
 
       {endLat !== null && endLng !== null && (
         <Marker
@@ -184,6 +191,13 @@ export function StopComponents(props) {
             scale: 1,
           }}
         />
+      )}
+
+      {selectedStop && (
+        <SelectedStopInfo
+          selectedStop={selectedStop}
+          handleInfoWindowClose={handleInfoWindowClose}
+        ></SelectedStopInfo>
       )}
     </React.Fragment>
   );

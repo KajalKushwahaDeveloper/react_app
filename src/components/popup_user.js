@@ -162,7 +162,7 @@ const PopUpUser = ({
             >
               {userToEdit === null ? "Add User" : "Edit User"}
             </h1>
-
+           
             <input
               type="text"
               id="firstname"
@@ -178,6 +178,7 @@ const PopUpUser = ({
                   message: "Only alphabets allowed!",
                 },
               })}
+              style={{marginBottom:"12px"}}
             />
             {errors.firstname && (
               <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
@@ -199,6 +200,7 @@ const PopUpUser = ({
                   message: "Only alphabets allowed!",
                 },
               })}
+              style={{marginBottom:"12px"}}
             />
             {errors.lastname && (
               <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
@@ -220,6 +222,7 @@ const PopUpUser = ({
                   message: "Please correct email format!",
                 },
               })}
+              style={{marginBottom:"12px"}}
             />
             {errors.email && (
               <p className="ms-4 mb-1" style={{ fontSize: 14, color: "red" }}>
@@ -239,6 +242,7 @@ const PopUpUser = ({
                 value: true,
                 message: "Telephone is required!",
               }}}
+              style={{marginBottom:"12px"}}
             />
             
             {errors.telephone && (

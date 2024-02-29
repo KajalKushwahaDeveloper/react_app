@@ -1,0 +1,18 @@
+Ingress Installation
+
+
+https://medium.com/@amirhosseineidy/how-to-set-up-nginx-ingress-controller-in-local-server-6cc4bd7d6a6b
+https://platform9.com/blog/using-metallb-to-add-the-loadbalancer-service-to-kubernetes-environments/
+
+https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/
+
+# Change mongo-75f59d57f4-4nd6q to the name of the Pod
+kubectl get pod react-app-64c7595b6c-bz4ft --template='{{(index (index .spec.containers 0).ports 0).containerPort}}{{"\n"}}'
+
+kubectl get pod spring-boot-647ddc996d-9r8v2 --template='{{(index (index .spec.containers 0).ports 0).containerPort}}{{"\n"}}'
+
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.44.0/deploy/static/provider/cloud/deploy.yaml
+
+// baremetal 
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.44.0/deploy/static/provider/baremetal/deploy.yaml

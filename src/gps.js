@@ -1,7 +1,7 @@
 import "./scss/map.scss";
 import "./scss/button.scss";
 import { ToastContainer } from "react-toastify";
-import React from "react";
+import React, { useEffect } from "react";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import "react-spring-bottom-sheet/dist/style.css";
 import { useViewPort } from "./ViewportProvider.js";
@@ -12,12 +12,60 @@ import GoogleMapContainer from "./components/location/map-components/GoogleMapCo
 import CreateTripDialog from "./components/location/map-components/CreateTrip/CreateTripDialog.js";
 import MovePositionDialog from "./components/location/map-components/CreateTrip/MovePositionDialog.js";
 import CreateTripButton from "./components/location/map-components/MapButtons.jsx";
+import { useEmulatorStore } from "./stores/emulator/store.tsx";
 
 const GPS = () => {
-  console.log("GPS rendered!")
+  const setMicCheck = useEmulatorStore((state) => state.setMicEnabled);
+
   const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
+
+  console.log("TEST@ GPS rendered")
+  useEffect(() => {
+    if (window.location.pathname === "/gps") {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Attempt to access the user's media devices (microphone)
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then((stream) => {
+            console.log(stream)
+            // Stop all tracks once we have the permission
+            stream.getTracks().forEach(track => track.stop());;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+      // For granted and denied status
+      const checkMicrophonePermission = async () => {
+        try {
+          // Check microphone permission status
+          const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+
+          if (permissionStatus.state === "granted") {
+            setMicCheck(true);
+          }
+
+          // Listen for changes in permission status
+          permissionStatus.onchange = () => {
+            if (permissionStatus.state === "granted") {
+              setMicCheck(true);
+            }
+          };
+        } catch (error) {
+          console.error('Error checking microphone permission:', error);
+        }
+      };
+
+      checkMicrophonePermission();
+      return () => {
+        // Cleanup if necessary
+      };
+
+    }
+  }, [setMicCheck]);
+
 
   return (
     <>
@@ -28,7 +76,7 @@ const GPS = () => {
       {!isMobile && (
         <>
           <div style={{ display: "flex", flexDirection: "column" }}>
-              <AddressTable />
+            <AddressTable />
             <div
               style={{
                 display: "flex",

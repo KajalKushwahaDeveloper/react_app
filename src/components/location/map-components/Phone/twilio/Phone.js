@@ -7,6 +7,7 @@ import "./Phone.css";
 import states from "./states";
 import { useEmulatorStore } from "../../../../../stores/emulator/store.tsx";
 import { useStates } from "../../../../../StateProvider.js";
+import { log } from "util";
 
 const Phone = ({setContactDialogOptions}) => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
@@ -43,6 +44,7 @@ const Phone = ({setContactDialogOptions}) => {
   };
 
   const handleCall = () => {
+    console.log("selectedDeviceData:",selectedDevice);
     if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.device.connect({ To: number });
     }

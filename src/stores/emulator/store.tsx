@@ -8,7 +8,7 @@ import {
   defaultLat,
 } from "./types_maps.tsx";
 import { BASE_URL, EMULATOR_URL } from "../../constants";
-import { deviceStore, createDeviceSlice } from "../call/storeCall.tsx";
+import { deviceStore, createDeviceSlice, microphoneStatus, microphoneCheckSlice } from "../call/storeCall.tsx";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { TwillioDevice } from "../call/types.tsx";
 import { EmulatorEvent } from "../../model/EmulatorEvent.tsx";
@@ -150,17 +150,18 @@ const createTripDataSlice: StateCreator<
       },
       onmessage(event) {
         // check event.event with EmulatorEvent
-        console.log("event: ", event.event)
-        if (event.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
+        const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
+        console.log("emulatorData: ", emulatorData.event)
+        if (emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           set({ connectedEmulator: emulatorData.emulatorDetails });
-        } else if (event.event === EmulatorEvent.EMULATOR_CONNECTED || event.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED) {
+        } else if (emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED || emulatorData.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           get().setSelectedEmulatorSSEData(emulatorData);
-        } else if(event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED) {
+        } else if (emulatorData.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           set({ connectedEmulator: emulatorData.emulatorDetails, tripData: null, pathTraveled: null, pathNotTraveled: null });
-        } else if (event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
+        } else if (emulatorData.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data);
           set({ connectedEmulator: emulatorData?.emulatorDetails });
           var tripData = get().tripData;
@@ -174,6 +175,7 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false });
       },
       onerror(err) {
+        console.log(err)
         console.error("There was an error from the server", err);
         set({ isLoading: false });
       },
@@ -265,12 +267,13 @@ const createSharedSlice: StateCreator<
 });
 
 export const useEmulatorStore = create<
-  EmulatorsSlice & TripDataSlice & SharedSlice & deviceStore
+  EmulatorsSlice & TripDataSlice & SharedSlice & deviceStore & microphoneStatus
 >()(
   subscribeWithSelector(devtools((...args) => ({
     ...createEmulatorsSlice(...args),
     ...createTripDataSlice(...args),
     ...createSharedSlice(...args),
     ...createDeviceSlice(...args),
+    ...microphoneCheckSlice(...args)
   })))
 );
