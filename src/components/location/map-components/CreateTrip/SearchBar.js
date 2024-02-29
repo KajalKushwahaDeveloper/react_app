@@ -1,60 +1,56 @@
-import React, { useState, useEffect } from "react";
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "./autocomplete";
-import { classnames } from "../../../../helpers";
-import "./autocomplete/auto_complete.css";
-import TextField from "@mui/material/TextField";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
+import TextField from '@mui/material/TextField'
+import React, { useEffect, useState } from 'react'
+import { classnames } from '../../../../helpers'
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from './autocomplete'
+import './autocomplete/auto_complete.css'
 
 const SearchBar = (props) => {
-  const [inputValue, setInputValue] = useState("");
-  const [address, setAddress] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [addressComponent, setAddressComponent] = useState(null);
+  const [inputValue, setInputValue] = useState('')
+  const [address, setAddress] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [latitude, setLatitude] = useState(null)
+  const [longitude, setLongitude] = useState(null)
+  const [addressComponent, setAddressComponent] = useState(null)
 
   const handleChange = (newAddress) => {
-    setAddress(newAddress);
-    setLatitude(null);
-    setLongitude(null);
-    setAddressComponent(null);
-    setErrorMessage("");
-  };
+    setAddress(newAddress)
+    setLatitude(null)
+    setLongitude(null)
+    setAddressComponent(null)
+    setErrorMessage('')
+  }
 
   const handleSelect = (selected) => {
-    setAddress(selected);
+    setAddress(selected)
     geocodeByAddress(selected)
       .then((res) => {
         res[0].address_components &&
-          setAddressComponent(res[0].address_components);
-        return getLatLng(res[0]);
+          setAddressComponent(res[0].address_components)
+        return getLatLng(res[0])
       })
       .then(({ lat, lng }) => {
-        setLatitude(lat);
-        setLongitude(lng);
+        setLatitude(lat)
+        setLongitude(lng)
       })
       .catch((error) => {
-        console.error("error", error);
-      });
-  };
+        console.error('error', error)
+      })
+  }
 
   const handleError = (status, clearSuggestions) => {
-    setErrorMessage(status);
-    clearSuggestions();
-  };
+    setErrorMessage(status)
+    clearSuggestions()
+  }
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+    setInputValue(event.target.value)
+  }
 
   useEffect(() => {
-    props.setLat(latitude);
-    props.setAddress(addressComponent);
-    props.setLong(longitude);
-  }, [latitude, longitude, addressComponent, props]);
+    props.setLat(latitude)
+    props.setLong(longitude)
+  }, [latitude, longitude, addressComponent, props])
 
   return (
     <div>
@@ -76,8 +72,8 @@ const SearchBar = (props) => {
                   value={inputValue}
                   onChange={handleInputChange}
                   {...getInputProps({
-                    placeholder: "Search Places...",
-                    className: "Demo__search-input",
+                    placeholder: 'Search Places...',
+                    className: 'Demo__search-input'
                   })}
                   fullWidth
                 />
@@ -85,17 +81,18 @@ const SearchBar = (props) => {
               {suggestions.length > 0 && (
                 <div className="Demo__autocomplete-container">
                   {suggestions.map((suggestion) => {
-                    const className = classnames("Demo__suggestion-item", {
-                      "Demo__suggestion-item--active": suggestion.active,
-                    });
+                    const className = classnames('Demo__suggestion-item', {
+                      'Demo__suggestion-item--active': suggestion.active
+                    })
                     return (
                       <div
+                        key={suggestion.placeId}
                         {...getSuggestionItemProps(suggestion, { className })}
                         style={{
-                          margin: ".2rem 0",
-                          display:"flex",
-                          alignItems:"flex-start",
-                          justifyContent:"flex-start",
+                          margin: '.2rem 0',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'flex-start'
                         }}
                       >
                         <div>
@@ -110,19 +107,19 @@ const SearchBar = (props) => {
                           </small>
                         </div>
                       </div>
-                    );
+                    )
                   })}
                 </div>
               )}
             </div>
-          );
+          )
         }}
       </PlacesAutocomplete>
       {errorMessage.length > 0 && (
         <div className="Demo__error-message">{errorMessage}</div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default SearchBar;
+export default SearchBar

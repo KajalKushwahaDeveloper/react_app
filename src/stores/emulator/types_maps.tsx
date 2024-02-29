@@ -1,20 +1,21 @@
-import { Emulator, TripData } from "./types";
+/* eslint-disable no-undef, no-unused-vars */
+import { Emulator, TripData } from './types'
 
 export interface Center {
-  lat: number;
-  lng: number;
+  lat: number
+  lng: number
 }
-export const defaultLat = 37.0902; // Default latitude (center of US)
-export const defaultLng = -95.7129; // Default longitude (center of US)
+export const defaultLat = 37.0902 // Default latitude (center of US)
+export const defaultLng = -95.7129 // Default longitude (center of US)
 
-//custom equality function for selectedEmulator
+// custom equality function for selectedEmulator
 export function compareSelectedEmulator(
   oldSelectedEmulator: Emulator | null,
   newSelectedEmulator: Emulator | null
 ) {
   // both were null
   if (oldSelectedEmulator === null && newSelectedEmulator === null) {
-    return false;
+    return false
   }
 
   // either one was null
@@ -22,12 +23,12 @@ export function compareSelectedEmulator(
     (oldSelectedEmulator === null && newSelectedEmulator !== null) ||
     (oldSelectedEmulator !== null && newSelectedEmulator === null)
   ) {
-    return true;
+    return true
   }
 
   // neither was null but id was different
   if (oldSelectedEmulator?.id !== newSelectedEmulator?.id) {
-    return true;
+    return true
   }
 
   // neither was null but currentTripPointIndex was different
@@ -35,7 +36,7 @@ export function compareSelectedEmulator(
     oldSelectedEmulator?.currentTripPointIndex !==
     newSelectedEmulator?.currentTripPointIndex
   ) {
-    return true;
+    return true
   }
 
   // neither was null but current lat and lng was different
@@ -43,10 +44,10 @@ export function compareSelectedEmulator(
     oldSelectedEmulator?.latitude !== newSelectedEmulator?.latitude &&
     oldSelectedEmulator?.longitude !== newSelectedEmulator?.longitude
   ) {
-    return true;
+    return true
   }
 
-  return false;
+  return false
 }
 
 // custom equality function for Emulators
@@ -56,23 +57,23 @@ export function compareEmulators(
 ) {
   // if the size of the arrays are different
   if (oldEmulators?.length !== newEmulators?.length) {
-    return true;
+    return true
   }
 
-  let returnVal = false;
+  let returnVal = false
   for (const newEmulator of newEmulators) {
     const oldEmulator = oldEmulators.find(
       (oldEmulator) => oldEmulator.id === newEmulator.id
-    );
+    )
     if (oldEmulator) {
-      returnVal = compareSelectedEmulator(oldEmulator, newEmulator);
+      returnVal = compareSelectedEmulator(oldEmulator, newEmulator)
     }
     if (returnVal === true) {
-      break; // Stops the loop when not return val will be false
+      break // Stops the loop when not return val will be false
     }
   }
 
-  return returnVal;
+  return returnVal
 }
 
 // custom equality function for Emulators
@@ -82,23 +83,23 @@ export function compareTripData(
 ) {
   // both were null
   if (oldTripData === null && newTripData === null) {
-    return false;
+    return false
   }
   // either one was null
   if (
     (oldTripData === null && newTripData !== null) ||
     (oldTripData !== null && newTripData === null)
   ) {
-    return false;
+    return false
   }
   // neither was null but trip was different
   // FIXME: This is not a good way to compare trips.
   // It should be done by comparing the trip id but id is similar and is based on emulator ID.
   if (oldTripData?.distance !== newTripData?.distance) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 // custom equality function for Emulators
@@ -108,33 +109,33 @@ export function compareEmulatorsCompletely(
 ) {
   // if the size of the arrays are different
   if (oldEmulators?.length !== newEmulators?.length) {
-    return true;
+    return true
   }
 
-  let returnVal = false;
+  let returnVal = false
   for (const newEmulator of newEmulators) {
     const oldEmulator = oldEmulators.find(
       (oldEmulator) => oldEmulator.id === newEmulator.id
-    );
+    )
     if (oldEmulator) {
-      returnVal = compareEmulatorCompletely(oldEmulator, newEmulator);
+      returnVal = compareEmulatorCompletely(oldEmulator, newEmulator)
     }
     if (returnVal === true) {
-      break; // Stops the loop when not return val will be false
+      break // Stops the loop when not return val will be false
     }
   }
 
-  return returnVal;
+  return returnVal
 }
 
-//custom equality function for selectedEmulator
+// custom equality function for selectedEmulator
 export function compareEmulatorCompletely(
   oldSelectedEmulator: Emulator | null,
   newSelectedEmulator: Emulator | null
 ) {
   // both were null
   if (oldSelectedEmulator === null && newSelectedEmulator === null) {
-    return false;
+    return false
   }
 
   // either one was null
@@ -142,12 +143,12 @@ export function compareEmulatorCompletely(
     (oldSelectedEmulator === null && newSelectedEmulator !== null) ||
     (oldSelectedEmulator !== null && newSelectedEmulator === null)
   ) {
-    return true;
+    return true
   }
 
   // id was different
   if (oldSelectedEmulator?.id !== newSelectedEmulator?.id) {
-    return true;
+    return true
   }
 
   // currentTripPointIndex was different
@@ -155,22 +156,22 @@ export function compareEmulatorCompletely(
     oldSelectedEmulator?.currentTripPointIndex !==
     newSelectedEmulator?.currentTripPointIndex
   ) {
-    return true;
+    return true
   }
 
   // status was different
   if (oldSelectedEmulator?.status !== newSelectedEmulator?.status) {
-    return true;
+    return true
   }
 
   // trip status was different
   if (oldSelectedEmulator?.status !== newSelectedEmulator?.status) {
-    return true;
+    return true
   }
 
   // trip status was different
   if (oldSelectedEmulator?.tripStatus !== newSelectedEmulator?.tripStatus) {
-    return true;
+    return true
   }
 
   // neither was null but current lat and lng was different
@@ -178,8 +179,8 @@ export function compareEmulatorCompletely(
     oldSelectedEmulator?.latitude !== newSelectedEmulator?.latitude &&
     oldSelectedEmulator?.longitude !== newSelectedEmulator?.longitude
   ) {
-    return true;
+    return true
   }
 
-  return false;
+  return false
 }

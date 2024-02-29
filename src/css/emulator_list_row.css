@@ -1,19 +1,37 @@
 @keyframes blink-default {
-  0% {background-color: transparent;}
-  50% {background-color: lightcoral;}
-  100% {background-color: transparent;}
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: lightcoral;
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 @keyframes blink-selected {
-  0% {background-color: lightblue;}
-  50% {background-color: lightcoral;}
-  100% {background-color: lightblue;}
+  0% {
+    background-color: lightblue;
+  }
+  50% {
+    background-color: lightcoral;
+  }
+  100% {
+    background-color: lightblue;
+  }
 }
 
 @keyframes blink-hovered {
-  0% {background-color: lightpink;}
-  50% {background-color: lightcoral;}
-  100% {background-color: lightpink;}
+  0% {
+    background-color: lightpink;
+  }
+  50% {
+    background-color: lightcoral;
+  }
+  100% {
+    background-color: lightpink;
+  }
 }
 
 .blink {

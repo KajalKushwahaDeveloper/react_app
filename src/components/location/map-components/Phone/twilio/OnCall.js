@@ -1,50 +1,50 @@
-import React, { useState } from "react";
-import KeypadButton from "./KeypadButton";
-import useLoudness from "./hooks/useLoudness";
-import useMuteWarning from "./hooks/useMuteWarning";
-import MicIcon from "@mui/icons-material/Mic";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import CallEndIcon from "@mui/icons-material/CallEnd";
-import "./OnCall.css";
+import CallEndIcon from '@mui/icons-material/CallEnd'
+import MicIcon from '@mui/icons-material/Mic'
+import MicOffIcon from '@mui/icons-material/MicOff'
+import React, { useState } from 'react'
+import KeypadButton from './KeypadButton'
+import './OnCall.css'
+import useLoudness from './hooks/useLoudness'
+import useMuteWarning from './hooks/useMuteWarning'
 
-const OnCall = ({ handleHangup, device, conn, showToast}) => {
-  const [muted, setMuted] = useState(false);
-  const [running, setRunning, loudness] = useLoudness(showToast);
-  const [showMuteWarning] = useMuteWarning(loudness, running);
+const OnCall = ({ handleHangup, device, conn, showToast }) => {
+  const [muted, setMuted] = useState(false)
+  const [running, setRunning, loudness] = useLoudness(showToast)
+  const [showMuteWarning] = useMuteWarning(loudness, running)
 
   const handleMute = () => {
-    conn.mute(!muted);
-    setMuted(!muted);
-    setRunning(!muted);
-  };
+    conn.mute(!muted)
+    setMuted(!muted)
+    setRunning(!muted)
+  }
 
   const muteIcon = muted ? (
     <MicOffIcon
       style={{
-        backgroundColor: "grey",
-        borderRadius: "100%",
-        padding: "10px",
-        fontSize: "3rem",
-        color: "white",
-        marginTop: "3rem",
+        backgroundColor: 'grey',
+        borderRadius: '100%',
+        padding: '10px',
+        fontSize: '3rem',
+        color: 'white',
+        marginTop: '3rem'
       }}
     />
   ) : (
     <MicIcon
       style={{
-        backgroundColor: "grey",
-        borderRadius: "100%",
-        padding: "10px",
-        fontSize: "3rem",
-        color: "white",
-        marginTop: "3rem",
+        backgroundColor: 'grey',
+        borderRadius: '100%',
+        padding: '10px',
+        fontSize: '3rem',
+        color: 'white',
+        marginTop: '3rem'
       }}
     />
-  );
+  )
 
   const muteWarning = (
     <p className="warning">Are you speaking? You are on mute!</p>
-  );
+  )
 
   return (
     <>
@@ -55,7 +55,7 @@ const OnCall = ({ handleHangup, device, conn, showToast}) => {
             <KeypadButton
               handleClick={() => handleMute()}
               className="call-button"
-              style={{ backgroundColor: muted ? "red" : "green" }}
+              style={{ backgroundColor: muted ? 'red' : 'green' }}
             >
               {muteIcon}
             </KeypadButton>
@@ -64,12 +64,12 @@ const OnCall = ({ handleHangup, device, conn, showToast}) => {
             <KeypadButton handleClick={() => handleHangup()} className="red">
               <CallEndIcon
                 style={{
-                  backgroundColor: "red",
-                  color: "white",
-                  borderRadius: "100%",
-                  padding: "10px",
-                  fontSize: "3rem",
-                  marginTop: "3rem",
+                  backgroundColor: 'red',
+                  color: 'white',
+                  borderRadius: '100%',
+                  padding: '10px',
+                  fontSize: '3rem',
+                  marginTop: '3rem'
                 }}
               />
             </KeypadButton>
@@ -77,7 +77,7 @@ const OnCall = ({ handleHangup, device, conn, showToast}) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default OnCall;
+export default OnCall

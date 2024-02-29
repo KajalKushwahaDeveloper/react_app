@@ -1,71 +1,72 @@
-import "./scss/map.scss";
-import "./scss/button.scss";
-import { ToastContainer } from "react-toastify";
-import React, { useEffect } from "react";
-import { BottomSheet } from "react-spring-bottom-sheet";
-import "react-spring-bottom-sheet/dist/style.css";
-import { useViewPort } from "./ViewportProvider.js";
-import GpsTable from "./components/location/map-components/gps_page_table.js";
-import AddressTable from "./components/location/map-components/Address/AddressTable.js";
-import { DragDialog } from "./components/location/map-components/DragDialog.jsx";
-import GoogleMapContainer from "./components/location/map-components/GoogleMapContainer.jsx";
-import CreateTripDialog from "./components/location/map-components/CreateTrip/CreateTripDialog.js";
-import MovePositionDialog from "./components/location/map-components/CreateTrip/MovePositionDialog.js";
-import CreateTripButton from "./components/location/map-components/MapButtons.jsx";
-import { useEmulatorStore } from "./stores/emulator/store.tsx";
+import React, { useEffect } from 'react'
+import { BottomSheet } from 'react-spring-bottom-sheet'
+import 'react-spring-bottom-sheet/dist/style.css'
+import { ToastContainer } from 'react-toastify'
+import { useViewPort } from './ViewportProvider.js'
+import AddressTable from './components/location/map-components/Address/AddressTable.js'
+import CreateTripDialog from './components/location/map-components/CreateTrip/CreateTripDialog.js'
+import MovePositionDialog from './components/location/map-components/CreateTrip/MovePositionDialog.js'
+import { DragDialog } from './components/location/map-components/DragDialog.jsx'
+import GoogleMapContainer from './components/location/map-components/GoogleMapContainer.jsx'
+import CreateTripButton from './components/location/map-components/MapButtons.jsx'
+import GpsTable from './components/location/map-components/gps_page_table.js'
+import './scss/button.scss'
+import './scss/map.scss'
+import { useEmulatorStore } from './stores/emulator/store.tsx'
 
 const GPS = () => {
-  const setMicCheck = useEmulatorStore((state) => state.setMicEnabled);
+  const setMicCheck = useEmulatorStore((state) => state.setMicEnabled)
 
-  const { width } = useViewPort();
-  const breakpoint = 620;
-  const isMobile = width < breakpoint;
+  const { width } = useViewPort()
+  const breakpoint = 620
+  const isMobile = width < breakpoint
 
-  console.log("TEST@ GPS rendered")
+  console.log('TEST@ GPS rendered')
   useEffect(() => {
-    if (window.location.pathname === "/gps") {
+    if (window.location.pathname === '/gps') {
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Attempt to access the user's media devices (microphone)
-        navigator.mediaDevices.getUserMedia({ audio: true })
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
           .then((stream) => {
             console.log(stream)
             // Stop all tracks once we have the permission
-            stream.getTracks().forEach(track => track.stop());;
+            stream.getTracks().forEach((track) => track.stop())
           })
           .catch((error) => {
-            console.log(error);
-          });
+            console.log(error)
+          })
       }
 
       // For granted and denied status
       const checkMicrophonePermission = async () => {
         try {
           // Check microphone permission status
-          const permissionStatus = await navigator.permissions.query({ name: 'microphone' });
+          const permissionStatus = await navigator.permissions.query({
+            name: 'microphone'
+          })
 
-          if (permissionStatus.state === "granted") {
-            setMicCheck(true);
+          if (permissionStatus.state === 'granted') {
+            setMicCheck(true)
           }
 
           // Listen for changes in permission status
           permissionStatus.onchange = () => {
-            if (permissionStatus.state === "granted") {
-              setMicCheck(true);
+            if (permissionStatus.state === 'granted') {
+              setMicCheck(true)
             }
-          };
+          }
         } catch (error) {
-          console.error('Error checking microphone permission:', error);
+          console.error('Error checking microphone permission:', error)
         }
-      };
+      }
 
-      checkMicrophonePermission();
+      checkMicrophonePermission()
       return () => {
         // Cleanup if necessary
-      };
-
+      }
     }
-  }, [setMicCheck]);
-
+  }, [setMicCheck])
 
   return (
     <>
@@ -75,21 +76,21 @@ const GPS = () => {
       <MovePositionDialog />
       {!isMobile && (
         <>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             <AddressTable />
             <div
               style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                width: "100%",
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                width: '100%'
               }}
             >
-              <div style={{ width: "320px", height: "100vh" }}>
+              <div style={{ width: '320px', height: '100vh' }}>
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
-              <div style={{ flex: "1", top: "128px" }}>
+              <div style={{ flex: '1', top: '128px' }}>
                 <GoogleMapContainer />
               </div>
             </div>
@@ -100,7 +101,7 @@ const GPS = () => {
       )}
       {isMobile && (
         <>
-          <div style={{ flex: "1", height: "100vh" }}>
+          <div style={{ flex: '1', height: '100vh' }}>
             <GoogleMapContainer />
           </div>
           <div>
@@ -135,6 +136,6 @@ const GPS = () => {
         </>
       )}
     </>
-  );
-};
-export default GPS;
+  )
+}
+export default GPS

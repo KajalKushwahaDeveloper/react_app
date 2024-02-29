@@ -1,21 +1,20 @@
-
 @mixin vertical-list {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-@mixin main{
-    margin:0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Raleway', sans-serif; /* Updated font-family to Raleway */
-    overflow-x: hidden;
-    overflow-y: auto;
-    letter-spacing: 2px;
-  }
-  
-  @mixin itemPosition($align, $justify) {
-    display: flex;
-    align-items: $align;
-    justify-content: $justify;
-  }
+@mixin main {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Raleway', sans-serif; /* Updated font-family to Raleway */
+  overflow-x: hidden;
+  overflow-y: auto;
+  letter-spacing: 2px;
+}
+
+@mixin itemPosition($align, $justify) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+}

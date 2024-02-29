@@ -1,24 +1,21 @@
-import React from "react";
-import "./Dialler.css";
-import KeypadButton from "./KeypadButton";
+import React from 'react'
+import './Dialler.css'
+import KeypadButton from './KeypadButton'
 
-const Dialler = ({
-  number,
-  setNumber,
-}) => {
+const Dialler = ({ number, setNumber }) => {
   const handleNumberChange = (event) => {
-    setNumber(event.target.value);
-  };
+    setNumber(event.target.value)
+  }
 
   const handleBackSpace = () => {
-    setNumber(number.substring(0, number.length - 1));
-  };
+    setNumber(number.substring(0, number.length - 1))
+  }
 
   const handleNumberPressed = (newNumber) => {
     return () => {
-      setNumber(`${number}${newNumber}`);
-    };
-  };
+      setNumber(`${number}${newNumber}`)
+    }
+  }
 
   return (
     <>
@@ -31,37 +28,37 @@ const Dialler = ({
 
       <ol className="keypad">
         <li>
-          <KeypadButton handleClick={handleNumberPressed("1")}>1</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('1')}>1</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("2")}>2</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('2')}>2</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("3")}>3</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('3')}>3</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("4")}>4</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('4')}>4</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("5")}>5</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('5')}>5</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("6")}>6</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('6')}>6</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("7")}>7</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('7')}>7</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("8")}>8</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('8')}>8</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("9")}>9</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('9')}>9</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("+")}>+</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('+')}>+</KeypadButton>
         </li>
         <li>
-          <KeypadButton handleClick={handleNumberPressed("0")}>0</KeypadButton>
+          <KeypadButton handleClick={handleNumberPressed('0')}>0</KeypadButton>
         </li>
         {number.length > 0 && (
           <li>
@@ -70,7 +67,7 @@ const Dialler = ({
         )}
       </ol>
     </>
-  );
-};
+  )
+}
 
-export default Dialler;
+export default Dialler

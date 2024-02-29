@@ -1,54 +1,51 @@
-import React from "react";
-import { Typography, List, Grid, Card } from "@mui/material";
-import {useViewPort} from "../../../.././ViewportProvider"
-import "./twilio/Phone.css";
+import { Card, Grid, List, Typography } from '@mui/material'
+import React from 'react'
+import './twilio/Phone.css'
 
 export function ShowHistory({ dialogType, data }) {
- 
-  const { width } = useViewPort();
-
-  const breakpoint = 620;
-  const isMobile = width < breakpoint;
   return (
     <div>
       {data && data.length ? (
-        dialogType === "call" ? (
+        dialogType === 'call' ? (
           data.map((callData) => {
             return (
-              <List style={{ paddingTop: "5px", paddingBottom: "5px" }}>
+              <List
+                key={callData.sid}
+                style={{ paddingTop: '5px', paddingBottom: '5px' }}
+              >
                 <Card
-                  style={{ padding: "0.5rem", boxShadow: "0px 0px 8px -4px" }}
+                  style={{ padding: '0.5rem', boxShadow: '0px 0px 8px -4px' }}
                 >
                   <Grid container>
                     <Grid
-                    className="showHistory"
+                      className="showHistory"
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>From:</Typography>
                       <Typography fontWeight={400}>{callData.from}</Typography>
                     </Grid>
                     <Grid
-                     className="showHistory"
+                      className="showHistory"
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>To:</Typography>
                       <Typography fontWeight={400}>{callData.to}</Typography>
                     </Grid>
                   </Grid>
-                  <Grid   className="showHistory" container >
+                  <Grid className="showHistory" container>
                     <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Start Time:</Typography>
@@ -56,11 +53,11 @@ export function ShowHistory({ dialogType, data }) {
                         {new Date(callData.startTime).toLocaleTimeString()}
                       </Typography>
                     </Grid>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>End Time:</Typography>
@@ -69,12 +66,12 @@ export function ShowHistory({ dialogType, data }) {
                       </Typography>
                     </Grid>
                   </Grid>
-                  <Grid className="showHistory" container >
-                    <Grid  
+                  <Grid className="showHistory" container>
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Duration:</Typography>
@@ -82,11 +79,11 @@ export function ShowHistory({ dialogType, data }) {
                         {callData.duration}
                       </Typography>
                     </Grid>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Status:</Typography>
@@ -96,39 +93,39 @@ export function ShowHistory({ dialogType, data }) {
                     </Grid>
                   </Grid>
                   <Grid className="showHistory" container>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>AnsweredBy:</Typography>
                       <Typography fontWeight={400}>
                         {callData.answeredBy === null
-                          ? "N/A"
+                          ? 'N/A'
                           : callData.answeredBy}
                       </Typography>
                     </Grid>
-                    <Grid 
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Price:</Typography>
                       <Typography fontWeight={400}>
-                        {callData.price + " " + callData.priceUnit}
+                        {callData.price + ' ' + callData.priceUnit}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid className="showHistory" container>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Direction:</Typography>
@@ -136,39 +133,39 @@ export function ShowHistory({ dialogType, data }) {
                         {callData.direction}
                       </Typography>
                     </Grid>
-                    <Grid 
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Caller Name:</Typography>
                       <Typography fontWeight={400}>
                         {callData.callerName === null ||
-                        callData.callerName === ""
-                          ? "N/A"
+                        callData.callerName === ''
+                          ? 'N/A'
                           : callData.callerName}
                       </Typography>
                     </Grid>
                   </Grid>
                 </Card>
               </List>
-            );
+            )
           })
-        ) : dialogType === "message" ? (
-          data.map((msgData, index) => {
+        ) : dialogType === 'message' ? (
+          data.map((msgData) => {
             return (
-              <List style={{ padding: "0px 5px"}}>
+              <List key={msgData.sid} style={{ padding: '0px 5px' }}>
                 <Card
-                  style={{ padding: "0.5rem", boxShadow: "0px 0px 8px -4px" }}
+                  style={{ padding: '0.5rem', boxShadow: '0px 0px 8px -4px' }}
                 >
-                  <Grid  className="showHistory" container>
-                    <Grid 
+                  <Grid className="showHistory" container>
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // // gap={1}
                     >
                       <Typography fontWeight={800}>From:</Typography>
@@ -176,60 +173,59 @@ export function ShowHistory({ dialogType, data }) {
                         {msgData.from.endpoint}
                       </Typography>
                     </Grid>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>To:</Typography>
                       <Typography fontWeight={400}>{msgData.to}</Typography>
                     </Grid>
                   </Grid>
-                  <Grid  className="showHistory" container>
-                    <Grid  
+                  <Grid className="showHistory" container>
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Sent Date:</Typography>
                       <Typography fontWeight={400}>
-                      {new Date(msgData.dateSent).toLocaleDateString()}
+                        {new Date(msgData.dateSent).toLocaleDateString()}
                       </Typography>
                     </Grid>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Sent Time:</Typography>
                       <Typography fontWeight={400}>
-                      {new Date(msgData.dateSent).toLocaleTimeString()}
-                        
+                        {new Date(msgData.dateSent).toLocaleTimeString()}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid className="showHistory" container>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Status:</Typography>
                       <Typography fontWeight={400}>{msgData.status}</Typography>
                     </Grid>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Durations:</Typography>
@@ -239,35 +235,40 @@ export function ShowHistory({ dialogType, data }) {
                     </Grid>
                   </Grid>
                   <Grid className="showHistory" container>
-                    <Grid  
+                    <Grid
                       item
                       xs={6}
-                      display={"flex"}
-                      direction={"row"}
+                      display={'flex'}
+                      direction={'row'}
                       // gap={1}
                     >
                       <Typography fontWeight={800}>Price:</Typography>
                       <Typography fontWeight={400}>
-                        {msgData.price + " " + msgData.priceUnit}
+                        {msgData.price + ' ' + msgData.priceUnit}
                       </Typography>
                     </Grid>
                   </Grid>
                   <Grid className="showHistory" container>
-                    <Grid item xs={12} display={"flex"} >
+                    <Grid item xs={12} display={'flex'}>
                       <Typography fontWeight={800}>Message:</Typography>
-                      <Typography fontWeight={400}style={{ wordBreak: "break-word" }}>{msgData.body}</Typography>
+                      <Typography
+                        fontWeight={400}
+                        style={{ wordBreak: 'break-word' }}
+                      >
+                        {msgData.body}
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Card>
               </List>
-            );
+            )
           })
         ) : null
       ) : (
-        <Typography fontSize={20} display={"flex"} justifyContent={"center"}>
+        <Typography fontSize={20} display={'flex'} justifyContent={'center'}>
           No history found at present.
         </Typography>
       )}
     </div>
-  );
+  )
 }

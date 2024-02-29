@@ -1,27 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 
 const useMuteWarning = (loudness, running) => {
-  const [showMuteWarning, setShowMuteWarning] = useState(false);
+  const [showMuteWarning, setShowMuteWarning] = useState(false)
 
   useEffect(() => {
     if (loudness > 6 && running) {
-      setShowMuteWarning(true);
+      setShowMuteWarning(true)
     }
-  }, [loudness, running]);
+  }, [loudness, running])
 
   useEffect(() => {
-    let timeout;
+    let timeout
     if (showMuteWarning) {
       timeout = setTimeout(() => {
-        setShowMuteWarning(false);
-      }, 5000);
+        setShowMuteWarning(false)
+      }, 5000)
     }
     return () => {
-      clearTimeout(timeout);
-    };
-  }, [showMuteWarning]);
+      clearTimeout(timeout)
+    }
+  }, [showMuteWarning])
 
-  return [showMuteWarning];
-};
+  return [showMuteWarning]
+}
 
-export default useMuteWarning;
+export default useMuteWarning

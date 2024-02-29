@@ -1,6 +1,6 @@
-import React from "react";
-import EmulatorMarker from "./EmulatorMarker.jsx";
-import useMarkerStore from "../../../../stores/emulator/markerStore.js";
+import React from 'react'
+import useMarkerStore from '../../../../stores/emulator/markerStore.js'
+import EmulatorMarker from './EmulatorMarker.jsx'
 
 const EmulatorMarkers = () => {
   const items = useMarkerStore((state) => state.items)
@@ -8,15 +8,10 @@ const EmulatorMarkers = () => {
   return (
     <>
       {items?.map((id) => {
-            return (
-              <EmulatorMarker
-                key={id}
-                id={id}
-              />
-            );
-          })}
+        return <EmulatorMarker key={id} id={id} />
+      })}
     </>
-  );
-};
+  )
+}
 
-export default EmulatorMarkers;
+export default EmulatorMarkers

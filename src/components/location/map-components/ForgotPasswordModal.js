@@ -1,49 +1,49 @@
-import React, { useState } from "react";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import ApiService from "../../../ApiService";
-import { FORGOT_PASSWORD } from "../../../constants";
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
+import Typography from '@mui/material/Typography'
+import React, { useState } from 'react'
+import ApiService from '../../../ApiService'
+import { FORGOT_PASSWORD } from '../../../constants'
 
 const ForgotPasswordModal = ({ isOpen, onClose }) => {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [resetSuccess, setResetSuccess] = useState(null);
-  const [responseError, setResponseError] = useState(null);
+  const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [resetSuccess, setResetSuccess] = useState(null)
+  const [responseError, setResponseError] = useState(null)
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+    setEmail(e.target.value)
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setEmailError("");
+    e.preventDefault()
+    setEmailError('')
 
     if (!email) {
-      setEmailError("Please enter your email address.");
+      setEmailError('Please enter your email address.')
     } else {
       try {
         const { success, data, error } = await ApiService.makeApiCall(
           FORGOT_PASSWORD,
-          "GET",
+          'GET',
           null,
           null,
           email
-        );
+        )
         if (success) {
-          const token = data.token;
-          localStorage.setItem("token", token);
-          setResetSuccess("Sent reset password mail successful");
+          const token = data.token
+          localStorage.setItem('token', token)
+          setResetSuccess('Sent reset password mail successful')
         } else {
-          setResponseError(error || "Invalid Email"); // Display appropriate error message
+          setResponseError(error || 'Invalid Email') // Display appropriate error message
         }
       } catch (error) {
-        console.error("Error occurred while sending mail:", error);
-        setResponseError("An error occurred while sending mail"); // Display a generic error message
+        console.error('Error occurred while sending mail:', error)
+        setResponseError('An error occurred while sending mail') // Display a generic error message
       }
     }
-  };
+  }
 
   return (
     <Modal
@@ -54,27 +54,27 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
     >
       <Box
         sx={{
-          paddingTop: "15px",
-          position: "absolute",
+          paddingTop: '15px',
+          position: 'absolute',
           width: 400,
-          bgcolor: "background.paper",
-          border: "2px solid #000",
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
           boxShadow: 24,
           p: 4,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)'
         }}
       >
         <span
           className="close"
           onClick={onClose}
           style={{
-            float: "right",
-            marginTop: ".5rem",
-            height: "2rem",
-            width: "2rem",
-            cursor: "pointer",
+            float: 'right',
+            marginTop: '.5rem',
+            height: '2rem',
+            width: '2rem',
+            cursor: 'pointer'
           }}
         >
           &times;
@@ -83,7 +83,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           id="modal-modal-title"
           variant="h6"
           component="h2"
-          style={{ paddingTop: "5px" }}
+          style={{ paddingTop: '5px' }}
         >
           Forgot Password
         </Typography>
@@ -93,14 +93,14 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           </Typography>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div className="form-group" style={{ paddingTop: "40px" }}>
+            <div className="form-group" style={{ paddingTop: '40px' }}>
               <label htmlFor="email">Email Address:</label>
               <input
                 style={{
-                  marginTop: "20px",
-                  marginBottom: "20px",
-                  marginLeft: "0px",
-                  marginRight: "0px",
+                  marginTop: '20px',
+                  marginBottom: '20px',
+                  marginLeft: '0px',
+                  marginRight: '0px'
                 }}
                 type="email"
                 id="email"
@@ -116,7 +116,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
               type="submit"
               variant="contained"
               color="primary"
-              style={{ marginTop: "30px", float: "right" }}
+              style={{ marginTop: '30px', float: 'right' }}
             >
               Reset Password
             </Button>
@@ -124,7 +124,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
         )}
       </Box>
     </Modal>
-  );
-};
+  )
+}
 
-export default ForgotPasswordModal;
+export default ForgotPasswordModal

@@ -1,9 +1,9 @@
 // CardComponent.jsx
-import React from "react";
-import { Card } from "@material-ui/core";
+import { Card } from '@material-ui/core'
+import React from 'react'
 
 const CardComponent = ({ children }) => {
-  return <Card variant="outlined">{children}</Card>;
-};
+  return <Card variant="outlined">{children}</Card>
+}
 
-export default CardComponent;
+export default CardComponent

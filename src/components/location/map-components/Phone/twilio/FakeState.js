@@ -1,19 +1,19 @@
-import React from "react";
-import states from "./states";
-import "./FakeState.css";
+import React from 'react'
+import './FakeState.css'
+import states from './states'
 
 const FakeState = ({ currentState, setState, setConn }) => {
-  const handleChange = event => {
-    const newState = states[event.target.value];
-    setState(newState);
+  const handleChange = (event) => {
+    const newState = states[event.target.value]
+    setState(newState)
     if (newState === states.INCOMING || newState === states.ON_CALL) {
-      setConn(true);
+      setConn(true)
     } else {
-      setConn(null);
+      setConn(null)
     }
-  };
+  }
 
-  const checkboxes = Object.keys(states).map(stateKey => {
+  const checkboxes = Object.keys(states).map((stateKey) => {
     return (
       <>
         <label htmlFor={stateKey}>{states[stateKey]}</label>
@@ -26,10 +26,10 @@ const FakeState = ({ currentState, setState, setConn }) => {
           onChange={handleChange}
         ></input>
       </>
-    );
-  });
+    )
+  })
 
-  return <div className="fake-state">{checkboxes}</div>;
-};
+  return <div className="fake-state">{checkboxes}</div>
+}
 
-export default FakeState;
+export default FakeState

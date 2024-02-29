@@ -1,6 +1,4 @@
-import { Device } from "twilio-client";
-import { Connection } from "twilio-client";
-import states from "../../components/location/map-components/Phone/twilio/states.js";
+import { Connection, Device } from "twilio-client";
 
 export interface TwillioDevice {
   emulatorId: number,

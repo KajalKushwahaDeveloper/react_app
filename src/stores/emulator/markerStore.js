@@ -1,31 +1,31 @@
-import { create } from "zustand";
-import { EMULATOR_URL } from "../../constants";
+import { create } from 'zustand'
+import { EMULATOR_URL } from '../../constants'
 
 async function initItems() {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
     const response = await fetch(EMULATOR_URL, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const emulators = await response.json();
-    const _ids = emulators.map((emulator) => emulator.id);
-    useMarkerStore.setState({ items: _ids });
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
+    const emulators = await response.json()
+    const _ids = emulators.map((emulator) => emulator.id)
+    useMarkerStore.setState({ items: _ids })
   } catch (error) {
-    console.error("V2 Failed to fetch emulators:", error);
+    console.error('V2 Failed to fetch emulators:', error)
   }
 }
 
 const useMarkerStore = create((set) => ({
   items: [],
   initMarkers() {
-    initItems();
+    initItems()
   },
   advance(emulators) {
-    if( !emulators ) {
+    if (!emulators) {
       return
     }
     set(() => {

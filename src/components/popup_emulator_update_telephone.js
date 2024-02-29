@@ -1,104 +1,103 @@
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import React, { useState, useEffect } from "react";
-import IconButton from "@mui/material/IconButton";
-import ClearIcon from "@mui/icons-material/Clear";
-import "../scss/login.scss";
-import { EMULATOR_TELEPHONE_UPDATE_URL } from "../constants";
-import DropDown from "./dropDown";
+import ClearIcon from '@mui/icons-material/Clear'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import Modal from '@mui/material/Modal'
+import React, { useEffect, useState } from 'react'
+import { EMULATOR_TELEPHONE_UPDATE_URL } from '../constants'
+import '../scss/login.scss'
+import DropDown from './dropDown'
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: "background.paper",
-  boxShadow: "-3px -3px 7px #97949473, 2px 2px 7px rgb(137, 138, 138)",
+  bgcolor: 'background.paper',
+  boxShadow: '-3px -3px 7px #97949473, 2px 2px 7px rgb(137, 138, 138)',
   pt: 2,
   px: 4,
-  pb: 3,
-};
+  pb: 3
+}
 
 const PopUpEmulatorTelephone = ({
   showToast,
   handleClose,
   open,
-  userToEdit,
+  userToEdit
 }) => {
-  const [id, setId] = useState("");
-  const [twilioNumber, setTwilioUpdatedPhone] = useState("");
-  const [alternateNumber, setAlternateNumber] = useState("");
-  const [error, setError] = useState("");
-  const [selectedDropdownValue, setSelectedDropdownValue] = useState(null);
-  const [voiceMsg, setVoiceMsg] = useState("");
+  const [id, setId] = useState('')
+  const [twilioNumber, setTwilioUpdatedPhone] = useState('')
+  const [alternateNumber, setAlternateNumber] = useState('')
+  const [error, setError] = useState('')
+  const [voiceMsg, setVoiceMsg] = useState('')
 
   useEffect(() => {
     if (userToEdit) {
-      setAlternateNumber(userToEdit.alternateTelephone);
-      setId(userToEdit.id);
-      setVoiceMsg(userToEdit.voiceMsg);
+      setAlternateNumber(userToEdit.alternateTelephone)
+      setId(userToEdit.id)
+      setVoiceMsg(userToEdit.voiceMsg)
     }
-  }, [userToEdit]);
+  }, [userToEdit])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!twilioNumber) {
-      alert("Telephone Number is empty, Please select a number.");
-      return;
+      alert('Telephone Number is empty, Please select a number.')
+      return
     }
 
     try {
-      const { success, error } = await addUser();
+      const { success, error } = await addUser()
 
       if (success) {
         if (userToEdit != null) {
-          handleClose(null, userToEdit?.id);
+          handleClose(null, userToEdit?.id)
         } else {
-          handleClose(null, 0);
+          handleClose(null, 0)
         }
-        showToast("Telephone Number Added", "success");
+        showToast('Telephone Number Added', 'success')
       } else {
-        showToast(error || "Failed to add Telephone Number", "error");
-        setError(error || "Failed to add Telephone Number");
+        showToast(error || 'Failed to add Telephone Number', 'error')
+        setError(error || 'Failed to add Telephone Number')
       }
     } catch (error) {
-      console.error("Error occurred while adding Telephone Number:", error);
-      setError("An error occurred while adding Telephone Number");
+      console.error('Error occurred while adding Telephone Number:', error)
+      setError('An error occurred while adding Telephone Number')
     }
     // setTwilioUpdatedPhone("");
     // setAlternateNumber("");
-  };
+  }
 
   const addUser = async () => {
     const user = {
-      id: id,
+      id,
       telephone: twilioNumber,
       alternateTelephone: alternateNumber,
-      voiceMsg: voiceMsg,
-    };
+      voiceMsg
+    }
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
     try {
       const response = await fetch(EMULATOR_TELEPHONE_UPDATE_URL, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(user),
-      });
+        body: JSON.stringify(user)
+      })
       if (!response.ok || response.status !== 200) {
-        const text = await response.text();
-        console.error("addUser error:", text);
-        return { success: false, error: text };
+        const text = await response.text()
+        console.error('addUser error:', text)
+        return { success: false, error: text }
       }
-      return { success: true };
+      return { success: true }
     } catch (e) {
-      showToast(`Failed to unassign user ${e}`, "error");
-      return { success: false, error: e };
+      showToast(`Failed to unassign user ${e}`, 'error')
+      return { success: false, error: e }
     }
-  };
+  }
 
   return (
     <div>
@@ -112,10 +111,10 @@ const PopUpEmulatorTelephone = ({
         <Box sx={{ ...style, width: 400 }}>
           <IconButton
             sx={{
-              position: "absolute",
+              position: 'absolute',
               top: 8,
               right: 8,
-              zIndex: 1,
+              zIndex: 1
             }}
             onClick={handleClose}
           >
@@ -124,12 +123,12 @@ const PopUpEmulatorTelephone = ({
           <form onSubmit={handleSubmit}>
             <h1
               style={{
-                marginBottom: "2rem",
-                fontSize: "1.5rem",
-                fontWeight: "600",
+                marginBottom: '2rem',
+                fontSize: '1.5rem',
+                fontWeight: '600'
               }}
             >
-              {" "}
+              {' '}
               Assign Phone Number
             </h1>
 
@@ -137,7 +136,6 @@ const PopUpEmulatorTelephone = ({
               setTwilioUpdatedPhone={setTwilioUpdatedPhone}
               alternateNumber={alternateNumber}
               setAlternateNumber={setAlternateNumber}
-              setSelectedDropdownValue={setSelectedDropdownValue}
               userToEdit={userToEdit}
               voiceMsg={voiceMsg}
               setVoiceMsg={setVoiceMsg}
@@ -146,10 +144,10 @@ const PopUpEmulatorTelephone = ({
             <button
               type="submit"
               style={{
-                width: "6rem",
-                float: "right",
-                marginRight: "0px",
-                padding: ".5rem 0",
+                width: '6rem',
+                float: 'right',
+                marginRight: '0px',
+                padding: '.5rem 0'
               }}
             >
               Add
@@ -159,7 +157,7 @@ const PopUpEmulatorTelephone = ({
         </Box>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default PopUpEmulatorTelephone;
+export default PopUpEmulatorTelephone
