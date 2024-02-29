@@ -9,18 +9,21 @@ import Speedometer from "./Address/Speedometer.jsx";
 
 const MapButtons = () => {
   console.log("MapButtons Rendered!");
-  const { width } = useViewPort();
   const { showToast, setIsTableVisible, isTableVisible, isMoveDialogVisible, setIsMoveDialogVisible } = useStates();
-
+  
   //Initiate fetchEmulators from store
   const tripData = useEmulatorStore((state) => state.tripData);
   const connectedEmulator = useEmulatorStore((state) => state.connectedEmulator);
   const movedEmulator = useEmulatorStore((state) => state.movedEmulator);
   const moveEmulator = useEmulatorStore((state) => state.moveEmulator);
+  
+  const { width } = useViewPort();
   const breakpoint = 620;
   const isMobile = width < breakpoint;
+
   const [isSpinning, setSpinning] = useState();
   const [showCancel, setShowCancel] = useState(false);
+
 
   const handleSetPositionClick = () => {
     if (connectedEmulator === null) {
@@ -116,7 +119,7 @@ const MapButtons = () => {
                   height: "40px",
                   zIndex: 2,
                   position: "absolute",
-                  top: "135px",
+                  top: isMobile ?  "100px" : "135px",
                   right: showCancel ? 300 : 180,
                   justifyContent: "center",
                   backgroundColor: "#f44336",
@@ -131,7 +134,7 @@ const MapButtons = () => {
                   height: "40px",
                   zIndex: 2,
                   position: "absolute",
-                  top: "135px",
+                  top: isMobile ?  "100px" : "135px",
                   right: showCancel ? 300 : 180,
                   justifyContent: "center",
                 }}
@@ -140,12 +143,13 @@ const MapButtons = () => {
                 Set position
               </button>
             }
+
             <button
               style={{
                 height: "38px",
                 zIndex: 2,
                 position: "absolute",
-                top: "135px",
+                top: isMobile ?  "100px" : "135px",
                 right: showCancel ? 180 : 60,
                 justifyContent: "center",
               }}
@@ -160,7 +164,7 @@ const MapButtons = () => {
                   height: "40px",
                   zIndex: 2,
                   position: "absolute",
-                  top: "135px",
+                  top: isMobile ?  "100px": "135px",
                   right: 60,
                   justifyContent: "center",
                   backgroundColor: "#f44336",
@@ -178,7 +182,7 @@ const MapButtons = () => {
             height: "40px",
             zIndex: 2,
             position: "absolute",
-            top: "135px",
+            top: isMobile ?  "100px" : "135px",
             right: 0,
             justifyContent: "center",
           }}

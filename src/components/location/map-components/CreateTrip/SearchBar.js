@@ -6,6 +6,7 @@ import PlacesAutocomplete, {
 import { classnames } from "../../../../helpers";
 import "./autocomplete/auto_complete.css";
 import TextField from "@mui/material/TextField";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 const SearchBar = (props) => {
   const [inputValue, setInputValue] = useState("");
@@ -67,8 +68,7 @@ const SearchBar = (props) => {
         {({ getInputProps, suggestions, getSuggestionItemProps }) => {
           return (
             <div className="Demo__search-bar-container">
-              <div className="Demo__search-input-container"
-              >
+              <div className="Demo__search-input-container">
                 <TextField
                   id="filled-basic"
                   label={props.label}
@@ -79,22 +79,11 @@ const SearchBar = (props) => {
                     placeholder: "Search Places...",
                     className: "Demo__search-input",
                   })}
+                  fullWidth
                 />
               </div>
               {suggestions.length > 0 && (
-                <div
-                  className="Demo__autocomplete-container"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    overflowY: "scroll",
-                    maxHeight: "70px",
-                    width: "100%",
-                    paddingLeft: "1rem",
-                    cursor: "pointer",
-                    fontSize:".9rem"
-                  }}
-                >
+                <div className="Demo__autocomplete-container">
                   {suggestions.map((suggestion) => {
                     const className = classnames("Demo__suggestion-item", {
                       "Demo__suggestion-item--active": suggestion.active,
@@ -102,13 +91,24 @@ const SearchBar = (props) => {
                     return (
                       <div
                         {...getSuggestionItemProps(suggestion, { className })}
+                        style={{
+                          margin: ".2rem 0",
+                          display:"flex",
+                          alignItems:"flex-start",
+                          justifyContent:"flex-start",
+                        }}
                       >
-                        <strong>
-                          {suggestion.formattedSuggestion.mainText}
-                        </strong>{" "}
-                        <small>
-                          {suggestion.formattedSuggestion.secondaryText}
-                        </small>
+                        <div>
+                          <LocationOnOutlinedIcon className="location_icon" />
+                        </div>
+                        <div>
+                          <strong>
+                            {suggestion.formattedSuggestion.mainText}
+                          </strong>
+                          <small className="small_text">
+                            {suggestion.formattedSuggestion.secondaryText}
+                          </small>
+                        </div>
                       </div>
                     );
                   })}
