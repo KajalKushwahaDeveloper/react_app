@@ -23,6 +23,9 @@ const EmulatorMarker = React.memo(({ id }) => {
   //PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
   var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
   icon_url = icon_url + "DEFAULT";
+  if (emulatorRef.current?.velocity < 30 || emulatorRef.current?.velocity > 60) {
+    icon_url = `${icon_url}/FLASH`;
+  }
   icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
 
   const emulatorIcon = {
@@ -64,12 +67,18 @@ const EmulatorMarker = React.memo(({ id }) => {
     }
 
     emulatorRef.current = state[id];
+    // Update marker position
     const newPosition = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
     markerRef.current?.setPosition(newPosition);
-
+    // Update marker icon
     var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
     icon_url = icon_url + "DEFAULT";
+    // check velocity and add flash if velocity is greater than 60 or less than 30
+    if (emulatorRef.current?.velocity > 60 || emulatorRef.current?.velocity < 30) {
+      icon_url = `${icon_url}/FLASH`;
+    }
     icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
+    console.log(icon_url);
 
     const emulatorIcon = {
       url: icon_url,
@@ -90,8 +99,8 @@ const EmulatorMarker = React.memo(({ id }) => {
       setMarkerVisibility(false);
       return
     }
-      // show the marker
-      setMarkerVisibility(true);
+    // show the marker
+    setMarkerVisibility(true);
   }
   ), [id])
 

@@ -19,7 +19,7 @@ const EmulatorMarkerSelected = () => {
       if (markerRef.current === null || markerRef.current === undefined) {
         return
       }
-      if(emulatorRef.current === null || emulatorRef.current === undefined){
+      if (emulatorRef.current === null || emulatorRef.current === undefined) {
         return
       }
       // moved
@@ -31,27 +31,27 @@ const EmulatorMarkerSelected = () => {
         // do something maybe
       }
       // un-moved..
-      else if(movedEmulator && movedEmulator.moveMarker === false) {
-       // reset markerRef
+      else if (movedEmulator && movedEmulator.moveMarker === false) {
+        // reset markerRef
         const newPosition = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
         markerRef.current?.setPosition(newPosition);
-        markerRef.current?.setAnimation(null); 
+        markerRef.current?.setAnimation(null);
       }
       movedEmulatorRef.current = movedEmulator
     },
   ), [])
-  
+
   useEffect(() => useEmulatorStore.subscribe(state => state.draggedEmulator, (draggedEmulator) => {
     draggedEmulatorRef.current = draggedEmulator
-    if(markerRef.current === null || markerRef.current === undefined){
+    if (markerRef.current === null || markerRef.current === undefined) {
       return
     }
-    if(draggedEmulator === null || draggedEmulator === undefined){
+    if (draggedEmulator === null || draggedEmulator === undefined) {
       const position = new window.google.maps.LatLng(emulatorRef.current?.latitude, emulatorRef.current?.longitude);
       markerRef.current?.setPosition(position);
     }
   }), [])
-  
+
   useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
     if (markerRef.current === null || markerRef.current === undefined) {
       return
@@ -71,9 +71,12 @@ const EmulatorMarkerSelected = () => {
     //TODO: use animation instead
 
     var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
-    icon_url = icon_url + "SELECT";
+    icon_url = icon_url + "SELECT";   // check velocity and add flash if velocity is greater than 60 or less than 30
+    if (emulatorRef.current?.velocity > 60 || emulatorRef.current?.velocity < 30) {
+      icon_url = `${icon_url}/FLASH`;
+    }
     icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
-
+    console.log(icon_url);
     const emulatorIcon = {
       url: icon_url,
       scaledSize: new window.google.maps.Size(20, 20),
@@ -173,6 +176,9 @@ const EmulatorMarkerSelected = () => {
 
   var icon_url = `images/${emulatorRef.current?.tripStatus}/`;
   icon_url = icon_url + "SELECT";
+  if (emulatorRef.current?.velocity > 60 || emulatorRef.current?.velocity < 30) {
+    icon_url = `${icon_url}/FLASH`;
+  }
   icon_url = `${icon_url}/${emulatorRef.current?.status}.svg`;
 
   const emulatorIcon = {
