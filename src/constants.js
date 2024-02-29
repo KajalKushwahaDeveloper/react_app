@@ -1,12 +1,4 @@
-export const LOCAL_SPRING_URL = "http://localhost:8080"
-
-export const LIVE_AWS_SPRING_URL_HTTP = "http://react-app-lb-260499273.us-east-1.elb.amazonaws.com:8080"
-export const LIVE_AWS_SPRING_URL_HTTP_LB = "http://logbookgps.com:8080"
-
-export const LIVE_AWS_SPRING_URL_HTTPS = "https://react-app-lb-260499273.us-east-1.elb.amazonaws.com:8081"
-export const LIVE_AWS_SPRING_URL_HTTPS_LB = "https://logbookgps.com:8081"
-
-export const BASE_URL = LIVE_AWS_SPRING_URL_HTTPS_LB;
+export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";

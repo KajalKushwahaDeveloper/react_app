@@ -6,6 +6,10 @@ import { CLIENT_LOGIN } from "./constants";
 import ForgotPasswordModal from "./components/location/map-components/ForgotPasswordModal";
 
 const LoginPage = () => {
+  // log env variables
+  console.log("BASE_URL", process.env.REACT_APP_BASE_URL);
+  console.log("LOG_LEVEL", process.env.REACT_APP_LOG_LEVEL);
+
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
