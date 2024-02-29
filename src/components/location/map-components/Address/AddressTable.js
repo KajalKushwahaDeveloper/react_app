@@ -27,6 +27,11 @@ const AddressTable = () => {
   }
 
   const setValues = useCallback((emulator, tripData, isHover) => {
+    function readableTime(time) {
+      const date = new Date(time);
+      return date.toLocaleString();
+    }
+
     const currentAddress = emulator ? emulator.address : "N/A";
 
     const fromAddress = tripData ?
@@ -47,7 +52,7 @@ const AddressTable = () => {
       " ," +
       tripData.toAddress[3]?.long_name : "N/A";
 
-    const arrivalTime = tripData ? "TODO" : "N/A";
+    const arrivalTime = tripData?.emulatorDetails ? (readableTime(tripData.emulatorDetails.departTime) + "<br/>" + readableTime(tripData.emulatorDetails.arrivalTime)) : "N/A";
     const totalTime = tripData ? "TODO" : "N/A";
     const remainingDistance = tripData ? "TODO" : "N/A";
 
@@ -433,7 +438,7 @@ const AddressTable = () => {
                   height: "64px",
                 }}
               >
-                <div className="address-table-heading">Final Arrival time </div>
+                <div className="address-table-heading">Depart/Arrival time </div>
                 <div className="addressTable" id="3" ref={elementRefs.current[3]}>
                   N/A
                 </div>

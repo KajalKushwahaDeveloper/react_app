@@ -3,7 +3,7 @@ import SearchBar from "./SearchBar.js";
 import { CREATE_TRIP_URL } from "../../../../constants.js";
 import CloseIcon from "@mui/icons-material/Close";
 import ApiService from "../../../../ApiService.js";
-import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
+import { Modal, Box, Typography, Button, IconButton, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { useStates } from "../../../../StateProvider.js";
@@ -13,6 +13,7 @@ import { useViewPort } from "../../../.././ViewportProvider.js";
 
 import DateTimePickerValue from "./DateTimeFieldValue.tsx";
 import dayjs from "dayjs";
+import { CheckBox } from "@mui/icons-material";
 
 const CreateTripDialog = () => {
 
@@ -38,7 +39,9 @@ const CreateTripDialog = () => {
   const [toAddress, setToAddress] = useState();
   const [inputValue, setInputValue] = useState("");
 
-  const [dateTime, setDateTime] = React.useState(dayjs("2024-01-30T15:30"));
+  const [departTime, setDepartTime] = React.useState(dayjs());
+  const [departNow, setDepartNow] = React.useState(true);
+  const [arrivalTime, setArrivalTime] = React.useState(dayjs().add(4, 'day'));
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,7 +55,7 @@ const CreateTripDialog = () => {
     setInputValue(event.target.value);
   };
 
-  const handleAddClick = async () => {
+  const handleCreateTripClick = async () => {
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
       showToast("Please fill both locations!", "error");
       return;
@@ -72,13 +75,7 @@ const CreateTripDialog = () => {
       confirmed = true;
     }
     if (confirmed) {
-    
-    // Get the current date
-    const currentDate = dayjs();
 
-    // Add four days
-      const futureDate = currentDate.add(4, 'day');
-      
       setIsLoading(true);
       const payload = {
         startLat: fromLat,
@@ -87,9 +84,10 @@ const CreateTripDialog = () => {
         endLong: toLong,
         fromAddress: fromAddress,
         toAddress: toAddress,
-        speed: 60,
         emulatorDetailsId: selectedEmulator.id,
-        arrivalTime: futureDate.unix() * 1000,
+        departTime: departNow? dayjs().unix() * 1000 : departTime.unix() * 1000,
+        arrivalTime: arrivalTime.unix() * 1000,
+        departNow: departNow
       };
       const token = localStorage.getItem("token");
       const { success, error } = await ApiService.makeApiCall(
@@ -134,7 +132,7 @@ const CreateTripDialog = () => {
               paddingRight: "0px",
               paddingBottom: "1rem",
               zIndex: "0px !important",
-              borderRadius:"1rem",
+              borderRadius: "1rem",
             }}
           >
             <IconButton
@@ -204,20 +202,44 @@ const CreateTripDialog = () => {
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
                     label="To Address"
-                   style={{ width:"80vw !important", background:"white !important"}}
+                    style={{ width: "80vw !important", background: "white !important" }}
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
-                {/* <div style={{ margin: "1rem 0" ,width: isMobile ? "85vw" : "48vw" }}>
+                <div style={{ margin: "1rem 0", width: isMobile ? "85vw" : "48vw" }}>
+                  <FormControlLabel control={
+                    <Checkbox
+                      checked={departNow}
+                      onChange={() => {
+                        setDepartNow(!departNow);
+                      }}
+                    />}
+                    label="Depart Now" />
+                </div>
+                {
+                  !departNow &&
+                  <div style={{ margin: "1rem 0", width: isMobile ? "85vw" : "48vw" }}>
+                    <DateTimePickerValue
+                      value={departTime}
+                      title={"Depart Time"}
+                      setValue={setDepartTime}
+                    />
+                    {error && <p className="error">{error}</p>}
+                  </div>
+                }
+
+                <div style={{ margin: "1rem 0", width: isMobile ? "85vw" : "48vw" }}>
                   <DateTimePickerValue
-                    value={dateTime}
-                    setValue={setDateTime}
+                    value={arrivalTime}
+                    title={"Arrival Time"}
+                    setValue={setArrivalTime}
                   />
                   {error && <p className="error">{error}</p>}
-                </div> */}
+                </div>
+
                 <div style={{ margin: "1rem 0" }}>
                   <Button
-                    onClick={handleAddClick}
+                    onClick={handleCreateTripClick}
                     style={{
                       cursor: "pointer",
                       width: "auto",
@@ -226,7 +248,7 @@ const CreateTripDialog = () => {
                       backgroundColor: "#1976d2",
                       color: "white",
                       marginRight: "0.7rem",
-                      float:"right",
+                      float: "right",
                     }}
                     disabled={isLoading ? true : false}
                   >

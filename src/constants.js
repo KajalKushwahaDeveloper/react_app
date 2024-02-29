@@ -1,15 +1,12 @@
-export const MY_CONSTANT_STRING = "Hello, World!";
-export const LOCAL_API = "http://192.168.1.116:8080";
-export const LOCAL_API_2 = "http://192.168.1.129:8080";
-export const LOCAL_API_3 = "http://192.168.1.6:8080";
-export const LOCAL_API_LOCAL = "http://localhost:8080";
-export const LIVE_API = "http://64.226.101.239:8080";
-export const LIVE_API_CLIENT = "http://149.28.69.114:8080";
-export const LIVE_API_CLIENT_HTTPS = "https://www.logbookgps.com/api";  
+export const LOCAL_SPRING_URL = "http://localhost:8080"
 
-export const LOCAL_API_SAURABH = "http://192.168.1.132:8080";
+export const LIVE_AWS_SPRING_URL_HTTP = "http://react-app-lb-260499273.us-east-1.elb.amazonaws.com:8080"
+export const LIVE_AWS_SPRING_URL_HTTP_LB = "http://logbookgps.com:8080"
 
-export const BASE_URL = LOCAL_API_LOCAL;
+export const LIVE_AWS_SPRING_URL_HTTPS = "https://react-app-lb-260499273.us-east-1.elb.amazonaws.com:8081"
+export const LIVE_AWS_SPRING_URL_HTTPS_LB = "https://logbookgps.com:8081"
+
+export const BASE_URL = LIVE_AWS_SPRING_URL_HTTPS_LB;
 
 //BASE
 export const RESET_PASSWORD = BASE_URL + "/reset-password";
@@ -51,6 +48,7 @@ export const TRIP_POINTS_URL = TRIP_URL + "/trip-points";
 export const CREATE_TRIP_URL = TRIP_URL + "/create";
 export const TRIP_STOPS_URL = TRIP_URL + "/stops";
 export const TRIP_STOPS_DELETE_URL = TRIP_STOPS_URL + "/delete";
+export const TRIP_STOPS_UPDATE_WAIT_TIME_URL = TRIP_STOPS_URL + "/updateWaitTime";
 
 export const TRIP_TOGGLE = TRIP_URL + "/toggle";
 export const TRIP_HISTORY = TRIP_URL + "/history";

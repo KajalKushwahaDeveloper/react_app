@@ -25,3 +25,8 @@ export function compareTripDataChangedNullOrId(
 
   return false;
 }
+
+export function toHumanReadableTime(time: number) {
+  const date = new Date(time);
+  return date.toLocaleString();
+}

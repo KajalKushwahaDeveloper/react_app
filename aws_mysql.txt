@@ -1,0 +1,30 @@
+MYSQL
+
+
+logbookgps_password
+
+
+https://medium.com/@midejoseph24/deploying-mysql-on-kubernetes-16758a42a746
+
+
+
+
+kubectl delete pods --all -A
+
+kubectl delete pod -n default logbookgps-7c8c4f548f-2fx7g --grace-period=0
+
+
+
+kubectl exec -it <pod-name> -- /bin/sh
+
+
+kubectl exec -it react-app-64c7595b6c-bz4ft -- /bin/sh
+kubectl exec -it spring-boot-647ddc996d-nr7l7 -- /bin/sh
+
+curl -4 icanhazip.com
+
+curl -X POST -H "Content-Type: application/json" -d '{"email": "admin@123", "password": "password"}' http://spring-boot/log-in
+
+curl -X POST -H "Content-Type: application/json" -d '{"email": "admin@123","password": "password","firstName": "John","lastName": "Doe"}' http://spring-boot/admin/sign-in
+
+curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkAxMjMiLCJleHAiOjE3MDg4OTM3NzEsImlhdCI6MTcwODg1Nzc3MX0.EPZf7U0ic7kSGAbe3JcTJcEsWfzmRIfrGIlJFsjToRvPpNEuobxp0T0vzvlZqlYaxYpSn0_u597MaO7EfyRwaA" http://spring-boot/emulator

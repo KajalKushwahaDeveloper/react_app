@@ -64,6 +64,7 @@ const GoogleMapContainer = () => {
 
   useEffect(() => useEmulatorStore.subscribe(
     state => state.center, (center) => {
+      console.log("TEST@ center changed")
       if (mapRef.current === null || mapRef.current === undefined) {
         return;
       }
@@ -100,6 +101,7 @@ const GoogleMapContainer = () => {
             tripData.tripPoints[Math.floor(tripData.tripPoints.length / 2)].lng
           )
         );
+        console.log("TEST@ tripData changed")
         mapRef.current.fitBounds(bounds);
       }
     }
@@ -111,25 +113,7 @@ const GoogleMapContainer = () => {
     libraries: libraries,
   });
 
-  const [selectedStop, setSelectedStop] = React.useState(null);
-
-  const handleMarkerClick = (stop) => {
-    setSelectedStop(stop);
-  };
-
-  const createDevices = useEmulatorStore.getState().createDevices;
-
-  const { data } = useFetch(EMULATOR_URL);
-
-  useEffect(() => {
-    if (data !== null) {
-      createDevices(data);
-    }
-  }, [createDevices, data]);
-
-  const handleInfoWindowClose = () => {
-    setSelectedStop(null);
-  };
+  console.log("TEST@ GoogleMapContainer rendered")
 
   const containerStyle = {
     position: "unset !important",
@@ -150,14 +134,7 @@ const GoogleMapContainer = () => {
     >
       <PathComponent />
       <ConnectedEmulatorComponent />
-      <StopComponents handleMarkerClick={handleMarkerClick}></StopComponents>
-      {selectedStop && (
-        <SelectedStopInfo
-          selectedStop={selectedStop}
-          handleInfoWindowClose={handleInfoWindowClose}
-        ></SelectedStopInfo>
-      )}
-
+      <StopComponents />
       <EmulatorMarkers />
     </GoogleMap>
   ) : (
