@@ -36,7 +36,7 @@ import {
 } from "../../../stores/emulator/types_maps.tsx";
 import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
 import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
-
+import "../../../css/emulator_list_row.css";
 
 
 const GpsTable = () => {
@@ -277,7 +277,7 @@ const GpsTable = () => {
       >
         <>
           <table
-            style={{ width: "100%"}}
+            style={{ width: "100%" }}
           >
             <tbody>
               {(rowsPerPage > 0
@@ -294,13 +294,13 @@ const GpsTable = () => {
                     minHeight: isMobile ? 'auto' : '80px',
                     maxHeight: isMobile ? 'auto' : '80px',
                     border: '2px solid #E6E6E6',
-                    background:
-                      selectedEmulator?.id === emulator.id
-                        ? 'lightblue'
-                        : hoveredEmulator?.id === emulator.id
-                          ? 'lightpink'
-                          : 'transparent'
                   }}
+                  className={`${(emulator.velocity < 30 || emulator.velocity > 60) && emulator.id === selectedEmulator?.id ? 'blink-selected' :
+                      (emulator.velocity < 30 || emulator.velocity > 60) && emulator.id === hoveredEmulator?.id ? 'blink-hovered' :
+                        (emulator.velocity < 30 || emulator.velocity > 60) ? 'blink' : ''
+                    } ${emulator.id === selectedEmulator?.id ? 'selected' : ''
+                    } ${emulator.id === hoveredEmulator?.id ? 'hovered' : ''
+                    }`}
                   onClick={() => handleEmulatorCheckboxChange(emulator)}
                 >
                   <td
