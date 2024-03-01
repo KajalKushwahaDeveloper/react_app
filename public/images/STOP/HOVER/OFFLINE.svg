@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
     <!-- Circle with initial settings -->
-	<circle cx="50%" cy="50%" r="50%" fill="#C1C1C1"> </circle>
+	<circle cx="50%" cy="50%" r="50%" fill="#F0E68C"> </circle>
     <circle cx="50%" cy="50%" r="42%" fill="#D71F10" >
 		<animate attributeName="r" values="42%;36%;42%" dur="0.5s" begin="0.25s" keyTimes="0;0.5;1" repeatCount="indefinite" />
     </circle>
     <!-- Draw a PAUSE Icon Path -->
-    <path fill="#C1C1C1"
+    <path fill="#F0E68C"
         d="M130 257c.001-30.163-.006-59.827.003-89.49.008-23.13 14.273-37.501 37.257-37.505 59.827-.011 119.654-.011 179.48 0 22.97.004 37.253 14.387 37.256 37.503.008 59.66.008 119.32 0 178.98-.003 23.307-14.301 37.507-37.754 37.51-59.494.005-118.987.005-178.48 0-23.671-.003-37.756-14.185-37.76-38.008-.004-29.497-.001-58.993-.001-88.99z">
     </path>
 </svg>
