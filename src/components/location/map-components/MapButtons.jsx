@@ -1,4 +1,5 @@
 import SyncIcon from '@mui/icons-material/Sync'
+import Button from '@mui/material/Button'
 import React, { useEffect, useState } from 'react'
 import ApiService from '../../../ApiService.js'
 import { useStates } from '../../../StateProvider.js'
@@ -121,72 +122,78 @@ const MapButtons = () => {
           <>
             <Speedometer />
             {movedEmulator && movedEmulator.moveMarker === true ? (
-              <button
+              <Button
+                variant="contained"
                 style={{
                   height: '40px',
                   zIndex: 2,
                   position: 'absolute',
                   top: isMobile ? '100px' : '135px',
-                  right: showCancel ? 300 : 180,
+                  right: showCancel ? 310 : 180,
                   justifyContent: 'center',
                   backgroundColor: '#f44336'
                 }}
                 onClick={handleSetPositionCancelClick}
               >
                 Cancel Set Position
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
+                variant="contained"
                 style={{
                   height: '40px',
                   zIndex: 2,
                   position: 'absolute',
                   top: isMobile ? '100px' : '135px',
-                  right: showCancel ? 300 : 180,
+                  right: showCancel ? 310 : 180,
                   justifyContent: 'center'
                 }}
                 onClick={handleSetPositionClick}
               >
                 Set position
-              </button>
+              </Button>
             )}
 
-            <button
+            <Button
+              variant="contained"
               style={{
-                height: '38px',
+                height: '40px',
                 zIndex: 2,
                 position: 'absolute',
                 top: isMobile ? '100px' : '135px',
-                right: showCancel ? 180 : 60,
+                right: showCancel ? 191 : 60,
                 justifyContent: 'center'
               }}
               onClick={handleCreateTripButton}
             >
               Create Trip
-            </button>
+            </Button>
 
             {showCancel ? (
-              <button
+              <Button
+                variant="contained"
                 style={{
                   height: '40px',
                   zIndex: 2,
                   position: 'absolute',
                   top: isMobile ? '100px' : '135px',
-                  right: 60,
+                  right: 70,
                   justifyContent: 'center',
                   backgroundColor: '#f44336'
                 }}
                 onClick={handleCancelTripClick}
               >
                 Cancel Trip
-              </button>
+              </Button>
             ) : null}
           </>
         )}
-        <button
+        <Button
+          variant="contained"
           style={{
-            width: '40px',
+            width: '30px',
             height: '40px',
+            margin: '0 0.2rem',
             zIndex: 2,
             position: 'absolute',
             top: isMobile ? '100px' : '135px',
@@ -203,7 +210,7 @@ const MapButtons = () => {
               transform: isSpinning ? 'rotate(360deg)' : '' // Apply rotation based on state
             }}
           />
-        </button>
+        </Button>
       </div>
     </>
   )
