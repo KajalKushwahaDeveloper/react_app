@@ -1,112 +1,118 @@
-import React, { useState } from "react";
-import SearchBar from "./SearchBar.js";
-import { CREATE_TRIP_URL } from "../../../../constants.js";
-import CloseIcon from "@mui/icons-material/Close";
-import ApiService from "../../../../ApiService.js";
-import { Modal, Box, Typography, Button, IconButton, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
-import CircularProgress from "@mui/material/CircularProgress";
+import CloseIcon from '@mui/icons-material/Close'
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  Modal,
+  Typography
+} from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
+import React, { useState } from 'react'
+import ApiService from '../../../../ApiService.js'
+import { CREATE_TRIP_URL } from '../../../../constants.js'
+import SearchBar from './SearchBar.js'
 
-import { useStates } from "../../../../StateProvider.js";
-import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
-import { compareSelectedEmulator } from "../../../../stores/emulator/types_maps.tsx";
-import { useViewPort } from "../../../.././ViewportProvider.js";
+import { useViewPort } from '../../../.././ViewportProvider.js'
+import { useStates } from '../../../../StateProvider.js'
+import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
+import { compareSelectedEmulator } from '../../../../stores/emulator/types_maps.tsx'
 
-import DateTimePickerValue from "./DateTimeFieldValue.tsx";
-import dayjs from "dayjs";
-import { CheckBox } from "@mui/icons-material";
+import dayjs from 'dayjs'
+import DateTimePickerValue from './DateTimeFieldValue.tsx'
 
 const CreateTripDialog = () => {
+  const { width } = useViewPort()
+  const breakpoint = 620
+  const isMobile = width < breakpoint
 
-  const { width } = useViewPort();
-  const breakpoint = 620;
-  const isMobile = width < breakpoint;
-
-
-  const { isTableVisible } = useStates();
-  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  const { isTableVisible } = useStates()
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators)
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldSelectedEmulator, newSelectedEmulator) => {
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator);
+      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
     }
-  );
+  )
 
-  const [fromLat, setFromLat] = useState();
-  const [fromLong, setFromLong] = useState();
-  const [toLat, setToLat] = useState();
-  const [toLong, setToLong] = useState();
-  const [fromAddress, setFromAddress] = useState();
-  const [toAddress, setToAddress] = useState();
-  const [inputValue, setInputValue] = useState("");
+  const [fromLat, setFromLat] = useState()
+  const [fromLong, setFromLong] = useState()
+  const [toLat, setToLat] = useState()
+  const [toLong, setToLong] = useState()
+  const [fromAddress, setFromAddress] = useState()
+  const [toAddress, setToAddress] = useState()
+  const [inputValue, setInputValue] = useState('')
 
-  const [departTime, setDepartTime] = React.useState(dayjs());
-  const [departNow, setDepartNow] = React.useState(true);
-  const [arrivalTime, setArrivalTime] = React.useState(dayjs().add(4, 'day'));
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [departTime, setDepartTime] = React.useState(dayjs())
+  const [departNow, setDepartNow] = React.useState(true)
+  const [arrivalTime, setArrivalTime] = React.useState(dayjs().add(4, 'day'))
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const { setIsTableVisible, showToast } = useStates();
+  const { setIsTableVisible, showToast } = useStates()
 
   const handleClose = () => {
-    setIsTableVisible(false);
-  };
+    setIsTableVisible(false)
+  }
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+    setInputValue(event.target.value)
+  }
 
   const handleCreateTripClick = async () => {
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
-      showToast("Please fill both locations!", "error");
-      return;
+      showToast('Please fill both locations!', 'error')
+      return
     }
 
-    setError("");
+    setError('')
 
-    let confirmed = false;
+    let confirmed = false
     if (
       selectedEmulator.startLat !== null &&
-      selectedEmulator.tripStatus !== "STOP"
+      selectedEmulator.tripStatus !== 'STOP'
     ) {
       confirmed = window.confirm(
-        "Creating new Trip will remove running trip for this emulator!! Continue?"
-      );
+        'Creating new Trip will remove running trip for this emulator!! Continue?'
+      )
     } else {
-      confirmed = true;
+      confirmed = true
     }
     if (confirmed) {
-
-      setIsLoading(true);
+      setIsLoading(true)
       const payload = {
         startLat: fromLat,
         startLong: fromLong,
         endLat: toLat,
         endLong: toLong,
-        fromAddress: fromAddress,
-        toAddress: toAddress,
+        fromAddress,
+        toAddress,
         emulatorDetailsId: selectedEmulator.id,
-        departTime: departNow? dayjs().unix() * 1000 : departTime.unix() * 1000,
+        departTime: departNow
+          ? dayjs().unix() * 1000
+          : departTime.unix() * 1000,
         arrivalTime: arrivalTime.unix() * 1000,
-        departNow: departNow
-      };
-      const token = localStorage.getItem("token");
+        departNow
+      }
+      const token = localStorage.getItem('token')
       const { success, error } = await ApiService.makeApiCall(
         CREATE_TRIP_URL,
-        "POST",
+        'POST',
         payload,
         token
-      );
+      )
       if (success) {
-        setIsLoading(true);
-        showToast("Trip Added successfully", "success");
-        fetchEmulators();
-        handleClose();
+        setIsLoading(true)
+        showToast('Trip Added successfully', 'success')
+        fetchEmulators()
+        handleClose()
       } else {
-        showToast(error, "error");
+        showToast(error, 'error')
       }
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -119,20 +125,20 @@ const CreateTripDialog = () => {
         >
           <Box
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: isMobile ? "90vw" : "50vw",
-              bgcolor: "background.paper",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: isMobile ? '90vw' : '50vw',
+              bgcolor: 'background.paper',
               boxShadow: 24,
               p: 4,
-              paddingTop: "0px",
-              paddingLeft: "0px",
-              paddingRight: "0px",
-              paddingBottom: "1rem",
-              zIndex: "0px !important",
-              borderRadius: "1rem",
+              paddingTop: '0px',
+              paddingLeft: '0px',
+              paddingRight: '0px',
+              paddingBottom: '1rem',
+              zIndex: '0px !important',
+              borderRadius: '1rem'
             }}
           >
             <IconButton
@@ -141,10 +147,10 @@ const CreateTripDialog = () => {
               onClick={handleClose}
               aria-label="close"
               sx={{
-                position: "absolute",
+                position: 'absolute',
                 top: 10,
                 right: 10,
-                color: "white",
+                color: 'white'
               }}
             >
               <CloseIcon />
@@ -153,23 +159,23 @@ const CreateTripDialog = () => {
               variant="h6"
               component="h2"
               style={{
-                padding: "10px",
-                backgroundColor: "#007dc6",
-                color: "white",
+                padding: '10px',
+                backgroundColor: '#007dc6',
+                color: 'white',
                 lineHeight: 2.6,
-                borderTopLeftRadius: "1rem",
-                borderTopRightRadius: "1rem",
+                borderTopLeftRadius: '1rem',
+                borderTopRightRadius: '1rem'
               }}
             >
               Create Trip
             </Typography>
-            <div style={{ margin: "1rem 0" }}>
+            <div style={{ margin: '1rem 0' }}>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexDirection: "column",
-                  alignItems: "center",
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: 'column',
+                  alignItems: 'center'
                 }}
               >
                 <div style={{ flex: 1 }}>
@@ -182,16 +188,16 @@ const CreateTripDialog = () => {
                     handleInputChange={handleInputChange}
                     label="From Address"
                     style={{
-                      width: "80vw !important",
-                      background: "white !important",
+                      width: '80vw !important',
+                      background: 'white !important'
                     }}
                   />
                 </div>
                 <div
                   style={{
-                    margin: "1rem 0",
-                    width: "80vw !important",
-                    background: "white !important",
+                    margin: '1rem 0',
+                    width: '80vw !important',
+                    background: 'white !important'
                   }}
                 >
                   <SearchBar
@@ -202,63 +208,82 @@ const CreateTripDialog = () => {
                     setInputValue={setInputValue}
                     handleInputChange={handleInputChange}
                     label="To Address"
-                    style={{ width: "80vw !important", background: "white !important" }}
+                    style={{
+                      width: '80vw !important',
+                      background: 'white !important'
+                    }}
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
-                <div style={{ margin: "1rem 0", width: isMobile ? "85vw" : "48vw" }}>
-                  <FormControlLabel control={
-                    <Checkbox
-                      checked={departNow}
-                      onChange={() => {
-                        setDepartNow(!departNow);
-                      }}
-                    />}
-                    label="Depart Now" />
+                <div
+                  style={{
+                    margin: '1rem 0',
+                    width: isMobile ? '85vw' : '48vw'
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={departNow}
+                        onChange={() => {
+                          setDepartNow(!departNow)
+                        }}
+                      />
+                    }
+                    label="Depart Now"
+                  />
                 </div>
-                {
-                  !departNow &&
-                  <div style={{ margin: "1rem 0", width: isMobile ? "85vw" : "48vw" }}>
+                {!departNow && (
+                  <div
+                    style={{
+                      margin: '1rem 0',
+                      width: isMobile ? '85vw' : '48vw'
+                    }}
+                  >
                     <DateTimePickerValue
                       value={departTime}
-                      title={"Depart Time"}
+                      title={'Depart Time'}
                       setValue={setDepartTime}
                     />
                     {error && <p className="error">{error}</p>}
                   </div>
-                }
+                )}
 
-                <div style={{ margin: "1rem 0", width: isMobile ? "85vw" : "48vw" }}>
+                <div
+                  style={{
+                    margin: '1rem 0',
+                    width: isMobile ? '85vw' : '48vw'
+                  }}
+                >
                   <DateTimePickerValue
                     value={arrivalTime}
-                    title={"Arrival Time"}
+                    title={'Arrival Time'}
                     setValue={setArrivalTime}
                   />
                   {error && <p className="error">{error}</p>}
                 </div>
 
-                <div style={{ margin: "1rem 0" }}>
+                <div style={{ margin: '1rem 0' }}>
                   <Button
                     onClick={handleCreateTripClick}
                     style={{
-                      cursor: "pointer",
-                      width: "auto",
-                      textAlign: "center",
-                      float: "right",
-                      backgroundColor: "#1976d2",
-                      color: "white",
-                      marginRight: "0.7rem",
-                      float: "right",
+                      cursor: 'pointer',
+                      width: 'auto',
+                      textAlign: 'center',
+                      float: 'right',
+                      backgroundColor: '#1976d2',
+                      color: 'white',
+                      marginRight: '0.7rem'
                     }}
-                    disabled={isLoading ? true : false}
+                    disabled={!!isLoading}
                   >
                     Add
                   </Button>
                   {error && <p className="error">{error}</p>}
                 </div>
 
-                <div style={{ margin: "0" }}>
-                  {isLoading ? <CircularProgress color="primary" /> : ""}
+                <div style={{ margin: '0' }}>
+                  {isLoading ? <CircularProgress color="primary" /> : ''}
                 </div>
               </div>
             </div>
@@ -266,7 +291,7 @@ const CreateTripDialog = () => {
         </Modal>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CreateTripDialog;
+export default CreateTripDialog

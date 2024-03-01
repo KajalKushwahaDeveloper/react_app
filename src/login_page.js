@@ -1,73 +1,70 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./scss/login.scss";
-import ApiService from "./ApiService";
-import { CLIENT_LOGIN } from "./constants";
-import ForgotPasswordModal from "./components/location/map-components/ForgotPasswordModal";
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import ApiService from './ApiService'
+import ForgotPasswordModal from './components/location/map-components/ForgotPasswordModal'
+import { CLIENT_LOGIN } from './constants'
+import './scss/login.scss'
 
 const LoginPage = () => {
   // log env variables
-  console.log("BASE_URL", process.env.REACT_APP_BASE_URL);
-  console.log("LOG_LEVEL", process.env.REACT_APP_LOG_LEVEL);
+  console.log('BASE_URL', process.env.REACT_APP_BASE_URL)
+  console.log('LOG_LEVEL', process.env.REACT_APP_LOG_LEVEL)
 
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [responseError, setResponseError] = useState("");
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [responseError, setResponseError] = useState('')
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
-    useState(false);
+    useState(false)
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+    setEmail(e.target.value)
+  }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+    setPassword(e.target.value)
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setResponseError("");
-    setEmailError("");
-    setPasswordError("");
+    e.preventDefault()
+    setResponseError('')
+    setEmailError('')
+    setPasswordError('')
     if (!email) {
-      setEmailError("Please enter an email");
+      setEmailError('Please enter an email')
     } else if (!password) {
-      setPasswordError("Please enter a password");
+      setPasswordError('Please enter a password')
     } else {
       try {
-        const payload = { email, password };
+        const payload = { email, password }
         const { success, data, error } = await ApiService.makeApiCall(
           CLIENT_LOGIN,
-          "POST",
+          'POST',
           payload,
           null
-        );
+        )
         if (success) {
-          const token = data.token;
-          localStorage.setItem("token", token);
-          navigate("/redirect"); // Redirect to the home page
+          const token = data.token
+          localStorage.setItem('token', token)
+          navigate('/redirect') // Redirect to the home page
         } else {
-          setResponseError(error || "Invalid credentials"); // Display appropriate error message
+          setResponseError(error || 'Invalid credentials') // Display appropriate error message
         }
       } catch (error) {
-        console.error("Error occurred during login:", error);
-        setResponseError("An error occurred during login"); // Display a generic error message
+        console.error('Error occurred during login:', error)
+        setResponseError('An error occurred during login') // Display a generic error message
       }
     }
-  };
-  const handleForgotPasswordClickChange = () => {
-    setIsForgotPasswordModalOpen(true); // Open the "Forgot Password" modal when clicked
-  };
+  }
 
   const closeForgotPasswordModal = () => {
-    setIsForgotPasswordModalOpen(false); // Close the "Forgot Password" modal
-  };
+    setIsForgotPasswordModalOpen(false) // Close the "Forgot Password" modal
+  }
 
   const handleForgotPasswordClick = async () => {
-    setIsForgotPasswordModalOpen(true);
-  };
+    setIsForgotPasswordModalOpen(true)
+  }
 
   return (
     <>
@@ -77,9 +74,9 @@ const LoginPage = () => {
             <div
               className="col-md-6 centerMid d-none d-md-flex"
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               <div className="Left_content">
@@ -96,9 +93,9 @@ const LoginPage = () => {
             <div
               className="col-md-6 formBox bg-light  centerMid flex-column"
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               <div className="authCard shadow">
@@ -115,7 +112,7 @@ const LoginPage = () => {
                     <div className="col-12">
                       <div className="inputField">
                         <input
-                          style={{ margin: "0px" }}
+                          style={{ margin: '0px' }}
                           type="email"
                           id="content_input"
                           name="email"
@@ -129,7 +126,7 @@ const LoginPage = () => {
                     <div className="col-12">
                       <div className="inputField">
                         <input
-                          style={{ margin: "0px" }}
+                          style={{ margin: '0px' }}
                           type="password"
                           id="content_input"
                           name="password"
@@ -145,9 +142,9 @@ const LoginPage = () => {
                         className="btn btn-main"
                         type="submit"
                         style={{
-                          background: "#007dc6",
-                          color: "white",
-                          width: "6rem",
+                          background: '#007dc6',
+                          color: 'white',
+                          width: '6rem'
                         }}
                       >
                         Login
@@ -182,6 +179,6 @@ const LoginPage = () => {
         </div>
       </div>
     </>
-  );
-};
-export default LoginPage;
+  )
+}
+export default LoginPage

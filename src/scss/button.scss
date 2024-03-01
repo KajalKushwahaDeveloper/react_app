@@ -1,17 +1,15 @@
-@import "./variables";
-@import "./mixins";
+@import './variables';
+@import './mixins';
 button {
-    border: none;
-    background: $background-color;
-    color: white;
-    font-size: 1rem;
-    // padding: .6rem .6rem;
-    margin: 0 .6rem;
-    border-radius: 0.2rem;
+  border: none;
+  background: $background-color;
+  color: white;
+  font-size: 1rem;
+  // padding: .6rem .6rem;
+  margin: 0 0.6rem;
+  border-radius: 0.2rem;
 }
 
 .loader {
-    margin: 30px;
-
+  margin: 30px;
 }
-

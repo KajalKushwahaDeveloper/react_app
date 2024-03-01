@@ -1,286 +1,284 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 
+import { Backdrop, CircularProgress, Tooltip } from '@mui/material'
 import TablePagination, {
-  tablePaginationClasses as classes,
-} from "@mui/material/TablePagination";
-import { Backdrop, CircularProgress } from "@mui/material";
-import { styled } from "@mui/system";
+  tablePaginationClasses as classes
+} from '@mui/material/TablePagination'
+import { styled } from '@mui/system'
 import {
   EMULATOR_NOTIFICATION_URL,
   TRIP_HISTORY,
-  TRIP_TOGGLE,
-} from "../../../constants";
+  TRIP_TOGGLE
+} from '../../../constants'
 
-import { MINIMUM_VELOCITY_METERS_PER_MILLISECONDS, MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS } from "../../../MetricsConstants.js";
+import {
+  MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS,
+  MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
+} from '../../../MetricsConstants.js'
 
-//icons
-import IconButton from "@mui/material/IconButton";
-import HistoryIcon from "@mui/icons-material/History";
-import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import CallRoundedIcon from "@mui/icons-material/CallRounded";
-import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+// icons
+import CallRoundedIcon from '@mui/icons-material/CallRounded'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import HistoryIcon from '@mui/icons-material/History'
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded'
+import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline'
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline'
+import RestartAltIcon from '@mui/icons-material/RestartAlt'
+import IconButton from '@mui/material/IconButton'
 
-//components
-import ContactDialogComponent from "./Phone/ContactDialogComponent";
+// components
+import ContactDialogComponent from './Phone/ContactDialogComponent'
 
-import ApiService from "../../../ApiService";
-import PopUpEmulatorHistory from "./popup_emulator_history";
-import { Tooltip } from "@mui/material";
-import { useViewPort } from "../../../ViewportProvider";
-import { useStates } from "../../../StateProvider";
-import { useEmulatorStore } from "../../../stores/emulator/store.tsx";
+import ApiService from '../../../ApiService'
+import PopUpEmulatorHistory from './popup_emulator_history'
+
+import { useStates } from '../../../StateProvider'
+import { useViewPort } from '../../../ViewportProvider'
+import '../../../css/emulator_list_row.css'
+import { compareSelectedDeviceForDialog } from '../../../stores/call/storeCall.tsx'
+import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import {
   compareEmulatorsCompletely,
-  compareSelectedEmulator,
-} from "../../../stores/emulator/types_maps.tsx";
-import { compareSelectedDeviceForDialog } from "../../../stores/call/storeCall.tsx";
-import CustomNoteComponent from "./Phone/CustomNoteComponent.js";
-import "../../../css/emulator_list_row.css";
-
+  compareSelectedEmulator
+} from '../../../stores/emulator/types_maps.tsx'
+import CustomNoteComponent from './Phone/CustomNoteComponent.js'
 
 const GpsTable = () => {
   // FIXME: fix table rerendering.
-  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators);
+  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators)
 
   const emulators = useEmulatorStore(
     (state) => state.emulators,
     (oldEmulators, newEmulators) => {
-      compareEmulatorsCompletely(oldEmulators, newEmulators);
+      compareEmulatorsCompletely(oldEmulators, newEmulators)
     }
-  );
+  )
 
   const selectedEmulator = useEmulatorStore(
     (state) => state.selectedEmulator,
     (oldEmulators, newEmulators) => {
-      compareSelectedEmulator(oldEmulators, newEmulators);
+      compareSelectedEmulator(oldEmulators, newEmulators)
     }
-  );
+  )
 
-  const selectEmulator = useEmulatorStore((state) => state.selectEmulator);
+  const selectEmulator = useEmulatorStore((state) => state.selectEmulator)
 
-  const selectDevice = useEmulatorStore((state) => state.selectDevice);
+  const selectDevice = useEmulatorStore((state) => state.selectDevice)
 
-  const devices = useEmulatorStore((state) => state.devices);
+  const devices = useEmulatorStore((state) => state.devices)
 
-  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator);
+  const hoveredEmulator = useEmulatorStore((state) => state.hoveredEmulator)
 
   // State variables
-  const { staticEmulators, showToast } = useStates();
+  const { staticEmulators, showToast } = useStates()
 
-  const { width, height } = useViewPort();
-  const breakpoint = 620;
+  const { width, height } = useViewPort()
+  const breakpoint = 620
 
-  const isMobile = width < breakpoint;
+  const isMobile = width < breakpoint
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [messageLoading, setMessageLoading] = useState(false);
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(1)
+  const [loading, setLoading] = useState(true)
+  const [messageLoading, setMessageLoading] = useState(false)
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
-    useState(false);
+    useState(false)
 
   const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] =
-    useState(null);
+    useState(null)
 
   const handleHistoryClose = () => {
-    setOpenEmulatorHistoryPopUp(false);
-    setSelectedEmulatorForHistoryData(null);
-  };
+    setOpenEmulatorHistoryPopUp(false)
+    setSelectedEmulatorForHistoryData(null)
+  }
 
   const [contactDialogOptions, setContactDialogOptions] = useState({
     open: false,
-    dialogType: "",
-    emulatorId: null,
-  });
+    dialogType: '',
+    emulatorId: null
+  })
 
   const selectedDevice = useEmulatorStore(
     (state) => state.selectedDevice,
     (oldSelectedDevice, newSelectedDevice) =>
       compareSelectedDeviceForDialog(oldSelectedDevice, newSelectedDevice)
-  );
+  )
 
   useEffect(() => {
     // When call comes/ ends.
     if (selectedDevice === null || selectedDevice.state === null) {
       setContactDialogOptions({
         open: false,
-        dialogType: "",
-        emulatorId: null,
-      });
-      return;
-    } else if (selectedDevice.state === "Incoming") {
+        dialogType: '',
+        emulatorId: null
+      })
+    } else if (selectedDevice.state === 'Incoming') {
       setContactDialogOptions({
         open: true,
-        dialogType: "call",
-        emulatorId: null,
-      });
-    } else if (selectedDevice.state === "On call") {
+        dialogType: 'call',
+        emulatorId: null
+      })
+    } else if (selectedDevice.state === 'On call') {
       setContactDialogOptions({
         open: true,
-        dialogType: "call",
-        emulatorId: null,
-      });
+        dialogType: 'call',
+        emulatorId: null
+      })
     } else if (
-      selectedDevice.state === "Offline" ||
-      selectedDevice.state === "Ready"
+      selectedDevice.state === 'Offline' ||
+      selectedDevice.state === 'Ready'
     ) {
       setContactDialogOptions({
         open: false,
-        dialogType: "",
-        emulatorId: null,
-      });
+        dialogType: '',
+        emulatorId: null
+      })
     }
-  }, [selectedDevice]);
+  }, [selectedDevice])
 
   const handleCallIconClicked = (emulator) => {
-    const device = devices.find((device) => device.emulatorId === emulator.id);
-    selectDevice(device);
+    const device = devices.find((device) => device.emulatorId === emulator.id)
+    selectDevice(device)
     setContactDialogOptions({
       open: true,
-      dialogType: "call",
-      emulatorId: null,
-    });
-  };
+      dialogType: 'call',
+      emulatorId: null
+    })
+  }
 
   const handleMessageIconClicked = (row) => {
     setContactDialogOptions({
       open: true,
-      dialogType: "message",
-      emulatorId: row.id,
-    });
-  };
+      dialogType: 'message',
+      emulatorId: row.id
+    })
+  }
 
   useEffect(() => {
     if (emulators != null) {
-      setLoading(false);
+      setLoading(false)
     } else {
-      setLoading(true);
+      setLoading(true)
     }
     if (hoveredEmulator !== null) {
       const selectedEmIndex = emulators.findIndex(
         (emulator) => emulator.id === hoveredEmulator.id
-      );
+      )
       // Calculate the new active page based on the selected checkbox index and rowsPerPage
       if (selectedEmIndex !== -1) {
-        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
-        setPage(newActivePage);
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage)
+        setPage(newActivePage)
       }
     }
     if (selectedEmulator !== null) {
       const selectedEmIndex = emulators.findIndex(
         (emulator) => emulator === selectedEmulator
-      );
+      )
       // Calculate the new active page based on the selected checkbox index and rowsPerPage
       if (selectedEmIndex !== -1) {
-        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage);
-        setPage(newActivePage);
+        const newActivePage = Math.floor(selectedEmIndex / rowsPerPage)
+        setPage(newActivePage)
       }
     }
-  }, [emulators, page, rowsPerPage, selectedEmulator, hoveredEmulator]);
+  }, [emulators, page, rowsPerPage, selectedEmulator, hoveredEmulator])
 
-  const tablePaginationRef = React.useRef(null);
+  const tablePaginationRef = React.useRef(null)
   // get max rows we can get within the screen height - 128px - 50px
   useEffect(() => {
-    const maxRowsPerPage = Math.floor(
-      (height - 128 - 50) / 80
-    );
-    tablePaginationRef.current?.setRowsPerPage(maxRowsPerPage);
-    setRowsPerPage(maxRowsPerPage);
-  }, [height]);
+    const maxRowsPerPage = Math.floor((height - 128 - 50) / 80)
+    tablePaginationRef.current?.setRowsPerPage(maxRowsPerPage)
+    setRowsPerPage(maxRowsPerPage)
+  }, [height])
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
     if (selectedEmulator?.id !== emulatorRow.id) {
-      selectEmulator(emulatorRow);
+      selectEmulator(emulatorRow)
     } else {
-      selectEmulator(null);
+      selectEmulator(null)
     }
-  };
+  }
 
   const handleHistoryButtonClick = async (emulatorForHistory) => {
-    setMessageLoading(true);
-    const token = localStorage.getItem("token");
+    setMessageLoading(true)
+    const token = localStorage.getItem('token')
     const { success, data, error } = await ApiService.makeApiCall(
-      TRIP_HISTORY + "/" + emulatorForHistory.id,
-      "GET",
+      TRIP_HISTORY + '/' + emulatorForHistory.id,
+      'GET',
       null,
       token
-    );
+    )
     if (success) {
-      setMessageLoading(false);
-      setSelectedEmulatorForHistoryData(data);
-      setOpenEmulatorHistoryPopUp(true);
+      setMessageLoading(false)
+      setSelectedEmulatorForHistoryData(data)
+      setOpenEmulatorHistoryPopUp(true)
     } else {
-      showToast("Error Fetching History", "error");
+      console.error(`Error Fetching History : ${error}`)
+      showToast('Error Fetching History', 'error')
     }
-  };
+  }
 
   const handleRestartButtonClick = async (row) => {
-    const token = localStorage.getItem("token");
-    const { success, data, error } = await ApiService.makeApiCall(
-      EMULATOR_NOTIFICATION_URL + "/" + row.id,
-      "POST",
+    const token = localStorage.getItem('token')
+    const { success, error } = await ApiService.makeApiCall(
+      EMULATOR_NOTIFICATION_URL + '/' + row.id,
+      'POST',
       null,
       token
-    );
+    )
     if (success) {
-      showToast("Notification send", "success");
+      showToast('Notification send', 'success')
     } else {
-      showToast("Error", "error");
+      console.error(`Error sending notification : ${error}`)
+      showToast('Error', 'error')
     }
-  };
+  }
 
   const handleActionButtonClick = async (row) => {
-    if (row.tripStatus === "FINISHED") {
-      showToast("Trip already Finished!", "error");
-      return;
+    if (row.tripStatus === 'FINISHED') {
+      showToast('Trip already Finished!', 'error')
+      return
     }
-    const token = localStorage.getItem("token");
-    const { success, data, error } = await ApiService.makeApiCall(
-      TRIP_TOGGLE + "/" + row.id,
-      "GET",
+    const token = localStorage.getItem('token')
+    const { success, error } = await ApiService.makeApiCall(
+      TRIP_TOGGLE + '/' + row.id,
+      'GET',
       null,
       token
-    );
+    )
     if (success) {
-      showToast("CHANGED TRIP STATUS", "success");
-      fetchEmulators();
+      showToast('CHANGED TRIP STATUS', 'success')
+      fetchEmulators()
     } else {
-      console.error(`Error CHANGING TRIP STATUS : ${error}`);
-      showToast("Error CHANGING TRIP STATUS", "error");
+      console.error(`Error CHANGING TRIP STATUS : ${error}`)
+      showToast('Error CHANGING TRIP STATUS', 'error')
     }
-  };
+  }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   return (
-    <div
-    >
+    <div>
       <Backdrop color="primary" style={{ zIndex: 4 }} open={messageLoading}>
         <CircularProgress color="primary" />
       </Backdrop>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          position: isMobile ? "static" : "absolute",
-          top: isMobile ? "0px" : "128px",
-          width: "320px"
+          display: 'flex',
+          flexDirection: 'column',
+          position: isMobile ? 'static' : 'absolute',
+          top: isMobile ? '0px' : '128px',
+          width: '320px'
         }}
       >
         <>
-          <table
-            style={{ width: "100%" }}
-          >
+          <table style={{ width: '100%' }}>
             <tbody>
               {(rowsPerPage > 0
                 ? emulators.slice(
@@ -290,19 +288,35 @@ const GpsTable = () => {
                 : emulators
               )?.map((emulator, index) => (
                 <tr
-                  key={emulator.id || "N/A"}
+                  key={emulator.id || 'N/A'}
                   style={{
                     height: isMobile ? 'auto' : '80px',
                     minHeight: isMobile ? 'auto' : '80px',
                     maxHeight: isMobile ? 'auto' : '80px',
-                    border: '2px solid #E6E6E6',
+                    border: '2px solid #E6E6E6'
                   }}
-                  className={`${(emulator.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulator.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) && emulator.id === selectedEmulator?.id ? 'blink-selected' :
-                      (emulator.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulator.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) && emulator.id === hoveredEmulator?.id ? 'blink-hovered' :
-                        (emulator.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS || emulator.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) ? 'blink' : ''
-                    } ${emulator.id === selectedEmulator?.id ? 'selected' : ''
-                    } ${emulator.id === hoveredEmulator?.id ? 'hovered' : ''
-                    }`}
+                  className={`${
+                    (emulator.velocity <
+                      MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+                      emulator.velocity >
+                        MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) &&
+                    emulator.id === selectedEmulator?.id
+                      ? 'blink-selected'
+                      : (emulator.velocity <
+                          MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+                          emulator.velocity >
+                            MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) &&
+                        emulator.id === hoveredEmulator?.id
+                      ? 'blink-hovered'
+                      : emulator.velocity <
+                          MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+                        emulator.velocity >
+                          MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
+                      ? 'blink'
+                      : ''
+                  } ${emulator.id === selectedEmulator?.id ? 'selected' : ''} ${
+                    emulator.id === hoveredEmulator?.id ? 'hovered' : ''
+                  }`}
                   onClick={() => handleEmulatorCheckboxChange(emulator)}
                 >
                   <td
@@ -325,17 +339,22 @@ const GpsTable = () => {
 
                   {/* TELEPHONE */}
                   <td>
-                    <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <div
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                      }}
+                    >
                       <Tooltip
-                        title={emulator.telephone || "N/A"}
+                        title={emulator.telephone || 'N/A'}
                         placement="top"
                       >
-                        <div
-                          style={{ display: "flex", alignItems: "center" }}
-                        >
-                          <div>{emulator.telephone || "N/A"}</div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <div>{emulator.telephone || 'N/A'}</div>
                           {/* Icons */}
-                          <div style={{ display: "flex" }}>
+                          <div style={{ display: 'flex' }}>
                             {/* calling icon */}
                             <IconButton
                               size="small"
@@ -347,9 +366,7 @@ const GpsTable = () => {
                             {/* message icon */}
                             <IconButton
                               size="small"
-                              onClick={() =>
-                                handleMessageIconClicked(emulator)
-                              }
+                              onClick={() => handleMessageIconClicked(emulator)}
                             >
                               <MessageRoundedIcon fontSize="small" />
                             </IconButton>
@@ -357,9 +374,7 @@ const GpsTable = () => {
                             {/* message icon */}
                             <IconButton
                               size="small"
-                              onClick={() =>
-                                handleHistoryButtonClick(emulator)
-                              }
+                              onClick={() => handleHistoryButtonClick(emulator)}
                             >
                               <HistoryIcon fontSize="small" />
                             </IconButton>
@@ -367,7 +382,7 @@ const GpsTable = () => {
                         </div>
                       </Tooltip>
                       {/* custom notes */}
-                      <div style={{ marginBottom: "0.2rem" }}>
+                      <div style={{ marginBottom: '0.2rem' }}>
                         <CustomNoteComponent emulator={emulator} />
                       </div>
                     </div>
@@ -375,10 +390,10 @@ const GpsTable = () => {
                   <td align="right">
                     <div
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        maxWidth: 85,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        maxWidth: 85
                       }}
                     >
                       {/* Trip Status Action */}
@@ -388,19 +403,19 @@ const GpsTable = () => {
                       >
                         <Tooltip title={emulator.tripStatus}>
                           <div style={{ width: 20, height: 20 }}>
-                            {emulator.tripStatus === "RUNNING" && (
+                            {emulator.tripStatus === 'RUNNING' && (
                               <PauseCircleOutlineIcon fontSize="small" />
                             )}
-                            {emulator.tripStatus === "PAUSED" && (
+                            {emulator.tripStatus === 'PAUSED' && (
                               <PlayCircleOutlineIcon fontSize="small" />
                             )}
-                            {emulator.tripStatus === "STOP" && (
+                            {emulator.tripStatus === 'STOP' && (
                               <PlayCircleOutlineIcon fontSize="small" />
                             )}
-                            {emulator.tripStatus === "RESTING" && (
+                            {emulator.tripStatus === 'RESTING' && (
                               <PlayCircleOutlineIcon fontSize="small" />
                             )}
-                            {emulator.tripStatus === "FINISHED" && (
+                            {emulator.tripStatus === 'FINISHED' && (
                               <CheckCircleOutlineIcon fontSize="small" />
                             )}
                           </div>
@@ -429,7 +444,9 @@ const GpsTable = () => {
         </>
       </div>
       <CustomTablePagination
-        onLoad={(ref) => { tablePaginationRef.current = ref }}
+        onLoad={(ref) => {
+          tablePaginationRef.current = ref
+        }}
         rowsPerPageOptions={[1]}
         colSpan={6}
         count={emulators.length}
@@ -438,38 +455,39 @@ const GpsTable = () => {
         onPageChange={handleChangePage}
         labelRowsPerPage={null}
         style={{
-          overflow: "hidden", borderTop: "1px solid #C8C8C8",
-          position: isMobile ? "static" : "absolute",
+          overflow: 'hidden',
+          borderTop: '1px solid #C8C8C8',
+          position: isMobile ? 'static' : 'absolute',
           bottom: 0,
-          backgroundColor: "#fff",
+          backgroundColor: '#fff',
           zIndex: 2,
-          height: "50px",
-          width: isMobile ? "100vw" : "320px",
+          height: '50px',
+          width: isMobile ? '100vw' : '320px'
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-export default GpsTable;
+export default GpsTable
 
 const blue = {
-  200: "#A5D8FF",
-  400: "#3399FF",
-};
+  200: '#A5D8FF',
+  400: '#3399FF'
+}
 
 const grey = {
-  50: "#F3F6F9",
-  100: "#E7EBF0",
-  200: "#E0E3E7",
-  300: "#CDD2D7",
-  400: "#B2BAC2",
-  500: "#A0AAB4",
-  600: "#6F7E8C",
-  700: "#3E5060",
-  800: "#2D3843",
-  900: "#1A2027",
-};
+  50: '#F3F6F9',
+  100: '#E7EBF0',
+  200: '#E0E3E7',
+  300: '#CDD2D7',
+  400: '#B2BAC2',
+  500: '#A0AAB4',
+  600: '#6F7E8C',
+  700: '#3E5060',
+  800: '#2D3843',
+  900: '#1A2027'
+}
 
 const CustomTablePagination = styled(TablePagination)(
   ({ theme }) => `
@@ -508,17 +526,18 @@ const CustomTablePagination = styled(TablePagination)(
   /* Update the select styles */
   & .${classes.select} {
     padding: 2px;
-    border: 1px solid ${theme.palette.mode === "dark" ? grey[800] : grey[200]};
+    border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[200]};
     border-radius: 50px;
     background-color: transparent;
     
     &:hover {
-      background-color: ${theme.palette.mode === "dark" ? grey[800] : grey[50]};
+      background-color: ${theme.palette.mode === 'dark' ? grey[800] : grey[50]};
     }
     
     &:focus {
-      outline: 1px solid ${theme.palette.mode === "dark" ? blue[400] : blue[200]
-    };
+      outline: 1px solid ${
+        theme.palette.mode === 'dark' ? blue[400] : blue[200]
+      };
     }
   }
   
@@ -527,4 +546,4 @@ const CustomTablePagination = styled(TablePagination)(
     // margin-left: 2rem;
   }
   `
-);
+)

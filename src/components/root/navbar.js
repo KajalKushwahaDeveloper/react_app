@@ -1,53 +1,53 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import "../../scss/navbar.scss";
-import MenuIcon from "@mui/icons-material/Menu";
-import { CLIENT_CURRENT } from "../../constants.js";
-import { useEmulatorStore } from "../../stores/emulator/store.tsx";
-import LinearProgressBar from "./StyledLinearProgressBar.js";
+import MenuIcon from '@mui/icons-material/Menu'
+import React, { useEffect, useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { CLIENT_CURRENT } from '../../constants.js'
+import '../../scss/navbar.scss'
+import { useEmulatorStore } from '../../stores/emulator/store.tsx'
+import LinearProgressBar from './StyledLinearProgressBar.js'
 
 const Navbar = ({ isAdmin, setIsAdmin }) => {
-  const [menuIcon, setMenuIcon] = useState(false);
-  const [data, setData] = useState();
+  const [menuIcon, setMenuIcon] = useState(false)
+  const [data, setData] = useState()
 
-  const logout = useEmulatorStore((state) => state.logout);
-  const navigate = useNavigate();
+  const logout = useEmulatorStore((state) => state.logout)
+  const navigate = useNavigate()
 
-  const isMicEnabled = useEmulatorStore((state) => state.isMicEnabled);
+  const isMicEnabled = useEmulatorStore((state) => state.isMicEnabled)
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsAdmin(false);
-    logout();
-    navigate("/login");
-  };
+    localStorage.removeItem('token')
+    setIsAdmin(false)
+    logout()
+    navigate('/login')
+  }
 
   const fetchClientData = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
     try {
       const response = await fetch(CLIENT_CURRENT, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (!response.ok || response.status !== 200) {
-        return { success: false, error: "Invalid credentials" };
+        return { success: false, error: 'Invalid credentials' }
       } else {
-        const responseData = await response.text();
-        const deserializedData = JSON.parse(responseData);
-        setData(deserializedData);
-        return { success: true, error: null };
+        const responseData = await response.text()
+        const deserializedData = JSON.parse(responseData)
+        setData(deserializedData)
+        return { success: true, error: null }
       }
     } catch (error) {
-      console.error("Data Error: " + error);
+      console.error('Data Error: ' + error)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchClientData();
-  }, []);
+    fetchClientData()
+  }, [])
 
   return (
     <>
@@ -57,20 +57,21 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
           <div className="logo">
             <img
               className="logo_image"
-              style={{ width: "8rem", height: "auto" }}
+              style={{ width: '8rem', height: 'auto' }}
               src="images/logo/logbookgps_logo.png"
               alt="logo"
             />
-            {window.location.pathname === "/gps" && isMicEnabled !== null && isMicEnabled !== undefined && isMicEnabled === false && (
-              <div className="microstyle">
-                Microphone is not connected!
-              </div>
+            {window.location.pathname === '/gps' &&
+              isMicEnabled !== null &&
+              isMicEnabled !== undefined &&
+              isMicEnabled === false && (
+                <div className="microstyle">Microphone is not connected!</div>
             )}
           </div>
 
           {/* 2nd menu part  */}
           <div
-            className={menuIcon ? "menu-link mobile-menu-link" : "menu-link"}
+            className={menuIcon ? 'menu-link mobile-menu-link' : 'menu-link'}
           >
             <ul>
               {isAdmin && (
@@ -94,9 +95,9 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
                 </NavLink>
               </li>
 
-              <p className="username_para" style={{ margin: "1rem 0" }}>
-                {data?.firstName || "N/A"} {data?.lastName || "N/A"} (
-                {data?.username || "N/A"})
+              <p className="username_para" style={{ margin: '1rem 0' }}>
+                {data?.firstName || 'N/A'} {data?.lastName || 'N/A'} (
+                {data?.username || 'N/A'})
               </p>
               <li>
                 <NavLink to="/" onClick={() => handleLogout()}>
@@ -112,9 +113,9 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
               <a href="#" onClick={() => setMenuIcon(!menuIcon)}>
                 <MenuIcon
                   style={{
-                    width: "4rem",
-                    height: "4rem",
-                    paddingBottom: "2.5rem",
+                    width: '4rem',
+                    height: '4rem',
+                    paddingBottom: '2.5rem'
                   }}
                 />
               </a>
@@ -127,7 +128,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
         <LinearProgressBar />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

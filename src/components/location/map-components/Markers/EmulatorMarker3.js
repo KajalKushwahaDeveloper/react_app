@@ -1,4 +1,4 @@
-import React, { useEffect, useRef} from 'react'
+import React, { useEffect, useRef } from 'react'
 import useMarkerStore from '../../../../stores/emulator/markerStore.js'
 import './styles.css'
 
@@ -12,17 +12,23 @@ function ItemFast({ id }) {
   // Bind component to store, forward changed coordinates transiently
   const stateRef = useRef()
   const ref = useRef()
-  useEffect(() => useMarkerStore.subscribe(state => stateRef.current = state[id]), [id])
+  useEffect(
+    () => useMarkerStore.subscribe((state) => (stateRef.current = state[id])),
+    [id]
+  )
 
   useEffect(() => {
     function renderLoop() {
       requestAnimationFrame(renderLoop)
     }
-    ref.current.innerText = 'xy ' + stateRef.current? `lat: ${stateRef.current?.lat}, lng: ${stateRef.current?.lat}` : 'no data'
+    ref.current.innerText =
+      'xy ' + stateRef.current
+        ? `lat: ${stateRef.current?.lat}, lng: ${stateRef.current?.lat}`
+        : 'no data'
     renderLoop()
   }, [])
 
-  return <div class="box" ref={ref} />
+  return <div className="box" ref={ref} />
 }
 
 export default function EmulatorMarker3() {
@@ -35,7 +41,9 @@ export default function EmulatorMarker3() {
           <ItemFast key={id} id={id} />
         ))}
       </div>
-      <span className="descr">150 connected components {'pass data through'}</span>
+      <span className="descr">
+        150 connected components {'pass data through'}
+      </span>
     </div>
   )
 }

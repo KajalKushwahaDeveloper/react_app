@@ -15,7 +15,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 40px;
-  gap:6rem;
+  gap: 6rem;
 }
 
 .accept-button,
@@ -25,7 +25,6 @@
   border-radius: 100%;
   border: none;
   cursor: pointer;
- 
 }
 
 .accept-button {

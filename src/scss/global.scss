@@ -1,5 +1,5 @@
-@import "./variables.scss";
-@import "./mixins.scss";
+@import './variables.scss';
+@import './mixins.scss';
 /* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Roboto+Slab&display=swap"); */
 
 /* @font-face {
@@ -16,16 +16,18 @@
 } */
 
 @font-face {
-  font-family: "SF-Compact-Text-Regular";
-  src: url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf");
-  src: url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf?#iefix")
-      format("embedded-opentype"),
-    url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf") format("embedded-opentype"),
-    url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf") format("otf"),
-    url("../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf") format("truetype");
-  
+  font-family: 'SF-Compact-Text-Regular';
+  src: url('../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf');
+  src: url('../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf?#iefix')
+      format('embedded-opentype'),
+    url('../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf')
+      format('embedded-opentype'),
+    url('../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf')
+      format('otf'),
+    url('../../public/fonts/SF-CompactFonts/SF-Compact-Text-Regular.otf')
+      format('truetype');
+
   font-style: normal;
- 
 }
 
 /* @font-face {
@@ -68,9 +70,8 @@
 } */
 
 * {
-  font-family: "SF-Compact-Text-Regular" !important;
+  font-family: 'SF-Compact-Text-Regular' !important;
 }
-
 
 /* width */
 ::-webkit-scrollbar {
@@ -130,7 +131,7 @@
 }
 
 .dashboard {
-  background: #F3F6F9;
+  background: #f3f6f9;
   padding: 5rem 0 0 0;
 }
 
@@ -140,12 +141,10 @@ input {
   }
 }
 
-.gm-style-mtc
-{
+.gm-style-mtc {
   display: none !important;
 }
 
-.gm-fullscreen-control
-{
+.gm-fullscreen-control {
   top: 18.5vh !important;
 }

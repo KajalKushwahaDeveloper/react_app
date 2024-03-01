@@ -1,5 +1,5 @@
-import React from "react";
-import "./view.scss";
+import React from 'react'
+import './view.scss'
 
 const PageNotFound = () => {
   return (
@@ -9,7 +9,7 @@ const PageNotFound = () => {
       <h5 id="headingError">Out of nothing, something</h5>
       <h5 id="subHeadnig">You have entered wrong url</h5>
     </div>
-  );
-};
+  )
+}
 
-export default PageNotFound;
+export default PageNotFound

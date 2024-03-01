@@ -1,78 +1,77 @@
 * {
-    box-sizing: border-box;
-  }
-  
-  html,
-  body,
-  #root,
-  .main {
-    margin-top: 124px;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    overflow: hidden;
-  }
-  
-  #root {
-    overflow: hidden;
-  }
-  
-  body {
-    position: fixed;
-    overflow: hidden;
-    overscroll-behavior-y: none;
-    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial,
-      sans-serif;
-    color: black;
-    -webkit-font-smoothing: antialiased;
-  }
-  
-  .main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-  }
-  
-  .box {
-    position: absolute;
-    width: 100px;
-    height: 2px;
-    background: #efefef;
-  }
-  
-  .fps {
-    top: 30px;
-    left: 30px;
-    color: #efefef;
-    font-family: monospace;
-    font-size: 1.75em;
-  }
-  
-  .switch {
-    top: 30px;
-    right: 30px;
-    padding: 5px 8px;
-    border-radius: 7px;
-  }
-  
-  .graph {
-    width: 100%;
-    height: 450px;
-  }
-  
-  .descr {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
-    color: #efefef;
-    font-size: 0.8em;
-  }
-  
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root,
+.main {
+  margin-top: 124px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+#root {
+  overflow: hidden;
+}
+
+body {
+  position: fixed;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  color: black;
+  -webkit-font-smoothing: antialiased;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.box {
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: #efefef;
+}
+
+.fps {
+  top: 30px;
+  left: 30px;
+  color: #efefef;
+  font-family: monospace;
+  font-size: 1.75em;
+}
+
+.switch {
+  top: 30px;
+  right: 30px;
+  padding: 5px 8px;
+  border-radius: 7px;
+}
+
+.graph {
+  width: 100%;
+  height: 450px;
+}
+
+.descr {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  color: #efefef;
+  font-size: 0.8em;
+}

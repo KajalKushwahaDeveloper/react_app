@@ -1,5 +1,5 @@
 
-import { Device, Connection } from "twilio-client";
+import { Connection, Device } from "twilio-client";
 
 export interface TwillioDevice {
   emulatorId: number,

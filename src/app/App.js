@@ -1,109 +1,107 @@
-import React, { useEffect, useState } from "react";
-import LoginPage from "../login_page.js";
-import RedirectPage from "../redirect_page.js";
-import Home from "../home.js";
-import GPS from "../gps.js";
+import React, { useEffect, useState } from 'react'
+import GPS from '../gps.js'
+import Home from '../home.js'
+import LoginPage from '../login_page.js'
+import RedirectPage from '../redirect_page.js'
 
-import { Routes, Route, useLocation } from "react-router-dom";
-import ApiService from "../ApiService.js";
-import { CLIENT_CURRENT } from "../constants.js";
-import { useNavigate } from "react-router-dom";
-import PrivateRoutes from "../components/utils/privateRoutes.js";
-import PageNotFound from "../view/pageNotFound.js";
-import { useEmulatorStore } from "../stores/emulator/store.tsx";
-import useMarkerStore from "../stores/emulator/markerStore.js";
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import ApiService from '../ApiService.js'
+import PrivateRoutes from '../components/utils/privateRoutes.js'
+import { CLIENT_CURRENT } from '../constants.js'
+import useMarkerStore from '../stores/emulator/markerStore.js'
+import { useEmulatorStore } from '../stores/emulator/store.tsx'
+import PageNotFound from '../view/pageNotFound.js'
 
 function App() {
-  console.log("TEST@ App rendered!")
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [isAdmin, setIsAdmin] = useState(false)
 
-  const connectEmulatorsSSE = useEmulatorStore.getState().connectEmulatorsSSE;
-  const initMarkers = useMarkerStore.getState().initMarkers;
-  const createDevices = useEmulatorStore.getState().createDevices;
+  const connectEmulatorsSSE = useEmulatorStore.getState().connectEmulatorsSSE
+  const initMarkers = useMarkerStore.getState().initMarkers
+  const createDevices = useEmulatorStore.getState().createDevices
 
   useEffect(() => {
     const checkToken = async () => {
       if (
-        location.pathname !== "/login" &&
-        location.pathname !== "/" &&
-        location.pathname !== "/home" &&
-        location.pathname !== "/redirect" &&
-        location.pathname !== "/gps" &&
-        location.pathname !== "/page404"
+        location.pathname !== '/login' &&
+        location.pathname !== '/' &&
+        location.pathname !== '/home' &&
+        location.pathname !== '/redirect' &&
+        location.pathname !== '/gps' &&
+        location.pathname !== '/page404'
       ) {
-        navigate("/page404");
-        return;
+        navigate('/page404')
+        return
       }
 
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token')
       if (token != null) {
         try {
           const { success, data, error } = await ApiService.makeApiCall(
             CLIENT_CURRENT,
-            "GET",
+            'GET',
             null,
             token
-          );
+          )
           if (success) {
-            const authorities = data.authorities;
-            let isRoleAdmin = false;
+            const authorities = data.authorities
+            let isRoleAdmin = false
             authorities.forEach((authority) => {
-              if (authority.authority === "ROLE_ADMIN") {
-                isRoleAdmin = true;
-                return; // Exit the loop early if ROLE_ADMIN is found
+              if (authority.authority === 'ROLE_ADMIN') {
+                isRoleAdmin = true
+                // Exit the loop early if ROLE_ADMIN is found
               }
-            });
-            setIsAdmin(isRoleAdmin);
-            if (location.pathname === "/redirect") {
+            })
+            setIsAdmin(isRoleAdmin)
+            if (location.pathname === '/redirect') {
               if (isRoleAdmin) {
-                navigate("/home");
+                navigate('/home')
               } else {
-                navigate("/gps");
+                navigate('/gps')
               }
-              return;
+              return
             }
 
             if (isRoleAdmin) {
-              if (location.pathname === "/login" || location.pathname === "/") {
-                navigate("/home");
+              if (location.pathname === '/login' || location.pathname === '/') {
+                navigate('/home')
               }
             } else {
               if (
-                location.pathname === "/login" ||
-                location.pathname === "/" ||
-                location.pathname === "/home"
+                location.pathname === '/login' ||
+                location.pathname === '/' ||
+                location.pathname === '/home'
               ) {
-                navigate("/gps");
+                navigate('/gps')
               }
             }
           } else {
-            console.error("CLIENT_CURRENT Error: ", error);
-            localStorage.removeItem("token");
-            navigate("/login");
+            console.error('CLIENT_CURRENT Error: ', error)
+            localStorage.removeItem('token')
+            navigate('/login')
           }
         } catch (error) {
-          console.error("CLIENT_CURRENT 2 Error: ", error);
-          localStorage.removeItem("token");
-          navigate("/login");
+          console.error('CLIENT_CURRENT 2 Error: ', error)
+          localStorage.removeItem('token')
+          navigate('/login')
         }
       } else {
-        navigate("/login");
+        navigate('/login')
       }
-    };
+    }
 
-    checkToken();
-  }, [location.pathname, navigate]);
+    checkToken()
+  }, [location.pathname, navigate])
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
     if (token) {
-      connectEmulatorsSSE();
-      initMarkers();
-      createDevices();
+      connectEmulatorsSSE()
+      initMarkers()
+      createDevices()
     }
-  }, [connectEmulatorsSSE, initMarkers, localStorage.getItem("token")]);
+  }, [connectEmulatorsSSE, initMarkers, localStorage.getItem('token')])
 
   return (
     <>
@@ -119,7 +117,7 @@ function App() {
         <Route exact path="/login" element={<LoginPage />} />
       </Routes>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

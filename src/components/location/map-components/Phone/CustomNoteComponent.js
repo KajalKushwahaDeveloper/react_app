@@ -1,66 +1,66 @@
-import React, { useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
-import ApiService from "../../../../ApiService";
-import { EMULATOR_NOTE_URL } from "../../../../constants";
-import { useStates } from "../../../../StateProvider";
+import TextField from '@mui/material/TextField'
+import React, { useEffect, useState } from 'react'
+import ApiService from '../../../../ApiService'
+import { useStates } from '../../../../StateProvider'
+import { EMULATOR_NOTE_URL } from '../../../../constants'
 
 const CustomNoteComponent = ({ emulator }) => {
-  const { showToast } = useStates();
+  const { showToast } = useStates()
 
-  const [noteText, setNoteText] = useState(emulator?.note? emulator.note : "");
-  const [timerId, setTimerId] = useState(null);
- 
+  const [noteText, setNoteText] = useState(emulator?.note ? emulator.note : '')
+  const [timerId, setTimerId] = useState(null)
+
   const handleNoteChange = (e) => {
     const newText = e.target.value
-    setNoteText(newText);
-  
+    setNoteText(newText)
+
     // Clear the previous timer
     if (timerId) {
-      clearTimeout(timerId);
+      clearTimeout(timerId)
     }
-  
+
     // Set a new timer
     setTimerId(setTimeout(() => {
-        handleSaveNote(newText);
-    }, 2000));  // Wait for 2 seconds
-  };
-  
+      handleSaveNote(newText)
+    }, 2000)) // Wait for 2 seconds
+  }
+
   useEffect(() => {
     return () => {
       // Cleanup the timer when the component is unmounted
       if (timerId) {
-        clearTimeout(timerId);
+        clearTimeout(timerId)
       }
-    };
-  }, [timerId]);
+    }
+  }, [timerId])
 
   const handleSaveNote = async (newText) => {
-    showToast(" Saving Note... ", "info");
-    const token = localStorage.getItem("token");
-    const payload = { noteText: newText, emulatorId: emulator.id };
+    showToast(' Saving Note... ', 'info')
+    const token = localStorage.getItem('token')
+    const payload = { noteText: newText, emulatorId: emulator.id }
     const { success } = await ApiService.makeApiCall(
       EMULATOR_NOTE_URL,
-      "POST",
+      'POST',
       payload,
       token
-    );
+    )
     if (success) {
-      showToast("Note Updated! ", "success");
+      showToast('Note Updated! ', 'success')
     } else {
-      showToast(" Failed to update Note! ", "error");
+      showToast(' Failed to update Note! ', 'error')
     }
-  };
+  }
 
   return (
     <TextField
-      style={{ width: "100%", padding: "0px 10px" }}
-      label={noteText ? "" : "Add Note"}
+      style={{ width: '100%', padding: '0px 10px' }}
+      label={noteText ? '' : 'Add Note'}
       variant="outlined"
       value={noteText}
       onChange={handleNoteChange}
       size="small"
     />
-  );
-};
+  )
+}
 
-export default CustomNoteComponent;
+export default CustomNoteComponent

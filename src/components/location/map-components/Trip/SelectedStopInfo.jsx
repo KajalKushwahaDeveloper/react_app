@@ -1,51 +1,70 @@
-import React, { useCallback, useEffect, useRef } from "react";
-import { InfoWindow } from "@react-google-maps/api";
-import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+import { InfoWindow } from '@react-google-maps/api'
+import React, { useEffect, useRef } from 'react'
+import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
-import ApiService from "../../../../ApiService.js";
-import { TRIP_STOPS_DELETE_URL } from "../../../../constants.js";
-import { toHumanReadableTime } from "./utils.tsx";
-import EditableWaitingTimeComponent from "./EditableWaitingTimeComponent.jsx";
+import ApiService from '../../../../ApiService.js'
+import { TRIP_STOPS_DELETE_URL } from '../../../../constants.js'
+import EditableWaitingTimeComponent from './EditableWaitingTimeComponent.jsx'
+import { toHumanReadableTime } from './utils.tsx'
 // import { useStates } from "../../../../StateProvider.js";
 
 export function SelectedStopInfo(props) {
   // const { showToast } = useStates();
 
-  const connectedEmulatorRef = useRef(useEmulatorStore.getState().connectedEmulator);
-  const tripDataRef = useRef(useEmulatorStore.getState().tripData);
+  const connectedEmulatorRef = useRef(
+    useEmulatorStore.getState().connectedEmulator
+  )
+  const tripDataRef = useRef(useEmulatorStore.getState().tripData)
 
-  useEffect(() => useEmulatorStore.subscribe(state => state.connectedEmulator, (connectedEmulator) => {
-    connectedEmulatorRef.current = connectedEmulator;
-  }), [])
+  useEffect(
+    () =>
+      useEmulatorStore.subscribe(
+        (state) => state.connectedEmulator,
+        (connectedEmulator) => {
+          connectedEmulatorRef.current = connectedEmulator
+        }
+      ),
+    []
+  )
 
-  useEffect(() => useEmulatorStore.subscribe(state => state.tripData, (tripData) => {
-    tripDataRef.current = tripData;
-  }), [])
+  useEffect(
+    () =>
+      useEmulatorStore.subscribe(
+        (state) => state.tripData,
+        (tripData) => {
+          tripDataRef.current = tripData
+        }
+      ),
+    []
+  )
 
-  const totalTime = useRef(null);
+  const totalTime = useRef(null)
 
-  const connectedEmulator = connectedEmulatorRef.current;
-  const tripData = tripDataRef.current;
-  const stop = props.selectedStop;
-  let timeToReachThisStop = null;
-  let distanceToThisStop = null;
+  const connectedEmulator = connectedEmulatorRef.current
+  const tripData = tripDataRef.current
+  const stop = props.selectedStop
+  let timeToReachThisStop = null
+  let distanceToThisStop = null
   if (connectedEmulator == null || stop == null || tripData == null) {
-    timeToReachThisStop = `N/A`;
-    distanceToThisStop = `N/A`;
+    timeToReachThisStop = 'N/A'
+    distanceToThisStop = 'N/A'
   } else {
     // take the currentTripPointIndex from connectedEmulator, and add all distances till stop's currentTripPointIndex
-    let distance = 0;
-    for (let i = connectedEmulator.currentTripPointIndex; i < stop.tripPointIndex; i++) {
-      if(i < 0) continue; // skip -1 index
-      distance += tripData.tripPoints[i].distance;
+    let distance = 0
+    for (
+      let i = connectedEmulator.currentTripPointIndex;
+      i < stop.tripPointIndex;
+      i++
+    ) {
+      if (i < 0) continue // skip -1 index
+      distance += tripData.tripPoints[i].distance
     }
-    const velocity = connectedEmulator.velocity;
-    const time = (distance / velocity) + Date.now(); // in milliseconds
+    const velocity = connectedEmulator.velocity
+    const time = distance / velocity + Date.now() // in milliseconds
     // meters to miles round to 2 decimal places
-    distanceToThisStop = (distance * 0.000621371).toFixed(2) + " miles";
-    timeToReachThisStop = toHumanReadableTime(time);
+    distanceToThisStop = (distance * 0.000621371).toFixed(2) + ' miles'
+    timeToReachThisStop = toHumanReadableTime(time)
   }
-
 
   const handleDeleteStop = async () => {
     // request on window for confirmation
@@ -53,83 +72,83 @@ export function SelectedStopInfo(props) {
     // if no, do nothing
 
     const shouldDelete = window.confirm(
-      "Are you sure you want to delete this stop?"
-    );
+      'Are you sure you want to delete this stop?'
+    )
     if (!shouldDelete) {
-      return;
+      return
     }
     // showToast("Deleting stop...", "info");
-    const token = localStorage.getItem("token");
-    const { success, data, error } = await ApiService.makeApiCall(
+    const token = localStorage.getItem('token')
+    const { success, error } = await ApiService.makeApiCall(
       TRIP_STOPS_DELETE_URL,
-      "GET",
+      'GET',
       null,
       token,
       connectedEmulatorRef.current?.id,
       new URLSearchParams({
-        stopTripPointIndex: props.selectedStop.tripPointIndex,
+        stopTripPointIndex: props.selectedStop.tripPointIndex
       })
-    );
+    )
 
     if (!success) {
       // showToast("Error deleting stop", "error");
-      console.error("handleDeleteStop error : ", error);
+      console.error('handleDeleteStop error : ', error)
     } else {
       // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
       // showToast("Stop deleted", "success");
-      props.handleInfoWindowClose();
+      props.handleInfoWindowClose()
     }
-  };
+  }
 
   return (
     <InfoWindow
       position={{
         lat: props.selectedStop.lat,
-        lng: props.selectedStop.lng,
+        lng: props.selectedStop.lng
       }}
       onCloseClick={props.handleInfoWindowClose}
     >
       <div
         style={{
-          width: "auto",
+          width: 'auto'
         }}
       >
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
           Stop Address:
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
           {props.selectedStop.address.map((addressItem, index) => (
             <React.Fragment key={index}>
-              {index > 0 && ", "}
+              {index > 0 && ', '}
               {addressItem.long_name}
             </React.Fragment>
           ))}
         </p>
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
           Nearest Gas Station:
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
           {props.selectedStop.gasStation.map((gasStationAddressItem, index) => (
             <React.Fragment key={index}>
-              {index > 0 && ", "}
+              {index > 0 && ', '}
               {gasStationAddressItem.long_name}
             </React.Fragment>
           ))}
@@ -137,65 +156,65 @@ export function SelectedStopInfo(props) {
 
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
           Distance || Time for Arrival:
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
-          { distanceToThisStop ? distanceToThisStop : "N/A" } || {timeToReachThisStop ? timeToReachThisStop : "N/A"}
+          {distanceToThisStop || 'N/A'} || {timeToReachThisStop || 'N/A'}
         </p>
 
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
-          Total Time:{" "}
+          Total Time:{' '}
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
-          {totalTime.current ? totalTime.current : "N/A"}
+          {totalTime.current ? totalTime.current : 'N/A'}
         </p>
 
         <h6
           style={{
-            color: "black",
+            color: 'black'
           }}
         >
-          Remaining Distance:{" "}
+          Remaining Distance:{' '}
         </h6>
         <p
           style={{
-            color: "black",
-            fontSize: "11px",
+            color: 'black',
+            fontSize: '11px'
           }}
         >
-          {timeToReachThisStop ? timeToReachThisStop : "N/A"}
+          {timeToReachThisStop || 'N/A'}
         </p>
         {/* Edit Button */}
         <EditableWaitingTimeComponent
           tripPointIndex={props.selectedStop.tripPointIndex}
-          waitTime = {props.selectedStop.waitTime}
-          connectedEmulatorId = {connectedEmulatorRef.current?.id}
+          waitTime={props.selectedStop.waitTime}
+          connectedEmulatorId={connectedEmulatorRef.current?.id}
         />
         {/* Delete Button */}
         <button
           style={{
-            backgroundColor: "red",
-            color: "white",
-            fontSize: "11px",
-            padding: "10px",
-            margin: "0px",
+            backgroundColor: 'red',
+            color: 'white',
+            fontSize: '11px',
+            padding: '10px',
+            margin: '0px'
           }}
           onClick={() => handleDeleteStop()}
         >
@@ -203,5 +222,5 @@ export function SelectedStopInfo(props) {
         </button>
       </div>
     </InfoWindow>
-  );
+  )
 }

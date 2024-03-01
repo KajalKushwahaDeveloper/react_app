@@ -1,5 +1,5 @@
-@import "./variables";
-@import "./mixins";
+@import './variables';
+@import './mixins';
 
 .combobox_customized {
   @include vertical-list;
@@ -13,6 +13,6 @@
   font-size: 1rem;
 
   &:focus {
-      outline: none;
+    outline: none;
   }
 }

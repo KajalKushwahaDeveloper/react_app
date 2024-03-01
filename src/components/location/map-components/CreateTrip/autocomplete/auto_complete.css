@@ -1,7 +1,7 @@
 .pac-container {
   background-color: #151515;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .pac-item,
@@ -13,31 +13,30 @@
   background: #6666;
 }
 
-
 /* create Trip dialog css */
 .Demo__search-bar-container {
   width: 100%;
 }
 
-.Demo__search-input-container>div {
+.Demo__search-input-container > div {
   width: 50vw;
   background-color: white !important;
   padding: 0 1rem;
 }
 
-.Demo__search-input-container>div>div>input {
+.Demo__search-input-container > div > div > input {
   margin: 0;
-  padding-left: .1rem;
+  padding-left: 0.1rem;
   padding-right: 0rem;
 }
 
-.Demo__search-input-container>div>div {
+.Demo__search-input-container > div > div {
   width: 100%;
   background-color: white !important;
 }
 
-.Demo__search-input-container>div>label {
-  padding: 0 .4rem;
+.Demo__search-input-container > div > label {
+  padding: 0 0.4rem;
 }
 
 .Demo__autocomplete-container {
@@ -54,22 +53,22 @@
 .location_icon {
   color: grey;
   font-size: 1.5rem;
-  margin-bottom: .4rem;
+  margin-bottom: 0.4rem;
   margin-right: 1rem;
 }
 
 .small_text {
   color: grey;
-  margin-left: .3rem;
+  margin-left: 0.3rem;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 @media screen and (max-width: 620px) {
-  .Demo__search-input-container>div {
+  .Demo__search-input-container > div {
     width: 90vw;
   }
   .Demo__autocomplete-container {
-    font-size: .9rem;
+    font-size: 0.9rem;
   }
 }
