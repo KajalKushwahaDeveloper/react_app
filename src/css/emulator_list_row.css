@@ -24,13 +24,13 @@
 
 @keyframes blink-hovered {
   0% {
-    background-color: lightpink;
+    background-color: lightyellow;
   }
   50% {
     background-color: lightcoral;
   }
   100% {
-    background-color: lightpink;
+    background-color: lightyellow;
   }
 }
 
@@ -57,5 +57,5 @@
 }
 
 .hovered {
-  background-color: lightpink;
+  background-color: khaki;
 }

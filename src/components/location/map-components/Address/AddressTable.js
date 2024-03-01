@@ -53,7 +53,8 @@ const AddressTable = () => {
       return date.toLocaleString()
     }
 
-    const currentAddress = emulator && emulator.address ? emulator.address : 'N/A'
+    const currentAddress =
+      emulator && emulator.address ? emulator.address : 'N/A'
 
     const fromAddress = tripData ? getAddress(tripData.fromAddress) : 'N/A'
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
@@ -77,9 +78,14 @@ const AddressTable = () => {
     elementParentRefs.current.forEach((elementRef) => {
       if (elementRef.current) {
         if (isHover) {
-          elementRef.current.style.backgroundColor = 'lightpink'
+          elementRef.current.style.backgroundColor = 'khaki'
+        } else if (
+          emulator &&
+          emulator.id === useEmulatorStore.getState().selectedEmulator?.id
+        ) {
+          elementRef.current.style.backgroundColor = 'lightblue'
         } else {
-          elementRef.current.style.backgroundColor = 'white'
+          elementRef.current.style.backgroundColor = 'transparent'
         }
       }
     })
@@ -137,9 +143,17 @@ const AddressTable = () => {
         (state) => state.connectedEmulator,
         (connectedEmulator) => {
           connectedEmulatorRef.current = connectedEmulator
+          setValues(
+            connectedEmulatorRef.current
+              ? connectedEmulatorRef.current
+              : useEmulatorStore.getState().selectedEmulator,
+            tripDataRef.current
+              ? tripDataRef.current
+              : useEmulatorStore.getState().tripData
+          )
         }
       ),
-    []
+    [setValues]
   )
 
   useEffect(

@@ -102,7 +102,11 @@ const EmulatorMarker = ({ id }) => {
         markerRef.current?.setPosition(newPosition)
         // Update marker icon
         let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
-        iconUrl = iconUrl + 'DEFAULT'
+        if (hoveredEmulatorRef.current?.id === id) {
+          iconUrl = iconUrl + 'HOVER'
+        } else {
+          iconUrl = iconUrl + 'DEFAULT'
+        }
         // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
         if (
           emulatorRef.current?.velocity >
