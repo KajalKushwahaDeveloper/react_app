@@ -37,7 +37,7 @@ const EmulatorMarkerSelected = () => {
               movedEmulator.longitude
             )
             markerRef.current?.setPosition(movedToPosition)
-            markerRef.current?.setAnimation(window.google.maps.Animation.BOUNCE)
+            markerRef.current?.setAnimation(window.google.maps.Animation.DROP)
 
             // do something maybe
           } else if (movedEmulator && movedEmulator.moveMarker === false) {
