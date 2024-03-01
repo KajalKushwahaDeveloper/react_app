@@ -449,7 +449,7 @@ const GpsTable = () => {
                           }}
                         >
                           {/* Trip Status Action */}
-                          {emulator.startLat !== 0 && (
+                          {emulator && emulator.startLat && emulator.startLat !== 0 && (
                              <IconButton
                              size="small"
                              onClick={() => handleActionButtonClick(emulator)}
