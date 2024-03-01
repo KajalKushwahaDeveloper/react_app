@@ -117,7 +117,7 @@ async function createDevicesFromEmulators(
 
         const deviceDataModel: TwillioDevice = {
           emulatorId: emulator.id,
-          token: token,
+          token,
           state: states.CONNECTING,
           conn: null,
           device: new Device(),

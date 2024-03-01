@@ -118,9 +118,9 @@ const createEmulatorsSlice: StateCreator<
     set({ selectedEmulator: emulator })
     get().connectSelectedEmulatorSSE(emulator)
   },
-  hoverEmulator: (hoveredEmulator) => set({ hoveredEmulator: hoveredEmulator }),
-  dragEmulator: (draggedEmulator) => set({ draggedEmulator: draggedEmulator }),
-  moveEmulator: (movedEmulator) => set({ movedEmulator: movedEmulator })
+  hoverEmulator: (hoveredEmulator) => set({ hoveredEmulator }),
+  dragEmulator: (draggedEmulator) => set({ draggedEmulator }),
+  moveEmulator: (movedEmulator) => set({ movedEmulator })
 })
 
 const createTripDataSlice: StateCreator<
@@ -174,7 +174,7 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false })
       },
       onmessage(event) {
-          console.log('TEST@ event: ', event)
+        console.log('TEST@ event: ', event)
         // if heartbeat, then return
         if (event.data === 'heartbeat') {
           return

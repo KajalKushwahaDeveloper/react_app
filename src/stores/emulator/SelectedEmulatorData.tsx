@@ -79,17 +79,18 @@ function generateTripPoint(str: string): TripPoint[] {
   // list of TripPoints
   const tripPoints: TripPoint[] = []
 
-  var index = 0,
+  let index = 0,
     lat = 0,
     lng = 0,
     shift = 0,
     result = 0,
     byte: number | null = null,
     latitudeChange: number,
-    longitudeChange: number,
-    factor = Math.pow(10, 6)
+    longitudeChange: number
 
-  var prevLat = 0,
+  const factor = Math.pow(10, 5)
+
+  let prevLat = 0,
     prevLng = 0,
     distance = 0,
     tripPointIndex = 0
@@ -143,7 +144,7 @@ function generateTripPoint(str: string): TripPoint[] {
         lat: lat / factor,
         lng: lng / factor,
         bearing: 0,
-        distance: distance
+        distance
       }
       tripPoints.push(tripPoint)
     }
@@ -186,7 +187,7 @@ function getTripPointSubIndexes(
       tripPointIndex: tripPointIndex++,
       lat: newLat,
       lng: newLng,
-      bearing: bearing,
+      bearing,
       distance: 100
     }
     tripPoints.push(tripPoint)
@@ -197,8 +198,8 @@ function getTripPointSubIndexes(
       tripPointIndex: tripPointIndex++,
       lat: nextLat,
       lng: nextLng,
-      bearing: bearing,
-      distance: distance
+      bearing,
+      distance
     }
     tripPoints.push(tripPoint)
   }
