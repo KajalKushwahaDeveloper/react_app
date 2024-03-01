@@ -129,7 +129,7 @@ const MapButtons = () => {
                   zIndex: 2,
                   position: 'absolute',
                   top: isMobile ? '100px' : '135px',
-                  right: showCancel ? 310 : 180,
+                  right: showCancel ? 310 : 200,
                   justifyContent: 'center',
                   backgroundColor: '#f44336'
                 }}
@@ -145,7 +145,7 @@ const MapButtons = () => {
                   zIndex: 2,
                   position: 'absolute',
                   top: isMobile ? '100px' : '135px',
-                  right: showCancel ? 310 : 180,
+                  right: showCancel ? 310 : 190,
                   justifyContent: 'center'
                 }}
                 onClick={handleSetPositionClick}
@@ -161,7 +161,7 @@ const MapButtons = () => {
                 zIndex: 2,
                 position: 'absolute',
                 top: isMobile ? '100px' : '135px',
-                right: showCancel ? 191 : 60,
+                right: showCancel ? 191 : 70,
                 justifyContent: 'center'
               }}
               onClick={handleCreateTripButton}
