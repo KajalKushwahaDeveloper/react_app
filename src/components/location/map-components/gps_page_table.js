@@ -449,30 +449,32 @@ const GpsTable = () => {
                           }}
                         >
                           {/* Trip Status Action */}
-                          <IconButton
-                            size="small"
-                            onClick={() => handleActionButtonClick(emulator)}
-                          >
-                            <Tooltip title={emulator.tripStatus}>
-                              <div style={{ width: 20, height: 20 }}>
-                                {emulator.tripStatus === 'RUNNING' && (
-                                  <PauseCircleOutlineIcon fontSize="small" />
-                                )}
-                                {emulator.tripStatus === 'PAUSED' && (
-                                  <PlayCircleOutlineIcon fontSize="small" />
-                                )}
-                                {emulator.tripStatus === 'STOP' && (
-                                  <PlayCircleOutlineIcon fontSize="small" />
-                                )}
-                                {emulator.tripStatus === 'RESTING' && (
-                                  <PlayCircleOutlineIcon fontSize="small" />
-                                )}
-                                {emulator.tripStatus === 'FINISHED' && (
-                                  <CheckCircleOutlineIcon fontSize="small" />
-                                )}
-                              </div>
-                            </Tooltip>
-                          </IconButton>
+                          {emulator && emulator.startLat && emulator.startLat !== 0 && (
+                             <IconButton
+                             size="small"
+                             onClick={() => handleActionButtonClick(emulator)}
+                            >
+                             <Tooltip title={emulator.tripStatus}>
+                               <div style={{ width: 20, height: 20 }}>
+                                 {emulator.tripStatus === 'RUNNING' && (
+                                   <PauseCircleOutlineIcon fontSize="small" />
+                                 )}
+                                 {emulator.tripStatus === 'PAUSED' && (
+                                   <PlayCircleOutlineIcon fontSize="small" />
+                                 )}
+                                 {emulator.tripStatus === 'STOP' && (
+                                   <PlayCircleOutlineIcon fontSize="small" />
+                                 )}
+                                 {emulator.tripStatus === 'RESTING' && (
+                                   <PlayCircleOutlineIcon fontSize="small" />
+                                 )}
+                                 {emulator.tripStatus === 'FINISHED' && (
+                                   <CheckCircleOutlineIcon fontSize="small" />
+                                 )}
+                               </div>
+                             </Tooltip>
+                           </IconButton>
+                          )}
                         </div>
                       </td>
                     </tr>
