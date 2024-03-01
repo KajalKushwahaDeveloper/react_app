@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
-import { Backdrop, CircularProgress, Tooltip } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
+import {
+  Backdrop,
+  CircularProgress,
+  InputAdornment,
+  TextField,
+  Tooltip
+} from '@mui/material'
 import TablePagination, {
   tablePaginationClasses as classes
 } from '@mui/material/TablePagination'
@@ -32,6 +39,7 @@ import ContactDialogComponent from './Phone/ContactDialogComponent'
 import ApiService from '../../../ApiService'
 import PopUpEmulatorHistory from './popup_emulator_history'
 
+import OptimizedFilter from 'react-optimized-filter'
 import { useStates } from '../../../StateProvider'
 import { useViewPort } from '../../../ViewportProvider'
 import '../../../css/emulator_list_row.css'
@@ -46,6 +54,7 @@ import CustomNoteComponent from './Phone/CustomNoteComponent.js'
 const GpsTable = () => {
   // FIXME: fix table rerendering.
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators)
+  const [searchInput, setSearchInput] = useState('')
 
   const emulators = useEmulatorStore(
     (state) => state.emulators,
@@ -184,9 +193,9 @@ const GpsTable = () => {
   }, [emulators, page, rowsPerPage, selectedEmulator, hoveredEmulator])
 
   const tablePaginationRef = React.useRef(null)
-  // get max rows we can get within the screen height - 128px - 50px
+  // get max rows we can get within the screen height - 128px(navbar) - 55px(search) - 50px(footer/pagination)
   useEffect(() => {
-    const maxRowsPerPage = Math.floor((height - 128 - 50) / 80)
+    const maxRowsPerPage = Math.floor((height - 128 - 55 - 50) / 80)
     tablePaginationRef.current?.setRowsPerPage(maxRowsPerPage)
     setRowsPerPage(maxRowsPerPage)
   }, [height])
@@ -278,155 +287,200 @@ const GpsTable = () => {
         }}
       >
         <>
-          <table style={{ width: '100%' }}>
-            <tbody>
-              {(rowsPerPage > 0
-                ? emulators.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-                : emulators
-              )?.map((emulator, index) => (
-                <tr
-                  key={emulator.id || 'N/A'}
-                  style={{
-                    height: isMobile ? 'auto' : '80px',
-                    minHeight: isMobile ? 'auto' : '80px',
-                    maxHeight: isMobile ? 'auto' : '80px',
-                    border: '2px solid #E6E6E6'
-                  }}
-                  className={`${
-                    (emulator.velocity <
-                      MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-                      emulator.velocity >
-                        MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) &&
-                    emulator.id === selectedEmulator?.id
-                      ? 'blink-selected'
-                      : (emulator.velocity <
+          <TextField
+            style={{
+              height: isMobile ? 'auto' : '55px',
+              minHeight: isMobile ? 'auto' : '55px',
+              maxHeight: isMobile ? 'auto' : '55px',
+              margin: '0'
+            }}
+            placeholder="Search by SSID or Note"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              )
+            }}
+          />
+          <OptimizedFilter
+            items={emulators}
+            predicate={(emulator, index, predicateArg) => {
+              // Determine if item should be included in filtered list... checking ssid and note
+              return (
+                emulator.emulatorSsid.includes(predicateArg) ||
+                (emulator.note &&
+                  emulator.note
+                    .toLowerCase()
+                    .includes(predicateArg.toLowerCase()))
+              )
+            }}
+            predicateArg={searchInput}
+            render={(emulators) => (
+              // Render filtered items...
+              <table style={{ width: '100%' }}>
+                <tbody>
+                  {(rowsPerPage > 0
+                    ? emulators.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                    : emulators
+                  )?.map((emulator, index) => (
+                    <tr
+                      key={emulator.id || 'N/A'}
+                      style={{
+                        height: isMobile ? 'auto' : '80px',
+                        minHeight: isMobile ? 'auto' : '80px',
+                        maxHeight: isMobile ? 'auto' : '80px',
+                        border: '2px solid #E6E6E6'
+                      }}
+                      className={`${
+                        (emulator.velocity <
                           MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
                           emulator.velocity >
                             MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) &&
-                        emulator.id === hoveredEmulator?.id
-                      ? 'blink-hovered'
-                      : emulator.velocity <
-                          MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-                        emulator.velocity >
-                          MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
-                      ? 'blink'
-                      : ''
-                  } ${emulator.id === selectedEmulator?.id ? 'selected' : ''} ${
-                    emulator.id === hoveredEmulator?.id ? 'hovered' : ''
-                  }`}
-                  onClick={() => handleEmulatorCheckboxChange(emulator)}
-                >
-                  <td
-                    style={{
-                      background:
-                        emulator.status === 'ACTIVE'
-                          ? '#16BA00'
-                          : emulator.status === 'INACTIVE'
-                            ? '#FFA500'
-                            : '#ff4d4d',
-                      textAlign: 'center'
-                    }}
-                  >
-                    {/* Restart/Reset Button */}
-                    <RestartAltIcon
-                      fontSize="small"
-                      onClick={() => handleRestartButtonClick(emulator)}
-                    />
-                  </td>
-
-                  {/* TELEPHONE */}
-                  <td>
-                    <div
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center'
-                      }}
+                        emulator.id === selectedEmulator?.id
+                          ? 'blink-selected'
+                          : (emulator.velocity <
+                              MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+                              emulator.velocity >
+                                MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) &&
+                            emulator.id === hoveredEmulator?.id
+                          ? 'blink-hovered'
+                          : emulator.velocity <
+                              MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+                            emulator.velocity >
+                              MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
+                          ? 'blink'
+                          : ''
+                      } ${
+                        emulator.id === selectedEmulator?.id ? 'selected' : ''
+                      } ${
+                        emulator.id === hoveredEmulator?.id ? 'hovered' : ''
+                      }`}
+                      onClick={() => handleEmulatorCheckboxChange(emulator)}
                     >
-                      <Tooltip
-                        title={emulator.telephone || 'N/A'}
-                        placement="top"
+                      <td
+                        style={{
+                          background:
+                            emulator.status === 'ACTIVE'
+                              ? '#16BA00'
+                              : emulator.status === 'INACTIVE'
+                                ? '#FFA500'
+                                : '#ff4d4d',
+                          textAlign: 'center'
+                        }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <div>{emulator.telephone || 'N/A'}</div>
-                          {/* Icons */}
-                          <div style={{ display: 'flex' }}>
-                            {/* calling icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleCallIconClicked(emulator)}
-                            >
-                              <CallRoundedIcon fontSize="small" />
-                            </IconButton>
+                        {/* Restart/Reset Button */}
+                        <RestartAltIcon
+                          fontSize="small"
+                          onClick={() => handleRestartButtonClick(emulator)}
+                        />
+                      </td>
 
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleMessageIconClicked(emulator)}
+                      {/* TELEPHONE */}
+                      <td>
+                        <div
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Tooltip
+                            title={emulator.telephone || 'N/A'}
+                            placement="top"
+                          >
+                            <div
+                              style={{ display: 'flex', alignItems: 'center' }}
                             >
-                              <MessageRoundedIcon fontSize="small" />
-                            </IconButton>
+                              <div>{emulator.telephone || 'N/A'}</div>
+                              {/* Icons */}
+                              <div style={{ display: 'flex' }}>
+                                {/* calling icon */}
+                                <IconButton
+                                  size="small"
+                                  onClick={() =>
+                                    handleCallIconClicked(emulator)
+                                  }
+                                >
+                                  <CallRoundedIcon fontSize="small" />
+                                </IconButton>
 
-                            {/* message icon */}
-                            <IconButton
-                              size="small"
-                              onClick={() => handleHistoryButtonClick(emulator)}
-                            >
-                              <HistoryIcon fontSize="small" />
-                            </IconButton>
+                                {/* message icon */}
+                                <IconButton
+                                  size="small"
+                                  onClick={() =>
+                                    handleMessageIconClicked(emulator)
+                                  }
+                                >
+                                  <MessageRoundedIcon fontSize="small" />
+                                </IconButton>
+
+                                {/* message icon */}
+                                <IconButton
+                                  size="small"
+                                  onClick={() =>
+                                    handleHistoryButtonClick(emulator)
+                                  }
+                                >
+                                  <HistoryIcon fontSize="small" />
+                                </IconButton>
+                              </div>
+                            </div>
+                          </Tooltip>
+                          {/* custom notes */}
+                          <div style={{ marginBottom: '0.2rem' }}>
+                            <CustomNoteComponent emulator={emulator} />
                           </div>
                         </div>
-                      </Tooltip>
-                      {/* custom notes */}
-                      <div style={{ marginBottom: '0.2rem' }}>
-                        <CustomNoteComponent emulator={emulator} />
-                      </div>
-                    </div>
-                  </td>
-                  <td align="right">
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        maxWidth: 85
-                      }}
-                    >
-                      {/* Trip Status Action */}
-                      <IconButton
-                        size="small"
-                        onClick={() => handleActionButtonClick(emulator)}
-                      >
-                        <Tooltip title={emulator.tripStatus}>
-                          <div style={{ width: 20, height: 20 }}>
-                            {emulator.tripStatus === 'RUNNING' && (
-                              <PauseCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === 'PAUSED' && (
-                              <PlayCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === 'STOP' && (
-                              <PlayCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === 'RESTING' && (
-                              <PlayCircleOutlineIcon fontSize="small" />
-                            )}
-                            {emulator.tripStatus === 'FINISHED' && (
-                              <CheckCircleOutlineIcon fontSize="small" />
-                            )}
-                          </div>
-                        </Tooltip>
-                      </IconButton>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      </td>
+                      <td align="right">
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            maxWidth: 85
+                          }}
+                        >
+                          {/* Trip Status Action */}
+                          <IconButton
+                            size="small"
+                            onClick={() => handleActionButtonClick(emulator)}
+                          >
+                            <Tooltip title={emulator.tripStatus}>
+                              <div style={{ width: 20, height: 20 }}>
+                                {emulator.tripStatus === 'RUNNING' && (
+                                  <PauseCircleOutlineIcon fontSize="small" />
+                                )}
+                                {emulator.tripStatus === 'PAUSED' && (
+                                  <PlayCircleOutlineIcon fontSize="small" />
+                                )}
+                                {emulator.tripStatus === 'STOP' && (
+                                  <PlayCircleOutlineIcon fontSize="small" />
+                                )}
+                                {emulator.tripStatus === 'RESTING' && (
+                                  <PlayCircleOutlineIcon fontSize="small" />
+                                )}
+                                {emulator.tripStatus === 'FINISHED' && (
+                                  <CheckCircleOutlineIcon fontSize="small" />
+                                )}
+                              </div>
+                            </Tooltip>
+                          </IconButton>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          />
 
           <PopUpEmulatorHistory
             showToast={showToast}
