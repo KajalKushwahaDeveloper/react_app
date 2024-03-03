@@ -89,7 +89,7 @@ const SearchBar = (props) => {
                         key={suggestion.placeId}
                         {...getSuggestionItemProps(suggestion, { className })}
                         style={{
-                          margin: '.2rem 0',
+                          margin: '.4rem 0',
                           display: 'flex',
                           alignItems: 'flex-start',
                           justifyContent: 'flex-start'
