@@ -193,13 +193,14 @@ export function StopComponents(props) {
           }}
         />
       )}
-
+<div style={{ margin: 0, display: 'block' }}>
       {selectedStop && (
         <SelectedStopInfo
           selectedStop={selectedStop}
           handleInfoWindowClose={handleInfoWindowClose}
         ></SelectedStopInfo>
       )}
+      </div>
     </React.Fragment>
   )
 }

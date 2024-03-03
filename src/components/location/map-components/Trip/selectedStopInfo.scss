@@ -1,0 +1,31 @@
+.selectedStopBox {
+  width: 30vw;
+  height: auto;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  transition: box-shadow 0.3s ease;
+  &:hover{
+    box-shadow: 15px 5px 5px 3px red, 5px 5px 5px 10px lightblue, ; 
+  }
+  .selectedStopInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    h6{
+      color: black;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+      p {
+        color: black;
+        font-size: .7rem;
+      }
+  }
+}
+@media screen and (max-width:"660px") {
+    .selectedStopBox {
+        width: 60vw;
+    }
+}
