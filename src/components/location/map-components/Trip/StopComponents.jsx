@@ -98,7 +98,7 @@ export function StopComponents(props) {
   async function requestNewStopCreation(marker, newLatLng, index) {
     // confirm from window alert
     const confirm = window.confirm(
-      `Change stop S${index + 1} location to this?}`
+      `Change stop S${index + 1} location to this?`
     )
     if (!confirm) {
       stopNewLatLng = null
