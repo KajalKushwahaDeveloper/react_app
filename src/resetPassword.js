@@ -43,7 +43,7 @@ const ResetPasswordPage = () => {
           if (response.ok) {
             window.alert('SAVED PASSWORD')
             localStorage.setItem('token', token)
-            navigate('/gps')
+            navigate('/')
           } else {
             throw new Error('An error occurred during password reset')
           }
