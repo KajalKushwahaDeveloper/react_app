@@ -47,13 +47,13 @@
   width: 100%;
   padding-left: 1rem;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 .location_icon {
   color: grey;
   font-size: 1.5rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0rem;
   margin-right: 1rem;
 }
 
@@ -69,6 +69,6 @@
     width: 90vw;
   }
   .Demo__autocomplete-container {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 }
