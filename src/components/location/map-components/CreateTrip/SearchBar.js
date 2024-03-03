@@ -50,6 +50,7 @@ const SearchBar = (props) => {
   useEffect(() => {
     props.setLat(latitude)
     props.setLong(longitude)
+    props.setAddress(addressComponent)
   }, [latitude, longitude, addressComponent, props])
 
   return (

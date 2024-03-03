@@ -61,6 +61,8 @@ const CreateTripDialog = () => {
   }
 
   const handleCreateTripClick = async () => {
+    console.log('fromAddress', fromAddress)
+    console.log('toAddress', toAddress)
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
       showToast('Please fill both locations!', 'error')
       return
