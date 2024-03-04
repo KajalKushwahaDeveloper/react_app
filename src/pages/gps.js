@@ -89,7 +89,7 @@ const GPS = () => {
                 <GpsTable />
               </div>
               {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
-              <div style={{ flex: '1', top: '128px' }}>
+              <div className='mapsContainer' style={{ flex: '1', top: '128px' }}>
                 <GoogleMapContainer />
               </div>
             </div>
