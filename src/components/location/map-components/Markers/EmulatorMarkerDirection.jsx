@@ -5,6 +5,9 @@ import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 const EmulatorMarkerDirection = () => {
   const markerRef = useRef(null)
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
+  const emulatorRefOne = useEmulatorStore.getState().connectSelectedEmulatorSSE
+
+  console.log('emulatorRefData:', emulatorRef, emulatorRefOne)
   // SVG with gradient and rotation
   const svgIcon = `
       <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" transform="rotate(${emulatorRef.current?.bearing})">
@@ -67,8 +70,12 @@ const EmulatorMarkerDirection = () => {
     [svgIcon]
   )
 
+  console.log('emulatorRefTesting:', emulatorRef.current.startLat)
+
   return (
-    <Marker
+    <>
+    {emulatorRef.current?.startLat && (
+      <Marker
       key={emulatorRef.current?.id}
       onLoad={(marker) => (markerRef.current = marker)}
       icon={{
@@ -84,6 +91,8 @@ const EmulatorMarkerDirection = () => {
       }}
       zIndex={0}
     />
+    )}
+    </>
   )
 }
 
