@@ -50,7 +50,8 @@ const SearchBar = (props) => {
   useEffect(() => {
     props.setLat(latitude)
     props.setLong(longitude)
-    props.setAddress(addressComponent)
+    // eslint-disable-next-line spaced-comment
+    //setAddress(addressComponent)
   }, [latitude, longitude, addressComponent, props])
 
   return (
@@ -60,7 +61,7 @@ const SearchBar = (props) => {
         value={address}
         onSelect={handleSelect}
         onError={handleError}
-        shouldFetchSuggestions={address.length > 2}
+        shouldFetchSuggestions={address?.length > 2}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps }) => {
           return (

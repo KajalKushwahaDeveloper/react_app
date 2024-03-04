@@ -31,7 +31,7 @@ export const ProtectedLayout = () => {
   }
 
   let isAdmin = false
-  client.role_TYPE.forEach((role) => {
+  client?.role_TYPE?.forEach((role) => {
     if (role.authority.includes('ROLE_ADMIN')) {
       isAdmin = true
     }
