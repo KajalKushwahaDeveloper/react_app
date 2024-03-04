@@ -282,7 +282,7 @@ const GpsTable = () => {
     emulatorId === hoveredEmulator?.id
 
   const getBlinkClass = (emulator, selectedEmulator, hoveredEmulator) => {
-    if (!emulator.startLat) return ''
+    if (!isSelectedEmulator(emulator.id, selectedEmulator) && !emulator.startLat) return ''
     if (isVelocityOutOfRange(emulator.velocity)) {
       if (isSelectedEmulator(emulator.id, selectedEmulator)) {
         return 'blink-selected'

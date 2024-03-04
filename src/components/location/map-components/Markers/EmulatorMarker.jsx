@@ -108,11 +108,11 @@ const EmulatorMarker = ({ id }) => {
           iconUrl = iconUrl + 'DEFAULT'
         }
         // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
-        if (
-          emulatorRef.current?.velocity >
+        if ((emulatorRef.current?.startLat && emulatorRef.current?.startLat !== 0) && (emulatorRef.current?.velocity >
             MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
           emulatorRef.current?.velocity <
             MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
+        )
         ) {
           iconUrl = `${iconUrl}/FLASH`
         }
