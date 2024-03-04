@@ -7,19 +7,53 @@ import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 export function PathComponent() {
   console.log('Path component Created!')
   // const { showToast } = useStates();
-  const pathTraveled = useEmulatorStore((state) => state.pathTraveled)
-  const pathNotTraveled = useEmulatorStore((state) => state.pathNotTraveled)
+  const pathTraveled = useEmulatorStore.getState().pathTraveled
+  const pathNotTraveled = useEmulatorStore.getState().pathNotTraveled
 
   const pathTraveledRef = useRef(null)
   const pathNotTraveledRef = useRef(null)
+
   const connectedEmulatorRef = useRef(
     useEmulatorStore.getState().connectedEmulator
   )
+
   useEffect(() =>
     useEmulatorStore.subscribe(
       (state) => state.connectedEmulator,
       (connectedEmulator) => {
         connectedEmulatorRef.current = connectedEmulator
+      }
+    )
+  )
+
+  useEffect(() =>
+    useEmulatorStore.subscribe(
+      (state) => state.pathTraveled,
+      (pathTraveled) => {
+        if (pathTraveled === null || pathTraveled === undefined) {
+          // reset the path
+          pathTraveledRef.current.setPath([])
+          return
+        }
+        if (pathTraveledRef.current) {
+          pathTraveledRef.current.setPath(pathTraveled)
+        }
+      }
+    )
+  )
+
+  useEffect(() =>
+    useEmulatorStore.subscribe(
+      (state) => state.pathNotTraveled,
+      (pathNotTraveled) => {
+        if (pathNotTraveled === null || pathNotTraveled === undefined) {
+          // reset the path
+          pathNotTraveledRef.current.setPath([])
+          return
+        }
+        if (pathNotTraveledRef.current) {
+          pathNotTraveledRef.current.setPath(pathNotTraveled)
+        }
       }
     )
   )
@@ -109,34 +143,32 @@ export function PathComponent() {
     }
   }
 
+  console.log('pathTraveled : ', pathTraveled?.length)
+  console.log('pathNotTraveled : ', pathNotTraveled?.length)
   return (
     <>
-      {pathTraveled != null && (
-        <Polyline
-          onLoad={(polyline) => (pathTraveledRef.current = polyline)}
-          path={pathTraveled}
-          options={{
-            strokeColor: '#0058A5',
-            strokeWeight: 3,
-            strokeOpacity: 1,
-            defaultVisible: true
-          }}
-          onClick={onPolyLineClickTraveled}
-        />
-      )}
-      {pathNotTraveled != null && (
-        <Polyline
-          onLoad={(polyline) => (pathNotTraveledRef.current = polyline)}
-          path={pathNotTraveled}
-          options={{
-            strokeColor: '#0058A54D',
-            strokeWeight: 3,
-            strokeOpacity: 1,
-            defaultVisible: true
-          }}
-          onClick={onPolyLineClickNotTraveled}
-        />
-      )}
+      <Polyline
+        onLoad={(polyline) => (pathTraveledRef.current = polyline)}
+        path={pathTraveled}
+        options={{
+          strokeColor: '#0058A5',
+          strokeWeight: 3,
+          strokeOpacity: 1,
+          defaultVisible: true
+        }}
+        onClick={onPolyLineClickTraveled}
+      />
+      <Polyline
+        onLoad={(polyline) => (pathNotTraveledRef.current = polyline)}
+        path={pathNotTraveled}
+        options={{
+          strokeColor: '#0058A54D',
+          strokeWeight: 3,
+          strokeOpacity: 1,
+          defaultVisible: true
+        }}
+        onClick={onPolyLineClickNotTraveled}
+      />
     </>
   )
 }

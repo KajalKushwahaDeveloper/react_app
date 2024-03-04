@@ -1,20 +1,22 @@
 import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import EmulatorTable from './components/home/emulator/EmulatorTable'
-import { EMULATOR_CREATE_RANDOM_URL, USER_URL } from './constants.js'
-// import UserTable from "./components/user_table.js";
-import { useForm } from 'react-hook-form'
-import ApiService from './ApiService.js'
-import { GetEmulatorApi } from './components/api/emulator.js'
-import DownloadApk from './components/download_apk.js'
-import ChangeEmulatorSsidPopup from './components/generated_id_popup.js'
-import UserTable from './components/home/user/UserTable'
-import PopUpAssignUser from './components/popup_assign_user.js'
-import PopUpEmulatorTelephone from './components/popup_emulator_update_telephone.js'
-import PopUpUser from './components/popup_user.js'
+import ApiService from '../ApiService.js'
+import { GetEmulatorApi } from '../components/api/emulator.js'
+import DownloadApk from '../components/download_apk.js'
+import ChangeEmulatorSsidPopup from '../components/generated_id_popup.js'
+import EmulatorTable from '../components/home/emulator/EmulatorTable.jsx'
+import UserTable from '../components/home/user/UserTable.jsx'
+import PopUpAssignUser from '../components/popup_assign_user.js'
+import PopUpEmulatorTelephone from '../components/popup_emulator_update_telephone.js'
+import PopUpUser from '../components/popup_user.js'
+import { EMULATOR_CREATE_RANDOM_URL, USER_URL } from '../constants.js'
+import { useAuth } from './hooks/useAuth.js'
 
 const Home = () => {
+  const { client } = useAuth()
   const [openUserPopup, setOpenUserPopup] = useState(false)
   const [openEmulatorPopup, setOpenEmulatorPopup] = useState(false)
   const [openUserAssignPopup, setOpenUserAssignPopup] = useState(false)
@@ -144,6 +146,18 @@ const Home = () => {
   }
 
   const handleEmulatorSsidChanged = (success, error, data) => {}
+
+  if (client) {
+    let isAdmin = false
+    client.role_TYPE?.forEach((role) => {
+      if (role.authority.includes('ROLE_ADMIN')) {
+        isAdmin = true
+      }
+    })
+    if (!isAdmin) {
+      return <Navigate to="/access-denied" />
+    }
+  }
 
   return (
     <>

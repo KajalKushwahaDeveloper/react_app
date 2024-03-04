@@ -50,6 +50,9 @@ const SearchBar = (props) => {
   useEffect(() => {
     props.setLat(latitude)
     props.setLong(longitude)
+    if (props.setAddress) {
+      props.setAddress(addressComponent)
+    }
   }, [latitude, longitude, addressComponent, props])
 
   return (
@@ -59,7 +62,7 @@ const SearchBar = (props) => {
         value={address}
         onSelect={handleSelect}
         onError={handleError}
-        shouldFetchSuggestions={address.length > 2}
+        shouldFetchSuggestions={address?.length > 2}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps }) => {
           return (
@@ -89,7 +92,7 @@ const SearchBar = (props) => {
                         key={suggestion.placeId}
                         {...getSuggestionItemProps(suggestion, { className })}
                         style={{
-                          margin: '.2rem 0',
+                          margin: '.4rem 0',
                           display: 'flex',
                           alignItems: 'flex-start',
                           justifyContent: 'flex-start'

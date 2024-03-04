@@ -1,26 +1,18 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import React, { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { CLIENT_CURRENT } from '../../constants.js'
+import { useAuth } from '../../pages/hooks/useAuth.js'
 import '../../scss/navbar.scss'
 import { useEmulatorStore } from '../../stores/emulator/store.tsx'
 import LinearProgressBar from './StyledLinearProgressBar.js'
 
-const Navbar = ({ isAdmin, setIsAdmin }) => {
+const Navbar = ({ isAdmin }) => {
+  const { logout } = useAuth()
   const [menuIcon, setMenuIcon] = useState(false)
   const [data, setData] = useState()
 
-  const logout = useEmulatorStore((state) => state.logout)
-  const navigate = useNavigate()
-
   const isMicEnabled = useEmulatorStore((state) => state.isMicEnabled)
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    setIsAdmin(false)
-    logout()
-    navigate('/login')
-  }
 
   const fetchClientData = async () => {
     const token = localStorage.getItem('token')
@@ -77,7 +69,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
               {isAdmin && (
                 <li>
                   <NavLink
-                    to="/home"
+                    to="/license"
                     className="navbar-link"
                     onClick={() => setMenuIcon(false)}
                   >
@@ -100,7 +92,7 @@ const Navbar = ({ isAdmin, setIsAdmin }) => {
                 {data?.username || 'N/A'})
               </p>
               <li>
-                <NavLink to="/" onClick={() => handleLogout()}>
+                <NavLink to="/" onClick={() => logout()}>
                   Logout
                 </NavLink>
               </li>

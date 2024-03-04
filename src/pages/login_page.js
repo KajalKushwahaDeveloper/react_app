@@ -1,16 +1,12 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import ApiService from './ApiService'
-import ForgotPasswordModal from './components/location/map-components/ForgotPasswordModal'
-import { CLIENT_LOGIN } from './constants'
-import './scss/login.scss'
+import { Navigate } from 'react-router-dom'
+import ForgotPasswordModal from '../components/location/map-components/ForgotPasswordModal'
+import '../scss/login.scss'
+import { useAuth } from './hooks/useAuth'
 
 const LoginPage = () => {
-  // log env variables
-  console.log('BASE_URL', process.env.REACT_APP_BASE_URL)
-  console.log('LOG_LEVEL', process.env.REACT_APP_LOG_LEVEL)
-
-  const navigate = useNavigate()
+  console.log('LoginPage rendered')
+  const { login, client } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -37,19 +33,12 @@ const LoginPage = () => {
       setPasswordError('Please enter a password')
     } else {
       try {
-        const payload = { email, password }
-        const { success, data, error } = await ApiService.makeApiCall(
-          CLIENT_LOGIN,
-          'POST',
-          payload,
-          null
-        )
-        if (success) {
-          const token = data.token
-          localStorage.setItem('token', token)
-          navigate('/redirect') // Redirect to the home page
-        } else {
-          setResponseError(error || 'Invalid credentials') // Display appropriate error message
+        const data = await login({
+          email,
+          password
+        })
+        if (!data.success) {
+          setResponseError(data.error)
         }
       } catch (error) {
         console.error('Error occurred during login:', error)
@@ -64,6 +53,21 @@ const LoginPage = () => {
 
   const handleForgotPasswordClick = async () => {
     setIsForgotPasswordModalOpen(true)
+  }
+
+  console.log('client', client)
+  if (client) {
+    let isAdmin = false
+    client.role_TYPE?.forEach((role) => {
+      if (role.authority.includes('ROLE_ADMIN')) {
+        isAdmin = true
+      }
+    })
+    if (isAdmin) {
+      return <Navigate to="/license" />
+    } else {
+      return <Navigate to="/gps" />
+    }
   }
 
   return (
@@ -85,9 +89,6 @@ const LoginPage = () => {
                   className="FrontImg"
                 />
                 <hr className="hr"></hr>
-                {/* <p className="para">
-                  Vivamus at dui consequat, dapibus tellus vitae
-                </p> */}
               </div>
             </div>
             <div

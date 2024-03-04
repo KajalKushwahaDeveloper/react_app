@@ -271,6 +271,29 @@ const GpsTable = () => {
   if (loading) {
     return <div>Loading...</div>
   }
+  const isVelocityOutOfRange = (velocity) =>
+    velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+  velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
+
+  const isSelectedEmulator = (emulatorId, selectedEmulator) =>
+    emulatorId === selectedEmulator?.id
+
+  const isHoveredEmulator = (emulatorId, hoveredEmulator) =>
+    emulatorId === hoveredEmulator?.id
+
+  const getBlinkClass = (emulator, selectedEmulator, hoveredEmulator) => {
+    if (!isSelectedEmulator(emulator.id, selectedEmulator) && !emulator.startLat) return ''
+    if (isVelocityOutOfRange(emulator.velocity)) {
+      if (isSelectedEmulator(emulator.id, selectedEmulator)) {
+        return 'blink-selected'
+      }
+      if (isHoveredEmulator(emulator.id, hoveredEmulator)) {
+        return 'blink-hovered'
+      }
+      return 'blink'
+    }
+    return ''
+  }
 
   return (
     <div>
@@ -294,7 +317,7 @@ const GpsTable = () => {
               maxHeight: isMobile ? 'auto' : '55px',
               margin: '0'
             }}
-            placeholder="Search by SSID or Note"
+            placeholder="Search by Number/Note/Ssid"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             InputProps={{
@@ -311,6 +334,7 @@ const GpsTable = () => {
               // Determine if item should be included in filtered list... checking ssid and note
               return (
                 emulator.emulatorSsid.includes(predicateArg) ||
+                (emulator.telephone && emulator.telephone.includes(predicateArg)) ||
                 (emulator.note &&
                   emulator.note
                     .toLowerCase()
@@ -337,30 +361,9 @@ const GpsTable = () => {
                         maxHeight: isMobile ? 'auto' : '80px',
                         border: '2px solid #E6E6E6'
                       }}
-                      className={`${
-                        (emulator.velocity <
-                          MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-                          emulator.velocity >
-                            MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) &&
-                        emulator.id === selectedEmulator?.id
-                          ? 'blink-selected'
-                          : (emulator.velocity <
-                              MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-                              emulator.velocity >
-                                MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS) &&
-                            emulator.id === hoveredEmulator?.id
-                          ? 'blink-hovered'
-                          : emulator.velocity <
-                              MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-                            emulator.velocity >
-                              MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
-                          ? 'blink'
-                          : ''
-                      } ${
-                        emulator.id === selectedEmulator?.id ? 'selected' : ''
-                      } ${
-                        emulator.id === hoveredEmulator?.id ? 'hovered' : ''
-                      }`}
+                      className={`${getBlinkClass(emulator, selectedEmulator, hoveredEmulator)} ${
+                        isSelectedEmulator(emulator.id, selectedEmulator) ? 'selected' : ''
+                        } ${isHoveredEmulator(emulator.id, hoveredEmulator) ? 'hovered' : ''}`}
                       onClick={() => handleEmulatorCheckboxChange(emulator)}
                     >
                       <td

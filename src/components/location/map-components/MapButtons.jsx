@@ -120,7 +120,10 @@ const MapButtons = () => {
       >
         {connectedEmulator && (
           <>
-            <Speedometer />
+            {connectedEmulator.startLat !== null &&
+              connectedEmulator.startLat !== undefined &&
+              connectedEmulator.startLat !== 0 && <Speedometer />}
+
             {movedEmulator && movedEmulator.moveMarker === true ? (
               <Button
                 variant="contained"

@@ -1,5 +1,5 @@
 import React from 'react'
-import '../src/view/view.scss'
+import './view.scss'
 
 const RedirectPage = () => {
   return (

@@ -1,26 +1,24 @@
 import React, { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
+import { RouterProvider } from 'react-router-dom'
 import './../node_modules/bootstrap/dist/js/bootstrap.min.js'
 import ErrorBoundary from './ErrorBoundary'
 import { StateProvider } from './StateProvider.js'
 import { ViewportProvider } from './ViewportProvider.js'
-import App from './app/App.js'
+import { router } from './app/App.js'
 import './scss/global.scss'
 import * as serviceWorker from './serviceWorker.js'
 
 // eslint-disable-next-line react/no-deprecated
 ReactDOM.render(
   <StrictMode>
-    <BrowserRouter>
-      <ErrorBoundary>
-        <ViewportProvider>
-          <StateProvider>
-            <App />
-          </StateProvider>
-        </ViewportProvider>
-      </ErrorBoundary>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <ViewportProvider>
+        <StateProvider>
+          <RouterProvider router={router} />
+        </StateProvider>
+      </ViewportProvider>
+    </ErrorBoundary>
   </StrictMode>,
   document.getElementById('root')
 )
