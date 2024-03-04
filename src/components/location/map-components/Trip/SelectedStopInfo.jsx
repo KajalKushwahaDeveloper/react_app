@@ -176,6 +176,6 @@ export function SelectedStopInfo(props) {
           </div>
         </div>
       </div>
-    </InfoWindow>
+      </InfoWindow>
   )
 }
