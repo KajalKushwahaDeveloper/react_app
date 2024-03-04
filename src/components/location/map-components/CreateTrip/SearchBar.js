@@ -50,8 +50,9 @@ const SearchBar = (props) => {
   useEffect(() => {
     props.setLat(latitude)
     props.setLong(longitude)
-    // eslint-disable-next-line spaced-comment
-    //setAddress(addressComponent)
+    if (props.setAddress) {
+      props.setAddress(addressComponent)
+    }
   }, [latitude, longitude, addressComponent, props])
 
   return (
