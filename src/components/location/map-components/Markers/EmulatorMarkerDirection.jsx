@@ -5,9 +5,6 @@ import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 const EmulatorMarkerDirection = () => {
   const markerRef = useRef(null)
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
-  const emulatorRefOne = useEmulatorStore.getState().connectSelectedEmulatorSSE
-
-  console.log('emulatorRefData:', emulatorRef, emulatorRefOne)
   // SVG with gradient and rotation
   const svgIcon = `
       <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" transform="rotate(${emulatorRef.current?.bearing})">
@@ -32,14 +29,18 @@ const EmulatorMarkerDirection = () => {
             return
           }
           emulatorRef.current = connectedEmulator
-
+          if (emulatorRef.current?.startLat === 0) {
+            setMarkerVisibility(false)
+          }
           const newPosition = new window.google.maps.LatLng(
             emulatorRef.current?.latitude,
             emulatorRef.current?.longitude
           )
           markerRef.current?.setPosition(newPosition)
           // TODO: use animation instead
-
+          if (emulatorRef.current?.startLat !== null && emulatorRef.current?.startLat !== 0) {
+            setMarkerVisibility(true)
+          }
           const svgIconNew = `
       <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" transform="rotate(${emulatorRef.current?.bearing})">
       <defs>
@@ -67,15 +68,19 @@ const EmulatorMarkerDirection = () => {
           markerRef.current?.setTitle(title)
         }
       ),
-    [svgIcon]
+    []
   )
 
-  console.log('emulatorRefTesting:', emulatorRef.current.startLat)
+  // function to set Marker to be visible or not after checking it's existing visibility
+  const setMarkerVisibility = (isVisible) => {
+    if (!markerRef.current) return
+    if (markerRef.current?.getVisible() !== isVisible) {
+      markerRef.current.setVisible(isVisible)
+    }
+  }
 
   return (
-    <>
-    {emulatorRef.current?.startLat && (
-      <Marker
+    <Marker
       key={emulatorRef.current?.id}
       onLoad={(marker) => (markerRef.current = marker)}
       icon={{
@@ -90,9 +95,11 @@ const EmulatorMarkerDirection = () => {
         lng: emulatorRef.current?.longitude
       }}
       zIndex={0}
+      // make visible false if connected emulator not null and has startLat
+      visible={
+        !(emulatorRef.current === null || emulatorRef.current?.startLat === 0)
+      }
     />
-    )}
-    </>
   )
 }
 
