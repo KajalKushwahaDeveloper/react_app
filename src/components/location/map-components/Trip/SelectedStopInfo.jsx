@@ -7,6 +7,7 @@ import { TRIP_STOPS_DELETE_URL } from '../../../../constants.js'
 import EditableWaitingTimeComponent from './EditableWaitingTimeComponent.jsx'
 import { toHumanReadableTime } from './utils.tsx'
 // import { useStates } from "../../../../StateProvider.js";
+import './selectedStopInfo.scss'
 
 export function SelectedStopInfo(props) {
   // const { showToast } = useStates();
@@ -108,119 +109,73 @@ export function SelectedStopInfo(props) {
       }}
       onCloseClick={props.handleInfoWindowClose}
     >
-      <div
-        style={{
-          width: 'auto'
-        }}
-      >
-        <h6
-          style={{
-            color: 'black'
-          }}
-        >
-          Stop Address:
-        </h6>
-        <p
-          style={{
-            color: 'black',
-            fontSize: '11px'
-          }}
-        >
-          {props.selectedStop.address.map((addressItem, index) => (
-            <React.Fragment key={index}>
-              {index > 0 && ', '}
-              {addressItem.long_name}
-            </React.Fragment>
-          ))}
-        </p>
-        <h6
-          style={{
-            color: 'black'
-          }}
-        >
-          Nearest Gas Station:
-        </h6>
-        <p
-          style={{
-            color: 'black',
-            fontSize: '11px'
-          }}
-        >
-          {props.selectedStop.gasStation.map((gasStationAddressItem, index) => (
-            <React.Fragment key={index}>
-              {index > 0 && ', '}
-              {gasStationAddressItem.long_name}
-            </React.Fragment>
-          ))}
-        </p>
-
-        <h6
-          style={{
-            color: 'black'
-          }}
-        >
-          Distance || Time for Arrival:
-        </h6>
-        <p
-          style={{
-            color: 'black',
-            fontSize: '11px'
-          }}
-        >
-          {distanceToThisStop || 'N/A'} || {timeToReachThisStop || 'N/A'}
-        </p>
-
-        <h6
-          style={{
-            color: 'black'
-          }}
-        >
-          Total Time:{' '}
-        </h6>
-        <p
-          style={{
-            color: 'black',
-            fontSize: '11px'
-          }}
-        >
-          {totalTime.current ? totalTime.current : 'N/A'}
-        </p>
-
-        <h6
-          style={{
-            color: 'black'
-          }}
-        >
-          Remaining Distance:{' '}
-        </h6>
-        <p
-          style={{
-            color: 'black',
-            fontSize: '11px'
-          }}
-        >
-          {timeToReachThisStop || 'N/A'}
-        </p>
-        {/* Edit Button */}
-        <EditableWaitingTimeComponent
-          tripPointIndex={props.selectedStop.tripPointIndex}
-          waitTime={props.selectedStop.waitTime}
-          connectedEmulatorId={connectedEmulatorRef.current?.id}
-        />
-        {/* Delete Button */}
-        <button
-          style={{
-            backgroundColor: 'red',
-            color: 'white',
-            fontSize: '11px',
-            padding: '10px',
-            margin: '0px'
-          }}
-          onClick={() => handleDeleteStop()}
-        >
-          Delete
-        </button>
+      <div className="selectedStopBox">
+        <div className="selectedStopInfo">
+          <div>
+            <h6 className="selectedStopHeader">Stop Address:</h6>
+            <p className="selectedStopPara">
+              {props.selectedStop.address.map((addressItem, index) => (
+                <React.Fragment key={index}>
+                  {index > 0 && ', '}
+                  {addressItem.long_name}
+                </React.Fragment>
+              ))}
+            </p>
+          </div>
+          <div>
+            <h6>Nearest Gas Station:</h6>
+            <p>
+              {props.selectedStop.gasStation.map(
+                (gasStationAddressItem, index) => (
+                  <React.Fragment key={index}>
+                    {index > 0 && ', '}
+                    {gasStationAddressItem.long_name}
+                  </React.Fragment>
+                )
+              )}
+            </p>
+          </div>
+        </div>
+        <div className="selectedStopInfo">
+          <div>
+            <h6>Distance || Time for Arrival:</h6>
+            <p>
+              {distanceToThisStop || 'N/A'} || {timeToReachThisStop || 'N/A'}
+            </p>
+          </div>
+          <div>
+            <h6>Total Time: </h6>
+            <p>{totalTime.current ? totalTime.current : 'N/A'}</p>
+          </div>
+        </div>
+        <div className="selectedStopInfo">
+          <div>
+            <h6>Remaining Distance: </h6>
+            <p>{timeToReachThisStop || 'N/A'}</p>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {/* Edit Button */}
+            <EditableWaitingTimeComponent
+              tripPointIndex={props.selectedStop.tripPointIndex}
+              waitTime={props.selectedStop.waitTime}
+              connectedEmulatorId={connectedEmulatorRef.current?.id}
+            />
+            {/* Delete Button */}
+            <button
+              style={{
+                backgroundColor: 'red',
+                color: 'white',
+                fontSize: '11px',
+                padding: '5px',
+                margin: '0px'
+              }}
+              onClick={() => handleDeleteStop()}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
-    </InfoWindow>
+      </InfoWindow>
   )
 }

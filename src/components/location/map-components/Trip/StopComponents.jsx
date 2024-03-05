@@ -193,9 +193,8 @@ export function StopComponents(props) {
           }}
         />
       )}
-
       {selectedStop && (
-        <SelectedStopInfo
+          <SelectedStopInfo
           selectedStop={selectedStop}
           handleInfoWindowClose={handleInfoWindowClose}
         ></SelectedStopInfo>
