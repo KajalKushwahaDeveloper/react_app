@@ -1,15 +1,7 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
-} from '@mui/material'
 import React, { useEffect } from 'react'
 import ApiService from '../../../ApiService.js'
 import { useStates } from '../../../StateProvider.js'
-import { EMULATOR_DRAG_URL, TRIP_URL } from '../../../constants.js'
+import { TRIP_URL } from '../../../constants.js'
 import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 
 const MAX_DISTANCE_SNAP = 10
@@ -26,12 +18,12 @@ export function DragDialog() {
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
 
-  const [openDialog, setOpenDialog] = React.useState(false)
+  // const [openDialog, setOpenDialog] = React.useState(false)
   const [dialogText, setDialogText] = React.useState('')
   const [payload, setPayload] = React.useState(null)
 
   const closeDragDialog = React.useCallback(() => {
-    setOpenDialog(false)
+    // setOpenDialog(false)
     if (draggedEmulator !== null) {
       dragEmulator(null)
     }
@@ -52,8 +44,11 @@ export function DragDialog() {
 
   function handleDialog(payload, text) {
     setPayload(payload)
-    setOpenDialog(true)
+    console.log("payload:", payload)
+    // setOpenDialog(true)
     setDialogText(text)
+    console.log("text32:", text)
+
   }
 
   useEffect(() => {
@@ -78,8 +73,7 @@ export function DragDialog() {
             longitude: dragEmulatorRequest.longitude
           }
           handleDialog(
-            payload,
-            'Do you want to set new Location of this emulator?'
+            payload
           )
         }
         return
@@ -281,43 +275,44 @@ export function DragDialog() {
     return distance
   }
 
-  const confirmNewLocation = async () => {
-    if (payload === null) {
-      showToast('Error: payload is null', 'error')
-      return
-    }
-    const token = localStorage.getItem('token')
-    const { success, error } = await ApiService.makeApiCall(
-      EMULATOR_DRAG_URL,
-      'POST',
-      payload,
-      token,
-      null
-    )
-    if (success) {
-      closeDragDialog()
-    } else {
-      showToast(error, 'error')
-    }
-  }
+  // const confirmNewLocation = async () => {
+  //   if (payload === null) {
+  //     showToast('Error: payload is null', 'error')
+  //     return
+  //   }
+  //   const token = localStorage.getItem('token')
+  //   const { success, error } = await ApiService.makeApiCall(
+  //     EMULATOR_DRAG_URL,
+  //     'POST',
+  //     payload,
+  //     token,
+  //     null
+  //   )
+  //   if (success) {
+  //     closeDragDialog()
+  //   } else {
+  //     showToast(error, 'error')
+  //   }
+  // }
 
   return (
-    <Dialog open={openDialog} onClose={closeDragDialog}>
-      <DialogTitle id="alert-dialog-title">{'logbook gps'}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {dialogText}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={confirmNewLocation} autoFocus>
-          Confirm
-        </Button>
-        <Button onClick={closeDragDialog} autoFocus>
-          Cancel
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <></>
+    // <Dialog open={openDialog} onClose={closeDragDialog}>
+    //   <DialogTitle id="alert-dialog-title">{'logbook gps'}</DialogTitle>
+    //   <DialogContent>
+    //     <DialogContentText id="alert-dialog-description">
+    //       {dialogText}
+    //     </DialogContentText>
+    //   </DialogContent>
+    //   <DialogActions>
+    //     <Button onClick={confirmNewLocation} autoFocus>
+    //       Confirm
+    //     </Button>
+    //     <Button onClick={closeDragDialog} autoFocus>
+    //       Cancel
+    //     </Button>
+    //   </DialogActions>
+    // </Dialog>
   )
 }
 
