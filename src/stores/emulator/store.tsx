@@ -196,9 +196,7 @@ const createTripDataSlice: StateCreator<
           ) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             get().setSelectedEmulatorSSEData(emulatorData)
-          } else if (
-            event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED
-          ) {
+          } else if (event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({
               connectedEmulator: emulatorData.emulatorDetails,
@@ -206,9 +204,7 @@ const createTripDataSlice: StateCreator<
               pathTraveled: null,
               pathNotTraveled: null
             })
-          } else if (
-            event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED
-          ) {
+          } else if (event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({ connectedEmulator: emulatorData?.emulatorDetails })
             var tripData = get().tripData
@@ -286,7 +282,7 @@ const createSharedSlice: StateCreator<
           const emulators: Emulator[] = JSON.parse(event.data)
           useEmulatorStore.getState().updateEmulators(emulators)
         }
-        if(event.event === EmulatorsSSEEvent.EMULATOR_UPDATED) {
+        if (event.event === EmulatorsSSEEvent.EMULATOR_UPDATED) {
           const emulator = JSON.parse(event.data)
           const emulators = get().emulators
           // find the emulator and update it on a new array
