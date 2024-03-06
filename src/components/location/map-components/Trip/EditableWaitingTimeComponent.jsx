@@ -65,7 +65,6 @@ function EditableWaitingTimeComponent(props) {
       } else {
         // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
         // showToast("Stop wait time Updated", "success");
-        console.log('timeData:', time)
         const date = new Date(time)
         const hours1 = date.getUTCHours()
         const minutes2 = date.getUTCMinutes()
@@ -98,7 +97,6 @@ function EditableWaitingTimeComponent(props) {
   }
 
   useEffect(() => {
-    console.log('TimeChecking:', time)
     const date = new Date(time)
     const hours1 = date.getUTCHours()
     const minutes2 = date.getUTCMinutes()
@@ -106,15 +104,13 @@ function EditableWaitingTimeComponent(props) {
       hours1.toString().padStart(2, '0') +
       ':' +
       minutes2.toString().padStart(2, '0')
-      console.log('TimeChecking11:', humanReadableTime)
-      setHumanReadableTime(humanReadableTime)
-  },[time])
+    setHumanReadableTime(humanReadableTime)
+  }, [time])
 
   return (
     <div>
       {isEditing ? (
         <>
-        { console.log("humanReadableTime7777:",humanReadableTime)}
         <button onClick={handleDecrement}>-</button>
           <TextField
             id="time"
@@ -134,6 +130,7 @@ function EditableWaitingTimeComponent(props) {
             variant="contained"
             color="primary"
             onClick={handleApplyClick}
+            style={{ margin: '10px 0px 0px 10px' }}
           >
             Apply
           </Button>
