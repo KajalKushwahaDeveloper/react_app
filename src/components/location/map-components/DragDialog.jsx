@@ -1,7 +1,15 @@
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
+} from '@mui/material'
 import React, { useEffect } from 'react'
 import ApiService from '../../../ApiService.js'
 import { useStates } from '../../../StateProvider.js'
-import { TRIP_URL } from '../../../constants.js'
+import { EMULATOR_DRAG_URL, TRIP_URL } from '../../../constants.js'
 import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 
 const MAX_DISTANCE_SNAP = 10
@@ -18,12 +26,12 @@ export function DragDialog() {
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
 
-  // const [openDialog, setOpenDialog] = React.useState(false)
+  const [openDialog, setOpenDialog] = React.useState(false)
   const [dialogText, setDialogText] = React.useState('')
   const [payload, setPayload] = React.useState(null)
 
   const closeDragDialog = React.useCallback(() => {
-    // setOpenDialog(false)
+    setOpenDialog(false)
     if (draggedEmulator !== null) {
       dragEmulator(null)
     }
@@ -44,11 +52,8 @@ export function DragDialog() {
 
   function handleDialog(payload, text) {
     setPayload(payload)
-    console.log("payload:", payload)
-    // setOpenDialog(true)
+    setOpenDialog(true)
     setDialogText(text)
-    console.log("text32:", text)
-
   }
 
   useEffect(() => {
@@ -73,7 +78,8 @@ export function DragDialog() {
             longitude: dragEmulatorRequest.longitude
           }
           handleDialog(
-            payload
+            payload,
+            'Do you want to set new Location of this emulator?'
           )
         }
         return
@@ -103,11 +109,13 @@ export function DragDialog() {
 
       if (nearestDistance <= MAX_DISTANCE_SNAP) {
         const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(
+
           dragEmulatorRequest.emulator.currentTripPointIndex,
           data.data.tripPoints
         )
 
         const nearestTripPointStopPoint = calculateNextStopPointIndex(
+
           nearestTripPoint.tripPointIndex,
           data.data.tripPoints
         )
@@ -200,8 +208,7 @@ export function DragDialog() {
     }
 
     function calculateNextStopPointIndex(currentIndex, tripData) {
-      const nextStopPoint = tripData?.stops?.find(
-        (stop) => currentIndex < stop.tripPointIndex
+      const nextStopPoint = tripData?.stops?.find((stop) => currentIndex < stop.tripPointIndex
       )
       return nextStopPoint
     }
@@ -257,6 +264,25 @@ export function DragDialog() {
     dragEmulator
   ])
 
+  useEffect(() => {
+    console.log('openDialog:', openDialog)
+    setOpenDialog(false)
+    if (draggedEmulator !== null) {
+      dragEmulator(null)
+    }
+    if (movedEmulator !== null) {
+      dragEmulator(null)
+    }
+    if (payload !== null) setPayload(null)
+    if (dialogText !== '') setDialogText('')
+    hideLoader()
+  }, [openDialog, draggedEmulator,
+    movedEmulator,
+    payload,
+    dialogText,
+    hideLoader,
+    dragEmulator])
+
   function haversine(lat1, lon1, lat2, lon2) {
     // Convert latitude and longitude from degrees to radians
     lat1 = (lat1 * Math.PI) / 180
@@ -275,44 +301,43 @@ export function DragDialog() {
     return distance
   }
 
-  // const confirmNewLocation = async () => {
-  //   if (payload === null) {
-  //     showToast('Error: payload is null', 'error')
-  //     return
-  //   }
-  //   const token = localStorage.getItem('token')
-  //   const { success, error } = await ApiService.makeApiCall(
-  //     EMULATOR_DRAG_URL,
-  //     'POST',
-  //     payload,
-  //     token,
-  //     null
-  //   )
-  //   if (success) {
-  //     closeDragDialog()
-  //   } else {
-  //     showToast(error, 'error')
-  //   }
-  // }
+  const confirmNewLocation = async () => {
+    if (payload === null) {
+      showToast('Error: payload is null', 'error')
+      return
+    }
+    const token = localStorage.getItem('token')
+    const { success, error } = await ApiService.makeApiCall(
+      EMULATOR_DRAG_URL,
+      'POST',
+      payload,
+      token,
+      null
+    )
+    if (success) {
+      closeDragDialog()
+    } else {
+      showToast(error, 'error')
+    }
+  }
 
   return (
-    <></>
-    // <Dialog open={openDialog} onClose={closeDragDialog}>
-    //   <DialogTitle id="alert-dialog-title">{'logbook gps'}</DialogTitle>
-    //   <DialogContent>
-    //     <DialogContentText id="alert-dialog-description">
-    //       {dialogText}
-    //     </DialogContentText>
-    //   </DialogContent>
-    //   <DialogActions>
-    //     <Button onClick={confirmNewLocation} autoFocus>
-    //       Confirm
-    //     </Button>
-    //     <Button onClick={closeDragDialog} autoFocus>
-    //       Cancel
-    //     </Button>
-    //   </DialogActions>
-    // </Dialog>
+    <Dialog open={false} onClose={closeDragDialog}>
+      <DialogTitle id="alert-dialog-title">{'logbook gps'}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {dialogText}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={confirmNewLocation} autoFocus>
+          Confirm
+        </Button>
+        <Button onClick={closeDragDialog} autoFocus>
+          Cancel
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
