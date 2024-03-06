@@ -10,7 +10,7 @@ export const ProtectedLayout = () => {
   const { client } = useAuth()
   const outlet = useOutlet()
 
-  const connectEmulatorsSSE = useEmulatorStore.getState().connectEmulatorsSSE
+  const getEmulatorsSSE = useEmulatorStore.getState().getEmulatorsSSE
   const initMarkers = useMarkerStore.getState().initMarkers
   const createDevices = useEmulatorStore.getState().createDevices
 
@@ -20,11 +20,11 @@ export const ProtectedLayout = () => {
     }
     const token = client.token
     if (token) {
-      connectEmulatorsSSE()
+      getEmulatorsSSE()
       initMarkers()
       createDevices()
     }
-  }, [client, connectEmulatorsSSE, createDevices, initMarkers])
+  }, [client, getEmulatorsSSE, createDevices, initMarkers])
 
   if (!client) {
     return <Navigate to="/login" />

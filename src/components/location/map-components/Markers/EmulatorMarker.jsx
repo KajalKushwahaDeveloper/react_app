@@ -14,15 +14,21 @@ const EmulatorMarker = ({ id }) => {
 
   const hoveredEmulatorRef = useRef(useEmulatorStore.getState().hoveredMarker)
   const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator)
+  const emulators = useEmulatorStore.getState().emulators
 
-  const emulatorRef = useRef({
-    id,
-    telephone: '+1 000 000 0000',
-    tripStatus: 'PAUSED',
-    status: 'OFFLINE',
-    latitude: 37.7749,
-    longitude: -122.4194
-  })
+  // create emulatorRef by finding the emulator with the id from the emulators
+  const emulatorRef = useRef(emulators.find((emulator) => emulator.id === id))
+  // else create a default emulatorRef
+  if (!emulatorRef.current) {
+    emulatorRef.current = {
+      id,
+      telephone: '+1 000 000 0000',
+      tripStatus: 'PAUSED',
+      status: 'OFFLINE',
+      latitude: 37.7749,
+      longitude: -122.4194
+    }
+  }
 
   // PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
   let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
