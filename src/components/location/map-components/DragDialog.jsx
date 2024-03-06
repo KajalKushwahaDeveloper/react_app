@@ -29,7 +29,7 @@ export function DragDialog() {
   const [openDialog, setOpenDialog] = React.useState(false)
   const [dialogText, setDialogText] = React.useState('')
   const [payload, setPayload] = React.useState(null)
-
+   //closeDragDialog function
   const closeDragDialog = React.useCallback(() => {
     setOpenDialog(false)
     if (draggedEmulator !== null) {
