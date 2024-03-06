@@ -286,7 +286,7 @@ const createSharedSlice: StateCreator<
           const emulators: Emulator[] = JSON.parse(event.data)
           useEmulatorStore.getState().updateEmulators(emulators)
         }
-        if(event.event === EmulatorsSSEEvent.EMULATOR_UPDATED) {
+        if (event.event === EmulatorsSSEEvent.EMULATOR_UPDATED) {
           const emulator = JSON.parse(event.data)
           const emulators = get().emulators
           // find the emulator and update it on a new array

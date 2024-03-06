@@ -405,18 +405,21 @@ const GpsTable = () => {
                               {/* Icons */}
                               <div style={{ display: 'flex' }}>
                                 {/* calling icon */}
-                                <IconButton
-                                  size="small"
+
+                                  <IconButton
+                                    size="small"
+                                    disabled={!emulator?.telephone}
                                   onClick={() =>
                                     handleCallIconClicked(emulator)
                                   }
                                 >
                                   <CallRoundedIcon fontSize="small" />
-                                </IconButton>
+                                  </IconButton>
 
                                 {/* message icon */}
                                 <IconButton
                                   size="small"
+                                  disabled={!emulator?.telephone}
                                   onClick={() =>
                                     handleMessageIconClicked(emulator)
                                   }
