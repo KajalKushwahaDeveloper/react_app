@@ -2,12 +2,8 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { create, StateCreator } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
-import {
-  EMULATOR_URL,
-  SSE_ALL_EMULATORS_URL,
-  SSE_CONNECTED_EMULATOR_URL
-} from '../../constants'
-import { EmulatorEvent, EmulatorsSSEEvent } from '../../model/EmulatorEvent.tsx'
+import { BASE_URL, EMULATOR_URL } from '../../constants'
+import { EmulatorEvent } from '../../model/EmulatorEvent.tsx'
 import {
   createDeviceSlice,
   deviceStore,
@@ -58,7 +54,7 @@ export interface TripDataSlice {
 }
 
 interface SharedSlice {
-  getEmulatorsSSE: () => void
+  connectEmulatorsSSE: () => void
   logout: () => void
   getBoth: () => void
   showLoader: () => void
@@ -111,6 +107,8 @@ const createEmulatorsSlice: StateCreator<
     } else {
       set({ center: null })
     }
+    // Store the selected emulator ID in localStorage
+     localStorage.setItem('selectedEmulatorId', emulator?.id || '')
     // if same as selectedEmulator, then do nothing..
     if (
       emulator === get().selectedEmulator ||
@@ -165,7 +163,7 @@ const createTripDataSlice: StateCreator<
     const token = localStorage.getItem('token')
     const ctrl = new AbortController()
     set({ isLoading: true })
-    fetchEventSource(`${SSE_CONNECTED_EMULATOR_URL}/${selectedEmulator?.id}`, {
+    fetchEventSource(`${BASE_URL}/sse/${selectedEmulator?.id}`, {
       method: 'GET',
       headers: {
         Accept: 'text/event-stream',
@@ -178,26 +176,26 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false })
       },
       onmessage(event) {
-        // if heartbeat, then return
         console.log('TEST@ event: ', event)
-        if (event.event === 'heartbeat') {
+        // if heartbeat, then return
+        if (event.data === 'heartbeat') {
           return
         }
         try {
           // check event.event with EmulatorEvent
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
           console.log('TEST@ emulatorData: ', emulatorData)
-          if (event.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
+          if (emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({ connectedEmulator: emulatorData.emulatorDetails })
           } else if (
-            event.event === EmulatorEvent.EMULATOR_CONNECTED ||
-            event.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED
+            emulatorData.event === EmulatorEvent.EMULATOR_CONNECTED ||
+            emulatorData.event === EmulatorEvent.EMULATOR_TRIP_DETAILS_UPDATED
           ) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             get().setSelectedEmulatorSSEData(emulatorData)
           } else if (
-            event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED
+            emulatorData.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED
           ) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({
@@ -207,7 +205,7 @@ const createTripDataSlice: StateCreator<
               pathNotTraveled: null
             })
           } else if (
-            event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED
+            emulatorData.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED
           ) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({ connectedEmulator: emulatorData?.emulatorDetails })
@@ -221,7 +219,7 @@ const createTripDataSlice: StateCreator<
         }
       },
       onclose() {
-        console.error('Connection closed by the server')
+        console.warn('Connection closed by the server')
         set({ isLoading: false })
       },
       onerror(err) {
@@ -260,12 +258,12 @@ const createSharedSlice: StateCreator<
   [],
   SharedSlice
 > = (set, get) => ({
-  getEmulatorsSSE: () => {
+  connectEmulatorsSSE: () => {
     // Run this when we are logged in. i.e. when we have a token
     const token = localStorage.getItem('token')
     const ctrl = new AbortController()
 
-    fetchEventSource(`${SSE_ALL_EMULATORS_URL}`, {
+    fetchEventSource(`${BASE_URL}/sse`, {
       method: 'GET',
       headers: {
         Accept: 'text/event-stream',
@@ -277,25 +275,8 @@ const createSharedSlice: StateCreator<
         }
       },
       onmessage(event) {
-        // if heartbeat, then return
-        if (event.event === 'heartbeat') {
-          return
-        }
-        // check event.event with EmulatorEvent
-        if (event.event === EmulatorsSSEEvent.EMULATORS_CONNECTED) {
-          const emulators: Emulator[] = JSON.parse(event.data)
-          useEmulatorStore.getState().updateEmulators(emulators)
-        }
-        if(event.event === EmulatorsSSEEvent.EMULATOR_UPDATED) {
-          const emulator = JSON.parse(event.data)
-          const emulators = get().emulators
-          // find the emulator and update it on a new array
-          const index = emulators.findIndex((e) => e.id === emulator.id)
-          if (index !== -1) {
-            emulators[index] = emulator
-          }
-          useEmulatorStore.getState().updateEmulators([...emulators])
-        }
+        const parsedData: Emulator[] = JSON.parse(event.data)
+        useEmulatorStore.getState().updateEmulators(parsedData)
       },
       onclose() {
         console.warn('Connection closed by the server')
