@@ -66,3 +66,8 @@ export const VOICE_GET_TOKEN_URL = VOICE_URL + '/token'
 // notification
 export const EMULATOR_SEND_URL = BASE_URL + '/send'
 export const EMULATOR_NOTIFICATION_URL = EMULATOR_SEND_URL + '/notification'
+
+// SSE
+export const SSE_URL = BASE_URL + '/sse'
+export const SSE_CONNECTED_EMULATOR_URL = SSE_URL + '/emulator'
+export const SSE_ALL_EMULATORS_URL = SSE_URL + '/emulators'
