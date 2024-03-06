@@ -40,6 +40,30 @@ const AddressTable = () => {
     widthArr[i] = savedAddressWithI
   }
 
+  function formatTime(milliseconds) {
+    // Convert milliseconds to seconds
+    let totalSeconds = Math.floor(milliseconds / 1000);
+    
+    // Calculate hours
+    const hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    
+    // Calculate minutes
+    const minutes = Math.floor(totalSeconds / 60);
+    
+    // Calculate remaining seconds
+    const seconds = totalSeconds % 60;
+    
+    // Format the time
+    const formattedTime = [
+      String(hours).padStart(2, '0'),
+      String(minutes).padStart(2, '0'),
+      String(seconds).padStart(2, '0')
+    ].join(':');
+    
+    return formattedTime;
+  }
+
   const getAddress = (address) =>
     address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
 
@@ -64,9 +88,13 @@ const AddressTable = () => {
         '<br/>' +
         readableTime(tripData.emulatorDetails.arrivalTime)
       : 'N/A'
-    const totalTime = tripData ? 'TODO' : 'N/A'
-    const remainingDistance = tripData ? 'TODO' : 'N/A'
 
+      const totalTime =
+      tripData?.emulatorDetails &&
+      formatTime(tripData.emulatorDetails.arrivalTime - tripData.emulatorDetails.departTime);
+
+    const remainingDistance = tripData ? 'TODO' : 'N/A'
+    console.log('arrivalTime:', arrivalTime)
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
     setStringToElementRef(toAddress, elementRefs.current[2])
