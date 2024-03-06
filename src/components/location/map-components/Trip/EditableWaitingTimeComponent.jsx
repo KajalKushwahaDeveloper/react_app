@@ -1,6 +1,6 @@
 import { Edit } from '@mui/icons-material'
 import { Button, IconButton, TextField } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ApiService from '../../../../ApiService'
 import { TRIP_STOPS_UPDATE_WAIT_TIME_URL } from '../../../../constants'
 
@@ -40,7 +40,7 @@ function EditableWaitingTimeComponent(props) {
       // if no, do nothing
 
       const shouldUpdateTime = window.confirm(
-        'Are you sure you want to delete this stop?'
+        'Are you sure you want to update the stop wait time?'
       )
       if (!shouldUpdateTime) {
         return
@@ -65,6 +65,7 @@ function EditableWaitingTimeComponent(props) {
       } else {
         // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
         // showToast("Stop wait time Updated", "success");
+        console.log('timeData:', time)
         const date = new Date(time)
         const hours1 = date.getUTCHours()
         const minutes2 = date.getUTCMinutes()
@@ -88,15 +89,38 @@ function EditableWaitingTimeComponent(props) {
     setTime(timeInMilliseconds)
   }
 
+  const handleIncrement = () => {
+    setTime(prevValue => prevValue + 1800000) // 30min to ms
+  }
+
+  const handleDecrement = () => {
+    setTime(prevValue => prevValue - 1800000) // 30min to ms
+  }
+
+  useEffect(() => {
+    console.log('TimeChecking:', time)
+    const date = new Date(time)
+    const hours1 = date.getUTCHours()
+    const minutes2 = date.getUTCMinutes()
+    const humanReadableTime =
+      hours1.toString().padStart(2, '0') +
+      ':' +
+      minutes2.toString().padStart(2, '0')
+      console.log('TimeChecking11:', humanReadableTime)
+      setHumanReadableTime(humanReadableTime)
+  },[time])
+
   return (
     <div>
       {isEditing ? (
         <>
+        { console.log("humanReadableTime7777:",humanReadableTime)}
+        <button onClick={handleDecrement}>-</button>
           <TextField
             id="time"
             label="Stop Wait Time"
             type="time"
-            defaultValue={humanReadableTime} // convert waitTime in milliseconds to format "12:00"
+            value={humanReadableTime} // convert waitTime in milliseconds to format "12:00"
             onChange={handleTimeChange}
             InputLabelProps={{
               shrink: true
@@ -105,6 +129,7 @@ function EditableWaitingTimeComponent(props) {
               step: 300 // 5 min
             }}
           />
+          <button onClick={handleIncrement}>+</button>
           <Button
             variant="contained"
             color="primary"
