@@ -405,17 +405,31 @@ const GpsTable = () => {
                               {/* Icons */}
                               <div style={{ display: 'flex' }}>
                                 {/* calling icon */}
-
-                                  <IconButton
-                                    size="small"
-                                    disabled={!emulator?.telephone}
-                                  onClick={() =>
-                                    handleCallIconClicked(emulator)
-                                  }
-                                >
-                                  <CallRoundedIcon fontSize="small" />
-                                  </IconButton>
-
+                          {devices.find((device) => device.emulatorId === emulator.id)?.state === 'Connecting' ? <span> <CircularProgress color="primary" size="1.5rem"/></span> : devices.find((device) => device.emulatorId === emulator.id)?.state === 'Offline' ? <IconButton
+                              size="small"
+                              disabled={true}
+                              onClick={() =>
+                                handleCallIconClicked(emulator)
+                            }
+                          >
+                              <CallRoundedIcon fontSize="small" sx={{ color: 'red' }}/>
+                              </IconButton> : devices.find((device) => device.emulatorId === emulator.id)?.state === 'Incoming' || devices.find((device) => device.emulatorId === emulator.id)?.state === 'On call' ? <IconButton
+                              size="small"
+                              disabled={true}
+                              onClick={() =>
+                                handleCallIconClicked(emulator)
+                            }
+                          >
+                              <CallRoundedIcon fontSize="small" />
+                              </IconButton> : <IconButton
+                              size="small"
+                              disabled={!emulator?.telephone}
+                              onClick={() =>
+                                handleCallIconClicked(emulator)
+                            }
+                          >
+                              <CallRoundedIcon fontSize="small" />
+                              </IconButton>}
                                 {/* message icon */}
                                 <IconButton
                                   size="small"
