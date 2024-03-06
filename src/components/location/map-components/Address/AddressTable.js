@@ -77,6 +77,33 @@ const AddressTable = () => {
       return date.toLocaleString()
     }
 
+    const emulatorCoords = {
+      latitude: emulator?.latitude,
+      longitude: emulator?.longitude
+    }
+    let currentDistanceFromStartPoint = 0 
+    let remainingDistance = 0
+    const tripDataPoints =  tripData?.tripPoints || []
+    console.log('tripDataPoints:', tripDataPoints)
+    tripDataPoints.forEach((point, index) => {
+      currentDistanceFromStartPoint = currentDistanceFromStartPoint + point?.distance
+      const tripPointCoords = {
+        latitude: point?.lat,
+        longitude: point?.lng
+      };
+  // Compare latitude and longitude values of emulatorCoords and tripPointCoords
+  if (
+    emulatorCoords.latitude === tripPointCoords.latitude &&
+    emulatorCoords.longitude === tripPointCoords.longitude
+  ) {
+    console.log(`Coordinates match found at trip point ${index + 1}`);
+    remainingDistance = tripData.distance - currentDistanceFromStartPoint
+    // break the loop as we got the distance of current position of emulator
+    return;
+    // Perform actions based on the matching coordinates
+    // For example, calculate distance or any other action
+  }
+});
     const currentAddress =
       emulator && emulator.address ? emulator.address : 'N/A'
 
@@ -93,14 +120,14 @@ const AddressTable = () => {
       tripData?.emulatorDetails &&
       formatTime(tripData.emulatorDetails.arrivalTime - tripData.emulatorDetails.departTime);
 
-    const remainingDistance = tripData ? 'TODO' : 'N/A'
+    const actualRemainingDistance = tripData ? remainingDistance : 'N/A'
     console.log('arrivalTime:', arrivalTime)
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
     setStringToElementRef(toAddress, elementRefs.current[2])
     setStringToElementRef(arrivalTime, elementRefs.current[3])
     setStringToElementRef(totalTime, elementRefs.current[4])
-    setStringToElementRef(remainingDistance, elementRefs.current[5])
+    setStringToElementRef(actualRemainingDistance, elementRefs.current[5])
 
     // loop through the element refs and set their background color to lightblue
     elementParentRefs.current.forEach((elementRef) => {
