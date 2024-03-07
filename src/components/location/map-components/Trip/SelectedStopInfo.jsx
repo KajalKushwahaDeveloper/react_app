@@ -1,5 +1,5 @@
 import { InfoWindow } from '@react-google-maps/api'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import ApiService from '../../../../ApiService.js'
 import { TRIP_STOPS_DELETE_URL } from '../../../../constants.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
@@ -10,17 +10,11 @@ import './selectedStopInfo.scss'
 
 export function SelectedStopInfo(props) {
   // const { showToast } = useStates();
-  const [isClicked, setClicked] = useState(false)
 
   const connectedEmulatorRef = useRef(
     useEmulatorStore.getState().connectedEmulator
   )
   const tripDataRef = useRef(useEmulatorStore.getState().tripData)
-
-  useEffect(() => {
-    // set the state in zustand store
-    localStorage.setItem('click', isClicked)
-  }, [isClicked])
 
   useEffect(
     () =>
@@ -43,8 +37,6 @@ export function SelectedStopInfo(props) {
       ),
     []
   )
-
-  const totalTime = useRef(null)
 
   const connectedEmulator = connectedEmulatorRef.current
   const tripData = tripDataRef.current

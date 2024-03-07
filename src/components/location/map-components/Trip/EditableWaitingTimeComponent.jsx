@@ -18,7 +18,6 @@ function EditableWaitingTimeComponent(props) {
   })
 
   const [time, setTime] = useState(props.waitTime)
-  const isClicked = localStorage.getItem('click')
 
   const handleEditClick = () => {
     setIsEditing(true)
