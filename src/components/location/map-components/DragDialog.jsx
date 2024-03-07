@@ -142,15 +142,14 @@ export function DragDialog() {
           latitude: lat,
           longitude: lng
         }
-
+        const previousTimeToReachStopNew = previousTimeToReachStop ?? ''
+        const newTimeToReachStopNew = newTimeToReachStop ?? ''
         handleDialog(
           payload,
           `${
-            'The emulator will be snapped to nearest route under 10 miles range. The Previous time to reach next Stop Point was ' +
-            previousTimeToReachStop +
-            '. The new location will take ' +
-            newTimeToReachStop +
-            ' to reach the same next station. Do you want to set new Location of this emulator?'
+            'The emulator will be snapped to nearest route under 10 miles range' +
+            previousTimeToReachStopNew +
+            newTimeToReachStopNew
           }`
         )
       } else {
