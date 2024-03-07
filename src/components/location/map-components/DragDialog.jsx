@@ -50,10 +50,27 @@ export function DragDialog() {
     dragEmulator
   ])
 
-  function handleDialog(payload, text) {
+  async function handleDialog(payload, text) {
     setPayload(payload)
-    setOpenDialog(true)
+    // setOpenDialog(true)
     setDialogText(text)
+    if (payload === null) {
+      showToast('Error: payload is null', 'error')
+      return
+    }
+    const token = localStorage.getItem('token')
+    const { success, error } = await ApiService.makeApiCall(
+      EMULATOR_DRAG_URL,
+      'POST',
+      payload,
+      token,
+      null
+    )
+    if (success) {
+      closeDragDialog()
+    } else {
+      showToast(error, 'error')
+    }
   }
 
   useEffect(() => {
