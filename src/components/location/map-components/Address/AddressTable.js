@@ -42,31 +42,28 @@ const AddressTable = () => {
 
   function formatTime(milliseconds) {
     // Convert milliseconds to seconds
-    let totalSeconds = Math.floor(milliseconds / 1000);
-    
+    let totalSeconds = Math.floor(milliseconds / 1000)
     // Calculate hours
-    const hours = Math.floor(totalSeconds / 3600);
-    totalSeconds %= 3600;
-    
+    const hours = Math.floor(totalSeconds / 3600)
+    totalSeconds %= 3600
     // Calculate minutes
-    const minutes = Math.floor(totalSeconds / 60);
-    
+    const minutes = Math.floor(totalSeconds / 60)
     // Calculate remaining seconds
-    const seconds = totalSeconds % 60;
-    
+    const seconds = totalSeconds % 60
     // Format the time
     const formattedTime = [
       String(hours).padStart(2, '0'),
       String(minutes).padStart(2, '0'),
       String(seconds).padStart(2, '0')
-    ].join(':');
-    
-    return formattedTime;
+    ].join(':')
+    return formattedTime
   }
 
   const getAddress = (address) =>
     address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
 
+  const metersToMiles = (currentDistanceFromStartPoint) =>
+    Math.floor(currentDistanceFromStartPoint * 0.000621371)
   const setValues = useCallback((emulator, tripData, isHover) => {
     console.log('emulator', emulator)
     console.log('tripData', tripData)
@@ -81,29 +78,35 @@ const AddressTable = () => {
       latitude: emulator?.latitude,
       longitude: emulator?.longitude
     }
-    let currentDistanceFromStartPoint = 0 
+    let currentDistanceFromStartPoint = 0
     let remainingDistance = 0
-    const tripDataPoints =  tripData?.tripPoints || []
-    console.log('tripDataPoints:', tripDataPoints)
+    const tripDataPoints = tripData?.tripPoints || []
     tripDataPoints.forEach((point, index) => {
-      currentDistanceFromStartPoint = currentDistanceFromStartPoint + point?.distance
+      currentDistanceFromStartPoint =
+        currentDistanceFromStartPoint + point?.distance
       const tripPointCoords = {
         latitude: point?.lat,
         longitude: point?.lng
-      };
-  // Compare latitude and longitude values of emulatorCoords and tripPointCoords
-  if (
-    emulatorCoords.latitude === tripPointCoords.latitude &&
-    emulatorCoords.longitude === tripPointCoords.longitude
-  ) {
-    console.log(`Coordinates match found at trip point ${index + 1}`);
-    remainingDistance = tripData.distance - currentDistanceFromStartPoint
-    // break the loop as we got the distance of current position of emulator
-    return;
-    // Perform actions based on the matching coordinates
-    // For example, calculate distance or any other action
-  }
-});
+      }
+      if (
+        emulatorCoords.latitude === tripPointCoords.latitude &&
+        emulatorCoords.longitude === tripPointCoords.longitude
+      ) {
+        console.log(
+          'compare:',
+          emulatorCoords.longitude,
+          tripPointCoords.longitude
+        )
+        console.log(`Coordinates match found at trip point ${index + 1}`)
+        remainingDistance = metersToMiles(
+          tripData.distance - currentDistanceFromStartPoint
+        )
+        console.log('remainingDistance', remainingDistance)
+        // break the loop as we got the distance of current position of emulator
+        return
+      }
+    })
+    // console.log("currentDistanceFromStartPoint:", currentDistanceFromStartPoint)
     const currentAddress =
       emulator && emulator.address ? emulator.address : 'N/A'
 
@@ -116,9 +119,12 @@ const AddressTable = () => {
         readableTime(tripData.emulatorDetails.arrivalTime)
       : 'N/A'
 
-      const totalTime =
+    const totalTime =
       tripData?.emulatorDetails &&
-      formatTime(tripData.emulatorDetails.arrivalTime - tripData.emulatorDetails.departTime);
+      formatTime(
+        tripData.emulatorDetails.arrivalTime -
+          tripData.emulatorDetails.departTime
+      )
 
     const actualRemainingDistance = tripData ? remainingDistance : 'N/A'
     console.log('arrivalTime:', arrivalTime)
