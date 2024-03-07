@@ -1,9 +1,8 @@
 import { InfoWindow } from '@react-google-maps/api'
-import React, { useEffect, useRef } from 'react'
-import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
-
+import React, { useEffect, useRef, useState } from 'react'
 import ApiService from '../../../../ApiService.js'
 import { TRIP_STOPS_DELETE_URL } from '../../../../constants.js'
+import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import EditableWaitingTimeComponent from './EditableWaitingTimeComponent.jsx'
 import { toHumanReadableTime } from './utils.tsx'
 // import { useStates } from "../../../../StateProvider.js";
@@ -11,11 +10,17 @@ import './selectedStopInfo.scss'
 
 export function SelectedStopInfo(props) {
   // const { showToast } = useStates();
+  const [isClicked, setClicked] = useState(false)
 
   const connectedEmulatorRef = useRef(
     useEmulatorStore.getState().connectedEmulator
   )
   const tripDataRef = useRef(useEmulatorStore.getState().tripData)
+
+  useEffect(() => {
+    // set the state in zustand store
+    localStorage.setItem('click', isClicked)
+  }, [isClicked])
 
   useEffect(
     () =>
@@ -98,6 +103,7 @@ export function SelectedStopInfo(props) {
       // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
       // showToast("Stop deleted", "success");
       props.handleInfoWindowClose()
+      localStorage.setItem('click', false)
     }
   }
 
@@ -111,71 +117,91 @@ export function SelectedStopInfo(props) {
     >
       <div className="selectedStopBox">
         <div className="selectedStopInfo">
-          <div>
-            <h6 className="selectedStopHeader">Stop Address:</h6>
-            <p className="selectedStopPara">
-              {props.selectedStop.address.map((addressItem, index) => (
-                <React.Fragment key={index}>
-                  {index > 0 && ', '}
-                  {addressItem.long_name}
-                </React.Fragment>
-              ))}
-            </p>
-          </div>
-          <div>
-            <h6>Nearest Gas Station:</h6>
-            <p>
-              {props.selectedStop.gasStation.map(
-                (gasStationAddressItem, index) => (
-                  <React.Fragment key={index}>
-                    {index > 0 && ', '}
-                    {gasStationAddressItem.long_name}
-                  </React.Fragment>
-                )
-              )}
-            </p>
-          </div>
-        </div>
-        <div className="selectedStopInfo">
-          <div>
-            <h6>Distance || Time for Arrival:</h6>
-            <p>
-              {distanceToThisStop || 'N/A'} || {timeToReachThisStop || 'N/A'}
-            </p>
-          </div>
-          <div>
-            <h6>Total Time: </h6>
-            <p>{totalTime.current ? totalTime.current : 'N/A'}</p>
-          </div>
-        </div>
-        <div className="selectedStopInfo">
-          <div>
-            <h6>Remaining Distance: </h6>
-            <p>{timeToReachThisStop || 'N/A'}</p>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            {/* Edit Button */}
-            <EditableWaitingTimeComponent
-              tripPointIndex={props.selectedStop.tripPointIndex}
-              waitTime={props.selectedStop.waitTime}
-              connectedEmulatorId={connectedEmulatorRef.current?.id}
-            />
-            {/* Delete Button */}
-            <button
-              style={{
-                backgroundColor: 'red',
-                color: 'white',
-                fontSize: '11px',
-                padding: '5px',
-                margin: '0px'
-              }}
-              onClick={() => handleDeleteStop()}
-            >
-              Delete
-            </button>
+          <div className="container text-center">
+            <div className="row">
+              <div className="col-md-6">
+                {/* STOP ADDRESS HERE */}
+                <div className="mt-2 mb-4">
+                  <h6 className="selectedStopHeader">Stop Address </h6>
+                  <p
+                    className="selectedStopPara"
+                    style={{ textAlign: 'left !important' }}
+                  >
+                    {props.selectedStop.address.map((addressItem, index) => (
+                      <React.Fragment key={index}>
+                        {index > 0 && ', '}
+                        {addressItem.long_name}
+                      </React.Fragment>
+                    ))}
+                  </p>
+                </div>
+
+                {/* STOP ADDRESS ENDS HERE */}
+
+                {/* DISTANCE  */}
+
+                <div className="selectedStopInfo">
+                  <div>
+                    <h6>Distance </h6>
+                    <p>{distanceToThisStop || 'N/A'}</p>
+                  </div>
+                </div>
+                {/* DISTANCE */}
+
+                {/* REMAINING DISTANCE */}
+
+                <div>
+                  <h6>Remaining Distance</h6>
+                  <p>{timeToReachThisStop || 'N/A'}</p>
+                </div>
+
+                {/* REMAINING DISTANCE */}
+              </div>
+              <div className="col-md-6">
+                {/* NEAREST GAS STATION HERE */}
+                <div className="mt-2 mb-4">
+                  <h6>Nearest Gas Station</h6>
+                  <p>
+                    {props.selectedStop.gasStation.map(
+                      (gasStationAddressItem, index) => (
+                        <React.Fragment key={index}>
+                          {index > 0 && ', '}
+                          {gasStationAddressItem.long_name}
+                        </React.Fragment>
+                      )
+                    )}
+                  </p>
+                </div>
+                {/* NEAREST GAS STATION HERE */}
+
+                {/* TIME FOR ARRIVAL */}
+                <div className="mb-4">
+                  <div>
+                    <h6>Time for Arrival </h6>
+                    <p>{timeToReachThisStop || 'N/A'}</p>
+                  </div>
+                </div>
+
+                {/* TIME FOR ARRIVAL */}
+
+                {/* EDIT COMPONENT HERE */}
+
+                {/* Edit Button */}
+                <EditableWaitingTimeComponent
+                  tripPointIndex={props.selectedStop.tripPointIndex}
+                  waitTime={props.selectedStop.waitTime}
+                  connectedEmulatorId={connectedEmulatorRef.current?.id}
+                  handleDeleteStop={handleDeleteStop}
+                  handleClose={props.handleInfoWindowClose}
+                />
+                {/* Edit Button */}
+
+                {/* EDIT COMPONENT HERE */}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      </InfoWindow>
+    </InfoWindow>
   )
 }
