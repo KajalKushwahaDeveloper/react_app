@@ -9,8 +9,7 @@ export const ProtectedLayout = () => {
   console.log('ProtectedLayout')
   const { client } = useAuth()
   const outlet = useOutlet()
-
-  const getEmulatorsSSE = useEmulatorStore.getState().getEmulatorsSSE
+  const getEmulatorsSSE = useEmulatorStore.getState().getEmulatorsSSE  
   const initMarkers = useMarkerStore.getState().initMarkers
   const createDevices = useEmulatorStore.getState().createDevices
 

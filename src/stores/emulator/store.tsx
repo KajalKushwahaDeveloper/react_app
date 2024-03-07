@@ -54,7 +54,7 @@ export interface TripDataSlice {
 }
 
 interface SharedSlice {
-  connectEmulatorsSSE: () => void
+  getEmulatorsSSE: () => void
   logout: () => void
   getBoth: () => void
   showLoader: () => void
@@ -258,7 +258,7 @@ const createSharedSlice: StateCreator<
   [],
   SharedSlice
 > = (set, get) => ({
-  connectEmulatorsSSE: () => {
+  getEmulatorsSSE: () => {
     // Run this when we are logged in. i.e. when we have a token
     const token = localStorage.getItem('token')
     const ctrl = new AbortController()

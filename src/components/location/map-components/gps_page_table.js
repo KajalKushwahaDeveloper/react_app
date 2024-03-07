@@ -90,12 +90,9 @@ const GpsTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [messageLoading, setMessageLoading] = useState(false)
-  const [storedSelectedEmulatorId, setStoredSelectedEmulatorId] = useState(null);
-
-
+  const [storedSelectedEmulatorId, setStoredSelectedEmulatorId] = useState(null)
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
     useState(false)
-
   const [selectedEmulatorForHistoryData, setSelectedEmulatorForHistoryData] =
     useState(null)
 
@@ -206,32 +203,32 @@ const GpsTable = () => {
     setPage(newPage)
   }
 
-  console.log("storedSelectedEmulatorId:", storedSelectedEmulatorId)
+  console.log('storedSelectedEmulatorId:', storedSelectedEmulatorId)
   useEffect(() => {
     // Retrieve selected emulator ID from local storage
-    const storedSelectedEmulatorId = localStorage.getItem('selectedEmulatorId');
+    const storedSelectedEmulatorId = localStorage.getItem('selectedEmulatorId')
     if (storedSelectedEmulatorId) {
       // Find the emulator with the stored ID
-      const selectedEmulator = emulators.find(emulator => emulator.id === storedSelectedEmulatorId);
+      const selectedEmulator = emulators.find(emulator => emulator.id === storedSelectedEmulatorId)
       if (selectedEmulator) {
-        setSelectedEmulator(selectedEmulator);
+        setSelectedEmulator(selectedEmulator)
       }
     }
-  }, []); // Empty dependency array to run the effect only once when the component mounts
+  }, []) // Empty dependency array to run the effect only once when the component mounts
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
     if (selectedEmulator?.id !== emulatorRow.id) {
-      selectEmulator(emulatorRow);
-      setStoredSelectedEmulatorId(emulatorRow.id);
+      selectEmulator(emulatorRow)
+      setStoredSelectedEmulatorId(emulatorRow)
       // Store the selected emulator ID in local storage
-      localStorage.setItem('selectedEmulatorId', emulatorRow.id);
+      localStorage.setItem('selectedEmulatorId', emulatorRow.id)
     } else {
-      selectEmulator(null);
+      selectEmulator(null)
       // Remove the selected emulator ID from local storage
-      localStorage.removeItem('selectedEmulatorId');
-      setStoredSelectedEmulatorId(null);
+      localStorage.removeItem('selectedEmulatorId')
+      setStoredSelectedEmulatorId(null)
     }
-  };
+  }
   const handleHistoryButtonClick = async (emulatorForHistory) => {
     setMessageLoading(true)
     const token = localStorage.getItem('token')
