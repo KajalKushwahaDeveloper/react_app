@@ -1,111 +1,127 @@
 import { Edit } from '@mui/icons-material'
-import { Button, IconButton, TextField } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import { Button, IconButton } from '@mui/material'
+import { LocalizationProvider, MobileTimePicker } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import dayjs from 'dayjs'
+import 'dayjs/locale/de'
+import utc from 'dayjs/plugin/utc'
+import React, { useState } from 'react'
 import ApiService from '../../../../ApiService'
 import { TRIP_STOPS_UPDATE_WAIT_TIME_URL } from '../../../../constants'
 
+// FIXME: The waitTime is in milliseconds from UTC 00:00:00, so it has to be converted to the local time when viewing Time Picker/ Edit Mode!.
 function EditableWaitingTimeComponent(props) {
+  dayjs.extend(utc)
   const waitTimeInMilliseconds = props.waitTime
 
-  const [isEditing, setIsEditing] = useState(false)
-  const [humanReadableTime, setHumanReadableTime] = useState(() => {
-    const date = new Date(waitTimeInMilliseconds)
-    const hours = date.getUTCHours()
-    const minutes = date.getUTCMinutes()
-    return `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`
+  console.log('waitTimeInMilliseconds props : ', waitTimeInMilliseconds)
+
+  const [timeValue, setTimeValue] = useState({
+    timeInMilliseconds: waitTimeInMilliseconds,
+    timeInDayJs: dayjs(new Date(waitTimeInMilliseconds)),
+    timeInDayJsLocal: dayjs(new Date(waitTimeInMilliseconds))
   })
 
-  const [time, setTime] = useState(props.waitTime)
+  const [isEditing, setIsEditing] = useState(false)
 
-  const handleEditClick = () => {
-    setIsEditing(true)
-  }
+  const [humanReadableTime, setHumanReadableTime] = useState(() => {
+    const date = new Date(waitTimeInMilliseconds)
+    // in utc
+    return dayjs(date).utc().format('HH:mm')
+  })
 
   const handleApplyClick = async () => {
-    // TODO: Update the wait time in the database
+    // request on window for confirmation
+    // if yes, update Stop Time
+    // if no, do nothing and close the edit mode
     if (
-      time === waitTimeInMilliseconds ||
+      timeValue.timeInMilliseconds === waitTimeInMilliseconds ||
       props.connectedEmulatorId === null ||
       props.tripPointIndex === null
     ) {
       console.log(
         'No change in wait time or connectedEmulatorId or tripPointIndex is null. Returning...'
       )
+      setIsEditing(false)
       return
+    }
+
+    const shouldUpdateTime = window.confirm(
+      'Are you sure you want to update the stop wait time to ' +
+        timeValue.timeInDayJsLocal.format('HH:mm') +
+        '?'
+    )
+    if (!shouldUpdateTime) {
+      return
+    }
+    // showToast("Deleting stop...", "info");
+    const token = localStorage.getItem('token')
+    const { success, error } = await ApiService.makeApiCall(
+      TRIP_STOPS_UPDATE_WAIT_TIME_URL,
+      'GET',
+      null,
+      token,
+      props.connectedEmulatorId,
+      new URLSearchParams({
+        stopTripPointIndex: props.tripPointIndex,
+        newWaitTime: timeValue.timeInMilliseconds
+      })
+    )
+
+    if (!success) {
+      // showToast("Error updating stop wait time", "error");
+      console.error('handleApplyClick error : ', error)
     } else {
-      // request on window for confirmation
-      // if yes, update Stop Time
-      // if no, do nothing
-
-      const shouldUpdateTime = window.confirm(
-        'Are you sure you want to update the stop wait time?'
-      )
-      if (!shouldUpdateTime) {
-        return
-      }
-      // showToast("Deleting stop...", "info");
-      const token = localStorage.getItem('token')
-      const { success, error } = await ApiService.makeApiCall(
-        TRIP_STOPS_UPDATE_WAIT_TIME_URL,
-        'GET',
-        null,
-        token,
-        props.connectedEmulatorId,
-        new URLSearchParams({
-          stopTripPointIndex: props.tripPointIndex,
-          newWaitTime: time
-        })
-      )
-
-      if (!success) {
-        // showToast("Error updating stop wait time", "error");
-        console.error('handleApplyClick error : ', error)
-      } else {
-        // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
-        // showToast("Stop wait time Updated", "success");
-        const date = new Date(time)
-        const hours1 = date.getUTCHours()
-        const minutes2 = date.getUTCMinutes()
-        const humanReadableTime =
-          hours1.toString().padStart(2, '0') +
-          ':' +
-          minutes2.toString().padStart(2, '0')
-        setHumanReadableTime(humanReadableTime)
-      }
+      // showToast("Stop wait time Updated", "success");
+      const date = new Date(timeValue.timeInMilliseconds)
+      const hours1 = date.getUTCHours()
+      const minutes2 = date.getUTCMinutes()
+      const humanReadableTime =
+        hours1.toString().padStart(2, '0') +
+        ':' +
+        minutes2.toString().padStart(2, '0')
+      setHumanReadableTime(humanReadableTime)
     }
     setIsEditing(false)
   }
 
-  const handleTimeChange = (event) => {
-    console.log(event.target.value)
-    // convert the time to milliseconds
-    const timeArray = event.target.value.split(':')
-    const hours = parseInt(timeArray[0])
-    const minutes = parseInt(timeArray[1])
-    const timeInMilliseconds = hours * 3600000 + minutes * 60000
-    setTime(timeInMilliseconds)
+  const handleTimeChange = (value) => {
+    console.log('handleTimeChange value : ', value.unix() * 1000)
+    const utcMilliseconds = dayjs(value).utc().valueOf()
+    setTimeValue({
+      timeInMilliseconds: value.unix() * 1000,
+      timeInDayJs: dayjs.utc(utcMilliseconds),
+      timeInDayJsLocal: dayjs(new Date(value.unix() * 1000))
+    })
   }
 
   const handleIncrement = () => {
-    setTime((prevValue) => prevValue + 1800000) // 30min to ms
+    // if value greater than 24 hours, return
+    if (timeValue.timeInMilliseconds + 1800000 > 86400000) {
+      return
+    }
+    const utcMilliseconds = dayjs(timeValue.timeInMilliseconds + 1800000)
+      .utc()
+      .valueOf()
+    setTimeValue({
+      timeInMilliseconds: timeValue.timeInMilliseconds + 1800000,
+      timeInDayJs: dayjs(new Date(timeValue.timeInMilliseconds + 1800000)),
+      timeInDayJsLocal: dayjs(new Date(utcMilliseconds + 1800000))
+    })
   }
 
   const handleDecrement = () => {
-    setTime((prevValue) => prevValue - 1800000) // 30min to ms
+    // if value less than 0, return
+    if (timeValue.timeInMilliseconds - 1800000 < 0) {
+      return
+    }
+    const utcMilliseconds = dayjs(timeValue.timeInMilliseconds + 1800000).utc()
+    setTimeValue({
+      timeInMilliseconds: timeValue.timeInMilliseconds - 1800000,
+      timeInDayJs: dayjs(new Date(timeValue.timeInMilliseconds - 1800000)),
+      timeInDayJsLocal: dayjs(new Date(utcMilliseconds - 1800000))
+    })
   }
-
-  useEffect(() => {
-    const date = new Date(time)
-    const hours1 = date.getUTCHours()
-    const minutes2 = date.getUTCMinutes()
-    const humanReadableTime =
-      hours1.toString().padStart(2, '0') +
-      ':' +
-      minutes2.toString().padStart(2, '0')
-    setHumanReadableTime(humanReadableTime)
-  }, [time])
 
   return (
     <div>
@@ -131,19 +147,14 @@ function EditableWaitingTimeComponent(props) {
             >
               -
             </button>
-            <TextField
-              id="time"
-              // label="Stop Wait Time"
-              type="time"
-              value={humanReadableTime} // convert waitTime in milliseconds to format "12:00"
-              onChange={handleTimeChange}
-              InputLabelProps={{
-                shrink: true
-              }}
-              inputProps={{
-                step: 300 // 5 min
-              }}
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
+              <MobileTimePicker
+                label="wait time"
+                ampm={false}
+                value={timeValue.timeInDayJsLocal}
+                onChange={handleTimeChange}
+              />
+            </LocalizationProvider>
             <button style={{ height: '25px' }} onClick={handleIncrement}>
               +
             </button>
@@ -155,7 +166,6 @@ function EditableWaitingTimeComponent(props) {
               variant="contained"
               color="primary"
               onClick={handleApplyClick}
-              // style={{ margin: '10px 0px 0px 10px' }}
             >
               Apply
             </Button>
@@ -178,7 +188,7 @@ function EditableWaitingTimeComponent(props) {
             </p>
             <IconButton
               aria-label="edit"
-              onClick={handleEditClick}
+              onClick={() => setIsEditing(true)}
               size="small"
             >
               <Edit fontSize="small" style={{ marginBottom: '10px' }} />

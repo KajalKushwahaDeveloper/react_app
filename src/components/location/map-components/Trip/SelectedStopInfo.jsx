@@ -174,11 +174,7 @@ export function SelectedStopInfo(props) {
                   </div>
                 </div>
 
-                {/* TIME FOR ARRIVAL */}
-
-                {/* EDIT COMPONENT HERE */}
-
-                {/* Edit Button */}
+                {/* Edit Button + Edit Component */}
                 <EditableWaitingTimeComponent
                   tripPointIndex={props.selectedStop.tripPointIndex}
                   waitTime={props.selectedStop.waitTime}
@@ -186,9 +182,6 @@ export function SelectedStopInfo(props) {
                   handleDeleteStop={handleDeleteStop}
                   handleClose={props.handleInfoWindowClose}
                 />
-                {/* Edit Button */}
-
-                {/* EDIT COMPONENT HERE */}
               </div>
             </div>
           </div>
