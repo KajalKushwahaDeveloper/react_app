@@ -61,9 +61,6 @@ const AddressTable = () => {
 
   const getAddress = (address) =>
     address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
-
-  const metersToMiles = (currentDistanceFromStartPoint) =>
-    Math.floor(currentDistanceFromStartPoint * 0.000621371)
   const setValues = useCallback((emulator, tripData, isHover) => {
     console.log('emulator', emulator)
     console.log('tripData', tripData)
@@ -73,40 +70,23 @@ const AddressTable = () => {
       const date = new Date(time)
       return date.toLocaleString()
     }
-
-    const emulatorCoords = {
-      latitude: emulator?.latitude,
-      longitude: emulator?.longitude
-    }
-    let currentDistanceFromStartPoint = 0
-    let remainingDistance = 0
+    const emulatorTripIndex = tripData?.emulatorDetails?.currentTripPointIndex
     const tripDataPoints = tripData?.tripPoints || []
-    tripDataPoints.forEach((point, index) => {
-      currentDistanceFromStartPoint =
-        currentDistanceFromStartPoint + point?.distance
-      const tripPointCoords = {
-        latitude: point?.lat,
-        longitude: point?.lng
-      }
-      if (
-        emulatorCoords.latitude === tripPointCoords.latitude &&
-        emulatorCoords.longitude === tripPointCoords.longitude
-      ) {
-        console.log(
-          'compare:',
-          emulatorCoords.longitude,
-          tripPointCoords.longitude
-        )
-        console.log(`Coordinates match found at trip point ${index + 1}`)
-        remainingDistance = metersToMiles(
-          tripData.distance - currentDistanceFromStartPoint
-        )
-        console.log('remainingDistance', remainingDistance)
-        // break the loop as we got the distance of current position of emulator
-        return
-      }
-    })
-    // console.log("currentDistanceFromStartPoint:", currentDistanceFromStartPoint)
+
+    let coveredDistance = 0
+    let calcTotalDistance = 0
+
+    for (let tripPointIndex = 0; tripPointIndex <= emulatorTripIndex; tripPointIndex++) {
+      coveredDistance += tripDataPoints[tripPointIndex].distance
+    }
+
+    for (let tripPointIndextotal = 0; tripPointIndextotal < tripDataPoints.length; tripPointIndextotal++) {
+      calcTotalDistance += tripDataPoints[tripPointIndextotal].distance
+    }
+
+    const calcRemainingDistance = calcTotalDistance - coveredDistance
+    var distanceInMiles = parseInt(calcRemainingDistance / 1609)
+
     const currentAddress =
       emulator && emulator.address ? emulator.address : 'N/A'
 
@@ -126,7 +106,7 @@ const AddressTable = () => {
           tripData.emulatorDetails.departTime
       )
 
-    const actualRemainingDistance = tripData ? remainingDistance : 'N/A'
+    const actualRemainingDistance = tripData ? distanceInMiles + ' miles' : 'N/A'
     console.log('arrivalTime:', arrivalTime)
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
