@@ -24,7 +24,6 @@ import {
 } from '../../../MetricsConstants.js'
 
 // icons
-import CallRoundedIcon from '@mui/icons-material/CallRounded'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import HistoryIcon from '@mui/icons-material/History'
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded'
@@ -49,6 +48,7 @@ import {
   compareEmulatorsCompletely,
   compareSelectedEmulator
 } from '../../../stores/emulator/types_maps.tsx'
+import PhoneComponent from './GpsEmulatorList/PhoneComponent.js'
 import CustomNoteComponent from './Phone/CustomNoteComponent.js'
 
 const GpsTable = () => {
@@ -273,7 +273,7 @@ const GpsTable = () => {
   }
   const isVelocityOutOfRange = (velocity) =>
     velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-  velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
+    velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
 
   const isSelectedEmulator = (emulatorId, selectedEmulator) =>
     emulatorId === selectedEmulator?.id
@@ -282,7 +282,12 @@ const GpsTable = () => {
     emulatorId === hoveredEmulator?.id
 
   const getBlinkClass = (emulator, selectedEmulator, hoveredEmulator) => {
-    if (!isSelectedEmulator(emulator.id, selectedEmulator) && !emulator.startLat) return ''
+    if (
+      !isSelectedEmulator(emulator.id, selectedEmulator) &&
+      !emulator.startLat
+    ) {
+      return ''
+    }
     if (isVelocityOutOfRange(emulator.velocity)) {
       if (isSelectedEmulator(emulator.id, selectedEmulator)) {
         return 'blink-selected'
@@ -334,7 +339,8 @@ const GpsTable = () => {
               // Determine if item should be included in filtered list... checking ssid and note
               return (
                 emulator.emulatorSsid.includes(predicateArg) ||
-                (emulator.telephone && emulator.telephone.includes(predicateArg)) ||
+                (emulator.telephone &&
+                  emulator.telephone.includes(predicateArg)) ||
                 (emulator.note &&
                   emulator.note
                     .toLowerCase()
@@ -361,9 +367,19 @@ const GpsTable = () => {
                         maxHeight: isMobile ? 'auto' : '80px',
                         border: '2px solid #E6E6E6'
                       }}
-                      className={`${getBlinkClass(emulator, selectedEmulator, hoveredEmulator)} ${
-                        isSelectedEmulator(emulator.id, selectedEmulator) ? 'selected' : ''
-                        } ${isHoveredEmulator(emulator.id, hoveredEmulator) ? 'hovered' : ''}`}
+                      className={`${getBlinkClass(
+                        emulator,
+                        selectedEmulator,
+                        hoveredEmulator
+                      )} ${
+                        isSelectedEmulator(emulator.id, selectedEmulator)
+                          ? 'selected'
+                          : ''
+                      } ${
+                        isHoveredEmulator(emulator.id, hoveredEmulator)
+                          ? 'hovered'
+                          : ''
+                      }`}
                       onClick={() => handleEmulatorCheckboxChange(emulator)}
                     >
                       <td
@@ -405,31 +421,11 @@ const GpsTable = () => {
                               {/* Icons */}
                               <div style={{ display: 'flex' }}>
                                 {/* calling icon */}
-                          {devices.find((device) => device.emulatorId === emulator.id)?.state === 'Connecting' ? <span> <CircularProgress color="primary" size="1.5rem"/></span> : devices.find((device) => device.emulatorId === emulator.id)?.state === 'Offline' ? <IconButton
-                              size="small"
-                              disabled={true}
-                              onClick={() =>
-                                handleCallIconClicked(emulator)
-                            }
-                          >
-                              <CallRoundedIcon fontSize="small" sx={{ color: 'red' }}/>
-                              </IconButton> : devices.find((device) => device.emulatorId === emulator.id)?.state === 'Incoming' || devices.find((device) => device.emulatorId === emulator.id)?.state === 'On call' ? <IconButton
-                              size="small"
-                              disabled={true}
-                              onClick={() =>
-                                handleCallIconClicked(emulator)
-                            }
-                          >
-                              <CallRoundedIcon fontSize="small" />
-                              </IconButton> : <IconButton
-                              size="small"
-                              disabled={!emulator?.telephone}
-                              onClick={() =>
-                                handleCallIconClicked(emulator)
-                            }
-                          >
-                              <CallRoundedIcon fontSize="small"/>
-                              </IconButton>}
+                                {PhoneComponent(
+                                  devices,
+                                  emulator,
+                                  handleCallIconClicked
+                                )}
                                 {/* message icon */}
                                 <IconButton
                                   size="small"
@@ -469,31 +465,35 @@ const GpsTable = () => {
                           }}
                         >
                           {/* Trip Status Action */}
-                          { (emulator.startLat !== null && emulator.startLat !== undefined && emulator.startLat !== 0) && (
-                             <IconButton
-                             size="small"
-                             onClick={() => handleActionButtonClick(emulator)}
-                            >
-                             <Tooltip title={emulator.tripStatus}>
-                               <div style={{ width: 20, height: 20 }}>
-                                 {emulator.tripStatus === 'RUNNING' && (
-                                   <PauseCircleOutlineIcon fontSize="small" />
-                                 )}
-                                 {emulator.tripStatus === 'PAUSED' && (
-                                   <PlayCircleOutlineIcon fontSize="small" />
-                                 )}
-                                 {emulator.tripStatus === 'STOP' && (
-                                   <PlayCircleOutlineIcon fontSize="small" />
-                                 )}
-                                 {emulator.tripStatus === 'RESTING' && (
-                                   <PlayCircleOutlineIcon fontSize="small" />
-                                 )}
-                                 {emulator.tripStatus === 'FINISHED' && (
-                                   <CheckCircleOutlineIcon fontSize="small" />
-                                 )}
-                               </div>
-                             </Tooltip>
-                           </IconButton>
+                          {emulator.startLat !== null &&
+                            emulator.startLat !== undefined &&
+                            emulator.startLat !== 0 && (
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  handleActionButtonClick(emulator)
+                                }
+                              >
+                                <Tooltip title={emulator.tripStatus}>
+                                  <div style={{ width: 20, height: 20 }}>
+                                    {emulator.tripStatus === 'RUNNING' && (
+                                      <PauseCircleOutlineIcon fontSize="small" />
+                                    )}
+                                    {emulator.tripStatus === 'PAUSED' && (
+                                      <PlayCircleOutlineIcon fontSize="small" />
+                                    )}
+                                    {emulator.tripStatus === 'STOP' && (
+                                      <PlayCircleOutlineIcon fontSize="small" />
+                                    )}
+                                    {emulator.tripStatus === 'RESTING' && (
+                                      <PlayCircleOutlineIcon fontSize="small" />
+                                    )}
+                                    {emulator.tripStatus === 'FINISHED' && (
+                                      <CheckCircleOutlineIcon fontSize="small" />
+                                    )}
+                                  </div>
+                                </Tooltip>
+                              </IconButton>
                           )}
                         </div>
                       </td>
