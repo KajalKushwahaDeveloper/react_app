@@ -1,15 +1,15 @@
 import { InfoWindow } from '@react-google-maps/api'
 import React, { useEffect, useRef } from 'react'
 import ApiService from '../../../../ApiService.js'
+import { useStates } from '../../../../StateProvider.js'
 import { TRIP_STOPS_DELETE_URL } from '../../../../constants.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import EditableWaitingTimeComponent from './EditableWaitingTimeComponent.jsx'
-import { toHumanReadableTime } from './utils.tsx'
-// import { useStates } from "../../../../StateProvider.js";
 import './selectedStopInfo.scss'
+import { toHumanReadableTime } from './utils.tsx'
 
 export function SelectedStopInfo(props) {
-  // const { showToast } = useStates();
+  const { showToast } = useStates()
 
   const connectedEmulatorRef = useRef(
     useEmulatorStore.getState().connectedEmulator
@@ -75,9 +75,9 @@ export function SelectedStopInfo(props) {
     if (!shouldDelete) {
       return
     }
-    // showToast("Deleting stop...", "info");
+    showToast('Deleting stop...', 'info')
     const token = localStorage.getItem('token')
-    const { success, error } = await ApiService.makeApiCall(
+    const { success, data, error } = await ApiService.makeApiCall(
       TRIP_STOPS_DELETE_URL,
       'GET',
       null,
@@ -87,13 +87,13 @@ export function SelectedStopInfo(props) {
         stopTripPointIndex: props.selectedStop.tripPointIndex
       })
     )
-
     if (!success) {
-      // showToast("Error deleting stop", "error");
+      showToast(error, 'error')
       console.error('handleDeleteStop error : ', error)
     } else {
+      console.log('handleDeleteStop data : ', data)
       // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
-      // showToast("Stop deleted", "success");
+      showToast('Stop deleted', 'success')
       props.handleInfoWindowClose()
       localStorage.setItem('click', false)
     }

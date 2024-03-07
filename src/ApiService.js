@@ -33,6 +33,7 @@ class ApiService {
 
       const response = await fetch(url, requestOptions)
 
+      console.log('response: ', response)
       if (!response.ok) {
         let errorData
         const contentType = response.headers.get('content-type')
@@ -55,7 +56,10 @@ class ApiService {
       }
       return { success: true, data: result, error: null }
     } catch (error) {
-      console.error('Error occurred during API call:', error)
+      console.log('error: 1 ')
+      console.log(error?.message)
+      console.log('error: 2 ')
+      console.log(error)
       return {
         success: false,
         data: null,
