@@ -31,6 +31,8 @@ const MapButtons = () => {
   const [isSpinning, setSpinning] = useState()
   const [showCancel, setShowCancel] = useState(false)
 
+  const [count, setCount] = useState(15)
+
   const handleSetPositionClick = () => {
     if (connectedEmulator === null) {
       showToast('Emulator is not selected', 'error') // Emulator is not selected error
@@ -108,6 +110,20 @@ const MapButtons = () => {
     }
   }, [tripData, connectedEmulator])
 
+  useEffect(() => {
+    if (movedEmulator && movedEmulator.moveMarker === true) {
+      const timer = setInterval(() => {
+        setCount(prevCount => prevCount - 1)
+      }, 1000)
+      return () => clearInterval(timer)
+    }
+    setCount(15)
+  }, [movedEmulator])
+
+  if (count === 0) {
+    setCount()
+  }
+
   return (
     <>
       <div
@@ -139,6 +155,7 @@ const MapButtons = () => {
                 onClick={handleSetPositionCancelClick}
               >
                 Cancel Set Position
+                {count}
               </Button>
             ) : (
               <Button

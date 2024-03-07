@@ -39,6 +39,8 @@ const MovePositionDialog = () => {
 
     setError('')
 
+    console.log('SelectedEmulatorshubham:', selectedEmulator, fromLat, fromLong)
+
     moveEmulator({
       emulator: selectedEmulator,
       latitude: fromLat,

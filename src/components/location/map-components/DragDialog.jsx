@@ -25,6 +25,9 @@ export function DragDialog() {
   const movedEmulator = useEmulatorStore((state) => state.movedEmulator)
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
+  const moveEmulator = useEmulatorStore((state) => state.moveEmulator)
+
+  const { setIsMoveDialogVisible } = useStates()
 
   const [openDialog, setOpenDialog] = React.useState(false)
   const [dialogText, setDialogText] = React.useState('')
@@ -49,6 +52,9 @@ export function DragDialog() {
     hideLoader,
     dragEmulator
   ])
+  const handleClose = () => {
+    setIsMoveDialogVisible(false)
+  }
 
   async function handleDialog(payload, text) {
     setPayload(payload)
@@ -59,6 +65,16 @@ export function DragDialog() {
       return
     }
     const token = localStorage.getItem('token')
+    console.log('tokentesting77:', payload, token)
+
+    moveEmulator({
+      emulator: payload,
+      latitude: payload.latitude,
+      longitude: payload.longitude,
+      moveMarker: true
+    })
+
+    handleClose()
     const { success, error } = await ApiService.makeApiCall(
       EMULATOR_DRAG_URL,
       'POST',
@@ -66,6 +82,7 @@ export function DragDialog() {
       token,
       null
     )
+    console.log('tokentesting77:', success, error)
     if (success) {
       closeDragDialog()
     } else {
