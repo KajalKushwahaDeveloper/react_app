@@ -196,9 +196,7 @@ const createTripDataSlice: StateCreator<
           ) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             get().setSelectedEmulatorSSEData(emulatorData)
-          } else if (
-            event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED
-          ) {
+          } else if (event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({
               connectedEmulator: emulatorData.emulatorDetails,
@@ -206,9 +204,7 @@ const createTripDataSlice: StateCreator<
               pathTraveled: null,
               pathNotTraveled: null
             })
-          } else if (
-            event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED
-          ) {
+          } else if (event.event === EmulatorEvent.EMULATOR_LOCATION_UPDATED) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({ connectedEmulator: emulatorData?.emulatorDetails })
             var tripData = get().tripData

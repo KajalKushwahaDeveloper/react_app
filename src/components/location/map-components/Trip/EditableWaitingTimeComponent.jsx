@@ -89,11 +89,11 @@ function EditableWaitingTimeComponent(props) {
   }
 
   const handleIncrement = () => {
-    setTime(prevValue => prevValue + 1800000) // 30min to ms
+    setTime((prevValue) => prevValue + 1800000) // 30min to ms
   }
 
   const handleDecrement = () => {
-    setTime(prevValue => prevValue - 1800000) // 30min to ms
+    setTime((prevValue) => prevValue - 1800000) // 30min to ms
   }
 
   useEffect(() => {
@@ -109,38 +109,106 @@ function EditableWaitingTimeComponent(props) {
 
   return (
     <div>
+      <h6
+        style={{
+          color: 'black',
+          fontSize: '.9rem',
+          fontWeight: 'bold',
+          textAlign: 'left'
+        }}
+      >
+        Stop wait Time{' '}
+      </h6>
       {isEditing ? (
         <>
-        <button onClick={handleDecrement}>-</button>
-          <TextField
-            id="time"
-            label="Stop Wait Time"
-            type="time"
-            value={humanReadableTime} // convert waitTime in milliseconds to format "12:00"
-            onChange={handleTimeChange}
-            InputLabelProps={{
-              shrink: true
-            }}
-            inputProps={{
-              step: 300 // 5 min
-            }}
-          />
-          <button onClick={handleIncrement}>+</button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleApplyClick}
-            style={{ margin: '10px 0px 0px 10px' }}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <button
+              style={{
+                width: '20px',
+                height: '25px'
+              }}
+              onClick={handleDecrement}
+            >
+              -
+            </button>
+            <TextField
+              id="time"
+              // label="Stop Wait Time"
+              type="time"
+              value={humanReadableTime} // convert waitTime in milliseconds to format "12:00"
+              onChange={handleTimeChange}
+              InputLabelProps={{
+                shrink: true
+              }}
+              inputProps={{
+                step: 300 // 5 min
+              }}
+            />
+            <button style={{ height: '25px' }} onClick={handleIncrement}>
+              +
+            </button>
+          </div>
+          <div
+            style={{ display: 'flex', justifyContent: 'right', marginTop: 14 }}
           >
-            Apply
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleApplyClick}
+              // style={{ margin: '10px 0px 0px 10px' }}
+            >
+              Apply
+            </Button>
+          </div>
         </>
       ) : (
         <>
-          <span>Stop wait Time: {humanReadableTime} hours</span>
-          <IconButton aria-label="edit" onClick={handleEditClick}>
-            <Edit />
-          </IconButton>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
+            <p
+              className="pt-2"
+              style={{ color: 'gray', fontSize: '.8rem', textAlign: 'left' }}
+            >
+              {humanReadableTime} hours
+            </p>
+            <IconButton
+              aria-label="edit"
+              onClick={handleEditClick}
+              size="small"
+            >
+              <Edit fontSize="small" style={{ marginBottom: '10px' }} />
+            </IconButton>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'right',
+              marginTop: '14px'
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: 'red !important' }}
+              size="small"
+              onClick={() => props.handleDeleteStop()}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              sx={{ marginLeft: '10px' }}
+              onClick={() => props.handleClose()}
+            >
+              Close
+            </Button>
+          </div>
         </>
       )}
     </div>
