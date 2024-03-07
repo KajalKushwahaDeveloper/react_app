@@ -56,7 +56,7 @@ const Navbar = ({ isAdmin }) => {
       })
       .catch(function (error) {
         // Microphone access denied
-        console.log('Microphone is off')
+        console.log('Microphone is off', error)
         // setMicEnabled(false);
       })
   } else {
