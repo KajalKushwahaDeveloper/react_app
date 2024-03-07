@@ -41,28 +41,29 @@ const Navbar = ({ isAdmin }) => {
     fetchClientData()
   }, [])
 
-// Check if getUserMedia is available in the browser
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  // Request access to the microphone
-  navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(function(stream) {
-          // Microphone access granted
-          console.log('Microphone is on');
-          // setMicEnabled(true);
-          
-          // Stop the stream (optional)
-          stream.getTracks().forEach(track => track.stop());
-      })
-      .catch(function(error) {
-          // Microphone access denied
-          console.log('Microphone is off');
-          // setMicEnabled(false);
-      });
-} else {
-  console.log('getUserMedia is not supported in this browser');
-}
+  // Check if getUserMedia is available in the browser
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // Request access to the microphone
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then(function (stream) {
+        // Microphone access granted
+        console.log('Microphone is on')
+        // setMicEnabled(true);
 
-console.log("ISMICENABLED:", isMicEnabled);
+        // Stop the stream (optional)
+        stream.getTracks().forEach((track) => track.stop())
+      })
+      .catch(function (error) {
+        // Microphone access denied
+        console.log('Microphone is off')
+        // setMicEnabled(false);
+      })
+  } else {
+    console.log('getUserMedia is not supported in this browser')
+  }
+
+  console.log('ISMICENABLED:', isMicEnabled)
 
   return (
     <>
