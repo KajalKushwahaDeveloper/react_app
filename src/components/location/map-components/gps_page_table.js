@@ -428,7 +428,7 @@ const GpsTable = () => {
                                 handleCallIconClicked(emulator)
                             }
                           >
-                              <CallRoundedIcon fontSize="small" />
+                              <CallRoundedIcon fontSize="small"/>
                               </IconButton>}
                                 {/* message icon */}
                                 <IconButton
