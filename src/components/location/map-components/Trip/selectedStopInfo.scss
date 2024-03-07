@@ -2,21 +2,25 @@
   width: 30vw;
   height: auto;
   flex-direction: column;
+  font-family: 'Roboto';
   justify-content: space-between;
   align-items: center;
   .selectedStopInfo {
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    margin-bottom: 10px;
+    // gap: 1rem;
     h6{
       color: black;
-      font-size: .8rem;
-      font-weight: 600;
+      font-size: .9rem;
+      font-weight: bold;
+      text-align: left;
     }
       p {
-        color: black;
-        font-size: .7rem;
+        color: gray;
+        font-size: .8rem;
+        text-align: left;
       }
   }
 }
