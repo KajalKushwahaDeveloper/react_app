@@ -45,6 +45,7 @@ const Speedometer = () => {
     []
   )
 
+  console.log('TEST@ speed : ', speed)
   return (
     <div className="center">
       <Container>

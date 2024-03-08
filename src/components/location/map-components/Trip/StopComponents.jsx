@@ -7,15 +7,20 @@ import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import { SelectedStopInfo } from './SelectedStopInfo.jsx'
 import { compareTripDataChangedNullOrId } from './utils.tsx'
 
-export function StopComponents(props) {
+export function StopComponents() {
   const { showToast } = useStates()
+
   const [selectedStop, setSelectedStop] = React.useState(null)
+
   const handleMarkerClick = (stop) => {
+    console.log('Stop clicked:', stop)
     setSelectedStop(stop)
   }
+
   const handleInfoWindowClose = () => {
     setSelectedStop(null)
   }
+
   const tripData = useEmulatorStore(
     (state) => state.tripData,
     (oldTripData, newTripData) => {
@@ -129,23 +134,23 @@ export function StopComponents(props) {
       showToast('Stop updated!', 'success')
       stopNewLatLng = null
     } else {
-      showToast('Error updating Stop!', 'error')
-      console.error('LOG 1 - error creating Stop: ', error)
+      showToast(error, 'error')
       stopNewLatLng = null
     }
   }
 
+  console.log('tripData:', tripData?.stops?.length)
+
   return (
-    <React.Fragment>
+    <>
       {tripData?.stops != null &&
         tripData?.stops.map((stop, index) => (
-          <React.Fragment key={stop.currentTripPointIndex}>
+          <div key={stop.currentTripPointIndex}>
             <Marker
+              key={stop.currentTripPointIndex}
               onLoad={(marker) => {
                 stopRefs.current[index] = marker
               }}
-              id={stop.tripPointIndex}
-              key={stop.tripPointIndex}
               position={{
                 lat: stop.lat,
                 lng: stop.lng
@@ -153,11 +158,12 @@ export function StopComponents(props) {
               label={`S${index + 1}`}
               draggable={true}
               onClick={() => handleMarkerClick(stop)}
-              onDragEnd={(event) => handleStopDragEnd(index)}
+              onDragEnd={() => handleStopDragEnd(index)}
               onDrag={(event) => handleStopDragged(event, index, stop)}
             />
             {stop.tripPoints && stop.tripPoints?.length > 0 && (
               <Polyline
+                key={stop.currentTripPointIndex}
                 path={stop.tripPoints}
                 options={{
                   strokeColor: '#FF2200',
@@ -167,7 +173,7 @@ export function StopComponents(props) {
                 }}
               />
             )}
-          </React.Fragment>
+          </div>
         ))}
 
       {endLat !== null && endLng !== null && (
@@ -194,11 +200,11 @@ export function StopComponents(props) {
         />
       )}
       {selectedStop && (
-          <SelectedStopInfo
+        <SelectedStopInfo
           selectedStop={selectedStop}
           handleInfoWindowClose={handleInfoWindowClose}
-        ></SelectedStopInfo>
+        />
       )}
-    </React.Fragment>
+    </>
   )
 }

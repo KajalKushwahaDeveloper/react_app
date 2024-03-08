@@ -197,9 +197,9 @@ const createTripDataSlice: StateCreator<
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             get().setSelectedEmulatorSSEData(emulatorData)
           } else if (event.event === EmulatorEvent.EMULATOR_TRIP_CANCELLED) {
-            const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
+            const emulatorData: Emulator = JSON.parse(event.data)
             set({
-              connectedEmulator: emulatorData.emulatorDetails,
+              connectedEmulator: emulatorData,
               tripData: null,
               pathTraveled: null,
               pathNotTraveled: null
