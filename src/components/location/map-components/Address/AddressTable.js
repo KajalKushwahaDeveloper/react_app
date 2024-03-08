@@ -571,7 +571,7 @@ const AddressTable = () => {
 export default AddressTable
 
 function calculateRemainingDistance(tripData, currentTripPointIndex) {
-  if (currentTripPointIndex === null || currentTripPointIndex === undefined) return
+  if (currentTripPointIndex === null || currentTripPointIndex === undefined) return 'N/A'
   const tripDataPoints = tripData?.tripPoints || []
   let coveredDistance = 0
   let calcTotalDistance = 0
