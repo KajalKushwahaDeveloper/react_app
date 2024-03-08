@@ -25,14 +25,11 @@ export function DragDialog() {
   const movedEmulator = useEmulatorStore((state) => state.movedEmulator)
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
-  const moveEmulator = useEmulatorStore((state) => state.moveEmulator)
-
-  const { setIsMoveDialogVisible } = useStates()
 
   const [openDialog, setOpenDialog] = React.useState(false)
   const [dialogText, setDialogText] = React.useState('')
   const [payload, setPayload] = React.useState(null)
-  // closeDragDialog function
+
   const closeDragDialog = React.useCallback(() => {
     setOpenDialog(false)
     if (draggedEmulator !== null) {
@@ -52,29 +49,17 @@ export function DragDialog() {
     hideLoader,
     dragEmulator
   ])
-  const handleClose = () => {
-    setIsMoveDialogVisible(false)
-  }
 
   async function handleDialog(payload, text) {
     setPayload(payload)
     // setOpenDialog(true)
     setDialogText(text)
+
     if (payload === null) {
       showToast('Error: payload is null', 'error')
       return
     }
     const token = localStorage.getItem('token')
-    console.log('tokentesting77:', payload, token)
-
-    moveEmulator({
-      emulator: payload,
-      latitude: payload.latitude,
-      longitude: payload.longitude,
-      moveMarker: true
-    })
-
-    handleClose()
     const { success, error } = await ApiService.makeApiCall(
       EMULATOR_DRAG_URL,
       'POST',
@@ -82,7 +67,6 @@ export function DragDialog() {
       token,
       null
     )
-    console.log('tokentesting77:', success, error)
     if (success) {
       closeDragDialog()
     } else {
@@ -143,13 +127,11 @@ export function DragDialog() {
 
       if (nearestDistance <= MAX_DISTANCE_SNAP) {
         const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(
-
           dragEmulatorRequest.emulator.currentTripPointIndex,
           data.data.tripPoints
         )
 
         const nearestTripPointStopPoint = calculateNextStopPointIndex(
-
           nearestTripPoint.tripPointIndex,
           data.data.tripPoints
         )
@@ -241,7 +223,8 @@ export function DragDialog() {
     }
 
     function calculateNextStopPointIndex(currentIndex, tripData) {
-      const nextStopPoint = tripData?.stops?.find((stop) => currentIndex < stop.tripPointIndex
+      const nextStopPoint = tripData?.stops?.find(
+        (stop) => currentIndex < stop.tripPointIndex
       )
       return nextStopPoint
     }
@@ -297,25 +280,6 @@ export function DragDialog() {
     dragEmulator
   ])
 
-  useEffect(() => {
-    console.log('openDialog:', openDialog)
-    setOpenDialog(false)
-    if (draggedEmulator !== null) {
-      dragEmulator(null)
-    }
-    if (movedEmulator !== null) {
-      dragEmulator(null)
-    }
-    if (payload !== null) setPayload(null)
-    if (dialogText !== '') setDialogText('')
-    hideLoader()
-  }, [openDialog, draggedEmulator,
-    movedEmulator,
-    payload,
-    dialogText,
-    hideLoader,
-    dragEmulator])
-
   function haversine(lat1, lon1, lat2, lon2) {
     // Convert latitude and longitude from degrees to radians
     lat1 = (lat1 * Math.PI) / 180
@@ -355,7 +319,7 @@ export function DragDialog() {
   }
 
   return (
-    <Dialog open={false} onClose={closeDragDialog}>
+    <Dialog open={openDialog} onClose={closeDragDialog}>
       <DialogTitle id="alert-dialog-title">{'logbook gps'}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
