@@ -56,6 +56,7 @@ const Navbar = ({ isAdmin }) => {
           })
           .catch(function (error) {
             // Microphone access denied
+            console.log(error)
             useEmulatorStore.getState().setMicEnabled(false)
           })
       } else {
@@ -80,8 +81,7 @@ const Navbar = ({ isAdmin }) => {
               isMicEnabled !== null &&
               isMicEnabled !== undefined &&
               isMicEnabled === false && (
-                <div className="microstyle">Microphone is not connected!</div>
-              )}
+                <div className="microstyle">Microphone is not connected!</div>)}
           </div>
 
           {/* 2nd menu part  */}
