@@ -75,19 +75,19 @@ export function DragDialog() {
     })
 
     handleClose()
-    const { success, error } = await ApiService.makeApiCall(
-      EMULATOR_DRAG_URL,
-      'POST',
-      payload,
-      token,
-      null
-    )
-    console.log('tokentesting77:', success, error)
-    if (success) {
-      closeDragDialog()
-    } else {
-      showToast(error, 'error')
-    }
+    // const { success, error } = await ApiService.makeApiCall(
+    //   EMULATOR_DRAG_URL,
+    //   'POST',
+    //   payload,
+    //   token,
+    //   null
+    // )
+    // console.log('tokentesting77:', success, error)
+    // if (success) {
+    //   closeDragDialog()
+    // } else {
+    //   showToast(error, 'error')
+    // }
   }
 
   useEffect(() => {

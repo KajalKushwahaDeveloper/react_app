@@ -23,6 +23,14 @@ const MapButtons = () => {
   const connectedEmulator = useEmulatorStore((state) => state.connectedEmulator)
   const movedEmulator = useEmulatorStore((state) => state.movedEmulator)
   const moveEmulator = useEmulatorStore((state) => state.moveEmulator)
+  // const emulators = useEmulatorStore((state) => state.emulators);
+  const emulators = useEmulatorStore((state) =>
+    state.emulators.map((emulator) => ({
+      ...emulator,
+      timer: 30 // Adding countdownTimer object with initial timer value
+    }))
+  )
+  console.log('emulators', emulators)
 
   const { width } = useViewPort()
   const breakpoint = 620
@@ -30,8 +38,9 @@ const MapButtons = () => {
 
   const [isSpinning, setSpinning] = useState()
   const [showCancel, setShowCancel] = useState(false)
+  const [countdownTimers, setCountdownTimers] = useState({})
 
-  const [count, setCount] = useState(15)
+  const [count, setCount] = useState(30)
 
   const handleSetPositionClick = () => {
     if (connectedEmulator === null) {
@@ -110,19 +119,71 @@ const MapButtons = () => {
     }
   }, [tripData, connectedEmulator])
 
+  // useEffect(() => {
+  //   if (movedEmulator && movedEmulator.moveMarker === true) {
+  //     const timer = setInterval(() => {
+  //       setCount(prevCount => prevCount - 1)
+  //     }, 1000)
+  //     return () => clearInterval(timer)
+  //   }
+  //   setCount(15)
+  // }, [movedEmulator])
+
+  // useEffect(() => {
+  //   if (movedEmulator && movedEmulator.moveMarker === true) {
+  //     const timer = setInterval(() => {
+  //       setCount(prevCount => prevCount > 0 ? prevCount - 1 : 0); // Ensure count doesn't go below 0
+  //     }, 1000);
+  //     return () => clearInterval(timer);
+  //   }
+  //   setCount(15); // Reset count when moveMarker is false
+  // }, [movedEmulator, count]);
+
+  // if (count === 0) {
+  //   setCount()
+  // }
+
+  const handleDrag = async () => {
+    const token = localStorage.getItem('token')
+
+    const payload = {
+      emulatorId: connectedEmulator?.id,
+      cancelTrip: false,
+      latitude: connectedEmulator?.latitude,
+      longitude: connectedEmulator?.longitude,
+      newTripIndex: null
+    }
+
+    const { success, error } = await ApiService.makeApiCall(
+      EMULATOR_DRAG_URL,
+      'POST',
+      payload,
+      token,
+      null
+    )
+
+    if (success) {
+      showToast('Emulator updated', 'success')
+    } else {
+      showToast('Emulator not updated!', 'error')
+    }
+  }
+
   useEffect(() => {
     if (movedEmulator && movedEmulator.moveMarker === true) {
-      const timer = setInterval(() => {
-        setCount(prevCount => prevCount - 1)
+      const interval = setInterval(() => {
+        setCount((prevCount) => (prevCount > 0 ? prevCount - 1 : 0))
       }, 1000)
-      return () => clearInterval(timer)
-    }
-    setCount(15)
-  }, [movedEmulator])
 
-  if (count === 0) {
-    setCount()
-  }
+      if (count === 0) {
+        handleDrag()
+      }
+
+      return () => {
+        clearInterval(interval)
+      }
+    }
+  }, [movedEmulator, handleDrag, count])
 
   return (
     <>
@@ -140,7 +201,9 @@ const MapButtons = () => {
               connectedEmulator.startLat !== undefined &&
               connectedEmulator.startLat !== 0 && <Speedometer />}
 
-            {movedEmulator && movedEmulator.moveMarker === true ? (
+            {movedEmulator &&
+            movedEmulator.moveMarker === true &&
+            count !== 0 ? (
               <Button
                 variant="contained"
                 style={{
@@ -154,8 +217,7 @@ const MapButtons = () => {
                 }}
                 onClick={handleSetPositionCancelClick}
               >
-                Cancel Set Position
-                {count}
+                Cancel Set Position ({count})
               </Button>
             ) : (
               <Button
