@@ -66,14 +66,12 @@ const AddressTable = () => {
       : 'N/A'
 
     const totalTime =
-      tripData?.emulatorDetails &&
-      formatTime(
+      tripData?.emulatorDetails ? formatTime(
         tripData.emulatorDetails.arrivalTime -
           tripData.emulatorDetails.departTime
-      )
+      ) : 'N/A'
 
-    const remainingDistance = calculateRemainingDistance(tripData)
-
+    const remainingDistance = calculateRemainingDistance(tripData, emulator?.currentTripPointIndex)
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
     setStringToElementRef(toAddress, elementRefs.current[2])
@@ -572,19 +570,17 @@ const AddressTable = () => {
 
 export default AddressTable
 
-function calculateRemainingDistance(tripData) {
-  const emulatorTripIndex = tripData?.emulatorDetails?.currentTripPointIndex
+function calculateRemainingDistance(tripData, currentTripPointIndex) {
   const tripDataPoints = tripData?.tripPoints || []
-
   let coveredDistance = 0
   let calcTotalDistance = 0
 
-  for (let tripPointIndex = 0; tripPointIndex <= emulatorTripIndex; tripPointIndex++) {
-    coveredDistance += tripDataPoints[tripPointIndex].distance
+  for (let tripPointIndex = 0; tripPointIndex <= currentTripPointIndex; tripPointIndex++) {
+    coveredDistance += tripDataPoints[tripPointIndex]?.distance
   }
 
   for (let tripPointIndextotal = 0; tripPointIndextotal < tripDataPoints.length; tripPointIndextotal++) {
-    calcTotalDistance += tripDataPoints[tripPointIndextotal].distance
+    calcTotalDistance += tripDataPoints[tripPointIndextotal]?.distance
   }
 
   const calcRemainingDistance = calcTotalDistance - coveredDistance
