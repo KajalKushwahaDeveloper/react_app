@@ -36,6 +36,7 @@ export const createDeviceSlice: StateCreator<
   devices: [],
   selectedDevice: null,
   createDevices: async () => {
+    console.log('running createDevices')
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(EMULATOR_URL, {
@@ -46,6 +47,7 @@ export const createDeviceSlice: StateCreator<
         }
       })
       const emulators = await response.json()
+      console.log('emulators:', emulators.length)
       await createDevicesFromEmulators(emulators, get, set)
     } catch (error) {
       console.error('V2 Failed to fetch emulators:', error)
@@ -55,18 +57,24 @@ export const createDeviceSlice: StateCreator<
     set({ selectedDevice })
   },
   updateDeviceState: (updatedDevice) => {
+    console.log(
+      'updateDeviceState:',
+      updatedDevice.emulatorId,
+      '->',
+      updatedDevice.state
+    )
     const updatedDevices = get().devices.map((device: TwillioDevice) => {
       if (device.emulatorId === updatedDevice.emulatorId) {
         if (
           updatedDevice.state === states.INCOMING ||
           updatedDevice.state === states.ON_CALL
         ) {
-          get().selectDevice(updatedDevice) // if incoming or on call, select the device
+          set({ selectedDevice: updatedDevice }) // if incoming or on call, select the device
         } else if (
           updatedDevice.state === states.READY ||
           updatedDevice.state === states.OFFLINE
         ) {
-          get().selectDevice(null) // if not incoming or on call, deselect the device
+          set({ selectedDevice: null }) // if not incoming or on call, deselect the device
         }
         return { ...device, ...updatedDevice }
       }
@@ -102,15 +110,19 @@ async function createDevicesFromEmulators(
           return null
         }
         const userToken = localStorage.getItem('token')
-        const { data: token, error } = await ApiService.makeApiCall(
+        const {
+          success,
+          data: token,
+          error
+        } = await ApiService.makeApiCall(
           VOICE_GET_TOKEN_URL,
           'GET',
           null,
           userToken,
           emulator.telephone
         )
-
-        if (error) {
+        console.log('get voice token: :', success)
+        if (!success) {
           console.error(error)
           return
         }
@@ -134,6 +146,7 @@ async function createDevicesFromEmulators(
         })
 
         deviceDataModel.device.on('ready', () => {
+          console.log('Device is ready : id : ', deviceDataModel.emulatorId)
           const deviceDataModelReady: TwillioDevice = {
             emulatorId: emulator.id,
             token: deviceDataModel.token,
@@ -145,6 +158,7 @@ async function createDevicesFromEmulators(
           get().updateDeviceState(deviceDataModelReady)
         })
         deviceDataModel.device.on('connect', (connection) => {
+          console.log('Device is connect : id : ', deviceDataModel.emulatorId)
           const deviceDataModelConnect: TwillioDevice = {
             emulatorId: deviceDataModel.emulatorId,
             token: deviceDataModel.token,
@@ -156,6 +170,10 @@ async function createDevicesFromEmulators(
           get().updateDeviceState(deviceDataModelConnect)
         })
         deviceDataModel.device.on('disconnect', () => {
+          console.log(
+            'Device is disconnect : id : ',
+            deviceDataModel.emulatorId
+          )
           const deviceDataModelDisconnect = {
             emulatorId: emulator.id,
             token: deviceDataModel.token,
@@ -167,6 +185,7 @@ async function createDevicesFromEmulators(
           get().updateDeviceState(deviceDataModelDisconnect)
         })
         deviceDataModel.device.on('incoming', (incomingConnection) => {
+          console.log('Device is incoming : id : ', deviceDataModel.emulatorId)
           const deviceDataModelIncoming = {
             emulatorId: emulator.id,
             token: deviceDataModel.token,
@@ -178,6 +197,7 @@ async function createDevicesFromEmulators(
           get().updateDeviceState(deviceDataModelIncoming)
 
           incomingConnection.on('reject', () => {
+            console.log('Device is reject : id : ', deviceDataModel.emulatorId)
             const deviceDataModelReject = {
               emulatorId: emulator.id,
               token: deviceDataModel.token,
@@ -190,6 +210,7 @@ async function createDevicesFromEmulators(
           })
         })
         deviceDataModel.device.on('cancel', () => {
+          console.log('Device is cancel : id : ', deviceDataModel.emulatorId)
           const deviceDataModelCancel = {
             emulatorId: emulator.id,
             token: deviceDataModel.token,
@@ -201,6 +222,7 @@ async function createDevicesFromEmulators(
           get().updateDeviceState(deviceDataModelCancel)
         })
         deviceDataModel.device.on('reject', () => {
+          console.log('Device is reject : id : ', deviceDataModel.emulatorId)
           const deviceDataModelReject = {
             emulatorId: emulator.id,
             token: deviceDataModel.token,

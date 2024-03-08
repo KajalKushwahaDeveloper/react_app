@@ -41,6 +41,29 @@ const Navbar = ({ isAdmin }) => {
     fetchClientData()
   }, [])
 
+  useEffect(() => {
+    // Check if getUserMedia is available in the browser
+    if (window.location.pathname === '/gps') {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Request access to the microphone
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then(function (stream) {
+            // Microphone access granted
+            useEmulatorStore.getState().setMicEnabled(true)
+            // Stop the stream (optional)
+            stream.getTracks().forEach((track) => track.stop())
+          })
+          .catch(function (error) {
+            // Microphone access denied
+            useEmulatorStore.getState().setMicEnabled(false)
+          })
+      } else {
+        console.log('getUserMedia is not supported in this browser')
+      }
+    }
+  }, [window.location.pathname])
+
   return (
     <>
       <div className="header">
@@ -58,7 +81,7 @@ const Navbar = ({ isAdmin }) => {
               isMicEnabled !== undefined &&
               isMicEnabled === false && (
                 <div className="microstyle">Microphone is not connected!</div>
-            )}
+              )}
           </div>
 
           {/* 2nd menu part  */}

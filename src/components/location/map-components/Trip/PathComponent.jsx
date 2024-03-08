@@ -1,70 +1,92 @@
 import { Polyline } from '@react-google-maps/api'
 import React, { useEffect, useRef } from 'react'
 import ApiService from '../../../../ApiService.js'
+import { useStates } from '../../../../StateProvider.js'
 import { TRIP_STOPS_URL } from '../../../../constants.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 export function PathComponent() {
-  console.log('Path component Created!')
-  // const { showToast } = useStates();
-  const pathTraveled = useEmulatorStore.getState().pathTraveled
-  const pathNotTraveled = useEmulatorStore.getState().pathNotTraveled
+  const { showToast } = useStates()
+  const pathTraveledRef = useRef(useEmulatorStore.getState().pathTraveled)
+  const pathNotTraveledRef = useRef(useEmulatorStore.getState().pathNotTraveled)
 
-  const pathTraveledRef = useRef(null)
-  const pathNotTraveledRef = useRef(null)
+  const pathTraveledPolylineRef = useRef(null)
+  const pathNotTraveledPolylineRef = useRef(null)
 
   const connectedEmulatorRef = useRef(
     useEmulatorStore.getState().connectedEmulator
   )
 
-  useEffect(() =>
-    useEmulatorStore.subscribe(
-      (state) => state.connectedEmulator,
-      (connectedEmulator) => {
-        connectedEmulatorRef.current = connectedEmulator
-      }
-    )
+  useEffect(
+    () =>
+      useEmulatorStore.subscribe(
+        (state) => state.connectedEmulator,
+        (connectedEmulator) => {
+          connectedEmulatorRef.current = connectedEmulator
+        }
+      ),
+    []
   )
 
-  useEffect(() =>
-    useEmulatorStore.subscribe(
-      (state) => state.pathTraveled,
-      (pathTraveled) => {
-        if (pathTraveled === null || pathTraveled === undefined) {
-          // reset the path
-          pathTraveledRef.current.setPath([])
-          return
+  useEffect(
+    () =>
+      useEmulatorStore.subscribe(
+        (state) => state.pathTraveled,
+        (pathTraveled) => {
+          pathTraveledRef.current = pathTraveled
+          if (pathTraveled === null || pathTraveled === undefined) {
+            console.log('pathTraveled is null or undefined')
+            // reset the path
+            pathTraveledPolylineRef.current.setPath([])
+            // update the path
+            pathTraveledRef.current = []
+            return
+          }
+          if (pathTraveledPolylineRef.current) {
+            pathTraveledPolylineRef.current.setPath(pathTraveled)
+          }
         }
-        if (pathTraveledRef.current) {
-          pathTraveledRef.current.setPath(pathTraveled)
-        }
-      }
-    )
+      ),
+    []
   )
 
-  useEffect(() =>
-    useEmulatorStore.subscribe(
-      (state) => state.pathNotTraveled,
-      (pathNotTraveled) => {
-        if (pathNotTraveled === null || pathNotTraveled === undefined) {
-          // reset the path
-          pathNotTraveledRef.current.setPath([])
-          return
+  useEffect(
+    () =>
+      useEmulatorStore.subscribe(
+        (state) => state.pathNotTraveled,
+        (pathNotTraveled) => {
+          pathNotTraveledRef.current = pathNotTraveled
+          if (pathNotTraveled === null || pathNotTraveled === undefined) {
+            console.log('pathNotTraveled is null or undefined')
+            // reset the path
+            pathNotTraveledPolylineRef.current.setPath([])
+            // update the path
+            pathNotTraveledRef.current = []
+            return
+          }
+          if (pathNotTraveledPolylineRef.current) {
+            pathNotTraveledPolylineRef.current.setPath(pathNotTraveled)
+          }
         }
-        if (pathNotTraveledRef.current) {
-          pathNotTraveledRef.current.setPath(pathNotTraveled)
-        }
-      }
-    )
+      ),
+    []
   )
 
   function onPolyLineClickTraveled(e) {
     if (
       connectedEmulatorRef.current === null ||
-      connectedEmulatorRef.current === undefined
+      connectedEmulatorRef.current === undefined ||
+      pathTraveledRef.current === null ||
+      pathTraveledRef.current === undefined
     ) {
+      showToast(
+        'Something went wrong! Please refresh if this keeps happening',
+        'error'
+      )
       return
     }
+    console.log('connectedEmulatorRef.current : ', connectedEmulatorRef.current)
+    console.log('pathTraveledRef.current : ', pathTraveledRef.current)
     const emulatorId = connectedEmulatorRef.current.id
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() }
 
@@ -82,19 +104,32 @@ export function PathComponent() {
       }, -1)
     }
 
-    const closestIndexPath = findClosestPointIndex(pathTraveled)
+    const closestIndexPath = findClosestPointIndex(pathTraveledRef.current)
     if (closestIndexPath && closestIndexPath !== -1) {
-      requestNewStopCreation(pathTraveled[closestIndexPath], emulatorId)
+      requestNewStopCreation(
+        pathTraveledRef.current[closestIndexPath],
+        emulatorId
+      )
     }
   }
 
   function onPolyLineClickNotTraveled(e) {
+    console.log('pathTraveledRef.current : ', pathTraveledRef.current)
+    console.log('pathNotTraveledRef.current : ', pathNotTraveledRef.current)
     if (
       connectedEmulatorRef.current === null ||
-      connectedEmulatorRef.current === undefined
+      connectedEmulatorRef.current === undefined ||
+      pathNotTraveledRef.current === null ||
+      pathNotTraveledRef.current === undefined
     ) {
+      showToast(
+        'Something went wrong! Please refresh if this keeps happening',
+        'error'
+      )
       return
     }
+    console.log('connectedEmulatorRef.current : ', connectedEmulatorRef.current)
+    console.log('pathNotTraveledRef.current : ', pathNotTraveledRef.current)
     const emulatorId = connectedEmulatorRef.current.id
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() }
 
@@ -112,9 +147,12 @@ export function PathComponent() {
       }, -1)
     }
 
-    const closestIndexPath = findClosestPointIndex(pathNotTraveled)
+    const closestIndexPath = findClosestPointIndex(pathNotTraveledRef.current)
     if (closestIndexPath && closestIndexPath !== -1) {
-      requestNewStopCreation(pathNotTraveled[closestIndexPath], emulatorId)
+      requestNewStopCreation(
+        pathNotTraveledRef.current[closestIndexPath],
+        emulatorId
+      )
     }
   }
 
@@ -143,13 +181,11 @@ export function PathComponent() {
     }
   }
 
-  console.log('pathTraveled : ', pathTraveled?.length)
-  console.log('pathNotTraveled : ', pathNotTraveled?.length)
   return (
     <>
       <Polyline
-        onLoad={(polyline) => (pathTraveledRef.current = polyline)}
-        path={pathTraveled}
+        onLoad={(polyline) => (pathTraveledPolylineRef.current = polyline)}
+        path={pathTraveledRef.current}
         options={{
           strokeColor: '#0058A5',
           strokeWeight: 3,
@@ -159,8 +195,8 @@ export function PathComponent() {
         onClick={onPolyLineClickTraveled}
       />
       <Polyline
-        onLoad={(polyline) => (pathNotTraveledRef.current = polyline)}
-        path={pathNotTraveled}
+        onLoad={(polyline) => (pathNotTraveledPolylineRef.current = polyline)}
+        path={pathNotTraveledRef.current}
         options={{
           strokeColor: '#0058A54D',
           strokeWeight: 3,

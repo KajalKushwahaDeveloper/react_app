@@ -1,3 +1,6 @@
+import {
+  CircularProgress
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useStates } from '../../../../../StateProvider.js'
 import { useEmulatorStore } from '../../../../../stores/emulator/store.tsx'
@@ -24,6 +27,14 @@ const Phone = ({ setContactDialogOptions }) => {
   const { showToast } = useStates()
 
   const [number, setNumber] = useState('')
+  const [callState, setCallState] = useState(false)
+
+  useEffect(() => {
+    if (selectedDevice?.state === 'On call') {
+      setCallState(false)
+    }
+  }, [selectedDevice?.state, callState])
+
   const acceptConnection = () => {
     if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.conn.accept()
@@ -43,10 +54,10 @@ const Phone = ({ setContactDialogOptions }) => {
   }
 
   const handleCall = () => {
-    console.log('selectedDeviceData:', selectedDevice)
     if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.device.connect({ To: number })
     }
+    setCallState(true)
   }
 
   let render
@@ -75,9 +86,10 @@ const Phone = ({ setContactDialogOptions }) => {
       <>
         <Dialler number={number} setNumber={setNumber} />
         <div className="call">
-          <KeypadButton handleClick={handleCall} color="green">
+          {callState === true ? <span style={{ display: 'flex', justifyContent: 'center' }} > <CircularProgress color="primary"/> </span> : <KeypadButton handleClick={handleCall} color="green">
             Call
           </KeypadButton>
+          }
         </div>
       </>
     )
