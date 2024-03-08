@@ -8,23 +8,9 @@ import CreateTripButton from '../MapButtons.jsx'
 import './ResizeContainer.css'
 
 const AddressTable = () => {
-  console.log('AddressTable')
-  const elementParentRefs = useRef([
-    React.createRef(),
-    React.createRef(),
-    React.createRef(),
-    React.createRef(),
-    React.createRef(),
-    React.createRef()
-  ])
-  const elementRefs = useRef([
-    React.createRef(),
-    React.createRef(),
-    React.createRef(),
-    React.createRef(),
-    React.createRef(),
-    React.createRef()
-  ])
+  const elementParentRefs = useRef(Array.from({ length: 6 }, () => React.createRef()))
+  const elementRefs = useRef(Array.from({ length: 6 }, () => React.createRef()))
+
   const { width } = useViewPort()
   const breakpoint = 620
   const isMobile = width < breakpoint
@@ -40,23 +26,37 @@ const AddressTable = () => {
     widthArr[i] = savedAddressWithI
   }
 
+  function formatTime(milliseconds) {
+    // Convert milliseconds to seconds
+    let totalSeconds = Math.floor(milliseconds / 1000)
+    // Calculate hours
+    const hours = Math.floor(totalSeconds / 3600)
+    totalSeconds %= 3600
+    // Calculate minutes
+    const minutes = Math.floor(totalSeconds / 60)
+    // Calculate remaining seconds
+    const seconds = totalSeconds % 60
+    // Format the time
+    const formattedTime = [
+      String(hours).padStart(2, '0'),
+      String(minutes).padStart(2, '0'),
+      String(seconds).padStart(2, '0')
+    ].join(':')
+    return formattedTime
+  }
+
   const getAddress = (address) =>
     address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
 
   const setValues = useCallback((emulator, tripData, isHover) => {
-    console.log('emulator', emulator)
-    console.log('tripData', tripData)
-    console.log('isHover', isHover)
-
-    function readableTime(time) {
-      const date = new Date(time)
-      return date.toLocaleString()
-    }
-
+    console.log('setValues emulator: ', emulator?.currentTripPointIndex)
+    console.log('setValues tripData: ', tripData)
+    console.log('setValues isHover: ', isHover)
     const currentAddress =
       emulator && emulator.address ? emulator.address : 'N/A'
 
     const fromAddress = tripData ? getAddress(tripData.fromAddress) : 'N/A'
+
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
     const arrivalTime = tripData?.emulatorDetails
@@ -64,9 +64,14 @@ const AddressTable = () => {
         '<br/>' +
         readableTime(tripData.emulatorDetails.arrivalTime)
       : 'N/A'
-    const totalTime = tripData ? 'TODO' : 'N/A'
-    const remainingDistance = tripData ? 'TODO' : 'N/A'
 
+    const totalTime =
+      tripData?.emulatorDetails ? formatTime(
+        tripData.emulatorDetails.arrivalTime -
+          tripData.emulatorDetails.departTime
+      ) : 'N/A'
+
+    const remainingDistance = calculateRemainingDistance(tripData, emulator?.currentTripPointIndex)
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
     setStringToElementRef(toAddress, elementRefs.current[2])
@@ -564,3 +569,26 @@ const AddressTable = () => {
 }
 
 export default AddressTable
+
+function calculateRemainingDistance(tripData, currentTripPointIndex) {
+  if (currentTripPointIndex === null || currentTripPointIndex === undefined) return 'N/A'
+  const tripDataPoints = tripData?.tripPoints || []
+  let coveredDistance = 0
+  let calcTotalDistance = 0
+
+  for (let tripPointIndex = 0; tripPointIndex <= currentTripPointIndex; tripPointIndex++) {
+    coveredDistance += tripDataPoints[tripPointIndex]?.distance
+  }
+
+  for (let tripPointIndextotal = 0; tripPointIndextotal < tripDataPoints.length; tripPointIndextotal++) {
+    calcTotalDistance += tripDataPoints[tripPointIndextotal]?.distance
+  }
+
+  const calcRemainingDistance = calcTotalDistance - coveredDistance
+  return tripData ? parseInt(calcRemainingDistance / 1609) + ' miles' : 'N/A'
+}
+
+function readableTime(time) {
+  const date = new Date(time)
+  return date.toLocaleString()
+}
