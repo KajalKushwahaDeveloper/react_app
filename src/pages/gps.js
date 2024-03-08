@@ -22,6 +22,8 @@ const GPS = () => {
   const breakpoint = 620
   const isMobile = width < breakpoint
 
+  // OLD CODE WHICH WAS ALREADY THERE. NOT WORKING CODE!
+
   // useEffect(() => {
   //   if (window.location.pathname === '/gps') {
   //     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -68,30 +70,57 @@ const GPS = () => {
   //   }
   // }, [setMicCheck])
 
-  useEffect(() => {
-    const checkMicrophonePermission = async () => {
-      try {
-        const permissionStatus = await navigator.permissions.query({ name: 'microphone' })
-        setMicrophonePermission(permissionStatus.state)
+  // OLD CODE WORKING FOR GOOGLE CHROME, FIREFOX AND EDGE: BUT NOT IN SAFARI
 
-        permissionStatus.onchange = () => {
+  // useEffect(() => {
+  //   const checkMicrophonePermission = async () => {
+  //     try {
+  //       const permissionStatus = await navigator.permissions.query({ name: 'microphone' })
+  //       setMicrophonePermission(permissionStatus.state)
+
+  //       permissionStatus.onchange = () => {
+  //         setMicrophonePermission(permissionStatus.state)
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking microphone permission:', error)
+  //     }
+  //   }
+
+  //   checkMicrophonePermission()
+  // }, [])
+
+  // useEffect(() => {
+  //   if (microphonePermission === 'granted') {
+  //     setMicCheck(true)
+  //   } else {
+  //     setMicCheck(false)
+  //   }
+  // }, [microphonePermission, setMicCheck])
+
+  // CODE WHICH MIGHT WORK FOR SAFARI
+
+  useEffect(() => {
+      const checkMicrophonePermission = async () => {
+        try {
+          const permissionStatus = await navigator.permissions.query({ name: 'microphone' })
           setMicrophonePermission(permissionStatus.state)
+          permissionStatus.onchange = () => {
+            setMicrophonePermission(permissionStatus.state)
+          }
+        } catch (error) {
+          console.error('Error checking microphone permission:', error)
         }
-      } catch (error) {
-        console.error('Error checking microphone permission:', error)
       }
-    }
-
-    checkMicrophonePermission()
-  }, [])
-
-  useEffect(() => {
-    if (microphonePermission === 'granted') {
-      setMicCheck(true)
-    } else {
-      setMicCheck(false)
-    }
-  }, [microphonePermission, setMicCheck])
+      checkMicrophonePermission()
+    }, [])
+  
+    useEffect(() => {
+      if (microphonePermission === 'granted') {
+        setMicCheck(true)
+      } else {
+        setMicCheck(false)
+      }
+    }, [microphonePermission, setMicCheck])
 
   return (
     <>
