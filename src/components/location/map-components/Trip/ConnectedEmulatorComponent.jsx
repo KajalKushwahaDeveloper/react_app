@@ -4,7 +4,6 @@ import EmulatorMarkerDirection from '../Markers/EmulatorMarkerDirection.jsx'
 import EmulatorMarkerSelected from '../Markers/EmulatorMarkerSelected.jsx'
 
 export function ConnectedEmulatorComponent() {
-  console.log('Path component Created!')
   const connectedEmulatorRef = useRef(
     useEmulatorStore.getState().connectedEmulator
   )
