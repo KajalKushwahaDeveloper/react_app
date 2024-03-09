@@ -49,9 +49,6 @@ const AddressTable = () => {
     address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
 
   const setValues = useCallback((emulator, tripData, isHover) => {
-    console.log('setValues emulator: ', emulator?.currentTripPointIndex)
-    console.log('setValues tripData: ', tripData)
-    console.log('setValues isHover: ', isHover)
     const currentAddress =
       emulator && emulator.address ? emulator.address : 'N/A'
 

@@ -155,6 +155,7 @@ const GpsTable = () => {
 
   useEffect(() => {
     if (hoveredEmulator !== null) {
+      console.log('current Page', page)
       const selectedEmIndex = emulators.findIndex(
         (emulator) => emulator.id === hoveredEmulator.id
       )
@@ -165,14 +166,16 @@ const GpsTable = () => {
       }
     } else if (selectedEmulator !== null) {
       const selectedEmIndex = emulators.findIndex(
-        (emulator) => emulator === selectedEmulator
+        (emulator) => emulator.id === selectedEmulator.id
       )
+      console.log('selectedEmIndex', selectedEmIndex)
       // Calculate the new active page based on the selected checkbox index and rowsPerPage
       if (selectedEmIndex !== -1) {
         const newActivePage = Math.floor(selectedEmIndex / rowsPerPage)
         setPage(newActivePage)
       }
     }
+    console.log('updated Page', page)
   }, [emulators, rowsPerPage, selectedEmulator, hoveredEmulator])
 
   // page changed from arrows

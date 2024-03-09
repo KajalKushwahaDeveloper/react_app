@@ -85,8 +85,6 @@ export function PathComponent() {
       )
       return
     }
-    console.log('connectedEmulatorRef.current : ', connectedEmulatorRef.current)
-    console.log('pathTraveledRef.current : ', pathTraveledRef.current)
     const emulatorId = connectedEmulatorRef.current.id
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() }
 
@@ -114,8 +112,6 @@ export function PathComponent() {
   }
 
   function onPolyLineClickNotTraveled(e) {
-    console.log('pathTraveledRef.current : ', pathTraveledRef.current)
-    console.log('pathNotTraveledRef.current : ', pathNotTraveledRef.current)
     if (
       connectedEmulatorRef.current === null ||
       connectedEmulatorRef.current === undefined ||
@@ -128,8 +124,6 @@ export function PathComponent() {
       )
       return
     }
-    console.log('connectedEmulatorRef.current : ', connectedEmulatorRef.current)
-    console.log('pathNotTraveledRef.current : ', pathNotTraveledRef.current)
     const emulatorId = connectedEmulatorRef.current.id
     const clickedLatLng = { lat: e.latLng.lat(), lng: e.latLng.lng() }
 
@@ -164,7 +158,7 @@ export function PathComponent() {
     }
 
     const token = localStorage.getItem('token')
-    // showToast("Creating Stop...", "info");
+    showToast('Creating Stop...', 'info')
     const { success, error } = await ApiService.makeApiCall(
       TRIP_STOPS_URL,
       'POST',
@@ -173,10 +167,10 @@ export function PathComponent() {
       emulatorId
     )
     if (success) {
-      // showToast("Stop created!", "success");
+      showToast('Stop created!', 'success')
       // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
     } else {
-      // showToast("Error creating Stop!", "error");
+      showToast(error, 'error')
       console.error('Error creating Stop: ', error)
     }
   }
