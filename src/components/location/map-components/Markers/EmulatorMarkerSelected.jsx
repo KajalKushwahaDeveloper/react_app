@@ -15,6 +15,9 @@ const EmulatorMarkerSelected = () => {
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
   const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator)
   const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator)
+  const draggedEmulatorsRef = useRef(
+    useEmulatorStore.getState().draggedEmulators
+  )
 
   useEffect(
     () =>
@@ -59,9 +62,19 @@ const EmulatorMarkerSelected = () => {
   useEffect(
     () =>
       useEmulatorStore.subscribe(
-        (state) => state.draggedEmulator,
-        (draggedEmulator) => {
-          draggedEmulatorRef.current = draggedEmulator
+        (state) => state.draggedEmulators,
+        (draggedEmulators) => {
+          draggedEmulatorsRef.current = draggedEmulators
+          // if there is a draggedEmulator inside draggedEmulatorsRef whose emulator.id == connectedEmulator.id, then set dragEmulatorRef to that draggedEmulator
+          const draggedEmulator = draggedEmulatorsRef.current.find(
+            (draggedEmulator) =>
+              draggedEmulator.emulator.id === emulatorRef.current?.id
+          )
+          if (draggedEmulator) {
+            draggedEmulatorRef.current = draggedEmulator
+          } else {
+            draggedEmulatorRef.current = null
+          }
           if (markerRef.current === null || markerRef.current === undefined) {
             return
           }
@@ -69,6 +82,15 @@ const EmulatorMarkerSelected = () => {
             const position = new window.google.maps.LatLng(
               emulatorRef.current?.latitude,
               emulatorRef.current?.longitude
+            )
+            markerRef.current?.setPosition(position)
+          } else {
+            // NOTE: this will not be able to switch position of when already dragged, and then get's selected.
+            // For that behavior, we need to make the default position of the marker to be the draggedEmulator position when selected. [#1]
+            // if draggedEmulator is not null, then set the marker position to draggedEmulator position
+            const position = new window.google.maps.LatLng(
+              draggedEmulator.latitude,
+              draggedEmulator.longitude
             )
             markerRef.current?.setPosition(position)
           }
@@ -148,14 +170,55 @@ const EmulatorMarkerSelected = () => {
     anchor: new window.google.maps.Point(10, 10)
   }
 
+  function handleDragStart(event) {
+    // remove any animation on marker
+    markerRef.current?.setAnimation(null)
+    const { latLng } = event
+    dragEmulator({
+      emulator: emulatorRef.current,
+      latitude: latLng.lat(),
+      longitude: latLng.lng(),
+      isDragMarkerDropped: false,
+      timeout: -1
+    })
+    // if drag started from a MovedEmulator, reset moveMarker to false
+    if (
+      movedEmulatorRef.current?.emulator?.id === emulatorRef.current?.id &&
+      movedEmulatorRef.current?.moveMarker === true
+    ) {
+      moveEmulator({
+        emulator: emulatorRef.current,
+        latitude: emulatorRef.current.latitude,
+        longitude: emulatorRef.current.longitude,
+        moveMarker: false
+      })
+    }
+  }
+
+  function handleDragEnd(event) {
+    const { latLng } = event
+    dragEmulator({
+      emulator: emulatorRef.current,
+      latitude: latLng.lat(),
+      longitude: latLng.lng(),
+      isDragMarkerDropped: true,
+      timeout: 150
+    })
+  }
+
   return (
     <>
       <Marker
         key={emulatorRef.current?.id}
         icon={emulatorIcon}
+        // [#1]
         position={{
-          lat: emulatorRef.current?.latitude,
-          lng: emulatorRef.current?.longitude
+          lat: draggedEmulatorRef.current
+            ? draggedEmulatorRef.current.latitude
+            : emulatorRef.current?.latitude,
+          lng: draggedEmulatorRef.current
+            ? draggedEmulatorRef.current.longitude
+            : emulatorRef.current?.longitude
         }}
         onLoad={(marker) => (markerRef.current = marker)}
         title={`${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`}
@@ -169,39 +232,8 @@ const EmulatorMarkerSelected = () => {
         labelAnchor={{ x: 'auto', y: 'auto' }}
         // onClick={() => selectEmulator(emulator)}
         draggable={true}
-        onDragStart={(event) => {
-          // remove any animation on marker
-          markerRef.current?.setAnimation(null)
-          const { latLng } = event
-          dragEmulator({
-            emulator: emulatorRef.current,
-            latitude: latLng.lat(),
-            longitude: latLng.lng(),
-            isDragMarkerDropped: false
-          })
-          // if drag started from a MovedEmulator, reset moveMarker to false
-          if (
-            movedEmulatorRef.current?.emulator?.id ===
-              emulatorRef.current?.id &&
-            movedEmulatorRef.current?.moveMarker === true
-          ) {
-            moveEmulator({
-              emulator: emulatorRef.current,
-              latitude: emulatorRef.current.latitude,
-              longitude: emulatorRef.current.longitude,
-              moveMarker: false
-            })
-          }
-        }}
-        onDragEnd={(event) => {
-          const { latLng } = event
-          dragEmulator({
-            emulator: emulatorRef.current,
-            latitude: latLng.lat(),
-            longitude: latLng.lng(),
-            isDragMarkerDropped: true
-          })
-        }}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
         zIndex={1}
       />
     </>

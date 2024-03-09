@@ -13,6 +13,7 @@ const Speedometer = () => {
   const [speed, setSpeed] = useState()
   const [currentValueText, setCurrentValueText] = useState('N/A MPH')
   const emulator = useEmulatorStore.getState().connectedEmulator
+  const speedometerRef = React.createRef()
 
   useEffect(() => {
     console.log('TEST@ emulator useEffect : ', emulator?.velocity)
@@ -34,20 +35,24 @@ const Speedometer = () => {
             connectedEmulator?.velocity === null ||
             connectedEmulator?.velocity === undefined
           ) {
+            speedometerRef.current.style.display = 'none'
             return
           }
+          speedometerRef.current.style.display = 'block'
           const speed = (connectedEmulator.velocity * 2236.94).toFixed(2)
           // update ReactSpeedometer value with speed
           setSpeed(speed)
           setCurrentValueText(speed + ' MPH')
         }
       ),
-    []
+    [speedometerRef]
   )
 
   console.log('TEST@ speed : ', speed)
   return (
-    <div className="center">
+    <div
+    ref={speedometerRef}
+    className="center">
       <Container>
         <Row>
           <Col>

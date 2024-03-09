@@ -34,6 +34,7 @@ export interface EmulatorsSlice {
   emulators: Emulator[] | []
   hoveredEmulator: Emulator | null
   draggedEmulator: DragEmulator | null
+  draggedEmulators: DragEmulator[] | []
   movedEmulator: MoveEmulator | null
   updateEmulators: (emulators: Emulator[]) => void
   fetchEmulators: () => Promise<void>
@@ -79,6 +80,7 @@ const createEmulatorsSlice: StateCreator<
   selectedEmulator: null,
   hoveredEmulator: null,
   draggedEmulator: null,
+  draggedEmulators: [],
   movedEmulator: null,
   updateEmulators: async (newEmulators) => {
     set({ emulators: newEmulators })
@@ -123,7 +125,25 @@ const createEmulatorsSlice: StateCreator<
     get().connectSelectedEmulatorSSE(emulator)
   },
   hoverEmulator: (hoveredEmulator) => set({ hoveredEmulator }),
-  dragEmulator: (draggedEmulator) => set({ draggedEmulator }),
+  dragEmulator: (draggedEmulator: DragEmulator | null) => {
+    // if draggedEmulator is not null and has a timeout > 0, then add/replace it in the draggedEmulatorsOnCountdown
+    if (draggedEmulator !== null) {
+      // insert/replace draggedEmulator in draggedEmulators
+      const draggedEmulators: DragEmulator[] = get().draggedEmulators
+      const index = draggedEmulators.findIndex(
+        (oldDraggedEmulator) =>
+          oldDraggedEmulator.emulator.id === draggedEmulator.emulator.id
+      )
+      if (index !== -1) {
+        draggedEmulators[index] = draggedEmulator
+      } else {
+        draggedEmulators.push(draggedEmulator)
+      }
+      // set a new copy of draggedEmulators
+      set({ draggedEmulators: [...draggedEmulators] })
+    }
+    set({ draggedEmulator })
+  },
   moveEmulator: (movedEmulator) => set({ movedEmulator })
 })
 
@@ -179,7 +199,6 @@ const createTripDataSlice: StateCreator<
       },
       onmessage(event) {
         // if heartbeat, then return
-        console.log('TEST@ event: ', event)
         if (event.event === 'heartbeat') {
           return
         }

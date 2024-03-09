@@ -1,6 +1,6 @@
 import SyncIcon from '@mui/icons-material/Sync'
 import Button from '@mui/material/Button'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ApiService from '../../../ApiService.js'
 import { useStates } from '../../../StateProvider.js'
 import { useViewPort } from '../../../ViewportProvider.js'
@@ -9,7 +9,13 @@ import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import Speedometer from './Address/Speedometer.jsx'
 
 const MapButtons = () => {
-  console.log('MapButtons Rendered!')
+  const { width } = useViewPort()
+  const breakpoint = 620
+  const isMobile = width < breakpoint
+
+  const [isSpinning, setSpinning] = useState()
+
+  console.log('TEST@ MapButtons Rendered!')
   const {
     showToast,
     setIsTableVisible,
@@ -18,21 +24,30 @@ const MapButtons = () => {
     setIsMoveDialogVisible
   } = useStates()
 
-  // Initiate fetchEmulators from store
-  const tripData = useEmulatorStore((state) => state.tripData)
-  const connectedEmulator = useEmulatorStore((state) => state.connectedEmulator)
-  const movedEmulator = useEmulatorStore((state) => state.movedEmulator)
+  const cancelSetPositionButtonRef = React.createRef()
+  const setPositionButtonRef = React.createRef()
+  const createTripButtonRef = React.createRef()
+  const cancelTripButtonRef = React.createRef()
+
+  // TRIP DATA
+  const tripDataRef = useRef(useEmulatorStore.getState().tripData)
+
+  // CONNECTED EMULATOR
+  const connectedEmulatorRef = useRef(
+    useEmulatorStore.getState().connectedEmulator
+  )
+
+  // MOVED EMULATOR
+  const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator)
   const moveEmulator = useEmulatorStore((state) => state.moveEmulator)
 
-  const { width } = useViewPort()
-  const breakpoint = 620
-  const isMobile = width < breakpoint
-
-  const [isSpinning, setSpinning] = useState()
-  const [showCancel, setShowCancel] = useState(false)
+  // DRAGGED EMULATORS
+  const draggedEmulatorsRef = useRef(
+    useEmulatorStore.getState().draggedEmulators
+  )
 
   const handleSetPositionClick = () => {
-    if (connectedEmulator === null) {
+    if (connectedEmulatorRef.current === null) {
       showToast('Emulator is not selected', 'error') // Emulator is not selected error
     } else {
       setIsMoveDialogVisible(!isMoveDialogVisible)
@@ -40,18 +55,35 @@ const MapButtons = () => {
   }
 
   const handleSetPositionCancelClick = () => {
-    moveEmulator({
-      emulator: connectedEmulator,
-      latitude: connectedEmulator.latitude,
-      longitude: connectedEmulator.longitude,
-      moveMarker: false
+    console.log('TEST@ handleSetPositionCancelClick')
+    if (movedEmulatorRef.current?.moveMarker) {
+      moveEmulator({
+        emulator: connectedEmulatorRef.current,
+        latitude: connectedEmulatorRef.current?.latitude,
+        longitude: connectedEmulatorRef.current?.longitude,
+        moveMarker: false
+      })
+    }
+    // if draggedEmulatorRef.current includes a dragEmulator of same dragEmulator.emulator.id
+    // remove draggedEmulator from draggedEmulatorsRef.current
+    const draggedEmulatorsList = draggedEmulatorsRef.current
+    let didRemove = false
+    draggedEmulatorsList.forEach((draggedEmulator, index) => {
+      if (draggedEmulator.emulator.id === connectedEmulatorRef.current?.id) {
+        draggedEmulatorsList.splice(index, 1)
+        didRemove = true
+      }
     })
+    if (didRemove) {
+      useEmulatorStore.setState({ draggedEmulators: [...draggedEmulatorsList] })
+    }
+    setupButtons()
   }
 
   const handleCreateTripButton = () => {
-    if (connectedEmulator === null) {
+    if (connectedEmulatorRef.current === null) {
       showToast('Emulator is not selected', 'error') // Emulator is not selected error
-    } else if (connectedEmulator.AssignedTelephoneNumber === null) {
+    } else if (connectedEmulatorRef.current.AssignedTelephoneNumber === null) {
       showToast('Telephone Number is not Assigned', 'error') // Telephone Number is not Assigned
     } else {
       setIsTableVisible(!isTableVisible)
@@ -67,16 +99,16 @@ const MapButtons = () => {
 
   const handleCancelTripClick = async () => {
     const confirmed = window.confirm(
-      `Are you want to cancel ${tripData?.fromAddress[0]?.long_name} to ${tripData?.toAddress[0].long_name} trip?`
+      `Are you want to cancel ${tripDataRef.current?.fromAddress[0]?.long_name} to ${tripDataRef.current?.toAddress[0].long_name} trip?`
     )
     if (confirmed) {
       const token = localStorage.getItem('token')
 
       const payload = {
-        emulatorId: connectedEmulator?.id,
+        emulatorId: connectedEmulatorRef.current?.id,
         cancelTrip: true,
-        latitude: connectedEmulator?.latitude,
-        longitude: connectedEmulator?.longitude,
+        latitude: connectedEmulatorRef.current?.latitude,
+        longitude: connectedEmulatorRef.current?.longitude,
         newTripIndex: null
       }
 
@@ -99,14 +131,172 @@ const MapButtons = () => {
     }
   }
 
-  useEffect(() => {
-    if (tripData !== null && connectedEmulator !== null) {
-      // leave earlier same, set show cancel true
-      setShowCancel(true)
-    } else {
-      setShowCancel(false)
+  // function to set Button to be visible or not after checking it's existing visibility
+
+  const setupButtons = useCallback(() => {
+    const shouldShowCancelSetPosition = () => {
+      // true if movedEmulator.moveMarker or if draggedEmulatorsRef.current includes a dragEmulator of same dragEmulator.emulator.id
+      let shouldShow = false
+      if (movedEmulatorRef.current?.moveMarker) {
+        shouldShow = true
+      }
+      if (draggedEmulatorsRef.current.length > 0) {
+        draggedEmulatorsRef.current.forEach((draggedEmulator) => {
+          console.log('TEST@ draggedEmulator', draggedEmulator.emulator.id, connectedEmulatorRef.current?.id)
+          if (draggedEmulator.emulator.id === connectedEmulatorRef.current?.id) {
+            shouldShow = true
+          }
+        })
+      }
+      console.log('TEST@ shouldShow', shouldShow)
+      return shouldShow
     }
-  }, [tripData, connectedEmulator])
+
+    const setButtonVisibility = (buttonRef, isVisible) => {
+      let display = 'none'
+      if (isVisible) {
+        display = 'block'
+      }
+      buttonRef.current.style.display = display
+    }
+
+    const alignButtons = () => {
+      // showCancel ? 310 : 190
+      // showCancel ? 191 : 70
+      if (tripDataRef.current !== null) {
+        setPositionButtonRef.current.style.right = '310px'
+        cancelSetPositionButtonRef.current.style.right = '310px'
+        cancelTripButtonRef.current.style.right = '189px'
+      } else {
+        setPositionButtonRef.current.style.right = '190px'
+        cancelSetPositionButtonRef.current.style.right = '190px'
+        cancelTripButtonRef.current.style.right = '70px'
+      }
+    }
+
+    const showPositionButtons = connectedEmulatorRef.current !== null
+    let showCancel = false
+    if (showPositionButtons) {
+      showCancel = shouldShowCancelSetPosition()
+    }
+    console.log(
+      'TEST@ setting cancelSetPositionButton',
+      showCancel,
+      cancelSetPositionButtonRef
+    )
+    setButtonVisibility(
+      cancelSetPositionButtonRef,
+      showPositionButtons && showCancel
+    )
+
+    console.log(
+      'TEST@ setting setPositionButtonRef',
+      !showCancel,
+      setPositionButtonRef
+    )
+    setButtonVisibility(
+      setPositionButtonRef,
+      showPositionButtons && !showCancel
+    )
+
+    console.log(
+      'TEST@ setting createTripButton',
+      connectedEmulatorRef.current !== null,
+      createTripButtonRef
+    )
+    setButtonVisibility(
+      createTripButtonRef,
+      connectedEmulatorRef.current !== null
+    )
+
+    console.log(
+      'TEST@ setting cancelTripButton',
+      tripDataRef.current !== null,
+      cancelTripButtonRef
+    )
+    setButtonVisibility(cancelTripButtonRef, tripDataRef.current !== null)
+    alignButtons()
+  }, [
+    cancelSetPositionButtonRef,
+    setPositionButtonRef,
+    createTripButtonRef,
+    cancelTripButtonRef,
+    connectedEmulatorRef,
+    tripDataRef
+  ])
+
+  // subscribe to connectedEmulator
+  useEffect(() => {
+    return useEmulatorStore.subscribe(
+      (state) => state.connectedEmulator,
+      (connectedEmulator) => {
+        connectedEmulatorRef.current = connectedEmulator
+        setupButtons()
+      }
+    )
+  }, [setupButtons])
+
+  // subscribe to movedEmulator
+  useEffect(() => {
+    return useEmulatorStore.subscribe(
+      (state) => state.movedEmulator,
+      (movedEmulator) => {
+        movedEmulatorRef.current = movedEmulator
+        setupButtons()
+      }
+    )
+  }, [setupButtons])
+
+  // subscribe to Trip Data
+  useEffect(() => {
+    return useEmulatorStore.subscribe(
+      (state) => state.tripData,
+      (tripData) => {
+        tripDataRef.current = tripData
+        setupButtons()
+      }
+    )
+  }, [setupButtons])
+
+  // subscribe to draggedEmulators
+  useEffect(() => {
+    return useEmulatorStore.subscribe(
+      (state) => state.draggedEmulators,
+      (draggedEmulators) => {
+        draggedEmulatorsRef.current = draggedEmulators
+        setupButtons()
+      }
+    )
+  }, [setupButtons])
+
+  // timer for draggedEmulatorsOnCountdown
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const draggedEmulatorsList = draggedEmulatorsRef.current
+      // loop index and reduce 1 from each draggedEmulator's timeout in draggedEmulatorsList
+      draggedEmulatorsList.forEach((draggedEmulator, index) => {
+        if (draggedEmulator.timeout > 0) {
+          draggedEmulatorsList[index].timeout = draggedEmulator.timeout - 1
+        }
+        // if connectedEmulator was the one being dragged, set setShowCancelSetPosition to true
+
+        if (draggedEmulator.emulator.id === connectedEmulatorRef.current?.id) {
+          // change CANCEL SET POSITION text to CANCEL SET POSITION (timeout seconds left)
+          if (cancelSetPositionButtonRef.current) {
+            cancelSetPositionButtonRef.current.innerText = `Cancel Set Position (${draggedEmulator.timeout}s)`
+          }
+        }
+
+        // if timeout reaches 0, remove the emulator from draggedEmulatorsList
+        if (draggedEmulator.timeout === 0) {
+          // TODO: hist the endpoint 'dragEmulator'...
+          draggedEmulatorsList.splice(index, 1)
+        }
+      })
+      useEmulatorStore.setState({ draggedEmulators: draggedEmulatorsList })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [cancelSetPositionButtonRef])
 
   return (
     <>
@@ -118,79 +308,77 @@ const MapButtons = () => {
           padding: '0'
         }}
       >
-        {connectedEmulator && (
-          <>
-            {connectedEmulator.startLat !== null &&
-              connectedEmulator.startLat !== undefined &&
-              connectedEmulator.startLat !== 0 && <Speedometer />}
+        <Speedometer />
+        {/* show cancel if movedEmulator.moveMarker or if draggedEmulatorRef.current includes a dragEmulator of same dragEmulator.emulator.id */}
+        <Button
+          ref={cancelSetPositionButtonRef}
+          variant="contained"
+          style={{
+            display: 'none',
+            height: '40px',
+            zIndex: 2,
+            position: 'absolute',
+            top: isMobile ? '100px' : '135px',
+            right: 190,
+            justifyContent: 'center',
+            backgroundColor: '#f44336'
+          }}
+          onClick={handleSetPositionCancelClick}
+        >
+          Cancel Set Position
+        </Button>
 
-            {movedEmulator && movedEmulator.moveMarker === true ? (
-              <Button
-                variant="contained"
-                style={{
-                  height: '40px',
-                  zIndex: 2,
-                  position: 'absolute',
-                  top: isMobile ? '100px' : '135px',
-                  right: showCancel ? 310 : 200,
-                  justifyContent: 'center',
-                  backgroundColor: '#f44336'
-                }}
-                onClick={handleSetPositionCancelClick}
-              >
-                Cancel Set Position
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                style={{
-                  height: '40px',
-                  zIndex: 2,
-                  position: 'absolute',
-                  top: isMobile ? '100px' : '135px',
-                  right: showCancel ? 310 : 190,
-                  justifyContent: 'center'
-                }}
-                onClick={handleSetPositionClick}
-              >
-                Set position
-              </Button>
-            )}
+        <Button
+          ref={setPositionButtonRef}
+          variant="contained"
+          style={{
+            display: 'none',
+            height: '40px',
+            zIndex: 2,
+            position: 'absolute',
+            top: isMobile ? '100px' : '135px',
+            right: 190,
+            justifyContent: 'center'
+          }}
+          onClick={handleSetPositionClick}
+        >
+          Set position
+        </Button>
 
-            <Button
-              variant="contained"
-              style={{
-                height: '40px',
-                zIndex: 2,
-                position: 'absolute',
-                top: isMobile ? '100px' : '135px',
-                right: showCancel ? 191 : 70,
-                justifyContent: 'center'
-              }}
-              onClick={handleCreateTripButton}
-            >
-              Create Trip
-            </Button>
+        <Button
+          ref={createTripButtonRef}
+          variant="contained"
+          style={{
+            display: 'none',
+            height: '40px',
+            zIndex: 2,
+            position: 'absolute',
+            top: isMobile ? '100px' : '135px',
+            right: 70,
+            justifyContent: 'center'
+          }}
+          onClick={handleCreateTripButton}
+        >
+          Create Trip
+        </Button>
 
-            {showCancel ? (
-              <Button
-                variant="contained"
-                style={{
-                  height: '40px',
-                  zIndex: 2,
-                  position: 'absolute',
-                  top: isMobile ? '100px' : '135px',
-                  right: 70,
-                  justifyContent: 'center',
-                  backgroundColor: '#f44336'
-                }}
-                onClick={handleCancelTripClick}
-              >
-                Cancel Trip
-              </Button>
-            ) : null}
-          </>
-        )}
+        <Button
+          ref={cancelTripButtonRef}
+          variant="contained"
+          style={{
+            display: 'none',
+            height: '40px',
+            zIndex: 2,
+            position: 'absolute',
+            top: isMobile ? '100px' : '135px',
+            right: 70,
+            justifyContent: 'center',
+            backgroundColor: '#f44336'
+          }}
+          onClick={handleCancelTripClick}
+        >
+          Cancel Trip
+        </Button>
         <Button
           variant="contained"
           style={{

@@ -20,7 +20,7 @@ const GoogleMapContainer = () => {
   useEffect(
     () =>
       useEmulatorStore.subscribe(
-        (state) => state.draggedEmulator,
+        (state) => state.draggedEmulator, // to show highlighted road map when dragging
         (draggedEmulator) => {
           if (mapRef.current === null || mapRef.current === undefined) {
             return

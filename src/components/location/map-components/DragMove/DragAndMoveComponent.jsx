@@ -7,14 +7,14 @@ import {
   DialogTitle
 } from '@mui/material'
 import React, { useEffect } from 'react'
-import ApiService from '../../../ApiService.js'
-import { useStates } from '../../../StateProvider.js'
-import { EMULATOR_DRAG_URL, TRIP_URL } from '../../../constants.js'
-import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
+import ApiService from '../../../../ApiService.js'
+import { useStates } from '../../../../StateProvider.js'
+import { EMULATOR_DRAG_URL, TRIP_URL } from '../../../../constants.js'
+import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 const MAX_DISTANCE_SNAP = 10
 
-export function DragDialog() {
+export function DragAndMoveComponent() {
   const { showToast } = useStates()
   const draggedEmulator = useEmulatorStore((state) => state.draggedEmulator)
 
@@ -226,9 +226,10 @@ export function DragDialog() {
     }
 
     // 1. check if draggedEmulator is null or not, if null then close dialog
-    if (draggedEmulator === null) {
+    if (draggedEmulator === null || dragEmulator.timeout !== 0) {
       return
     }
+
     // 2. if not yet dropped then close dialog
     if (draggedEmulator.isDragMarkerDropped === false) {
       return
@@ -259,7 +260,8 @@ export function DragDialog() {
     closeDragDialog,
     showToast,
     selectedEmulator?.id,
-    dragEmulator
+    dragEmulator,
+    showLoader
   ])
 
   function haversine(lat1, lon1, lat2, lon2) {
@@ -320,4 +322,4 @@ export function DragDialog() {
   )
 }
 
-export default DragDialog
+export default DragAndMoveComponent

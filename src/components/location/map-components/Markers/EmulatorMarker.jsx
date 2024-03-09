@@ -14,6 +14,10 @@ const EmulatorMarker = ({ id }) => {
 
   const hoveredEmulatorRef = useRef(useEmulatorStore.getState().hoveredMarker)
   const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator)
+  const draggedEmulatorsRef = useRef(
+    useEmulatorStore.getState().draggedEmulators
+  )
+
   const emulators = useEmulatorStore.getState().emulators
 
   // create emulatorRef by finding the emulator with the id from the emulators
@@ -33,11 +37,11 @@ const EmulatorMarker = ({ id }) => {
   // PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
   let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
   iconUrl = iconUrl + 'DEFAULT'
-  if ((emulatorRef.current?.startLat && emulatorRef.current?.startLat !== 0) && (emulatorRef.current?.velocity >
-    MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-  emulatorRef.current?.velocity <
-    MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
-  )
+  if (
+    emulatorRef.current?.startLat &&
+    emulatorRef.current?.startLat !== 0 &&
+    (emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+      emulatorRef.current?.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS)
   ) {
     iconUrl = `${iconUrl}/FLASH`
   }
@@ -73,16 +77,17 @@ const EmulatorMarker = ({ id }) => {
   useEffect(
     () =>
       useEmulatorStore.subscribe(
-        (state) => state.draggedEmulator,
-        (draggedEmulator) => {
-          if (draggedEmulator && draggedEmulator.emulator.id === id) {
-            // if the draggedEmulator is the same as this marker (id), we set the draggedEmulatorRef to only this marker
+        (state) => state.draggedEmulators,
+        (draggedEmulators) => {
+          draggedEmulatorsRef.current = draggedEmulators
+          // if there is a draggedEmulator inside draggedEmulatorsRef whose emulator.id == connectedEmulator.id, then set dragEmulatorRef to that draggedEmulator
+          const draggedEmulator = draggedEmulatorsRef.current.find(
+            (draggedEmulator) => draggedEmulator.emulator.id === id
+          )
+          if (draggedEmulator) {
             draggedEmulatorRef.current = draggedEmulator
-            return
-          }
-          if (draggedEmulator === null || draggedEmulator === undefined) {
-            // if the draggedEmulator is null, we set the draggedEmulatorRef to null
-            draggedEmulatorRef.current = draggedEmulator
+          } else {
+            draggedEmulatorRef.current = null
           }
         }
       ),
@@ -116,11 +121,13 @@ const EmulatorMarker = ({ id }) => {
           iconUrl = iconUrl + 'DEFAULT'
         }
         // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
-        if ((emulatorRef.current?.startLat && emulatorRef.current?.startLat !== 0) && (emulatorRef.current?.velocity >
+        if (
+          emulatorRef.current?.startLat &&
+          emulatorRef.current?.startLat !== 0 &&
+          (emulatorRef.current?.velocity >
             MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-          emulatorRef.current?.velocity <
-            MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
-        )
+            emulatorRef.current?.velocity <
+              MINIMUM_VELOCITY_METERS_PER_MILLISECONDS)
         ) {
           iconUrl = `${iconUrl}/FLASH`
         }
@@ -163,6 +170,28 @@ const EmulatorMarker = ({ id }) => {
     }
   }
 
+  function handleDragStart(event) {
+    const { latLng } = event
+    dragEmulator({
+      emulator: emulatorRef.current,
+      latitude: latLng.lat(),
+      longitude: latLng.lng(),
+      isDragMarkerDropped: false,
+      timeout: -1
+    })
+  }
+
+  function handleDragEnd(event) {
+    const { latLng } = event
+    dragEmulator({
+      emulator: emulatorRef.current,
+      latitude: latLng.lat(),
+      longitude: latLng.lng(),
+      isDragMarkerDropped: true,
+      timeout: 150
+    })
+  }
+
   return (
     <Marker
       key={id}
@@ -183,6 +212,7 @@ const EmulatorMarker = ({ id }) => {
       labelAnchor={{ x: 'auto', y: 'auto' }}
       onClick={() => selectEmulator(emulatorRef.current)}
       onMouseOver={() => {
+        console.log('TEST@ hovering')
         // check if the same marker is being dragged or hovered already
         if (
           draggedEmulatorRef.current?.emulator?.id === id ||
@@ -200,24 +230,8 @@ const EmulatorMarker = ({ id }) => {
         hoverEmulator(null)
       }}
       draggable={true}
-      onDragStart={(event) => {
-        const { latLng } = event
-        dragEmulator({
-          emulator: emulatorRef.current,
-          latitude: latLng.lat(),
-          longitude: latLng.lng(),
-          isDragMarkerDropped: false
-        })
-      }}
-      onDragEnd={(event) => {
-        const { latLng } = event
-        dragEmulator({
-          emulator: emulatorRef.current,
-          latitude: latLng.lat(),
-          longitude: latLng.lng(),
-          isDragMarkerDropped: true
-        })
-      }}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       zIndex={1}
     />
   )

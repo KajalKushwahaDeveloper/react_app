@@ -5,8 +5,8 @@ import { ToastContainer } from 'react-toastify'
 import { useViewPort } from '../ViewportProvider.js'
 import AddressTable from '../components/location/map-components/Address/AddressTable.js'
 import CreateTripDialog from '../components/location/map-components/CreateTrip/CreateTripDialog.js'
-import MovePositionDialog from '../components/location/map-components/CreateTrip/MovePositionDialog.js'
-import { DragDialog } from '../components/location/map-components/DragDialog.jsx'
+import { DragAndMoveComponent } from '../components/location/map-components/DragMove/DragAndMoveComponent.jsx'
+import MovePositionDialog from '../components/location/map-components/DragMove/MovePositionDialog.js'
 import GoogleMapContainer from '../components/location/map-components/GoogleMapContainer.jsx'
 import CreateTripButton from '../components/location/map-components/MapButtons.jsx'
 import GpsTable from '../components/location/map-components/gps_page_table.js'
@@ -125,7 +125,7 @@ const GPS = () => {
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
-      <DragDialog />
+      <DragAndMoveComponent />
       <CreateTripDialog />
       <MovePositionDialog />
       {!isMobile && (
@@ -143,7 +143,6 @@ const GPS = () => {
               <div style={{ width: '320px', height: '100vh' }}>
                 <GpsTable />
               </div>
-              {/* TODO fix the map, its showing full screen, should be 100% of the remaining space */}
               <div
                 className="mapsContainer"
                 style={{ flex: '1', top: '128px' }}

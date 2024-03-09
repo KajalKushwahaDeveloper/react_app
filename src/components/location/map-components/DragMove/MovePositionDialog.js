@@ -1,10 +1,10 @@
 import CloseIcon from '@mui/icons-material/Close'
 import { Box, Button, IconButton, Modal, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import SearchBar from './SearchBar.js'
+import SearchBar from '../CreateTrip/SearchBar.js'
 
-import { useViewPort } from '../../../.././ViewportProvider.js'
 import { useStates } from '../../../../StateProvider.js'
+import { useViewPort } from '../../../../ViewportProvider.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 const MovePositionDialog = () => {
