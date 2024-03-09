@@ -100,27 +100,27 @@ const GPS = () => {
   // CODE WHICH MIGHT WORK FOR SAFARI
 
   useEffect(() => {
-      const checkMicrophonePermission = async () => {
-        try {
-          const permissionStatus = await navigator.permissions.query({ name: 'microphone' })
+    const checkMicrophonePermission = async () => {
+      try {
+        const permissionStatus = await navigator.permissions.query({ name: 'microphone' })
+        setMicrophonePermission(permissionStatus.state)
+        permissionStatus.onchange = () => {
           setMicrophonePermission(permissionStatus.state)
-          permissionStatus.onchange = () => {
-            setMicrophonePermission(permissionStatus.state)
-          }
-        } catch (error) {
-          console.error('Error checking microphone permission:', error)
         }
+      } catch (error) {
+        console.error('Error checking microphone permission:', error)
       }
-      checkMicrophonePermission()
-    }, [])
-  
-    useEffect(() => {
-      if (microphonePermission === 'granted') {
-        setMicCheck(true)
-      } else {
-        setMicCheck(false)
-      }
-    }, [microphonePermission, setMicCheck])
+    }
+    checkMicrophonePermission()
+  }, [])
+
+  useEffect(() => {
+    if (microphonePermission === 'granted') {
+      setMicCheck(true)
+    } else {
+      setMicCheck(false)
+    }
+  }, [microphonePermission, setMicCheck])
 
   return (
     <>

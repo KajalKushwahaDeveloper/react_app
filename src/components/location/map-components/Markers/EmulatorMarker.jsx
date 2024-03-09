@@ -33,9 +33,11 @@ const EmulatorMarker = ({ id }) => {
   // PAUSED RESTING RUNNING STOP //HOVER SELECT DEFAULT //ONLINE OFFLINE INACTIVE
   let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
   iconUrl = iconUrl + 'DEFAULT'
-  if (
-    emulatorRef.current?.velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-    emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
+  if ((emulatorRef.current?.startLat && emulatorRef.current?.startLat !== 0) && (emulatorRef.current?.velocity >
+    MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+  emulatorRef.current?.velocity <
+    MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
+  )
   ) {
     iconUrl = `${iconUrl}/FLASH`
   }

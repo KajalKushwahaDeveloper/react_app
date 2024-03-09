@@ -44,10 +44,6 @@ import { useViewPort } from '../../../ViewportProvider'
 import '../../../css/emulator_list_row.css'
 import { compareSelectedDeviceForDialog } from '../../../stores/call/storeCall.tsx'
 import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
-import {
-  compareEmulatorsCompletely,
-  compareSelectedEmulator
-} from '../../../stores/emulator/types_maps.tsx'
 import PhoneComponent from './GpsEmulatorList/PhoneComponent.js'
 import CustomNoteComponent from './Phone/CustomNoteComponent.js'
 
@@ -57,17 +53,11 @@ const GpsTable = () => {
   const [searchInput, setSearchInput] = useState('')
 
   const emulators = useEmulatorStore(
-    (state) => state.emulators,
-    (oldEmulators, newEmulators) => {
-      compareEmulatorsCompletely(oldEmulators, newEmulators)
-    }
+    (state) => state.emulators
   )
 
   const selectedEmulator = useEmulatorStore(
-    (state) => state.selectedEmulator,
-    (oldEmulators, newEmulators) => {
-      compareSelectedEmulator(oldEmulators, newEmulators)
-    }
+    (state) => state.selectedEmulator
   )
 
   const selectEmulator = useEmulatorStore((state) => state.selectEmulator)
@@ -88,7 +78,6 @@ const GpsTable = () => {
 
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(1)
-  const [loading, setLoading] = useState(true)
   const [messageLoading, setMessageLoading] = useState(false)
 
   const [openEmulatorHistoryPopUp, setOpenEmulatorHistoryPopUp] =
@@ -165,11 +154,6 @@ const GpsTable = () => {
   }
 
   useEffect(() => {
-    if (emulators != null) {
-      setLoading(false)
-    } else {
-      setLoading(true)
-    }
     if (hoveredEmulator !== null) {
       const selectedEmIndex = emulators.findIndex(
         (emulator) => emulator.id === hoveredEmulator.id
@@ -179,8 +163,7 @@ const GpsTable = () => {
         const newActivePage = Math.floor(selectedEmIndex / rowsPerPage)
         setPage(newActivePage)
       }
-    }
-    if (selectedEmulator !== null) {
+    } else if (selectedEmulator !== null) {
       const selectedEmIndex = emulators.findIndex(
         (emulator) => emulator === selectedEmulator
       )
@@ -190,7 +173,14 @@ const GpsTable = () => {
         setPage(newActivePage)
       }
     }
-  }, [emulators, page, rowsPerPage, selectedEmulator, hoveredEmulator])
+  }, [emulators, rowsPerPage, selectedEmulator, hoveredEmulator])
+
+  // page changed from arrows
+  useEffect(() => {
+    if (tablePaginationRef.current) {
+      tablePaginationRef.current.setPage(page)
+    }
+  }, [page])
 
   const tablePaginationRef = React.useRef(null)
   // get max rows we can get within the screen height - 128px(navbar) - 55px(search) - 50px(footer/pagination)
@@ -199,10 +189,6 @@ const GpsTable = () => {
     tablePaginationRef.current?.setRowsPerPage(maxRowsPerPage)
     setRowsPerPage(maxRowsPerPage)
   }, [height])
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
     if (selectedEmulator?.id !== emulatorRow.id) {
@@ -268,9 +254,6 @@ const GpsTable = () => {
     }
   }
 
-  if (loading) {
-    return <div>Loading...</div>
-  }
   const isVelocityOutOfRange = (velocity) =>
     velocity < MINIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
     velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS
@@ -528,7 +511,7 @@ const GpsTable = () => {
         count={emulators.length}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage}
+        onPageChange={(event, newPage) => setPage(newPage)}
         labelRowsPerPage={null}
         style={{
           overflow: 'hidden',
