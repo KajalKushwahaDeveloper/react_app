@@ -322,7 +322,8 @@ const MapButtons = () => {
               draggedEmulatorsList.splice(index, 1)
               // fetchEmulators();
               // NOTE: Don't need to refresh.. gets refreshed by SSE
-              // But since we are not updating the state, we need to update the buttons here
+              // But since we are not updating the state, and subscribe only responds to added draggedEmulators.
+              // we need to update the buttons right now from here
               setupButtons()
             } else {
               throw new Error(error)
@@ -341,6 +342,9 @@ const MapButtons = () => {
                 error
               )
               draggedEmulatorsList.splice(index, 1)
+              // since we are not updating the state, and subscribe only responds to added draggedEmulators.
+              // we need to update the buttons right now from here
+              setupButtons()
             } else {
               showToast(
                 `Error updating location for emulator ID ${draggedEmulator.emulator.id}. Retrying in 5 seconds.` +

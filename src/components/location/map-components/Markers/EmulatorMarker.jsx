@@ -4,10 +4,12 @@ import {
   MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS,
   MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
 } from '../../../../MetricsConstants.js'
+import { useStates } from '../../../../StateProvider.js'
 import useMarkerStore from '../../../../stores/emulator/markerStore.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 const EmulatorMarker = ({ id }) => {
+  const { showToast } = useStates()
   const emulators = useEmulatorStore.getState().emulators
   const dragEmulator = useEmulatorStore.getState().dragEmulator
   const hoverEmulator = useEmulatorStore.getState().hoverEmulator
@@ -52,6 +54,15 @@ const EmulatorMarker = ({ id }) => {
   }
 
   const markerRef = useRef(null)
+
+  // callback function to update marker position
+  const updateMarkerPosition = useCallback(() => {
+    const newPosition = new window.google.maps.LatLng(
+      emulatorRef.current?.latitude,
+      emulatorRef.current?.longitude
+    )
+    markerRef.current?.setPosition(newPosition)
+  }, [])
 
   // callback function to update marker icon
   const updateMarkerIcon = useCallback(() => {
@@ -166,6 +177,7 @@ const EmulatorMarker = ({ id }) => {
     [updateTitle, id]
   )
 
+  // emulator subscription
   useEffect(
     () =>
       useMarkerStore.subscribe((state) => {
@@ -184,11 +196,7 @@ const EmulatorMarker = ({ id }) => {
           console.log('skipping position due to draggedEmulator')
         } else {
           // Update marker position
-          const newPosition = new window.google.maps.LatLng(
-            emulatorRef.current?.latitude,
-            emulatorRef.current?.longitude
-          )
-          markerRef.current?.setPosition(newPosition)
+          updateMarkerPosition()
         }
 
         // Update marker icon
@@ -198,9 +206,10 @@ const EmulatorMarker = ({ id }) => {
         // FIXME: THIS RUNS A LOT.. maybe remove this or change useMarkerStore to not update all emulators on individual emulator updates.
         updateTitle()
       }),
-    [updateTitle, id, updateMarkerIcon]
+    [updateTitle, id, updateMarkerIcon, updateMarkerPosition]
   )
 
+  // connectedEmulator subscription
   useEffect(
     () =>
       useEmulatorStore.subscribe(
@@ -226,6 +235,10 @@ const EmulatorMarker = ({ id }) => {
   }
 
   function handleDragStart(event) {
+    const isDraggable = getDraggable()
+    if (!isDraggable) {
+      return
+    }
     const { latLng } = event
     dragEmulator({
       emulator: emulatorRef.current,
@@ -238,6 +251,12 @@ const EmulatorMarker = ({ id }) => {
   }
 
   function handleDragEnd(event) {
+    const isDraggable = getDraggable()
+    if (!isDraggable) {
+      showToast('Emulator is in a trip', 'error')
+      updateMarkerPosition()
+      return
+    }
     const { latLng } = event
     dragEmulator({
       emulator: emulatorRef.current,
@@ -273,6 +292,32 @@ const EmulatorMarker = ({ id }) => {
         draggedEmulator.emulator.id === emulatorRef.current?.id &&
         !draggedEmulator.isDragMarkerDropped
     )
+  }
+
+  function getDraggable() {
+    console.log('checking if draggable')
+    // true if emulator is not in a trip
+    let draggable = true
+    if (emulatorRef.current === undefined || emulatorRef.current === null) {
+      console.log('emulator is undefined or null')
+      draggable = false
+    }
+    if (
+      emulatorRef.current?.tripStatus === 'PAUSED' &&
+      emulatorRef.current?.status === 'RESTING'
+    ) {
+      console.log('emulator is in a trip 1')
+      draggable = false
+    }
+    if (
+      emulatorRef.current?.startLat !== null &&
+      emulatorRef.current?.startLat !== 0
+    ) {
+      console.log('emulator is in a trip 2')
+      draggable = false
+    }
+
+    return draggable
   }
 
   return (
