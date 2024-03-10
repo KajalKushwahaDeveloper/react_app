@@ -15,7 +15,7 @@ async function initItems() {
     const _ids = emulators.map((emulator) => emulator.id)
     useMarkerStore.setState({ items: _ids })
   } catch (error) {
-    console.error('V2 Failed to fetch emulators:', error)
+    console.error('markerStore, init : Failed to fetch emulators :', error)
   }
 }
 

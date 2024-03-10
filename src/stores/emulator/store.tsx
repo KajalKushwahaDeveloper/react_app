@@ -19,6 +19,7 @@ import useMarkerStore from './markerStore.js'
 import { SelectedEmulatorData, toTripData } from './SelectedEmulatorData.tsx'
 import {
   DragEmulator,
+  DragEmulatorOnTrip,
   Emulator,
   MoveEmulator,
   TripData,
@@ -33,13 +34,15 @@ export interface EmulatorsSlice {
   selectedEmulator: Emulator | null
   emulators: Emulator[] | []
   hoveredEmulator: Emulator | null
-  draggedEmulator: DragEmulator | null
+  draggedEmulatorOnTrip: DragEmulatorOnTrip | null
+  draggedEmulators: DragEmulator[] | []
   movedEmulator: MoveEmulator | null
   updateEmulators: (emulators: Emulator[]) => void
   fetchEmulators: () => Promise<void>
   selectEmulator: (emulator: Emulator | null) => void
   hoverEmulator: (emulator: Emulator | null) => void
   dragEmulator: (emulator: DragEmulator | null) => void
+  dragEmulatorOnTrip: (emulator: DragEmulatorOnTrip | null) => void
   moveEmulator: (emulator: MoveEmulator | null) => void
 }
 
@@ -78,7 +81,8 @@ const createEmulatorsSlice: StateCreator<
   emulatorsCount: 0,
   selectedEmulator: null,
   hoveredEmulator: null,
-  draggedEmulator: null,
+  draggedEmulatorOnTrip: null,
+  draggedEmulators: [],
   movedEmulator: null,
   updateEmulators: async (newEmulators) => {
     set({ emulators: newEmulators })
@@ -123,7 +127,27 @@ const createEmulatorsSlice: StateCreator<
     get().connectSelectedEmulatorSSE(emulator)
   },
   hoverEmulator: (hoveredEmulator) => set({ hoveredEmulator }),
-  dragEmulator: (draggedEmulator) => set({ draggedEmulator }),
+  dragEmulator: (draggedEmulator: DragEmulator | null) => {
+    // if draggedEmulator is not null and has a timeout > 0, then add/replace it in the draggedEmulatorsOnCountdown
+    if (draggedEmulator !== null) {
+      // insert/replace draggedEmulator in draggedEmulators
+      const draggedEmulators: DragEmulator[] = get().draggedEmulators
+      const index = draggedEmulators.findIndex(
+        (oldDraggedEmulator) =>
+          oldDraggedEmulator.emulator.id === draggedEmulator.emulator.id
+      )
+      if (index !== -1) {
+        draggedEmulators[index] = draggedEmulator
+      } else {
+        draggedEmulators.push(draggedEmulator)
+      }
+      // set a new copy of draggedEmulators
+      set({ draggedEmulators: [...draggedEmulators] })
+    }
+  },
+  dragEmulatorOnTrip: (draggedEmulatorOnTrip) => {
+    set({ draggedEmulatorOnTrip })
+  },
   moveEmulator: (movedEmulator) => set({ movedEmulator })
 })
 
@@ -179,7 +203,6 @@ const createTripDataSlice: StateCreator<
       },
       onmessage(event) {
         // if heartbeat, then return
-        console.log('TEST@ event: ', event)
         if (event.event === 'heartbeat') {
           return
         }
