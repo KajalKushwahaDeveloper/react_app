@@ -1,5 +1,5 @@
 import { Marker } from '@react-google-maps/api'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import {
   MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS,
   MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
@@ -8,17 +8,15 @@ import useMarkerStore from '../../../../stores/emulator/markerStore.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 const EmulatorMarker = ({ id }) => {
+  const emulators = useEmulatorStore.getState().emulators
   const dragEmulator = useEmulatorStore.getState().dragEmulator
   const hoverEmulator = useEmulatorStore.getState().hoverEmulator
   const selectEmulator = useEmulatorStore.getState().selectEmulator
 
   const hoveredEmulatorRef = useRef(useEmulatorStore.getState().hoveredMarker)
-  const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator)
   const draggedEmulatorsRef = useRef(
     useEmulatorStore.getState().draggedEmulators
   )
-
-  const emulators = useEmulatorStore.getState().emulators
 
   // create emulatorRef by finding the emulator with the id from the emulators
   const emulatorRef = useRef(emulators.find((emulator) => emulator.id === id))
@@ -55,6 +53,66 @@ const EmulatorMarker = ({ id }) => {
 
   const markerRef = useRef(null)
 
+  // callback function to update marker icon
+  const updateMarkerIcon = useCallback(() => {
+    let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
+    if (hoveredEmulatorRef.current?.id === id) {
+      iconUrl = iconUrl + 'HOVER'
+    } else {
+      iconUrl = iconUrl + 'DEFAULT'
+    }
+    // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
+    if (
+      emulatorRef.current?.startLat &&
+      emulatorRef.current?.startLat !== 0 &&
+      (emulatorRef.current?.velocity >
+        MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
+        emulatorRef.current?.velocity <
+          MINIMUM_VELOCITY_METERS_PER_MILLISECONDS)
+    ) {
+      iconUrl = `${iconUrl}/FLASH`
+    }
+    iconUrl = `${iconUrl}/${emulatorRef.current?.status}.svg`
+    const emulatorIcon = {
+      url: iconUrl,
+      scaledSize: new window.google.maps.Size(20, 20),
+      anchor: new window.google.maps.Point(10, 10)
+    }
+    // can further optimize by checking if the icon and title is the same
+    markerRef.current?.setIcon(emulatorIcon)
+  }, [id])
+
+  const updateTitle = useCallback(() => {
+    // if the marker is being dragged, show the draggedEmulatorRef.current timeout
+    if (markerRef.current === null || markerRef.current === undefined) {
+      return
+    }
+    let title = `${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`
+    const draggedEmulator = draggedEmulatorsRef.current.find(
+      (draggedEmulator) =>
+        draggedEmulator.emulator.id === emulatorRef.current?.id &&
+        draggedEmulator.isDragMarkerDropped
+    )
+    if (draggedEmulator) {
+      title = `${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status}) - ${draggedEmulator.timeout} seconds`
+    }
+    markerRef.current?.setTitle(title)
+  }, [])
+
+  const getTitle = () => {
+    let title = `${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`
+    const draggedEmulator = draggedEmulatorsRef.current.find(
+      (draggedEmulator) =>
+        draggedEmulator.emulator.id === emulatorRef.current?.id &&
+        draggedEmulator.isDragMarkerDropped
+    )
+    if (draggedEmulator) {
+      title = `${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status}) - ${draggedEmulator.timeout} seconds`
+    }
+    return title
+  }
+
+  // hoveredEmulator subscription
   useEffect(
     () =>
       useEmulatorStore.subscribe(
@@ -69,29 +127,43 @@ const EmulatorMarker = ({ id }) => {
             // if the hoveredEmulator is null, we set the hoveredEmulatorRef to null
             hoveredEmulatorRef.current = hoveredEmulator
           }
+          updateMarkerIcon()
         }
       ),
-    [id]
+    [id, updateMarkerIcon]
   )
 
+  // draggedEmulators subscription
   useEffect(
     () =>
       useEmulatorStore.subscribe(
         (state) => state.draggedEmulators,
         (draggedEmulators) => {
           draggedEmulatorsRef.current = draggedEmulators
-          // if there is a draggedEmulator inside draggedEmulatorsRef whose emulator.id == connectedEmulator.id, then set dragEmulatorRef to that draggedEmulator
+          // TODO: maybe we need to set Position of the marker to the draggedEmulator position
+          if (markerRef.current === null || markerRef.current === undefined) {
+            return
+          }
           const draggedEmulator = draggedEmulatorsRef.current.find(
-            (draggedEmulator) => draggedEmulator.emulator.id === id
+            (draggedEmulator) =>
+              draggedEmulator.emulator.id === emulatorRef.current?.id
           )
-          if (draggedEmulator) {
-            draggedEmulatorRef.current = draggedEmulator
-          } else {
-            draggedEmulatorRef.current = null
+          // found the draggedEmulator whose emulator.id == connectedEmulator.id
+          if (draggedEmulator === null || draggedEmulator === undefined) {
+            return
+          }
+          // if draggedEmulator is not null, then set the marker position to draggedEmulator position
+          if (draggedEmulator.isDragMarkerDropped) {
+            const position = new window.google.maps.LatLng(
+              draggedEmulator.latitude,
+              draggedEmulator.longitude
+            )
+            markerRef.current?.setPosition(position)
+            updateTitle()
           }
         }
       ),
-    [id]
+    [updateTitle, id]
   )
 
   useEffect(
@@ -100,50 +172,33 @@ const EmulatorMarker = ({ id }) => {
         if (markerRef.current === null || markerRef.current === undefined) {
           return
         }
+        emulatorRef.current = state[id]
         // if current marker (non selected!) is being  dragged, skip
-        if (draggedEmulatorRef.current?.emulator?.id === id) {
-          console.log('skipping due to draggedEmulator')
-          return
+        const draggedEmulator = draggedEmulatorsRef.current.find(
+          (draggedEmulator) =>
+            draggedEmulator.emulator.id === emulatorRef.current?.id
+        )
+        // FIXME: We just need to prevent setting new position when the marker is being dragged or moved
+        // NOTE: ^ FIXED!!
+        if (draggedEmulator !== null && draggedEmulator !== undefined) {
+          console.log('skipping position due to draggedEmulator')
+        } else {
+          // Update marker position
+          const newPosition = new window.google.maps.LatLng(
+            emulatorRef.current?.latitude,
+            emulatorRef.current?.longitude
+          )
+          markerRef.current?.setPosition(newPosition)
         }
 
-        emulatorRef.current = state[id]
-        // Update marker position
-        const newPosition = new window.google.maps.LatLng(
-          emulatorRef.current?.latitude,
-          emulatorRef.current?.longitude
-        )
-        markerRef.current?.setPosition(newPosition)
         // Update marker icon
-        let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
-        if (hoveredEmulatorRef.current?.id === id) {
-          iconUrl = iconUrl + 'HOVER'
-        } else {
-          iconUrl = iconUrl + 'DEFAULT'
-        }
-        // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
-        if (
-          emulatorRef.current?.startLat &&
-          emulatorRef.current?.startLat !== 0 &&
-          (emulatorRef.current?.velocity >
-            MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
-            emulatorRef.current?.velocity <
-              MINIMUM_VELOCITY_METERS_PER_MILLISECONDS)
-        ) {
-          iconUrl = `${iconUrl}/FLASH`
-        }
-        iconUrl = `${iconUrl}/${emulatorRef.current?.status}.svg`
-        const emulatorIcon = {
-          url: iconUrl,
-          scaledSize: new window.google.maps.Size(20, 20),
-          anchor: new window.google.maps.Point(10, 10)
-        }
-        // can further optimize by checking if the icon and title is the same
-        markerRef.current?.setIcon(emulatorIcon)
+        updateMarkerIcon()
+
         // Update marker title
-        const title = `${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`
-        markerRef.current?.setTitle(title)
+        // FIXME: THIS RUNS A LOT.. maybe remove this or change useMarkerStore to not update all emulators on individual emulator updates.
+        updateTitle()
       }),
-    [id]
+    [updateTitle, id, updateMarkerIcon]
   )
 
   useEffect(
@@ -177,7 +232,8 @@ const EmulatorMarker = ({ id }) => {
       latitude: latLng.lat(),
       longitude: latLng.lng(),
       isDragMarkerDropped: false,
-      timeout: -1
+      timeout: -1,
+      retries: 0
     })
   }
 
@@ -188,34 +244,50 @@ const EmulatorMarker = ({ id }) => {
       latitude: latLng.lat(),
       longitude: latLng.lng(),
       isDragMarkerDropped: true,
-      timeout: 150
+      timeout: 15,
+      retries: 0
     })
+  }
+
+  const getMarkerPosition = () => {
+    // loop draggedEmulatorsRef to get the draggedEmulator whose emulator.id == connectedEmulator.id
+    const draggedEmulator = draggedEmulatorsRef.current.find(
+      (draggedEmulator) =>
+        draggedEmulator.emulator.id === emulatorRef.current?.id
+    )
+    if (draggedEmulator === null || draggedEmulator === undefined) {
+      return new window.google.maps.LatLng(
+        emulatorRef.current?.latitude,
+        emulatorRef.current?.longitude
+      )
+    }
+    return new window.google.maps.LatLng(
+      draggedEmulator.latitude,
+      draggedEmulator.longitude
+    )
+  }
+
+  function isThisEmulatorDraggedButNotDropped() {
+    return draggedEmulatorsRef.current.some(
+      (draggedEmulator) =>
+        draggedEmulator.emulator.id === emulatorRef.current?.id &&
+        !draggedEmulator.isDragMarkerDropped
+    )
   }
 
   return (
     <Marker
       key={id}
       icon={emulatorIcon}
-      position={{
-        lat: emulatorRef.current?.latitude,
-        lng: emulatorRef.current?.longitude
-      }}
+      // check of emulatorRef.current id exist in draggedEmulatorsRef.current list, if yes, show the draggedEmulatorRef.current position, else show the emulatorRef.current position
+      position={getMarkerPosition()}
       onLoad={(marker) => (markerRef.current = marker)}
-      title={`${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`}
-      labelStyle={{
-        textAlign: 'center',
-        width: 'auto',
-        color: '#037777777777',
-        fontSize: '11px',
-        padding: '0px'
-      }}
-      labelAnchor={{ x: 'auto', y: 'auto' }}
+      title={getTitle()}
       onClick={() => selectEmulator(emulatorRef.current)}
       onMouseOver={() => {
-        console.log('TEST@ hovering')
         // check if the same marker is being dragged or hovered already
         if (
-          draggedEmulatorRef.current?.emulator?.id === id ||
+          isThisEmulatorDraggedButNotDropped() ||
           hoveredEmulatorRef.current?.id === id
         ) {
           return
@@ -224,9 +296,9 @@ const EmulatorMarker = ({ id }) => {
       }}
       onMouseOut={() => {
         // check if the same marker is being dragged
-        if (draggedEmulatorRef.current?.emulator?.id === id) {
-          return
-        }
+        // if (isThisEmulatorDragged) {
+        //   return
+        // }
         hoverEmulator(null)
       }}
       draggable={true}

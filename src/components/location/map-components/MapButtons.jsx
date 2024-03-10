@@ -142,8 +142,14 @@ const MapButtons = () => {
       }
       if (draggedEmulatorsRef.current.length > 0) {
         draggedEmulatorsRef.current.forEach((draggedEmulator) => {
-          console.log('TEST@ draggedEmulator', draggedEmulator.emulator.id, connectedEmulatorRef.current?.id)
-          if (draggedEmulator.emulator.id === connectedEmulatorRef.current?.id) {
+          console.log(
+            'TEST@ draggedEmulator',
+            draggedEmulator.emulator.id,
+            connectedEmulatorRef.current?.id
+          )
+          if (
+            draggedEmulator.emulator.id === connectedEmulatorRef.current?.id
+          ) {
             shouldShow = true
           }
         })
@@ -274,7 +280,7 @@ const MapButtons = () => {
     const interval = setInterval(() => {
       const draggedEmulatorsList = draggedEmulatorsRef.current
       // loop index and reduce 1 from each draggedEmulator's timeout in draggedEmulatorsList
-      draggedEmulatorsList.forEach((draggedEmulator, index) => {
+      draggedEmulatorsList.forEach(async (draggedEmulator, index) => {
         if (draggedEmulator.timeout > 0) {
           draggedEmulatorsList[index].timeout = draggedEmulator.timeout - 1
         }
@@ -289,14 +295,75 @@ const MapButtons = () => {
 
         // if timeout reaches 0, remove the emulator from draggedEmulatorsList
         if (draggedEmulator.timeout === 0) {
-          // TODO: hist the endpoint 'dragEmulator'...
-          draggedEmulatorsList.splice(index, 1)
+          try {
+            const token = localStorage.getItem('token')
+            const payload = {
+              emulatorId: draggedEmulator.emulator.id,
+              cancelTrip: true,
+              latitude: draggedEmulator.latitude,
+              longitude: draggedEmulator.longitude,
+              newTripIndex: null
+            }
+
+            const { success, error } = await ApiService.makeApiCall(
+              EMULATOR_DRAG_URL,
+              'POST',
+              payload,
+              token,
+              null
+            )
+
+            if (success) {
+              showToast(
+                `Location Updated for emulator ID ${draggedEmulator.emulator.id}.`,
+                'success'
+              )
+              // remove from draggedEmulatorsList
+              draggedEmulatorsList.splice(index, 1)
+              // fetchEmulators();
+              // NOTE: Don't need to refresh.. gets refreshed by SSE
+              // But since we are not updating the state, we need to update the buttons here
+              setupButtons()
+            } else {
+              throw new Error(error)
+            }
+          } catch (error) {
+            if (draggedEmulator.retries > 5) {
+              showToast(
+                `Error updating location for emulator ID ${draggedEmulator.emulator.id}. Retries exceeded. Resetting to Original Location!.` +
+                  error,
+                'error'
+              )
+              console.error(
+                'Error updating location for emulator ID',
+                draggedEmulator.emulator.id,
+                '. Retries exceeded. Removing from list.',
+                error
+              )
+              draggedEmulatorsList.splice(index, 1)
+            } else {
+              showToast(
+                `Error updating location for emulator ID ${draggedEmulator.emulator.id}. Retrying in 5 seconds.` +
+                  error,
+                'error'
+              )
+              console.error(
+                'Error updating location for emulator ID',
+                draggedEmulator.emulator.id,
+                '. Retrying in 5 seconds.',
+                error
+              )
+              draggedEmulatorsList[index].timeout = 5
+              draggedEmulatorsList[index].retries =
+                draggedEmulatorsList[index].retries + 1
+            }
+          }
         }
       })
-      useEmulatorStore.setState({ draggedEmulators: draggedEmulatorsList })
+      useEmulatorStore.setState({ draggedEmulators: draggedEmulatorsList }) // Shallow update. State change won't be detected.
     }, 1000)
     return () => clearInterval(interval)
-  }, [cancelSetPositionButtonRef])
+  }, [cancelSetPositionButtonRef, showToast])
 
   return (
     <>

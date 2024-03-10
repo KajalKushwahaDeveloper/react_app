@@ -14,10 +14,20 @@ const EmulatorMarkerSelected = () => {
 
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
   const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator)
-  const draggedEmulatorRef = useRef(useEmulatorStore.getState().draggedEmulator)
   const draggedEmulatorsRef = useRef(
     useEmulatorStore.getState().draggedEmulators
   )
+
+  function isThisEmulatorDragged() {
+    return draggedEmulatorsRef.current.some(
+      (draggedEmulator) =>
+        draggedEmulator.emulator.id === emulatorRef.current?.id
+    )
+  }
+
+  function isThisEmulatorMoved() {
+    return movedEmulatorRef.current?.emulator?.id === emulatorRef.current?.id
+  }
 
   useEffect(
     () =>
@@ -70,11 +80,6 @@ const EmulatorMarkerSelected = () => {
             (draggedEmulator) =>
               draggedEmulator.emulator.id === emulatorRef.current?.id
           )
-          if (draggedEmulator) {
-            draggedEmulatorRef.current = draggedEmulator
-          } else {
-            draggedEmulatorRef.current = null
-          }
           if (markerRef.current === null || markerRef.current === undefined) {
             return
           }
@@ -111,10 +116,9 @@ const EmulatorMarkerSelected = () => {
             return
           }
           // if current marker is being dragged or moved, skip
-          if (
-            draggedEmulatorRef.current?.emulator?.id === connectedEmulator.id ||
-            movedEmulatorRef?.emulator?.id === connectedEmulator.id
-          ) {
+          // FIXME: We just need to prevent setting new position when the marker is being dragged or moved
+          if (isThisEmulatorDragged() || isThisEmulatorMoved()) {
+            console.log('skipping due to draggedEmulator or movedEmulator')
             return
           }
 
@@ -179,7 +183,8 @@ const EmulatorMarkerSelected = () => {
       latitude: latLng.lat(),
       longitude: latLng.lng(),
       isDragMarkerDropped: false,
-      timeout: -1
+      timeout: -1,
+      retries: 0
     })
     // if drag started from a MovedEmulator, reset moveMarker to false
     if (
@@ -202,8 +207,27 @@ const EmulatorMarkerSelected = () => {
       latitude: latLng.lat(),
       longitude: latLng.lng(),
       isDragMarkerDropped: true,
-      timeout: 150
+      timeout: 15,
+      retries: 0
     })
+  }
+
+  function getMarkerPosition() {
+    // loop draggedEmulatorsRef to get the draggedEmulator whose emulator.id == connectedEmulator.id
+    const draggedEmulator = draggedEmulatorsRef.current.find(
+      (draggedEmulator) =>
+        draggedEmulator.emulator.id === emulatorRef.current?.id
+    )
+    if (draggedEmulator === null || draggedEmulator === undefined) {
+      return new window.google.maps.LatLng(
+        emulatorRef.current?.latitude,
+        emulatorRef.current?.longitude
+      )
+    }
+    return new window.google.maps.LatLng(
+      draggedEmulator.latitude,
+      draggedEmulator.longitude
+    )
   }
 
   return (
@@ -212,24 +236,9 @@ const EmulatorMarkerSelected = () => {
         key={emulatorRef.current?.id}
         icon={emulatorIcon}
         // [#1]
-        position={{
-          lat: draggedEmulatorRef.current
-            ? draggedEmulatorRef.current.latitude
-            : emulatorRef.current?.latitude,
-          lng: draggedEmulatorRef.current
-            ? draggedEmulatorRef.current.longitude
-            : emulatorRef.current?.longitude
-        }}
+        position={getMarkerPosition()}
         onLoad={(marker) => (markerRef.current = marker)}
         title={`${emulatorRef.current?.telephone} ${emulatorRef.current?.tripStatus}(${emulatorRef.current?.status})`}
-        labelStyle={{
-          textAlign: 'center',
-          width: 'auto',
-          color: '#037777777777',
-          fontSize: '11px',
-          padding: '0px'
-        }}
-        labelAnchor={{ x: 'auto', y: 'auto' }}
         // onClick={() => selectEmulator(emulator)}
         draggable={true}
         onDragStart={handleDragStart}

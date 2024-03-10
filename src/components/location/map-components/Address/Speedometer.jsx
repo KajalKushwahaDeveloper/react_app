@@ -51,8 +51,12 @@ const Speedometer = () => {
   console.log('TEST@ speed : ', speed)
   return (
     <div
-    ref={speedometerRef}
-    className="center">
+      ref={speedometerRef}
+      style={{
+        display: 'none'
+      }}
+      className="center"
+    >
       <Container>
         <Row>
           <Col>

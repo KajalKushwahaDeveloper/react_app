@@ -118,6 +118,7 @@ export interface DragEmulator {
   longitude: number;
   isDragMarkerDropped: boolean;
   timeout: number;
+  retries: number;
 }
 export interface MoveEmulator {
   emulator: Emulator;
