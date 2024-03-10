@@ -253,7 +253,10 @@ const EmulatorMarker = ({ id }) => {
   function handleDragEnd(event) {
     const isDraggable = getDraggable()
     if (!isDraggable) {
-      showToast('Emulator is in a trip', 'error')
+      showToast(
+        'Emulator is in a trip, Please select the emulator to modify location.',
+        'error'
+      )
       updateMarkerPosition()
       return
     }

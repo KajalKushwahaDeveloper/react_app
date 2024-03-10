@@ -14,14 +14,23 @@ const EmulatorMarkerSelected = () => {
 
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
   const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator)
+
+  const draggedEmulatorOnTripRef = useRef(
+    useEmulatorStore.getState().draggedEmulatorOnTrip
+  )
+  const dragEmulatorOnTrip = useEmulatorStore.getState().dragEmulatorOnTrip
+
   const draggedEmulatorsRef = useRef(
     useEmulatorStore.getState().draggedEmulators
   )
 
   function isThisEmulatorDragged() {
-    return draggedEmulatorsRef.current.some(
-      (draggedEmulator) =>
-        draggedEmulator.emulator.id === emulatorRef.current?.id
+    return (
+      draggedEmulatorsRef.current.some(
+        (draggedEmulator) =>
+          draggedEmulator.emulator.id === emulatorRef.current?.id
+      ) ||
+      draggedEmulatorOnTripRef.current?.emulator?.id === emulatorRef.current?.id
     )
   }
 
@@ -29,6 +38,7 @@ const EmulatorMarkerSelected = () => {
     return movedEmulatorRef.current?.emulator?.id === emulatorRef.current?.id
   }
 
+  // movedEmulator subscription
   useEffect(
     () =>
       useEmulatorStore.subscribe(
@@ -69,6 +79,7 @@ const EmulatorMarkerSelected = () => {
     []
   )
 
+  // draggedEmulators subscription
   useEffect(
     () =>
       useEmulatorStore.subscribe(
@@ -104,6 +115,7 @@ const EmulatorMarkerSelected = () => {
     []
   )
 
+  // connectedEmulator subscription
   useEffect(
     () =>
       useEmulatorStore.subscribe(
@@ -158,6 +170,39 @@ const EmulatorMarkerSelected = () => {
     []
   )
 
+  // draggedEmulatorOnTrip subscription
+  useEffect(
+    () =>
+      useEmulatorStore.subscribe(
+        (state) => state.draggedEmulatorOnTrip,
+        (draggedEmulatorOnTrip) => {
+          draggedEmulatorOnTripRef.current = draggedEmulatorOnTrip
+          if (markerRef.current === null || markerRef.current === undefined) {
+            return
+          }
+          if (
+            draggedEmulatorOnTrip === null ||
+            draggedEmulatorOnTrip === undefined
+          ) {
+            // reset marker position to emulator position
+            const position = new window.google.maps.LatLng(
+              emulatorRef.current?.latitude,
+              emulatorRef.current?.longitude
+            )
+            markerRef.current?.setPosition(position)
+            return
+          }
+          // if draggedEmulatorOnTrip is not null, then set the marker position to draggedEmulatorOnTrip position
+          const position = new window.google.maps.LatLng(
+            draggedEmulatorOnTrip.latitude,
+            draggedEmulatorOnTrip.longitude
+          )
+          markerRef.current?.setPosition(position)
+        }
+      ),
+    []
+  )
+
   let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
   iconUrl = iconUrl + 'SELECT'
   if (
@@ -174,18 +219,48 @@ const EmulatorMarkerSelected = () => {
     anchor: new window.google.maps.Point(10, 10)
   }
 
+  function isThisEmulatorOnTrip() {
+    let hasNoTrip = true
+    if (
+      emulatorRef.current?.tripStatus === 'PAUSED' &&
+      emulatorRef.current?.status === 'RESTING'
+    ) {
+      console.log('emulator is in a trip 1')
+      hasNoTrip = false
+    }
+    if (
+      emulatorRef.current?.startLat !== null &&
+      emulatorRef.current?.startLat !== 0
+    ) {
+      console.log('emulator is in a trip 2')
+      hasNoTrip = false
+    }
+
+    return !hasNoTrip
+  }
+
   function handleDragStart(event) {
     // remove any animation on marker
     markerRef.current?.setAnimation(null)
     const { latLng } = event
-    dragEmulator({
-      emulator: emulatorRef.current,
-      latitude: latLng.lat(),
-      longitude: latLng.lng(),
-      isDragMarkerDropped: false,
-      timeout: -1,
-      retries: 0
-    })
+    if (isThisEmulatorOnTrip()) {
+      dragEmulatorOnTrip({
+        emulator: emulatorRef.current,
+        latitude: latLng.lat(),
+        longitude: latLng.lng(),
+        isDragMarkerDropped: false
+      })
+    } else {
+      dragEmulator({
+        emulator: emulatorRef.current,
+        latitude: latLng.lat(),
+        longitude: latLng.lng(),
+        isDragMarkerDropped: false,
+        timeout: -1,
+        retries: 0
+      })
+    }
+
     // if drag started from a MovedEmulator, reset moveMarker to false
     if (
       movedEmulatorRef.current?.emulator?.id === emulatorRef.current?.id &&
@@ -202,14 +277,23 @@ const EmulatorMarkerSelected = () => {
 
   function handleDragEnd(event) {
     const { latLng } = event
-    dragEmulator({
-      emulator: emulatorRef.current,
-      latitude: latLng.lat(),
-      longitude: latLng.lng(),
-      isDragMarkerDropped: true,
-      timeout: 15,
-      retries: 0
-    })
+    if (isThisEmulatorOnTrip()) {
+      dragEmulatorOnTrip({
+        emulator: emulatorRef.current,
+        latitude: latLng.lat(),
+        longitude: latLng.lng(),
+        isDragMarkerDropped: true
+      })
+    } else {
+      dragEmulator({
+        emulator: emulatorRef.current,
+        latitude: latLng.lat(),
+        longitude: latLng.lng(),
+        isDragMarkerDropped: true,
+        timeout: 15,
+        retries: 0
+      })
+    }
   }
 
   function getMarkerPosition() {

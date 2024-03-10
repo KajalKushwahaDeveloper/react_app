@@ -9,19 +9,21 @@ import {
 import React, { useEffect } from 'react'
 import ApiService from '../../../../ApiService.js'
 import { useStates } from '../../../../StateProvider.js'
-import { EMULATOR_DRAG_URL, TRIP_URL } from '../../../../constants.js'
+import { EMULATOR_DRAG_URL } from '../../../../constants.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 const MAX_DISTANCE_SNAP = 10
 
 export function DragAndMoveComponent() {
   const { showToast } = useStates()
-  const draggedEmulator = useEmulatorStore((state) => state.draggedEmulator)
+  const draggedEmulatorOnTrip = useEmulatorStore(
+    (state) => state.draggedEmulatorOnTrip
+  )
+  const dragEmulatorOnTrip = useEmulatorStore.getState().dragEmulatorOnTrip
 
   const showLoader = useEmulatorStore.getState().showLoader
   const hideLoader = useEmulatorStore.getState().hideLoader
 
-  const dragEmulator = useEmulatorStore((state) => state.dragEmulator)
   const movedEmulator = useEmulatorStore((state) => state.movedEmulator)
 
   const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
@@ -32,22 +34,23 @@ export function DragAndMoveComponent() {
 
   const closeDragDialog = React.useCallback(() => {
     setOpenDialog(false)
-    if (draggedEmulator !== null) {
-      dragEmulator(null)
+    if (draggedEmulatorOnTrip !== null) {
+      dragEmulatorOnTrip(null)
     }
     if (movedEmulator !== null) {
-      dragEmulator(null)
+      dragEmulatorOnTrip(null)
     }
     if (payload !== null) setPayload(null)
     if (dialogText !== '') setDialogText('')
     hideLoader()
+    dragEmulatorOnTrip(null)
   }, [
-    draggedEmulator,
-    movedEmulator,
-    payload,
     dialogText,
+    dragEmulatorOnTrip,
+    draggedEmulatorOnTrip,
     hideLoader,
-    dragEmulator
+    movedEmulator,
+    payload
   ])
 
   function handleDialog(payload, text) {
@@ -59,80 +62,23 @@ export function DragAndMoveComponent() {
   useEffect(() => {
     async function tryUpdatingTrip(dragEmulatorRequest) {
       showLoader()
-      const token = localStorage.getItem('token')
-      const { success, data, error } = await ApiService.makeApiCall(
-        TRIP_URL,
-        'POST',
-        { distance: 0 },
-        token,
-        dragEmulatorRequest.emulator.id
-      )
-      if (!success && error) {
-        // if error contains text 'Emulator Does not have a trip route!!' then set new location
-        if (error.includes('Emulator Does not have a trip route!!')) {
-          const payload = {
-            emulatorId: dragEmulatorRequest.emulator.id,
-            cancelTrip: false,
-            newTripIndex: null,
-            latitude: dragEmulatorRequest.latitude,
-            longitude: dragEmulatorRequest.longitude
-          }
-          handleDialog(
-            payload,
-            'Do you want to set new Location of this emulator?'
-          )
-        }
-        return
-      }
-      // got Trip Point, now check if it is selected emulator's trip else show toast to select emulator first!
-      if (
-        dragEmulatorRequest.emulator.id !== selectedEmulator?.id &&
-        data !== null &&
-        data !== undefined &&
-        data.data.tripPoints !== null &&
-        data.data.tripPoints !== undefined &&
-        data.data.tripPoints.length > 0
-      ) {
+      const tripPoints = useEmulatorStore.getState().tripData?.tripPoints
+      if (tripPoints === null || tripPoints === undefined) {
         showToast(
-          'Please select this emulator first as a trip already exists.',
+          'Error: Failed to recognize trip route. Resetting changes!',
           'error'
         )
-        closeDragDialog()
+        dragEmulatorOnTrip(null)
         return
       }
-      // else find nearest point or cancelation point
+      // find nearest point or cancelation point
       const { nearestTripPoint, nearestDistance } = findNearestTripPoint(
-        data.data.tripPoints,
+        tripPoints,
         dragEmulatorRequest.latitude,
         dragEmulatorRequest.longitude
       )
 
       if (nearestDistance <= MAX_DISTANCE_SNAP) {
-        const emulatorCurrentTripPointStopPoint = calculateNextStopPointIndex(
-          dragEmulatorRequest.emulator.currentTripPointIndex,
-          data.data.tripPoints
-        )
-
-        const nearestTripPointStopPoint = calculateNextStopPointIndex(
-          nearestTripPoint.tripPointIndex,
-          data.data.tripPoints
-        )
-
-        const previousTimeToReachStop =
-          calculateTimeFromTripPointIndexToStopPoint(
-            dragEmulatorRequest.emulator.currentTripPointIndex,
-            emulatorCurrentTripPointStopPoint,
-            dragEmulatorRequest.emulator.speed,
-            data.data.tripPoints
-          )
-
-        const newTimeToReachStop = calculateTimeFromTripPointIndexToStopPoint(
-          nearestTripPoint.tripPointIndex,
-          nearestTripPointStopPoint,
-          dragEmulatorRequest.emulator.speed,
-          data.data.tripPoints
-        )
-
         const { lat, lng, tripPointIndex } = nearestTripPoint
 
         const payload = {
@@ -142,15 +88,9 @@ export function DragAndMoveComponent() {
           latitude: lat,
           longitude: lng
         }
-        const previousTimeToReachStopNew = previousTimeToReachStop ?? ''
-        const newTimeToReachStopNew = newTimeToReachStop ?? ''
         handleDialog(
           payload,
-          `${
-            'The emulator will be snapped to nearest route under 10 miles range' +
-            previousTimeToReachStopNew +
-            newTimeToReachStopNew
-          }`
+          'The emulator will be snapped to nearest trip Point, Continue?'
         )
       } else {
         const payload = {
@@ -163,52 +103,9 @@ export function DragAndMoveComponent() {
 
         handleDialog(
           payload,
-          'This is too far from its current route, setting this as emulators new location will cancel the trip.'
+          'The new position is too far from the trip route. Do you want cancel the trip and set this as new location?'
         )
       }
-    }
-
-    function calculateTimeFromTripPointIndexToStopPoint(
-      startIndex,
-      stop,
-      velocity,
-      tripPoints
-    ) {
-      if (
-        startIndex == null ||
-        stop == null ||
-        velocity == null ||
-        tripPoints == null
-      ) {
-        return 'N/A'
-      }
-      let distance = 0
-      tripPoints.forEach((path) => {
-        if (
-          path.tripPointIndex >= startIndex &&
-          path.tripPointIndex <= stop.tripPointIndex
-        ) {
-          distance += path.distance
-        }
-      })
-
-      const remainingStopDistance = Math.floor(distance)
-      const timeInHours = distance / velocity
-      if (timeInHours === Infinity) {
-        return 'Refreshing...'
-      }
-
-      const hours = Math.floor(timeInHours)
-      const minutes = Math.round((timeInHours - hours) * 60)
-
-      return [`${hours} : ${minutes} : 00 GMT`, remainingStopDistance]
-    }
-
-    function calculateNextStopPointIndex(currentIndex, tripData) {
-      const nextStopPoint = tripData?.stops?.find(
-        (stop) => currentIndex < stop.tripPointIndex
-      )
-      return nextStopPoint
     }
 
     function findNearestTripPoint(tripPoints, targetLat, targetLng) {
@@ -226,41 +123,45 @@ export function DragAndMoveComponent() {
     }
 
     // 1. check if draggedEmulator is null or not, if null then close dialog
-    if (draggedEmulator === null || dragEmulator.timeout !== 0) {
+    if (draggedEmulatorOnTrip === null) {
       return
     }
 
     // 2. if not yet dropped then close dialog
-    if (draggedEmulator.isDragMarkerDropped === false) {
+    if (draggedEmulatorOnTrip.isDragMarkerDropped === false) {
       return
     }
     // 3. if isDragMarkerDropped is true then check if emulator, lat and long is present or not
     if (
-      draggedEmulator.isDragMarkerDropped === true &&
-      (draggedEmulator.emulator === null ||
-        draggedEmulator.latitude === null ||
-        draggedEmulator.longitude === null)
+      draggedEmulatorOnTrip.isDragMarkerDropped === true &&
+      (draggedEmulatorOnTrip.emulator === null ||
+        draggedEmulatorOnTrip.latitude === null ||
+        draggedEmulatorOnTrip.longitude === null)
     ) {
+      showToast(
+        'Error: Failed to recognize new Position. Resetting Changes!',
+        'error'
+      )
+      dragEmulatorOnTrip(null)
       return
     }
 
     // 4. if emulator, lat and long is present and isDragMarkerDropped is true then try to update trip
     if (
-      draggedEmulator.emulator &&
-      draggedEmulator.latitude &&
-      draggedEmulator.longitude &&
-      draggedEmulator.isDragMarkerDropped === true
+      draggedEmulatorOnTrip.emulator &&
+      draggedEmulatorOnTrip.latitude &&
+      draggedEmulatorOnTrip.longitude &&
+      draggedEmulatorOnTrip.isDragMarkerDropped === true
     ) {
       // send copy of draggedEmulator to tryUpdatingTrip function
-      tryUpdatingTrip({ ...draggedEmulator })
-      dragEmulator(null)
+      tryUpdatingTrip({ ...draggedEmulatorOnTrip })
     }
   }, [
-    draggedEmulator,
+    draggedEmulatorOnTrip,
     closeDragDialog,
     showToast,
     selectedEmulator?.id,
-    dragEmulator,
+    dragEmulatorOnTrip,
     showLoader
   ])
 
@@ -284,7 +185,12 @@ export function DragAndMoveComponent() {
 
   const confirmNewLocation = async () => {
     if (payload === null) {
-      showToast('Error: payload is null', 'error')
+      showToast(
+        'Error: Failed to recognize new position. Resetting changes!',
+        'error'
+      )
+      closeDragDialog()
+      dragEmulatorOnTrip(null)
       return
     }
     const token = localStorage.getItem('token')
@@ -296,10 +202,14 @@ export function DragAndMoveComponent() {
       null
     )
     if (success) {
+      showToast('Emulator Location Updated', 'success')
       closeDragDialog()
+      dragEmulatorOnTrip(null)
     } else {
       showToast(error, 'error')
+      showToast('You can try again or close dialog to reset changes!', 'info')
     }
+    hideLoader()
   }
 
   return (

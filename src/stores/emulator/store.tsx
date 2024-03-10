@@ -19,6 +19,7 @@ import useMarkerStore from './markerStore.js'
 import { SelectedEmulatorData, toTripData } from './SelectedEmulatorData.tsx'
 import {
   DragEmulator,
+  DragEmulatorOnTrip,
   Emulator,
   MoveEmulator,
   TripData,
@@ -33,7 +34,7 @@ export interface EmulatorsSlice {
   selectedEmulator: Emulator | null
   emulators: Emulator[] | []
   hoveredEmulator: Emulator | null
-  draggedEmulator: DragEmulator | null
+  draggedEmulatorOnTrip: DragEmulatorOnTrip | null
   draggedEmulators: DragEmulator[] | []
   movedEmulator: MoveEmulator | null
   updateEmulators: (emulators: Emulator[]) => void
@@ -41,6 +42,7 @@ export interface EmulatorsSlice {
   selectEmulator: (emulator: Emulator | null) => void
   hoverEmulator: (emulator: Emulator | null) => void
   dragEmulator: (emulator: DragEmulator | null) => void
+  dragEmulatorOnTrip: (emulator: DragEmulatorOnTrip | null) => void
   moveEmulator: (emulator: MoveEmulator | null) => void
 }
 
@@ -79,7 +81,7 @@ const createEmulatorsSlice: StateCreator<
   emulatorsCount: 0,
   selectedEmulator: null,
   hoveredEmulator: null,
-  draggedEmulator: null,
+  draggedEmulatorOnTrip: null,
   draggedEmulators: [],
   movedEmulator: null,
   updateEmulators: async (newEmulators) => {
@@ -142,7 +144,9 @@ const createEmulatorsSlice: StateCreator<
       // set a new copy of draggedEmulators
       set({ draggedEmulators: [...draggedEmulators] })
     }
-    set({ draggedEmulator })
+  },
+  dragEmulatorOnTrip: (draggedEmulatorOnTrip) => {
+    set({ draggedEmulatorOnTrip })
   },
   moveEmulator: (movedEmulator) => set({ movedEmulator })
 })

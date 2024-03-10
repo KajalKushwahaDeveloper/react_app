@@ -299,7 +299,7 @@ const MapButtons = () => {
             const token = localStorage.getItem('token')
             const payload = {
               emulatorId: draggedEmulator.emulator.id,
-              cancelTrip: true,
+              cancelTrip: false,
               latitude: draggedEmulator.latitude,
               longitude: draggedEmulator.longitude,
               newTripIndex: null
@@ -315,7 +315,11 @@ const MapButtons = () => {
 
             if (success) {
               showToast(
-                `Location Updated for emulator ID ${draggedEmulator.emulator.id}.`,
+                `Location Updated for emulator with number ${
+                  draggedEmulator.emulator.telephone
+                    ? draggedEmulator.emulator.telephone
+                    : 'N/A'
+                }.`,
                 'success'
               )
               // remove from draggedEmulatorsList
