@@ -8,7 +8,9 @@ import CreateTripButton from '../MapButtons.jsx'
 import './ResizeContainer.css'
 
 const AddressTable = () => {
-  const elementParentRefs = useRef(Array.from({ length: 6 }, () => React.createRef()))
+  const elementParentRefs = useRef(
+    Array.from({ length: 6 }, () => React.createRef())
+  )
   const elementRefs = useRef(Array.from({ length: 6 }, () => React.createRef()))
 
   const { width } = useViewPort()
@@ -56,19 +58,20 @@ const AddressTable = () => {
 
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
-    const arrivalTime = tripData?.emulatorDetails
-      ? readableTime(tripData.emulatorDetails.departTime) +
+    const arrivalTime = emulator
+      ? readableTime(emulator.departTime) +
         '<br/>' +
-        readableTime(tripData.emulatorDetails.arrivalTime)
+        readableTime(emulator.arrivalTime)
       : 'N/A'
 
-    const totalTime =
-      tripData?.emulatorDetails ? formatTime(
-        tripData.emulatorDetails.arrivalTime -
-          tripData.emulatorDetails.departTime
-      ) : 'N/A'
+    const totalTime = emulator
+      ? formatTime(emulator.arrivalTime - emulator.departTime)
+      : 'N/A'
 
-    const remainingDistance = calculateRemainingDistance(tripData, emulator?.currentTripPointIndex)
+    const remainingDistance = calculateRemainingDistance(
+      tripData,
+      emulator?.currentTripPointIndex
+    )
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
     setStringToElementRef(toAddress, elementRefs.current[2])
@@ -568,16 +571,26 @@ const AddressTable = () => {
 export default AddressTable
 
 function calculateRemainingDistance(tripData, currentTripPointIndex) {
-  if (currentTripPointIndex === null || currentTripPointIndex === undefined) return 'N/A'
+  if (currentTripPointIndex === null || currentTripPointIndex === undefined) {
+    return 'N/A'
+  }
   const tripDataPoints = tripData?.tripPoints || []
   let coveredDistance = 0
   let calcTotalDistance = 0
 
-  for (let tripPointIndex = 0; tripPointIndex <= currentTripPointIndex; tripPointIndex++) {
+  for (
+    let tripPointIndex = 0;
+    tripPointIndex <= currentTripPointIndex;
+    tripPointIndex++
+  ) {
     coveredDistance += tripDataPoints[tripPointIndex]?.distance
   }
 
-  for (let tripPointIndextotal = 0; tripPointIndextotal < tripDataPoints.length; tripPointIndextotal++) {
+  for (
+    let tripPointIndextotal = 0;
+    tripPointIndextotal < tripDataPoints.length;
+    tripPointIndextotal++
+  ) {
     calcTotalDistance += tripDataPoints[tripPointIndextotal]?.distance
   }
 
