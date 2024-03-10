@@ -56,7 +56,7 @@ const EmulatorMarker = ({ id }) => {
   const markerRef = useRef(null)
 
   // callback function to update marker position
-  const updateMarkerPosition = useCallback(() => {
+  const restoreMarkerPosition = useCallback(() => {
     const newPosition = new window.google.maps.LatLng(
       emulatorRef.current?.latitude,
       emulatorRef.current?.longitude
@@ -149,7 +149,7 @@ const EmulatorMarker = ({ id }) => {
     () =>
       useEmulatorStore.subscribe(
         (state) => state.draggedEmulators,
-        (draggedEmulators) => {
+        (draggedEmulators, prevDraggedEmulators) => {
           draggedEmulatorsRef.current = draggedEmulators
           // TODO: maybe we need to set Position of the marker to the draggedEmulator position
           if (markerRef.current === null || markerRef.current === undefined) {
@@ -161,6 +161,10 @@ const EmulatorMarker = ({ id }) => {
           )
           // found the draggedEmulator whose emulator.id == connectedEmulator.id
           if (draggedEmulator === null || draggedEmulator === undefined) {
+            // [#2] We cannot tell if a draggedEmulator was dropped or not, when it's set position was cancelled by connectedEmulator subscription.
+            // So we need to check if it was dropped or not on the connectedEmulator subscription
+            // when the draggedEmulator position was cancelled, it will remove the draggedEmulator from this draggedEmulatorsRef.current
+            // so, we need to verify this by checking that last connectedEmulator state's lat long is the same as the current emulatorRef.current lat long and does not exist in draggedEmulatorsRef.current
             return
           }
           // if draggedEmulator is not null, then set the marker position to draggedEmulator position
@@ -196,7 +200,7 @@ const EmulatorMarker = ({ id }) => {
           console.log('skipping position due to draggedEmulator')
         } else {
           // Update marker position
-          updateMarkerPosition()
+          restoreMarkerPosition()
         }
 
         // Update marker icon
@@ -206,7 +210,7 @@ const EmulatorMarker = ({ id }) => {
         // FIXME: THIS RUNS A LOT.. maybe remove this or change useMarkerStore to not update all emulators on individual emulator updates.
         updateTitle()
       }),
-    [updateTitle, id, updateMarkerIcon, updateMarkerPosition]
+    [updateTitle, id, updateMarkerIcon, restoreMarkerPosition]
   )
 
   // connectedEmulator subscription
@@ -214,17 +218,19 @@ const EmulatorMarker = ({ id }) => {
     () =>
       useEmulatorStore.subscribe(
         (state) => state.connectedEmulator,
-        (connectedEmulator) => {
+        (connectedEmulator, prevConnectedEmulator) => {
           if (connectedEmulator?.id === id) {
             // hide the marker
             setMarkerVisibility(false)
             return
           }
           // show the marker
+          // [#2]
+          restoreMarkerPosition() // TODO: runs [#2} issue check unnecessarily for every other emulator which didn't had a draggedEmulator set to null.
           setMarkerVisibility(true)
         }
       ),
-    [id]
+    [id, restoreMarkerPosition]
   )
 
   // function to set Marker to be visible or not after checking it's existing visibility
@@ -257,7 +263,7 @@ const EmulatorMarker = ({ id }) => {
         'Emulator is in a trip, Please select the emulator to modify location.',
         'error'
       )
-      updateMarkerPosition()
+      restoreMarkerPosition()
       return
     }
     const { latLng } = event

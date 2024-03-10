@@ -53,6 +53,10 @@ const getUserData = () => {
     })
 }
 
+if (process.env.REACT_APP_LOG_LEVEL === 'error') {
+  console.log = function () {}
+}
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
