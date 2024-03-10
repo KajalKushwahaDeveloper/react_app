@@ -45,15 +45,11 @@ export function DragAndMoveComponent() {
     hideLoader()
     dragEmulatorOnTrip(null)
   }, [
-    dialogText,
-    dragEmulatorOnTrip,
-    draggedEmulatorOnTrip,
-    hideLoader,
-    movedEmulator,
-    payload
+    draggedEmulatorOnTrip
   ])
 
   function handleDialog(payload, text) {
+    console.log('handleDialog', payload, text)
     setPayload(payload)
     setOpenDialog(true)
     setDialogText(text)

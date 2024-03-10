@@ -121,6 +121,7 @@ const EmulatorMarkerSelected = () => {
       useEmulatorStore.subscribe(
         (state) => state.connectedEmulator,
         (connectedEmulator) => {
+          emulatorRef.current = connectedEmulator
           if (markerRef.current === null || markerRef.current === undefined) {
             return
           }
@@ -133,8 +134,6 @@ const EmulatorMarkerSelected = () => {
             console.log('skipping due to draggedEmulator or movedEmulator')
             return
           }
-
-          emulatorRef.current = connectedEmulator
 
           const newPosition = new window.google.maps.LatLng(
             emulatorRef.current?.latitude,
@@ -176,10 +175,12 @@ const EmulatorMarkerSelected = () => {
       useEmulatorStore.subscribe(
         (state) => state.draggedEmulatorOnTrip,
         (draggedEmulatorOnTrip) => {
+          console.log('draggedEmulatorOnTrip', draggedEmulatorOnTrip)
           draggedEmulatorOnTripRef.current = draggedEmulatorOnTrip
           if (markerRef.current === null || markerRef.current === undefined) {
             return
           }
+
           if (
             draggedEmulatorOnTrip === null ||
             draggedEmulatorOnTrip === undefined
@@ -192,6 +193,7 @@ const EmulatorMarkerSelected = () => {
             markerRef.current?.setPosition(position)
             return
           }
+
           // if draggedEmulatorOnTrip is not null, then set the marker position to draggedEmulatorOnTrip position
           const position = new window.google.maps.LatLng(
             draggedEmulatorOnTrip.latitude,
