@@ -40,8 +40,8 @@ const CreateTripDialog = () => {
   const [fromLong, setFromLong] = useState()
   const [toLat, setToLat] = useState()
   const [toLong, setToLong] = useState()
-  const [fromAddress, setFromAddress] = useState()
-  const [toAddress, setToAddress] = useState()
+  const [fromAddress, setFromAddress] = useState('')
+  const [toAddress, setToAddress] = useState('')
   const [inputValue, setInputValue] = useState('')
 
   const [departTime, setDepartTime] = React.useState(dayjs())

@@ -2,7 +2,10 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import TextField from '@mui/material/TextField'
 import React, { useEffect, useState } from 'react'
 import { classnames } from '../../../../helpers'
-import PlacesAutocomplete, { geocodeByAddress, getLatLng } from './autocomplete'
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng
+} from './autocomplete'
 import './autocomplete/auto_complete.css'
 
 const SearchBar = (props) => {
@@ -13,8 +16,11 @@ const SearchBar = (props) => {
   const [longitude, setLongitude] = useState(null)
   const [addressComponent, setAddressComponent] = useState(null)
 
+  props.setAddress(address) // Update external state if needed
+
   const handleChange = (newAddress) => {
-    setAddress(newAddress)
+    setInputValue(newAddress)
+    setAddress(newAddress) // Update the address state with the new input value
     setLatitude(null)
     setLongitude(null)
     setAddressComponent(null)
@@ -43,10 +49,6 @@ const SearchBar = (props) => {
     clearSuggestions()
   }
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value)
-  }
-
   useEffect(() => {
     props.setLat(latitude)
     props.setLong(longitude)
@@ -55,11 +57,27 @@ const SearchBar = (props) => {
     }
   }, [latitude, longitude, addressComponent, props])
 
+  useEffect(() => {
+    geocodeByAddress(address)
+      .then((res) => {
+        res[0].address_components &&
+          setAddressComponent(res[0].address_components)
+        return getLatLng(res[0])
+      })
+      .then(({ lat, lng }) => {
+        setLatitude(lat)
+        setLongitude(lng)
+      })
+      .catch((error) => {
+        console.error('error', error)
+      })
+  }, [address])
+
   return (
     <div>
       <PlacesAutocomplete
         onChange={handleChange}
-        value={address}
+        value={address} // Use address state as the value for PlacesAutocomplete
         onSelect={handleSelect}
         onError={handleError}
         shouldFetchSuggestions={address?.length > 2}
@@ -72,8 +90,11 @@ const SearchBar = (props) => {
                   id="filled-basic"
                   label={props.label}
                   variant="filled"
-                  value={inputValue}
-                  onChange={handleInputChange}
+                  value={inputValue} // Use inputValue state for TextField value
+                  onChange={(e) => {
+                    setInputValue(e.target.value)
+                    setAddress(e.target.value)
+                  }}
                   {...getInputProps({
                     placeholder: 'Search Places...',
                     className: 'Demo__search-input'
