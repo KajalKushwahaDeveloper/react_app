@@ -93,7 +93,7 @@ const Speedometer = () => {
                 needleTransitionDuration={3000}
                 needleTransition="easeElastic"
                 currentValueText={'AVG ' + currentValueText}
-                value={speed}
+                value={speed > 100 ? 100 : speed}
               />
             </div>
           </Col>
