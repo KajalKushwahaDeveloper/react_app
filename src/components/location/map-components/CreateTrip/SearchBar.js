@@ -39,7 +39,11 @@ const SearchBar = (props) => {
   }
 
   const handleError = (status, clearSuggestions) => {
-    setErrorMessage(status)
+    let errorMessage = status
+    if(status === 'ZERO_RESULTS') {
+      errorMessage = 'This address is not found, try to search USA locations'
+    }
+    setErrorMessage(errorMessage)
     clearSuggestions()
   }
 
