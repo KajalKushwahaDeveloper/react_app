@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
 
@@ -16,6 +16,20 @@ const GoogleMapContainer = () => {
   console.log('Google Map Rendered!')
   const mapRef = useRef(null)
   const styleRef = useRef('default')
+  const [savedZoom, setSavedZoom] = useState(null)
+  const [savedCenter, setSavedCenter] = useState(null)
+  const isPrevioiusStateShowed = useRef(false);
+
+  const handleMapStateChange = () => {
+    if (mapRef.current && isPrevioiusStateShowed.current == true) {
+        // save the new zoom points only when the user intract with the map.
+        localStorage.setItem('mapZoom', mapRef.current.getZoom())
+        localStorage.setItem(
+          'mapCenter',
+          JSON.stringify(mapRef.current.getCenter().toJSON())
+        )
+    }
+  }
 
   useEffect(
     () =>
@@ -125,11 +139,30 @@ const GoogleMapContainer = () => {
               )
             )
             mapRef.current.fitBounds(bounds)
+            // Initlize the map for previously saved points if available.
+            setPreviousSavedZoomAndCenterIfAvailable()
           }
         }
       ),
     []
   )
+
+  const setPreviousSavedZoomAndCenterIfAvailable = () => {
+    if (mapRef.current) {
+      const savedMapZoom = localStorage.getItem('mapZoom')
+      const mapCenter = localStorage.getItem('mapCenter')
+      if (typeof mapCenter === 'string' && mapCenter !== '[object Object]') {
+        const savedMapCenter = JSON.parse(mapCenter)
+
+        if (savedMapZoom && savedMapCenter) {
+          setSavedZoom(Number(savedMapZoom))
+          setSavedCenter(savedMapCenter)
+        }
+      }
+      // previous saved state is shown so start saving new zoom and map state.
+      isPrevioiusStateShowed.current = true;
+    }
+  }
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -146,8 +179,12 @@ const GoogleMapContainer = () => {
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      zoom={4}
-      center={{ lat: defaultLat, lng: defaultLng }}
+      center={
+        savedCenter !== null
+          ? savedCenter
+          : { lat: defaultLat, lng: defaultLng }
+      }
+      zoom={savedZoom !== null ? savedZoom : 4}
       gestureHandling="none"
       zoomControl={false}
       options={{
@@ -157,6 +194,18 @@ const GoogleMapContainer = () => {
       }}
       onLoad={(ref) => {
         mapRef.current = ref
+        const mapCenter = localStorage.getItem('mapCenter')
+        if (typeof mapCenter === 'string' && mapCenter !== '[object Object]') {
+          // This will prevent to overwrite the previous saved zoom and the map state,
+          // after drawing the map root we will set the previous state if any available for the emualtor.
+          isPrevioiusStateShowed.current = false;
+        } else {
+          // no previous saved state is available so start saving new state and zoom. 
+          isPrevioiusStateShowed.current = true;
+        }
+        // Add event listeners for map state changes (zoom and center)
+        mapRef.current.addListener('zoom_changed', handleMapStateChange)
+        mapRef.current.addListener('center_changed', handleMapStateChange)
       }}
       onUnmount={() => {
         mapRef.current = null
