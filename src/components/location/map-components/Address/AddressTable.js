@@ -48,11 +48,21 @@ const AddressTable = () => {
   }
 
   const getAddress = (address) =>
-    address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
+    address?.map((component) => component?.long_name || '').join(', ') || 'N/s'
 
-  const setValues = useCallback((emulator, tripData, isHover) => {
-    const currentAddress =
-      emulator && emulator.address ? emulator.address : 'N/A'
+  const setValues = useCallback(async (emulator, tripData, isHover) => {
+    // const currentAddress =
+    //   emulator && emulator.address ? emulator.address : 'N/A'
+
+    // console.log(
+    //   'TRIP CORDINATES:',
+    //   tripData?.emulatorDetails?.latitude,
+    //   tripData?.emulatorDetails?.longitude
+    // )
+
+    const currentAddress = tripData
+      ? await CurrentLocation(emulator.latitude, emulator.longitude)
+      : 'N/A'
 
     const fromAddress = tripData ? getAddress(tripData.fromAddress) : 'N/A'
 
@@ -274,6 +284,23 @@ const AddressTable = () => {
     }
   }, [])
 
+  // API CALL FOR GETTING THE CURRENT LOCATION
+
+  const CurrentLocation = async (lat, lng) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E`
+      )
+      const data = await response.json()
+      if (data.results && data.results.length > 0) {
+        return data.results[0].formatted_address
+      }
+    } catch (error) {
+      console.error('Error fetching location name:', error)
+    }
+    return ''
+  }
+
   return (
     <div className="main-address-table">
       {isMobile ? (
@@ -440,6 +467,7 @@ const AddressTable = () => {
             width: '100vw'
           }}
         >
+          {console.log('elementRefs', elementRefs.current[0])}
           <Resize handleWidth={'5px'} handleColor={'#007DC66F'}>
             {/* CURRENT ADDRESS */}
             <ResizeHorizon width={`${widthArr[0]}px`} minWidth={'50px'}>
@@ -593,6 +621,8 @@ function calculateRemainingDistance(tripData, currentTripPointIndex) {
   ) {
     calcTotalDistance += tripDataPoints[tripPointIndextotal]?.distance
   }
+
+  console.log('calcTotalDistance', parseInt(calcTotalDistance / 1609))
 
   const calcRemainingDistance = calcTotalDistance - coveredDistance
   return tripData ? parseInt(calcRemainingDistance / 1609) + ' miles' : 'N/A'
