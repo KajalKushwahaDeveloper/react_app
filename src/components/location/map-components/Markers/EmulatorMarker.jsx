@@ -218,7 +218,7 @@ const EmulatorMarker = ({ id }) => {
     () =>
       useEmulatorStore.subscribe(
         (state) => state.connectedEmulator,
-        (connectedEmulator, prevConnectedEmulator) => {
+        (connectedEmulator) => {
           if (connectedEmulator?.id === id) {
             // hide the marker
             setMarkerVisibility(false)
@@ -226,7 +226,17 @@ const EmulatorMarker = ({ id }) => {
           }
           // show the marker
           // [#2]
-          restoreMarkerPosition() // TODO: runs [#2} issue check unnecessarily for every other emulator which didn't had a draggedEmulator set to null.
+
+          // skip for draggedEmulator
+          const draggedEmulator = draggedEmulatorsRef.current.some(
+            (draggedEmulator) =>
+              draggedEmulator.emulator.id === emulatorRef.current?.id &&
+              draggedEmulator.isDragMarkerDropped
+          )
+          if (!draggedEmulator) {
+            restoreMarkerPosition() // TODO: runs [#2} issue check unnecessarily for every other emulator which didn't had a draggedEmulator set to null.
+            // NOTE: ^ FIXED!!
+          }
           setMarkerVisibility(true)
         }
       ),
