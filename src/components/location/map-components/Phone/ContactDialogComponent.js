@@ -105,7 +105,7 @@ function ContactDialogComponent({
               />
             )}
           </TabPanel>
-          <TabPanel value={tabIndexValue} index={1} style={{ height: '63%' }}>
+          <TabPanel value={tabIndexValue} index={1} style={{ height: '62vh', overflowY: 'scroll' }}>
             <ShowHistory
               dialogType={contactDialogOptions.dialogType}
               data={historyData}
