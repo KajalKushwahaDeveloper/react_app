@@ -30,7 +30,8 @@ const PopUpEmulatorHistory = ({
 
   const mobileStyle = {
     width: isMobile ? '90%' : '50%',
-    maxWidth: '90vw' // Adjust the maximum width for smaller screens
+    maxWidth: '90vw', // Adjust the maximum width for smaller screens
+    height: '70vh'
   }
 
   const handleSubmit = async (e) => {

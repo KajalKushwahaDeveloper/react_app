@@ -1,15 +1,10 @@
-import React, { useState } from 'react'
-
-import TablePagination, {
-  tablePaginationClasses as classes
-} from '@mui/material/TablePagination'
-
 import InsightsIcon from '@mui/icons-material/Insights'
 import { Modal } from '@mui/material'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import { styled } from '@mui/system'
+import React, { useState } from 'react'
 import '../../../scss/button.scss'
+import { CustomTablePagination } from '../../CustomTablePagination'
 
 const style = {
   position: 'absolute',
@@ -60,7 +55,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
   //   rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
   return (
-    <div style={{ overflow: 'scroll' }}>
+    <div style={{ height: '51vh', overflow: 'scroll' }}>
       {/* Additional Dialog */}
       {showAdditionalDialog && historyRowSelected && (
         <Modal
@@ -159,12 +154,9 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
       )}
 
       {data.length !== 0 ? (
-        <table
-          aria-label="custom pagination table"
-          style={{ overflow: 'scroll' }}
-        >
+        <table aria-label="custom pagination table">
           <thead>
-            <tr>
+            <tr style={{ borderBottom: '1px solid #D9DDDC' }}>
               <th>FROM</th>
               <th>TO</th>
               <th>DISTANCE</th>
@@ -213,7 +205,13 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
                   : 'N/A'
 
               return (
-                <tr key={row.id || 'N/A'}>
+                <tr
+                  key={row.id || 'N/A'}
+                  style={{
+                    borderBottom: '.5px solid #D9DDDC',
+                    overflow: 'scroll'
+                  }}
+                >
                   <td>{fromAddress || 'N/A'}</td>
                   <td>{toAddress || 'N/A'}</td>
                   <td>{distance}</td>
@@ -244,7 +242,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
           )} */}
           </tbody>
           <tfoot>
-            <tr>
+            <tr style={{ position: 'fixed', bottom: 0 }}>
               <CustomTablePagination
                 rowsPerPageOptions={[3, 5, 10, { label: 'All', value: -1 }]}
                 colSpan={5}
@@ -253,6 +251,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
+                style={{ overflow: 'hidden' }}
               />
             </tr>
           </tfoot>
@@ -267,80 +266,3 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
 }
 
 export default PopupEmulatorHistoryTable
-
-const blue = {
-  200: '#A5D8FF',
-  400: '#3399FF'
-}
-
-const grey = {
-  50: '#F3F6F9',
-  100: '#E7EBF0',
-  200: '#E0E3E7',
-  300: '#CDD2D7',
-  400: '#B2BAC2',
-  500: '#A0AAB4',
-  600: '#6F7E8C',
-  700: '#3E5060',
-  800: '#2D3843',
-  900: '#1A2027'
-}
-
-const CustomTablePagination = styled(TablePagination)(
-  ({ theme }) => `
-      /* Remove the spacer element */
-      & .${classes.spacer} {
-        display: none;
-      }
-    
-      /* Update the toolbar styles */
-      & .${classes.toolbar} {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-        gap: 10px;
-      }
-    
-      /* Update the select label styles */
-      & .${classes.selectLabel} {
-        margin: 0;
-      }
-    
-      /* Update the select styles */
-      & .${classes.select} {
-        padding: 2px;
-        border: 1px solid ${
-          theme.palette.mode === 'dark' ? grey[800] : grey[200]
-        };
-        border-radius: 50px;
-        background-color: transparent;
-    
-        &:hover {
-          background-color: ${
-            theme.palette.mode === 'dark' ? grey[800] : grey[50]
-          };
-        }
-    
-        &:focus {
-          outline: 1px solid ${
-            theme.palette.mode === 'dark' ? blue[400] : blue[200]
-          };
-        }
-      }
-    
-      /* Update the actions styles */
-      .${classes.actions} {
-        padding: 2px;
-        border-radius: 50px;
-        text-align: center;
-        display: flex;
-      }
-    
-      /* Update the displayed rows styles */
-      & .${classes.displayedRows} {
-        margin-left: 2rem;
-        margin-bottom: unset;
-      }
-      `
-)

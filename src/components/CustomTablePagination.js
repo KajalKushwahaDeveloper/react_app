@@ -56,7 +56,8 @@ export const CustomTablePagination = styled(TablePagination)(
                   align-items: center;
                   // justify-content:space-around;
                   gap: 0px;
-                  margin: 0 5px;
+                  margin: 0px;
+                  padding: 0px 0 0 .3px;
                 }
                 
                 /* Update the select label styles */
