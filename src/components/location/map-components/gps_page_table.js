@@ -286,6 +286,22 @@ const GpsTable = () => {
     return ''
   }
 
+  useEffect(() => {
+    emulators.filter((emulator) => {
+      return (
+        emulator.emulatorSsid.includes(searchInput) ||
+                (emulator.telephone &&
+                  emulator.telephone.includes(searchInput)) ||
+                (emulator.note &&
+                  emulator.note
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase()))
+      )
+    })
+    setPage(0)
+    setRowsPerPage(8)
+  }, [searchInput, emulators, searchInput, setPage])
+
   return (
     <div>
       <Backdrop color="primary" style={{ zIndex: 4 }} open={messageLoading}>
