@@ -4,7 +4,7 @@ import './twilio/Phone.css'
 
 export function ShowHistory({ dialogType, data }) {
   return (
-    <div>
+    <div className='hhhh'>
       {data && data.length ? (
         dialogType === 'call' ? (
           data.map((callData) => {

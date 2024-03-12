@@ -79,6 +79,8 @@ function ContactDialogComponent({
             value={tabIndexValue}
             onChange={handleTabChange}
             aria-label="basic tabs example"
+            className='messageTabs'
+            style={{ position: 'absolute', top: '0rem' }}
           >
             <Tab
               label={
