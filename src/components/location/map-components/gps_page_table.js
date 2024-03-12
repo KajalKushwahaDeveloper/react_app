@@ -190,6 +190,7 @@ const GpsTable = () => {
   useEffect(() => {
     const maxRowsPerPage = Math.floor((height - 128 - 55 - 50) / 80)
     tablePaginationRef.current?.setRowsPerPage(maxRowsPerPage)
+    console.log('rowperPageShubham:', maxRowsPerPage)
     setRowsPerPage(maxRowsPerPage)
   }, [height])
 
@@ -298,9 +299,10 @@ const GpsTable = () => {
                     .includes(searchInput.toLowerCase()))
       )
     })
+    const maxRowsPerPage = Math.floor((height - 128 - 55 - 50) / 80)
     setPage(0)
-    setRowsPerPage(8)
-  }, [searchInput, emulators, searchInput, setPage])
+    setRowsPerPage(maxRowsPerPage)
+  }, [searchInput, emulators, searchInput, setPage, height])
 
   return (
     <div>
