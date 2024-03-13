@@ -155,6 +155,13 @@ const createEmulatorsSlice: StateCreator<
       movedEmulator !== undefined &&
       movedEmulator.moveMarker === true
     ) {
+      if (
+        movedEmulator.emulator.startLat !== null &&
+        movedEmulator.emulator.startLat !== undefined &&
+        movedEmulator.emulator.startLat !== 0
+      ) {
+        return
+      }
       const draggedEmulator: DragEmulator = {
         emulator: movedEmulator.emulator,
         latitude: movedEmulator.latitude,
