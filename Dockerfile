@@ -18,6 +18,6 @@ RUN service apache2 restart
 # Expose port 80 to allow outside access to your container
 EXPOSE 80
 
-# npm run build
+# npm run build:prod
 # docker build -t shresthasaurabh86/react-app:latest .
 # docker push shresthasaurabh86/react-app:latest

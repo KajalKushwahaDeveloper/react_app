@@ -57,12 +57,7 @@ const MapButtons = () => {
   const handleSetPositionCancelClick = () => {
     console.log('TEST@ handleSetPositionCancelClick')
     if (movedEmulatorRef.current?.moveMarker) {
-      moveEmulator({
-        emulator: connectedEmulatorRef.current,
-        latitude: connectedEmulatorRef.current?.latitude,
-        longitude: connectedEmulatorRef.current?.longitude,
-        moveMarker: false
-      })
+      moveEmulator(null)
     }
     // if draggedEmulatorRef.current includes a dragEmulator of same dragEmulator.emulator.id
     // remove draggedEmulator from draggedEmulatorsRef.current
@@ -293,7 +288,7 @@ const MapButtons = () => {
           }
         }
 
-        // if timeout reaches 0, remove the emulator from draggedEmulatorsList
+        // if timeout reaches 0, remove the emulator from draggedEmulatorsList and set movedEmulator to null
         if (draggedEmulator.timeout === 0) {
           try {
             const token = localStorage.getItem('token')
@@ -329,6 +324,7 @@ const MapButtons = () => {
               // But since we are not updating the state, and subscribe only responds to added draggedEmulators.
               // we need to update the buttons right now from here
               setupButtons()
+              moveEmulator(null)
             } else {
               throw new Error(error)
             }
