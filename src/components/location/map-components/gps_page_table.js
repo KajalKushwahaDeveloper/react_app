@@ -322,6 +322,7 @@ const GpsTable = () => {
           <OptimizedFilter
             items={emulators}
             predicate={(emulator, index, predicateArg) => {
+              if (predicateArg.length !== 0) setPage(0)
               // Determine if item should be included in filtered list... checking ssid and note
               return (
                 emulator.emulatorSsid.includes(predicateArg) ||
