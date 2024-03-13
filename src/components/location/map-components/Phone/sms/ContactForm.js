@@ -61,7 +61,7 @@ export function ContactForm({ emulatorId, showToast }) {
         setMessage('')
         setPhoneNumberError('')
         setMessageError('')
-        showToast('Data submit Successfully', 'success')
+        showToast('Message Submit Successfully', 'success')
       } else if (error) {
         showToast(`error: ${error}`, 'error')
       }
