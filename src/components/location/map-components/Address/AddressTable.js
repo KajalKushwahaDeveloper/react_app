@@ -58,13 +58,13 @@ const AddressTable = () => {
 
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
-    const arrivalTime = emulator
-      ? readableTime(emulator.departTime) +
+    const arrivalTime = (emulator?.departTime && emulator?.arrivalTime)
+      ? (readableTime(emulator.departTime) +
         '<br/>' +
-        readableTime(emulator.arrivalTime)
+        readableTime(emulator.arrivalTime))
       : 'N/A'
 
-    const totalTime = emulator
+    const totalTime = (emulator?.arrivalTime && emulator?.departTime)
       ? formatTime(emulator.arrivalTime - emulator.departTime)
       : 'N/A'
 

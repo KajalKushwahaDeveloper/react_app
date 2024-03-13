@@ -56,7 +56,7 @@ const MapButtons = () => {
 
   const handleSetPositionCancelClick = () => {
     console.log('TEST@ handleSetPositionCancelClick')
-    if (movedEmulatorRef.current?.moveMarker) {
+    if (movedEmulatorRef.current !== null) {
       moveEmulator(null)
     }
     // if draggedEmulatorRef.current includes a dragEmulator of same dragEmulator.emulator.id
@@ -176,45 +176,30 @@ const MapButtons = () => {
     }
 
     const showPositionButtons = connectedEmulatorRef.current !== null
-    let showCancel = false
+    let showCancelSetPositionButton = false
     if (showPositionButtons) {
-      showCancel = shouldShowCancelSetPosition()
+      showCancelSetPositionButton = shouldShowCancelSetPosition()
     }
-    console.log(
-      'TEST@ setting cancelSetPositionButton',
-      showCancel,
-      cancelSetPositionButtonRef
-    )
+
+    if (showCancelSetPositionButton) {
+      cancelSetPositionButtonRef.current.innerText = 'Cancel Set Position'
+    }
+
     setButtonVisibility(
       cancelSetPositionButtonRef,
-      showPositionButtons && showCancel
+      showPositionButtons && showCancelSetPositionButton
     )
 
-    console.log(
-      'TEST@ setting setPositionButtonRef',
-      !showCancel,
-      setPositionButtonRef
-    )
     setButtonVisibility(
       setPositionButtonRef,
-      showPositionButtons && !showCancel
+      showPositionButtons && !showCancelSetPositionButton
     )
 
-    console.log(
-      'TEST@ setting createTripButton',
-      connectedEmulatorRef.current !== null,
-      createTripButtonRef
-    )
     setButtonVisibility(
       createTripButtonRef,
       connectedEmulatorRef.current !== null
     )
 
-    console.log(
-      'TEST@ setting cancelTripButton',
-      tripDataRef.current !== null,
-      cancelTripButtonRef
-    )
     setButtonVisibility(cancelTripButtonRef, tripDataRef.current !== null)
     alignButtons()
   }, [
@@ -324,6 +309,7 @@ const MapButtons = () => {
               // But since we are not updating the state, and subscribe only responds to added draggedEmulators.
               // we need to update the buttons right now from here
               setupButtons()
+              cancelSetPositionButtonRef.current.innerText = 'Cancel Set Position'
               moveEmulator(null)
             } else {
               throw new Error(error)
