@@ -131,12 +131,14 @@ const AddressTable = () => {
           ) {
             return
           }
-          setValues(
-            connectedEmulatorRef.current
-              ? connectedEmulatorRef.current
-              : useEmulatorStore.getState().selectedEmulator,
-            tripData
-          )
+          if (hoveredEmulatorRef.current === null) {
+            setValues(
+              connectedEmulatorRef.current
+                ? connectedEmulatorRef.current
+                : useEmulatorStore.getState().selectedEmulator,
+              tripData
+            )
+          }
         }
       ),
     [setValues]
@@ -148,14 +150,16 @@ const AddressTable = () => {
         (state) => state.connectedEmulator,
         (connectedEmulator) => {
           connectedEmulatorRef.current = connectedEmulator
-          setValues(
-            connectedEmulatorRef.current
-              ? connectedEmulatorRef.current
-              : useEmulatorStore.getState().selectedEmulator,
-            tripDataRef.current
-              ? tripDataRef.current
-              : useEmulatorStore.getState().tripData
-          )
+          if (hoveredEmulatorRef.current === null) {
+            setValues(
+              connectedEmulatorRef.current
+                ? connectedEmulatorRef.current
+                : useEmulatorStore.getState().selectedEmulator,
+              tripDataRef.current
+                ? tripDataRef.current
+                : useEmulatorStore.getState().tripData
+            )
+          }
         }
       ),
     [setValues]
