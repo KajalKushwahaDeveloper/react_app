@@ -27,6 +27,7 @@ import {
 import ApiService from './../../../ApiService'
 
 import { useStates } from '../../../StateProvider'
+import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import { CustomTablePagination } from '../../CustomTablePagination'
 
 export default function EmulatorTable({
@@ -156,6 +157,7 @@ export default function EmulatorTable({
 
   // delete button
   const handleDeleteButtonClick = async (emulator) => {
+    const totalEmulators = useEmulatorStore.getState().emulators
     const confirmed = window.confirm(
       'Delete this emulator : ' + emulator.emulatorSsid + '?'
     )
@@ -171,6 +173,10 @@ export default function EmulatorTable({
 
       if (success) {
         showToast('emulator deleted', 'success')
+        const updatedData = totalEmulators.filter(
+          (item) => item.emulatorSsid !== emulator.emulatorSsid
+        )
+        useEmulatorStore.getState().updateEmulators(updatedData)
         fetchData()
       } else {
         showToast('emulator not deleted', 'error')
