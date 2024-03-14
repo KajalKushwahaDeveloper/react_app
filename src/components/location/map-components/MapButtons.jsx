@@ -29,6 +29,9 @@ const MapButtons = () => {
   const createTripButtonRef = React.createRef()
   const cancelTripButtonRef = React.createRef()
 
+  // SELECTED EMULATOR
+  const selectEmulator = useEmulatorStore((state) => state.selectEmulator)
+
   // TRIP DATA
   const tripDataRef = useRef(useEmulatorStore.getState().tripData)
 
@@ -107,7 +110,7 @@ const MapButtons = () => {
         newTripIndex: null
       }
 
-      const { success, error } = await ApiService.makeApiCall(
+      const { success, data, error } = await ApiService.makeApiCall(
         EMULATOR_DRAG_URL,
         'POST',
         payload,
@@ -116,6 +119,7 @@ const MapButtons = () => {
       )
 
       if (success) {
+        selectEmulator(data)
         showToast('Trip has been cancelled', 'success')
         // fetchEmulators();
         // NOTE: Don't need to refresh.. gets refreshed by SSE
