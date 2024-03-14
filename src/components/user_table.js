@@ -112,7 +112,7 @@ const UserTable = ({
         }
         return item
       })
-      showToast('Updated user table!', 'success')
+      // showToast('Updated user table!', 'success')
       setUserData(updatedData)
     } else {
       showToast('Failed to update user table', 'error')
@@ -134,7 +134,7 @@ const UserTable = ({
       // eslint-disable-next-line no-mixed-operators
       if (!response.ok || response.status !== 200) {
         if (userId !== undefined) {
-          showToast('Failed to update user table1122', 'error')
+          showToast('Failed to update user table', 'error')
         }
         return { success: false, error: 'Failed to unassign user' }
       }
@@ -153,7 +153,7 @@ const UserTable = ({
         }
         return item
       })
-      showToast('Updated user table!', 'success')
+      // showToast('Updated user table!', 'success')
       setUserData(updatedData)
     } catch (error) {
       console.error('refreshUser error : ' + error)
@@ -225,9 +225,9 @@ const UserTable = ({
           <tbody>
             {(rowsPerPage > 0
               ? userData.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                )
               : userData
             ).map((row) => {
               const createdAtDate = new Date(row.createdAt)

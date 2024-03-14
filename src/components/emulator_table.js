@@ -71,10 +71,10 @@ const EmulatorTable = ({
         }
         return item
       })
-      showToast('Updated user table!', 'success')
+      // showToast('Updated emulator table!', 'success')
       setEmulators(updatedData)
     } else {
-      showToast('Failed to update user table' + error, 'error')
+      showToast('Failed to update emulator table' + error, 'error')
       return { success: false, error: 'Failed to unassign user' }
     }
   }
