@@ -149,7 +149,7 @@ const EmulatorMarker = ({ id }) => {
     () =>
       useEmulatorStore.subscribe(
         (state) => state.draggedEmulators,
-        (draggedEmulators, prevDraggedEmulators) => {
+        (draggedEmulators) => {
           draggedEmulatorsRef.current = draggedEmulators
           // TODO: maybe we need to set Position of the marker to the draggedEmulator position
           if (markerRef.current === null || markerRef.current === undefined) {

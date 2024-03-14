@@ -58,13 +58,13 @@ const AddressTable = () => {
 
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
-    const arrivalTime = emulator
-      ? readableTime(emulator.departTime) +
+    const arrivalTime = (emulator?.departTime && emulator?.arrivalTime)
+      ? (readableTime(emulator.departTime) +
         '<br/>' +
-        readableTime(emulator.arrivalTime)
+        readableTime(emulator.arrivalTime))
       : 'N/A'
 
-    const totalTime = emulator
+    const totalTime = (emulator?.arrivalTime && emulator?.departTime)
       ? formatTime(emulator.arrivalTime - emulator.departTime)
       : 'N/A'
 
@@ -131,12 +131,14 @@ const AddressTable = () => {
           ) {
             return
           }
-          setValues(
-            connectedEmulatorRef.current
-              ? connectedEmulatorRef.current
-              : useEmulatorStore.getState().selectedEmulator,
-            tripData
-          )
+          if (hoveredEmulatorRef.current === null) {
+            setValues(
+              connectedEmulatorRef.current
+                ? connectedEmulatorRef.current
+                : useEmulatorStore.getState().selectedEmulator,
+              tripData
+            )
+          }
         }
       ),
     [setValues]
@@ -148,14 +150,16 @@ const AddressTable = () => {
         (state) => state.connectedEmulator,
         (connectedEmulator) => {
           connectedEmulatorRef.current = connectedEmulator
-          setValues(
-            connectedEmulatorRef.current
-              ? connectedEmulatorRef.current
-              : useEmulatorStore.getState().selectedEmulator,
-            tripDataRef.current
-              ? tripDataRef.current
-              : useEmulatorStore.getState().tripData
-          )
+          if (hoveredEmulatorRef.current === null) {
+            setValues(
+              connectedEmulatorRef.current
+                ? connectedEmulatorRef.current
+                : useEmulatorStore.getState().selectedEmulator,
+              tripDataRef.current
+                ? tripDataRef.current
+                : useEmulatorStore.getState().tripData
+            )
+          }
         }
       ),
     [setValues]

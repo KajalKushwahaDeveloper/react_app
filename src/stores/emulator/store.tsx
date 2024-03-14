@@ -148,7 +148,31 @@ const createEmulatorsSlice: StateCreator<
   dragEmulatorOnTrip: (draggedEmulatorOnTrip) => {
     set({ draggedEmulatorOnTrip })
   },
-  moveEmulator: (movedEmulator) => set({ movedEmulator })
+  moveEmulator: (movedEmulator) => {
+    set({ movedEmulator })
+    if (
+      movedEmulator !== null &&
+      movedEmulator !== undefined &&
+      movedEmulator.moveMarker === true
+    ) {
+      if (
+        movedEmulator.emulator.startLat !== null &&
+        movedEmulator.emulator.startLat !== undefined &&
+        movedEmulator.emulator.startLat !== 0
+      ) {
+        return
+      }
+      const draggedEmulator: DragEmulator = {
+        emulator: movedEmulator.emulator,
+        latitude: movedEmulator.latitude,
+        longitude: movedEmulator.longitude,
+        isDragMarkerDropped: true,
+        timeout: 15,
+        retries: 0
+      }
+      get().dragEmulator(draggedEmulator)
+    }
+  }
 })
 
 const createTripDataSlice: StateCreator<

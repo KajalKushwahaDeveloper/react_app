@@ -54,16 +54,14 @@ const EmulatorMarkerSelected = () => {
             return
           }
           // moved
-          if (movedEmulator && movedEmulator.moveMarker === true) {
+          if (movedEmulator !== null && movedEmulator !== undefined) {
             const movedToPosition = new window.google.maps.LatLng(
               movedEmulator.latitude,
               movedEmulator.longitude
             )
             markerRef.current?.setPosition(movedToPosition)
             markerRef.current?.setAnimation(window.google.maps.Animation.DROP)
-
-            // do something maybe
-          } else if (movedEmulator && movedEmulator.moveMarker === false) {
+          } else {
             // un-moved..
             // reset markerRef
             const newPosition = new window.google.maps.LatLng(
@@ -104,11 +102,18 @@ const EmulatorMarkerSelected = () => {
             // NOTE: this will not be able to switch position of when already dragged, and then get's selected.
             // For that behavior, we need to make the default position of the marker to be the draggedEmulator position when selected. [#1]
             // if draggedEmulator is not null, then set the marker position to draggedEmulator position
-            const position = new window.google.maps.LatLng(
-              draggedEmulator.latitude,
-              draggedEmulator.longitude
+            const draggedEmulator = draggedEmulatorsRef.current.some(
+              (draggedEmulator) =>
+                draggedEmulator.emulator.id === emulatorRef.current?.id &&
+                draggedEmulator.isDragMarkerDropped
             )
-            markerRef.current?.setPosition(position)
+            if (!draggedEmulator) {
+              const position = new window.google.maps.LatLng(
+                draggedEmulator.latitude,
+                draggedEmulator.longitude
+              )
+              markerRef.current?.setPosition(position)
+            }
           }
         }
       ),
@@ -268,12 +273,7 @@ const EmulatorMarkerSelected = () => {
       movedEmulatorRef.current?.emulator?.id === emulatorRef.current?.id &&
       movedEmulatorRef.current?.moveMarker === true
     ) {
-      moveEmulator({
-        emulator: emulatorRef.current,
-        latitude: emulatorRef.current.latitude,
-        longitude: emulatorRef.current.longitude,
-        moveMarker: false
-      })
+      moveEmulator(null)
     }
   }
 
