@@ -18,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import { GetEmulatorApi } from '../../../components/api/emulator'
+import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 
 import {
   EMULATOR_DELETE_URL,
@@ -50,6 +51,8 @@ export default function EmulatorTable({
   const [error, setError] = React.useState(null)
 
   const [emulators, setEmulators] = React.useState([])
+
+  const updateEmulators = useEmulatorStore((state) => state.updateEmulators)
 
   React.useEffect(() => {
     setEmulators(emulatorData)
@@ -147,6 +150,7 @@ export default function EmulatorTable({
 
     if (success) {
       setEmulators(data)
+      updateEmulators(data)
       setLoading(false)
     } else {
       setError(error)
