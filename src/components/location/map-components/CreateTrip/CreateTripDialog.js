@@ -9,7 +9,7 @@ import {
   Typography
 } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ApiService from '../../../../ApiService.js'
 import { CREATE_TRIP_URL } from '../../../../constants.js'
 import SearchBar from './SearchBar.js'
@@ -17,7 +17,6 @@ import SearchBar from './SearchBar.js'
 import { useViewPort } from '../../../.././ViewportProvider.js'
 import { useStates } from '../../../../StateProvider.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
-import { compareSelectedEmulator } from '../../../../stores/emulator/types_maps.tsx'
 
 import dayjs from 'dayjs'
 import DateTimePickerValue from './DateTimeFieldValue.tsx'
@@ -28,13 +27,21 @@ const CreateTripDialog = () => {
   const isMobile = width < breakpoint
 
   const { isTableVisible } = useStates()
-  const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators)
-  const selectedEmulator = useEmulatorStore(
-    (state) => state.selectedEmulator,
-    (oldSelectedEmulator, newSelectedEmulator) => {
-      compareSelectedEmulator(oldSelectedEmulator, newSelectedEmulator)
-    }
+
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
+
+  const draggedEmulatorsRef = useRef(
+    useEmulatorStore.getState().draggedEmulators
   )
+
+  useEffect(() => {
+    useEmulatorStore.subscribe(
+      (state) => state.draggedEmulators,
+      (draggedEmulators) => {
+        draggedEmulatorsRef.current = draggedEmulators
+      }
+    )
+  }, [])
 
   const [fromLat, setFromLat] = useState()
   const [fromLong, setFromLong] = useState()
@@ -60,9 +67,24 @@ const CreateTripDialog = () => {
     setInputValue(event.target.value)
   }
 
+  const handleDraggedEmulatorsIfAny = () => {
+    if (selectedEmulator !== null) {
+      // if draggedEmulators is not null, then find from draggedEmulators where id is equal to selectedEmulator.id
+      const draggedEmulatorsList = draggedEmulatorsRef.current
+      let didRemove = false
+      draggedEmulatorsList.forEach((draggedEmulator, index) => {
+        if (draggedEmulator.emulator.id === selectedEmulator.id) {
+          draggedEmulatorsList.splice(index, 1)
+          didRemove = true
+        }
+      })
+      if (didRemove) {
+        useEmulatorStore.setState({ draggedEmulators: [...draggedEmulatorsList] })
+      }
+    }
+  }
+
   const handleCreateTripClick = async () => {
-    console.log('fromAddress', fromAddress)
-    console.log('toAddress', toAddress)
     if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
       showToast('Please fill both locations!', 'error')
       return
@@ -105,9 +127,9 @@ const CreateTripDialog = () => {
         token
       )
       if (success) {
-        setIsLoading(true)
         showToast('Trip Added successfully', 'success')
-        fetchEmulators()
+        // fetchEmulators()
+        handleDraggedEmulatorsIfAny()
         handleClose()
       } else {
         showToast(error, 'error')

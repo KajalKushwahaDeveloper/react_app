@@ -188,6 +188,7 @@ function getTripPointSubIndexes(
       bearing: bearing,
       distance: 100
     }
+    distance = distance - 100
     tripPoints.push(tripPoint)
   }
 
