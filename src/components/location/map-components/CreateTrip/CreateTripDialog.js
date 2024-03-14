@@ -28,11 +28,20 @@ const CreateTripDialog = () => {
 
   const { isTableVisible } = useStates()
 
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
+  const connectedEmulatorRef = useRef(
+    useEmulatorStore.getState().connectedEmulator
+  )
 
   const draggedEmulatorsRef = useRef(
     useEmulatorStore.getState().draggedEmulators
   )
+
+  useEffect(() => {
+    useEmulatorStore.subscribe(
+      (state) => state.connectedEmulator,
+      (connectedEmulator) => (connectedEmulatorRef.current = connectedEmulator)
+    )
+  }, [])
 
   useEffect(() => {
     useEmulatorStore.subscribe(
@@ -68,18 +77,21 @@ const CreateTripDialog = () => {
   }
 
   const handleDraggedEmulatorsIfAny = () => {
-    if (selectedEmulator !== null) {
-      // if draggedEmulators is not null, then find from draggedEmulators where id is equal to selectedEmulator.id
+    const connectedEmulator = connectedEmulatorRef.current
+    if (connectedEmulator !== null) {
+      // if draggedEmulators is not null, then find from draggedEmulators where id is equal to connectedEmulator.id
       const draggedEmulatorsList = draggedEmulatorsRef.current
       let didRemove = false
       draggedEmulatorsList.forEach((draggedEmulator, index) => {
-        if (draggedEmulator.emulator.id === selectedEmulator.id) {
+        if (draggedEmulator.emulator.id === connectedEmulator.id) {
           draggedEmulatorsList.splice(index, 1)
           didRemove = true
         }
       })
       if (didRemove) {
-        useEmulatorStore.setState({ draggedEmulators: [...draggedEmulatorsList] })
+        useEmulatorStore.setState({
+          draggedEmulators: [...draggedEmulatorsList]
+        })
       }
     }
   }
@@ -93,9 +105,14 @@ const CreateTripDialog = () => {
     setError('')
 
     let confirmed = false
+    const connectedEmulator = connectedEmulatorRef.current
+    if (connectedEmulator === null) {
+      showToast('Please connect to an emulator!', 'error')
+      return
+    }
     if (
-      selectedEmulator.startLat !== null &&
-      selectedEmulator.tripStatus !== 'STOP'
+      connectedEmulator.startLat !== null &&
+      connectedEmulator.tripStatus !== 'STOP'
     ) {
       confirmed = window.confirm(
         'Creating new Trip will remove running trip for this emulator!! Continue?'
@@ -112,7 +129,7 @@ const CreateTripDialog = () => {
         endLong: toLong,
         fromAddress,
         toAddress,
-        emulatorDetailsId: selectedEmulator.id,
+        emulatorDetailsId: connectedEmulator.id,
         departTime: departNow
           ? dayjs().unix() * 1000
           : departTime.unix() * 1000,
