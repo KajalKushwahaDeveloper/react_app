@@ -64,19 +64,25 @@ const AddressTable = () => {
         readableTime(emulator.arrivalTime))
       : 'N/A'
 
-    const totalTime = (emulator?.arrivalTime && emulator?.departTime)
-      ? formatTime(emulator.arrivalTime - emulator.departTime)
-      : 'N/A'
+    // const totalTime = (emulator?.arrivalTime && emulator?.departTime)
+    //   ? formatTime(emulator.arrivalTime - emulator.departTime)
+    //   : 'N/A'
 
-    const remainingDistance = calculateRemainingDistance(
+    const calcRemainingDistance = calculateRemainingDistance(
       tripData,
       emulator?.currentTripPointIndex
     )
+
+    const remainingDistance = tripData ? parseInt(calcRemainingDistance / 1609) + ' miles' : 'N/A'
+    const resultantTime = (calcRemainingDistance / emulator?.velocity).toFixed(2)
+
+    const formatRemainingTime = formatTime(resultantTime)
+
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
     setStringToElementRef(toAddress, elementRefs.current[2])
     setStringToElementRef(arrivalTime, elementRefs.current[3])
-    setStringToElementRef(totalTime, elementRefs.current[4])
+    setStringToElementRef(formatRemainingTime, elementRefs.current[4])
     setStringToElementRef(remainingDistance, elementRefs.current[5])
 
     // loop through the element refs and set their background color to lightblue
@@ -296,6 +302,7 @@ const AddressTable = () => {
             <div className="address-table-heading">Current location</div>
             <div
               className="addressTable"
+              ref={elementRefs.current[0]}
               style={{
                 height: 'auto',
                 fontSize: '10px',
@@ -318,6 +325,7 @@ const AddressTable = () => {
             <div className="address-table-heading">From address</div>
             <div
               className="addressTable"
+              ref={elementRefs.current[1]}
               style={{
                 height: 'auto',
                 fontSize: '10px',
@@ -340,6 +348,7 @@ const AddressTable = () => {
             <div className="address-table-heading">To address</div>
             <div
               className="addressTable"
+              ref={elementRefs.current[2]}
               style={{
                 height: 'auto',
                 fontSize: '10px',
@@ -370,7 +379,7 @@ const AddressTable = () => {
               }}
               className="totalTimeSubContent"
             >
-              <div className="addressTable" style={{ wordWrap: 'break-word' }}>
+              <div className="addressTable" ref={elementRefs.current[3]} style={{ wordWrap: 'break-word' }}>
                 N/A
               </div>
             </div>
@@ -386,7 +395,7 @@ const AddressTable = () => {
               width: '200px'
             }}
           >
-            <div className="address-table-heading">Total Time</div>
+            <div className="address-table-heading">Remaining Time</div>
             <div
               style={{
                 marginTop: '5px !important'
@@ -395,6 +404,7 @@ const AddressTable = () => {
             >
               <div
                 className="addressTable"
+                ref={elementRefs.current[4]}
                 style={{
                   wordWrap: 'break-word',
                   height: 'auto',
@@ -428,7 +438,7 @@ const AddressTable = () => {
               }}
               className=""
             >
-              <div className="addressTable" style={{ wordWrap: 'break-word' }}>
+              <div className="addressTable" ref={elementRefs.current[5]} style={{ wordWrap: 'break-word' }}>
                 N/A miles
               </div>
             </div>
@@ -535,7 +545,7 @@ const AddressTable = () => {
                   height: '64px'
                 }}
               >
-                <div className="address-table-heading">Total Time</div>
+                <div className="address-table-heading">Remaining Time</div>
                 <div
                   className="addressTable"
                   id="4"
@@ -599,7 +609,7 @@ function calculateRemainingDistance(tripData, currentTripPointIndex) {
   }
 
   const calcRemainingDistance = calcTotalDistance - coveredDistance
-  return tripData ? parseInt(calcRemainingDistance / 1609) + ' miles' : 'N/A'
+  return calcRemainingDistance
 }
 
 function readableTime(time) {
