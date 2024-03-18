@@ -9,7 +9,6 @@ import UploadFiles from './components/upload-files.component.js'
 
 export function ContactForm({ emulatorId, showToast }) {
   const { control, handleSubmit } = useForm()
-  const [phoneNumber, setPhoneNumber] = useState('')
   const [message, setMessage] = useState('')
   // Remove the unused variable declaration
   const [messageError, setMessageError] = useState('')
@@ -49,7 +48,7 @@ export function ContactForm({ emulatorId, showToast }) {
       const payload = {
         emulatorId,
         message,
-        number: phoneNumber,
+        number: telephone,
         fileNames: extractedNames
       }
       const token = localStorage.getItem('token')
@@ -61,7 +60,6 @@ export function ContactForm({ emulatorId, showToast }) {
         null
       )
       if (success) {
-        setPhoneNumber('')
         setMessage('')
         setPhoneNumberError('')
         setMessageError('')
