@@ -58,15 +58,17 @@ const AddressTable = () => {
 
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
-    const arrivalTime = (emulator?.departTime && emulator?.arrivalTime)
-      ? (readableTime(emulator.departTime) +
-        '<br/>' +
-        readableTime(emulator.arrivalTime))
-      : 'N/A'
+    const arrivalTime =
+      emulator?.departTime && emulator?.arrivalTime
+        ? readableTime(emulator.departTime) +
+          '<br/>' +
+          readableTime(emulator.arrivalTime)
+        : 'N/A'
 
-    const totalTime = (emulator?.arrivalTime && emulator?.departTime)
-      ? formatTime(emulator.arrivalTime - emulator.departTime)
-      : 'N/A'
+    const totalTime =
+      emulator?.arrivalTime && emulator?.departTime
+        ? formatTime(emulator.arrivalTime - emulator.departTime)
+        : 'N/A'
 
     const remainingDistance = calculateRemainingDistance(
       tripData,
@@ -578,6 +580,7 @@ function calculateRemainingDistance(tripData, currentTripPointIndex) {
   if (currentTripPointIndex === null || currentTripPointIndex === undefined) {
     return 'N/A'
   }
+
   const tripDataPoints = tripData?.tripPoints || []
   let coveredDistance = 0
   let calcTotalDistance = 0
@@ -599,7 +602,14 @@ function calculateRemainingDistance(tripData, currentTripPointIndex) {
   }
 
   const calcRemainingDistance = calcTotalDistance - coveredDistance
-  return tripData ? parseInt(calcRemainingDistance / 1609) + ' miles' : 'N/A'
+
+  if (tripData) {
+    const remainingMiles = calcRemainingDistance / 1609
+    const formattedDistance = remainingMiles.toFixed(2) // Round to 2 decimal places
+    return formattedDistance + ' miles'
+  } else {
+    return 'N/A'
+  }
 }
 
 function readableTime(time) {
