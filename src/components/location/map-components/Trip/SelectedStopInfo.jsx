@@ -41,6 +41,8 @@ export function SelectedStopInfo(props) {
   const connectedEmulator = connectedEmulatorRef.current
   const tripData = tripDataRef.current
   const stop = props.selectedStop
+  const distanceFromStartToStops = stop ? (stop?.distance / 1609).toFixed(2) + ' miles' : 'N/A'
+
   let timeToReachThisStop = null
   let distanceToThisStop = null
   if (connectedEmulator == null || stop == null || tripData == null) {
@@ -135,7 +137,7 @@ export function SelectedStopInfo(props) {
                 <div className="selectedStopInfo">
                   <div>
                     <h6>Distance </h6>
-                    <p>{distanceToThisStop || 'N/A'}</p>
+                    <p>{distanceFromStartToStops || 'N/A'}</p>
                   </div>
                 </div>
                 {/* DISTANCE */}
@@ -144,7 +146,7 @@ export function SelectedStopInfo(props) {
 
                 <div>
                   <h6>Remaining Distance</h6>
-                  <p>{timeToReachThisStop || 'N/A'}</p>
+                  <p>{distanceToThisStop || 'N/A'}</p>
                 </div>
 
                 {/* REMAINING DISTANCE */}

@@ -1,12 +1,14 @@
 import { Button } from '@mui/material'
 import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form'
 import ApiService from '../../../../../ApiService'
 import { MESSAGE_SEND_MSG } from '../../../../../constants'
 import '../../../../../scss/ContactForm.scss'
 import UploadFiles from './components/upload-files.component.js'
 
 export function ContactForm({ emulatorId, showToast }) {
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const { control, handleSubmit } = useForm()
   const [message, setMessage] = useState('')
   // Remove the unused variable declaration
   const [messageError, setMessageError] = useState('')
@@ -37,15 +39,16 @@ export function ContactForm({ emulatorId, showToast }) {
     return true
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    if (validatePhoneNumber(phoneNumber) && validateMessage(message)) {
+  const handleSubmitForm = async (data) => {
+    const { telephone } = data
+
+    if (validatePhoneNumber(telephone) && validateMessage(message)) {
       const extractedNames = fileNames.map((file) => file.name)
 
       const payload = {
         emulatorId,
         message,
-        number: phoneNumber,
+        number: telephone,
         fileNames: extractedNames
       }
       const token = localStorage.getItem('token')
@@ -57,7 +60,6 @@ export function ContactForm({ emulatorId, showToast }) {
         null
       )
       if (success) {
-        setPhoneNumber('')
         setMessage('')
         setPhoneNumberError('')
         setMessageError('')
@@ -69,14 +71,23 @@ export function ContactForm({ emulatorId, showToast }) {
   }
   return (
     <div className="sms_form">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(handleSubmitForm)}>
         {/* Form inputs */}
-        <input
+        <PhoneInputWithCountry
+          name="telephone"
+          control={control}
+          international
+          countryCallingCodeEditable={false}
+          defaultCountry="US"
+          limitMaxLength={10}
+          rules={{
+            required: {
+              value: true,
+              message: 'Telephone is required!'
+            }
+          }}
           className="smsInput"
-          type="text"
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          style={{ marginBottom: '12px' }}
         />
         {numberError && <p className="error">{numberError}</p>}
         <textarea
