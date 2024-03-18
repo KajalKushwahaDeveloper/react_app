@@ -28,25 +28,6 @@ const AddressTable = () => {
     widthArr[i] = savedAddressWithI
   }
 
-  function formatTime(milliseconds) {
-    // Convert milliseconds to seconds
-    let totalSeconds = Math.floor(milliseconds / 1000)
-    // Calculate hours
-    const hours = Math.floor(totalSeconds / 3600)
-    totalSeconds %= 3600
-    // Calculate minutes
-    const minutes = Math.floor(totalSeconds / 60)
-    // Calculate remaining seconds
-    const seconds = totalSeconds % 60
-    // Format the time
-    const formattedTime = [
-      String(hours).padStart(2, '0'),
-      String(minutes).padStart(2, '0'),
-      String(seconds).padStart(2, '0')
-    ].join(':')
-    return formattedTime
-  }
-
   const getAddress = (address) =>
     address?.map((component) => component?.long_name || '').join(', ') || 'N/A'
 
@@ -58,27 +39,31 @@ const AddressTable = () => {
 
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
-    const arrivalTime =
+
+    // NOTE: CONVERTING DEPART TIME AND ARRIVAL TIME TO UTC THEN TO READABLE...
+    const arrivalDepartTime =
       emulator?.departTime && emulator?.arrivalTime
-        ? readableTime(emulator.departTime) +
+        ? readableTime(emulator.departTimeInUtc + emulator.departTimeOffSet) +
           '<br/>' +
-          readableTime(emulator.arrivalTime)
+          readableTime(emulator.arrivalTimeInUtc + emulator.arrivalTimeOffSet)
         : 'N/A'
 
-    const totalTime =
-      emulator?.arrivalTime && emulator?.departTime
-        ? formatTime(emulator.arrivalTime - emulator.departTime)
-        : 'N/A'
-
-    const remainingDistance = calculateRemainingDistance(
-      tripData,
-      emulator?.currentTripPointIndex
+    console.log(
+      'emulator',
+      emulator?.departTimeInUtc,
+      emulator?.arrivalTimeInUtc
     )
+
+    const { remainingTime, remainingDistance } = calculateRemainingDistance(
+      tripData,
+      emulator
+    )
+
     setStringToElementRef(currentAddress, elementRefs.current[0])
     setStringToElementRef(fromAddress, elementRefs.current[1])
     setStringToElementRef(toAddress, elementRefs.current[2])
-    setStringToElementRef(arrivalTime, elementRefs.current[3])
-    setStringToElementRef(totalTime, elementRefs.current[4])
+    setStringToElementRef(arrivalDepartTime, elementRefs.current[3])
+    setStringToElementRef(remainingTime, elementRefs.current[4])
     setStringToElementRef(remainingDistance, elementRefs.current[5])
 
     // loop through the element refs and set their background color to lightblue
@@ -388,7 +373,7 @@ const AddressTable = () => {
               width: '200px'
             }}
           >
-            <div className="address-table-heading">Total Time</div>
+            <div className="address-table-heading">Remaining Time</div>
             <div
               style={{
                 marginTop: '5px !important'
@@ -576,43 +561,97 @@ const AddressTable = () => {
 
 export default AddressTable
 
-function calculateRemainingDistance(tripData, currentTripPointIndex) {
-  if (currentTripPointIndex === null || currentTripPointIndex === undefined) {
-    return 'N/A'
+function calculateRemainingDistance(tripData, emulator) {
+  function formatTime(milliseconds) {
+    // hours and minutes from milliseconds
+    const hours = Math.floor(milliseconds / 3600000)
+    const minutes = Math.floor((milliseconds % 3600000) / 60000)
+    return `${hours}h ${minutes}m`
   }
 
+  if (
+    tripData === null ||
+    tripData === undefined ||
+    emulator === undefined ||
+    emulator === null
+  ) {
+    return { remainingTime: 'N/A', remainingDistance: 'N/A' }
+  }
+
+  let remainingDriveTimeInMilliseconds = 'N/A'
+  let remainingDistanceInMeters = 'N/A'
+
+  const stops = tripData?.stops || []
   const tripDataPoints = tripData?.tripPoints || []
-  let coveredDistance = 0
-  let calcTotalDistance = 0
+  const currentTripPointIndex = emulator.currentTripPointIndex
 
-  for (
-    let tripPointIndex = 0;
-    tripPointIndex <= currentTripPointIndex;
-    tripPointIndex++
-  ) {
-    coveredDistance += tripDataPoints[tripPointIndex]?.distance
-  }
-
-  for (
-    let tripPointIndextotal = 0;
-    tripPointIndextotal < tripDataPoints.length;
-    tripPointIndextotal++
-  ) {
-    calcTotalDistance += tripDataPoints[tripPointIndextotal]?.distance
-  }
-
-  const calcRemainingDistance = calcTotalDistance - coveredDistance
-
-  if (tripData) {
-    const remainingMiles = calcRemainingDistance / 1609
-    const formattedDistance = remainingMiles.toFixed(2) // Round to 2 decimal places
-    return formattedDistance + ' miles'
+  // if currentTripPointIndex is more than middle of the tripPoints, then we need to calculate the remaining distance and time
+  if (currentTripPointIndex > tripDataPoints.length / 2) {
+    // get the remaining tripPoints by iterating above the currentTripPointIndex
+    remainingDistanceInMeters = tripDataPoints.reduce(
+      (acc, tripPoint, index) => {
+        if (index > currentTripPointIndex) {
+          return acc + tripPoint.distance
+        }
+        return acc
+      },
+      0
+    )
+    remainingDriveTimeInMilliseconds =
+      remainingDistanceInMeters / emulator.velocity
   } else {
-    return 'N/A'
+    // get the remaining tripPoints by iterating below the currentTripPointIndex then delete the distance from totalDistance
+    const traveledDistance = tripDataPoints.reduce((acc, tripPoint, index) => {
+      if (index < currentTripPointIndex) {
+        return acc - tripPoint.distance
+      }
+      return acc
+    }, 0)
+    remainingDistanceInMeters = tripData.distance - traveledDistance
+    remainingDriveTimeInMilliseconds =
+      remainingDistanceInMeters / emulator.velocity
   }
+
+  console.log('remainingTime', remainingDriveTimeInMilliseconds)
+  console.log('remainingDistance', remainingDistanceInMeters)
+
+  const totalTimeTrue =
+    emulator?.arrivalTimeInUtc && emulator?.departTimeInUtc
+      ? formatTime(emulator.arrivalTimeInUtc - emulator.departTimeInUtc)
+      : 'N/A'
+
+  const totalTime = tripData
+    ? formatTime(tripData.distance / emulator.velocity)
+    : 'N/A'
+
+  console.log('totalTimeTrue', totalTimeTrue)
+  console.log('totalTime', totalTime)
+  console.log(
+    'remainingDriveTimeInMilliseconds',
+    remainingDriveTimeInMilliseconds
+  )
+  console.log('remainingDistance', remainingDistanceInMeters)
+  console.log('totalDistance', tripData.distance)
+  // for each stop Point whose tripPointIndex is greater than currentTripPointIndex, add the waitTime to const totalStopWaitTime
+  const totalStopWaitTime = stops.reduce((acc, stopPoint) => {
+    if (stopPoint.tripPointIndex > currentTripPointIndex) {
+      return acc + stopPoint.waitTime
+    }
+    return acc
+  }, 0)
+
+  const remainingTime = `Drive : ${formatTime(
+    remainingDriveTimeInMilliseconds
+  )} + Stops : ${formatTime(totalStopWaitTime)}<br/> = ${formatTime(
+    remainingDriveTimeInMilliseconds + totalStopWaitTime
+  )}`
+  const remainingDistance =
+    parseInt(remainingDistanceInMeters / 1609) + ' miles'
+
+  return { remainingTime, remainingDistance }
+
 }
 
 function readableTime(time) {
-  const date = new Date(time)
-  return date.toLocaleString()
+  return new Date(time).toUTCString().substring(5, 22)
 }
