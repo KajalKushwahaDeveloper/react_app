@@ -19,9 +19,11 @@ import { useStates } from '../../../../StateProvider.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import DateTimePickerValue from './DateTimeFieldValue.tsx'
 
 const CreateTripDialog = () => {
+  dayjs.extend(utc)
   const { width } = useViewPort()
   const breakpoint = 620
   const isMobile = width < breakpoint
@@ -130,10 +132,10 @@ const CreateTripDialog = () => {
         fromAddress,
         toAddress,
         emulatorDetailsId: connectedEmulator.id,
-        departTime: departNow
+        fakeDepartTimeInUtc: departNow
           ? dayjs().unix() * 1000
           : departTime.unix() * 1000,
-        arrivalTime: arrivalTime.unix() * 1000,
+        fakeArrivalTimeInUtc: arrivalTime.unix() * 1000,
         departNow
       }
       const token = localStorage.getItem('token')

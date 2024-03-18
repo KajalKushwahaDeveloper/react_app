@@ -9,6 +9,7 @@ export default function DateTimePickerValue({ value, setValue, title }) {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
         <DateTimePicker
+          timezone='UTC'
           label={title}
           value={value}
           onChange={(newValue) => setValue(newValue)}
