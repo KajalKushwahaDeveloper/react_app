@@ -78,3 +78,15 @@
     color: black;
   }
 }
+
+@media screen and (max-width:600px){
+  .sms_list_card {
+    overflow-y: auto;
+    max-height: 10rem;
+    height: 8rem;
+    color: black;
+    .card_list {
+      color: black;
+    }
+  }
+}
