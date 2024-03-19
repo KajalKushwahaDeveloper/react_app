@@ -22,7 +22,7 @@ const GoogleMapContainer = () => {
 
   const handleMapStateChange = () => {
     if (mapRef.current && isPrevioiusStateShowed.current === true) {
-    // save the new zoom points only when the user intract with the map.
+      // save the new zoom points only when the user intract with the map.
       localStorage.setItem('mapZoom', mapRef.current.getZoom())
       localStorage.setItem(
         'mapCenter',
