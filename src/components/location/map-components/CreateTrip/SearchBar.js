@@ -16,8 +16,6 @@ const SearchBar = (props) => {
   const [longitude, setLongitude] = useState(null)
   const [addressComponent, setAddressComponent] = useState(null)
 
-  props.setAddress(address) // Update external state if needed
-
   const handleChange = (newAddress) => {
     setInputValue(newAddress)
     setAddress(newAddress) // Update the address state with the new input value
@@ -56,8 +54,8 @@ const SearchBar = (props) => {
   useEffect(() => {
     props.setLat(latitude)
     props.setLong(longitude)
-    if (props.setAddress) {
-      props.setAddress(addressComponent)
+    if (props?.setAddress) {
+      props?.setAddress(addressComponent)
     }
   }, [latitude, longitude, addressComponent, props])
 

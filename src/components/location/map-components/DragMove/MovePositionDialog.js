@@ -101,7 +101,7 @@ const MovePositionDialog = () => {
                 borderTopLeftRadius: '1rem'
               }}
             >
-              Create Trip
+              Set Position
             </Typography>
             <div style={{ margin: '1rem 0' }}>
               <div
