@@ -19,20 +19,31 @@ import { useStates } from '../../../../StateProvider.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import DateTimePickerValue from './DateTimeFieldValue.tsx'
 
 const CreateTripDialog = () => {
+  dayjs.extend(utc)
   const { width } = useViewPort()
   const breakpoint = 620
   const isMobile = width < breakpoint
 
   const { isTableVisible } = useStates()
 
-  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
+  const connectedEmulatorRef = useRef(
+    useEmulatorStore.getState().connectedEmulator
+  )
 
   const draggedEmulatorsRef = useRef(
     useEmulatorStore.getState().draggedEmulators
   )
+
+  useEffect(() => {
+    useEmulatorStore.subscribe(
+      (state) => state.connectedEmulator,
+      (connectedEmulator) => (connectedEmulatorRef.current = connectedEmulator)
+    )
+  }, [])
 
   useEffect(() => {
     useEmulatorStore.subscribe(
@@ -68,18 +79,21 @@ const CreateTripDialog = () => {
   }
 
   const handleDraggedEmulatorsIfAny = () => {
-    if (selectedEmulator !== null) {
-      // if draggedEmulators is not null, then find from draggedEmulators where id is equal to selectedEmulator.id
+    const connectedEmulator = connectedEmulatorRef.current
+    if (connectedEmulator !== null) {
+      // if draggedEmulators is not null, then find from draggedEmulators where id is equal to connectedEmulator.id
       const draggedEmulatorsList = draggedEmulatorsRef.current
       let didRemove = false
       draggedEmulatorsList.forEach((draggedEmulator, index) => {
-        if (draggedEmulator.emulator.id === selectedEmulator.id) {
+        if (draggedEmulator.emulator.id === connectedEmulator.id) {
           draggedEmulatorsList.splice(index, 1)
           didRemove = true
         }
       })
       if (didRemove) {
-        useEmulatorStore.setState({ draggedEmulators: [...draggedEmulatorsList] })
+        useEmulatorStore.setState({
+          draggedEmulators: [...draggedEmulatorsList]
+        })
       }
     }
   }
@@ -93,9 +107,14 @@ const CreateTripDialog = () => {
     setError('')
 
     let confirmed = false
+    const connectedEmulator = connectedEmulatorRef.current
+    if (connectedEmulator === null) {
+      showToast('Please connect to an emulator!', 'error')
+      return
+    }
     if (
-      selectedEmulator.startLat !== null &&
-      selectedEmulator.tripStatus !== 'STOP'
+      connectedEmulator.startLat !== null &&
+      connectedEmulator.tripStatus !== 'STOP'
     ) {
       confirmed = window.confirm(
         'Creating new Trip will remove running trip for this emulator!! Continue?'
@@ -112,11 +131,11 @@ const CreateTripDialog = () => {
         endLong: toLong,
         fromAddress,
         toAddress,
-        emulatorDetailsId: selectedEmulator.id,
-        departTime: departNow
+        emulatorDetailsId: connectedEmulator.id,
+        fakeDepartTimeInUtc: departNow
           ? dayjs().unix() * 1000
           : departTime.unix() * 1000,
-        arrivalTime: arrivalTime.unix() * 1000,
+        fakeArrivalTimeInUtc: arrivalTime.unix() * 1000,
         departNow
       }
       const token = localStorage.getItem('token')

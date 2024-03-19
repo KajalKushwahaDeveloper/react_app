@@ -13,6 +13,7 @@ import PopUpAssignUser from '../components/popup_assign_user.js'
 import PopUpEmulatorTelephone from '../components/popup_emulator_update_telephone.js'
 import PopUpUser from '../components/popup_user.js'
 import { EMULATOR_CREATE_RANDOM_URL, USER_URL } from '../constants.js'
+import { useEmulatorStore } from '../stores/emulator/store.tsx'
 import { useAuth } from './hooks/useAuth.js'
 
 const Home = () => {
@@ -31,6 +32,8 @@ const Home = () => {
   const [emulatorData, setEmulatorData] = useState([])
   const [updatedData, setUpdatedData] = useState([])
   const [updateSerial, setUpdateSerial] = useState(false)
+
+  const updateEmulators = useEmulatorStore((state) => state.updateEmulators)
 
   const {
     register,
@@ -54,6 +57,7 @@ const Home = () => {
   const updatedEmulator = async () => {
     const { success, data, error } = await GetEmulatorApi()
     if (success) {
+      updateEmulators(data)
       setEmulatorData(data)
     } else {
       console.error('Failed to fetch Emulator Data', error)

@@ -11,6 +11,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 import ApiService from '../../../ApiService'
 import { USER_CHANGE_STATUS_URL, USER_URL } from '../../../constants'
 import { CustomTablePagination } from '../../CustomTablePagination'
@@ -38,6 +39,13 @@ export default function UserTable({
   const [error, setError] = React.useState(null)
 
   const [userData, setUserData] = React.useState([])
+  const [dataUpdated, setDataUpdated] = useState(false) // State to track if data has been updated
+
+  useEffect(() => {
+    if (!dataUpdated) {
+      fetchUsers() // Fetch data only if data hasn't been updated
+    }
+  }, [dataUpdated])
 
   React.useEffect(() => {
     // Fetch data from API
@@ -59,6 +67,7 @@ export default function UserTable({
         })
         // showToast('Updated user table!', 'success')
         setUserData(updatedData)
+        console.error('updatedData : ', updatedData)
       } else {
         console.error('refreshEditedUser error : ' + error)
         showToast('Failed to update user table', 'error')
@@ -68,11 +77,12 @@ export default function UserTable({
     if (userEditedId !== null) {
       if (userEditedId === 0) {
         fetchUsers()
+        setDataUpdated(false) // Reset data update flag when adding a new user
       } else {
         refreshEditedUser(userEditedId)
       }
     }
-  }, [userEditedId])
+  }, [userEditedId, updatedData])
 
   React.useEffect(() => {
     // Fetch data from API
@@ -211,6 +221,7 @@ export default function UserTable({
     const { success, error } = fetchUsers()
     if (success) {
       showToast('Fetched Users successfully', 'success')
+      setDataUpdated(true) // Set data update flag after fetching
     } else {
       showToast(error, 'error')
     }
@@ -243,7 +254,6 @@ export default function UserTable({
       ),
     [order, orderBy, page, userData, rowsPerPage]
   )
-
   if (loading) {
     return (
       <>

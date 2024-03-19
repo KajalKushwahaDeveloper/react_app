@@ -1,10 +1,11 @@
 import React from 'react'
+import PhoneInput from 'react-phone-number-input'
 import './Dialler.css'
 import KeypadButton from './KeypadButton'
 
 const Dialler = ({ number, setNumber }) => {
   const handleNumberChange = (event) => {
-    setNumber(event.target.value)
+    setNumber(event)
   }
 
   const handleBackSpace = () => {
@@ -19,11 +20,13 @@ const Dialler = ({ number, setNumber }) => {
 
   return (
     <>
-      <input
-        type="tel"
+      <PhoneInput
+        country="US"
+        defaultCountry="US"
         value={number}
         onChange={handleNumberChange}
-        className="input"
+        className="smsInput"
+        maxLength='11'
       />
 
       <ol className="keypad">
@@ -60,7 +63,7 @@ const Dialler = ({ number, setNumber }) => {
         <li>
           <KeypadButton handleClick={handleNumberPressed('0')}>0</KeypadButton>
         </li>
-        {number.length > 0 && (
+        {number?.length > 0 && (
           <li>
             <KeypadButton handleClick={handleBackSpace}>&lt;&lt;</KeypadButton>
           </li>

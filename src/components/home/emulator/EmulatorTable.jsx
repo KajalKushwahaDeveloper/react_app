@@ -53,6 +53,7 @@ export default function EmulatorTable({
   const [emulators, setEmulators] = React.useState([])
 
   const totalEmulators = useEmulatorStore.getState().emulators
+  const updateEmulators = useEmulatorStore((state) => state.updateEmulators)
 
   React.useEffect(() => {
     setEmulators(emulatorData)
@@ -171,6 +172,7 @@ export default function EmulatorTable({
 
     if (success) {
       setEmulators(data)
+      updateEmulators(data)
       setLoading(false)
     } else {
       setError(error)
