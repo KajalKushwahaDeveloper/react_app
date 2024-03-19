@@ -108,7 +108,8 @@ class PlacesAutocomplete extends React.Component {
       this.autocompleteService.getPlacePredictions(
         {
           ...this.props.searchOptions,
-          input: value
+          input: value,
+          componentRestrictions: { country: 'US' } // Restrict suggestions to USA
         },
         this.autocompleteCallback
       )

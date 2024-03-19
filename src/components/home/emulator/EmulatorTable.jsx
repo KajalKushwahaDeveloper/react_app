@@ -18,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import { GetEmulatorApi } from '../../../components/api/emulator'
+import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 
 import {
   EMULATOR_DELETE_URL,
@@ -27,6 +28,7 @@ import {
 import ApiService from './../../../ApiService'
 
 import { useStates } from '../../../StateProvider'
+import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import { CustomTablePagination } from '../../CustomTablePagination'
 
 export default function EmulatorTable({
@@ -50,6 +52,9 @@ export default function EmulatorTable({
   const [error, setError] = React.useState(null)
 
   const [emulators, setEmulators] = React.useState([])
+
+  const totalEmulators = useEmulatorStore.getState().emulators
+  const updateEmulators = useEmulatorStore((state) => state.updateEmulators)
 
   React.useEffect(() => {
     setEmulators(emulatorData)
@@ -92,13 +97,25 @@ export default function EmulatorTable({
         }
         return item
       })
-      showToast('Updated Emulator table!', 'success')
+      // showToast('Updated Emulator table!', 'success')
       setEmulators(updatedData)
     } else {
       showToast('Failed to update Emulator table' + error, 'error')
       return { success: false, error: 'Failed to unassign user' }
     }
   }
+
+  React.useEffect(() => {
+    if (userAssingedEmulator != null) {
+      const updatedData = emulators.map((item) => {
+        if (item.id === userAssingedEmulator.id) {
+          return { ...item, user: userAssingedEmulator.user }
+        }
+        return item
+      })
+      setEmulators(updatedData)
+    }
+  }, [userAssingedEmulator])
 
   // assign/unassign button
   const handleAssignButtonClick = async (row) => {
@@ -131,6 +148,7 @@ export default function EmulatorTable({
           return item
         })
         showToast('User Un-Assigned', 'success')
+        useEmulatorStore.getState().updateEmulators(updatedData)
         setEmulators(updatedData)
       } catch (error) {
         showToast(`Failed to unassign user ${error}`, 'error')
@@ -140,6 +158,14 @@ export default function EmulatorTable({
     }
   }
 
+  React.useEffect(() => {
+    const unsubscribe = useEmulatorStore.subscribe(
+      (newEmulators) => setEmulators(newEmulators.emulators),
+      (state) => state.emulators
+    )
+    return () => unsubscribe()
+  }, [])
+
   // Fetch data from API // GET  API
   const fetchData = async () => {
     setLoading(true)
@@ -147,6 +173,7 @@ export default function EmulatorTable({
 
     if (success) {
       setEmulators(data)
+      updateEmulators(data)
       setLoading(false)
     } else {
       setError(error)
@@ -156,6 +183,7 @@ export default function EmulatorTable({
 
   // delete button
   const handleDeleteButtonClick = async (emulator) => {
+    const totalEmulators = useEmulatorStore.getState().emulators
     const confirmed = window.confirm(
       'Delete this emulator : ' + emulator.emulatorSsid + '?'
     )
@@ -171,6 +199,10 @@ export default function EmulatorTable({
 
       if (success) {
         showToast('emulator deleted', 'success')
+        const updatedData = totalEmulators.filter(
+          (item) => item.emulatorSsid !== emulator.emulatorSsid
+        )
+        useEmulatorStore.getState().updateEmulators(updatedData)
         fetchData()
       } else {
         showToast('emulator not deleted', 'error')
@@ -197,6 +229,7 @@ export default function EmulatorTable({
         return item
       })
       setEmulators(updatedData)
+      // showToast('Updated emulator table!', 'success')
     }
   }, [userAssingedEmulator])
 
@@ -221,7 +254,7 @@ export default function EmulatorTable({
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(emulators, getComparator(order, orderBy)).slice(
+      stableSort(totalEmulators, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),

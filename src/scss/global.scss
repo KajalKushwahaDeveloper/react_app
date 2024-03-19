@@ -159,3 +159,13 @@ input {
 .css-tlc64q-MuiPaper-root-MuiDialog-paper.css-tlc64q-MuiPaper-root-MuiDialog-paper{
   overflow-y: hidden;
 }
+.css-tlc64q-MuiPaper-root-MuiDialog-paper{
+  overflow-y: hidden !important;
+  height: 93vh;
+}
+@media screen and (max-width: 600px) {
+  .css-tlc64q-MuiPaper-root-MuiDialog-paper{
+    overflow-y: hidden !important;
+    height: 94vh;
+  }
+}

@@ -2,12 +2,11 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Backdrop, CircularProgress, Dialog, Tab, Tabs } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import ApiService from '../../../../ApiService'
+import { useStates } from '../../../../StateProvider.js'
 import { CALL_URL, MESSAGE_URL } from '../../../../constants'
+import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import { ShowHistory } from './ShowHistory'
 import { TabPanel, a11yProps } from './a11yProps'
-
-import { useStates } from '../../../../StateProvider.js'
-import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import { ContactForm } from './sms/ContactForm'
 import Phone from './twilio/Phone'
 
@@ -97,7 +96,7 @@ function ContactDialogComponent({
               {...a11yProps(1)}
             />
           </Tabs>
-          <TabPanel value={tabIndexValue} index={0} style={{ height: '63%' }}>
+          <TabPanel value={tabIndexValue} index={0} style={{ height: '81vh', overflowY: 'scroll' }}>
             {contactDialogOptions.dialogType === 'call' ? (
               <Phone setContactDialogOptions={setContactDialogOptions} />
             ) : (
@@ -107,7 +106,7 @@ function ContactDialogComponent({
               />
             )}
           </TabPanel>
-          <TabPanel value={tabIndexValue} index={1} style={{ height: '63%' }}>
+          <TabPanel value={tabIndexValue} index={1} style={{ height: '80vh', overflowY: 'scroll' }}>
             <ShowHistory
               dialogType={contactDialogOptions.dialogType}
               data={historyData}
