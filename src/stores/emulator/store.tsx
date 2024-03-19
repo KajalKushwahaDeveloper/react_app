@@ -115,6 +115,10 @@ const createEmulatorsSlice: StateCreator<
     } else {
       set({ center: null })
     }
+
+    // Store the selected emulator ID in localStorage
+    localStorage.setItem('selectedEmulator', JSON.stringify(emulator) || '')
+
     // if same as selectedEmulator, then do nothing..
     if (
       emulator === get().selectedEmulator ||

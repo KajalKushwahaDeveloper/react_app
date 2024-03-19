@@ -194,11 +194,35 @@ const GpsTable = () => {
     setRowsPerPage(maxRowsPerPage)
   }, [height])
 
+  useEffect(() => {
+    // Retrieve selected emulator from local storage
+    const storedSelectedEmulatorStr = localStorage.getItem('selectedEmulator')
+    let storedSelectedEmulator
+    if (typeof storedSelectedEmulatorStr === 'string' && storedSelectedEmulatorStr !== '[object Object]') {
+      storedSelectedEmulator = JSON.parse(storedSelectedEmulatorStr)
+
+      if (storedSelectedEmulator) {
+        selectEmulator(storedSelectedEmulator)
+      }
+    }
+  }, []) // Empty dependency array to run the effect only once when the component mounts
+
   const handleEmulatorCheckboxChange = (emulatorRow) => {
     if (selectedEmulator?.id !== emulatorRow.id) {
       selectEmulator(emulatorRow)
+      localStorage.setItem('selectedEmulator', JSON.stringify(emulatorRow))
+
+      // when selecting any other emualtor clear the previous saved zoom and center
+      // for zoom functionality while refreshing the page
+      localStorage.removeItem('mapZoom')
+      localStorage.removeItem('mapCenter')
     } else {
       selectEmulator(null)
+      // Remove the selected emulator ID from local storage
+      localStorage.removeItem('selectedEmulator')
+      // Remove the previous selected zoom and center.
+      localStorage.removeItem('mapZoom')
+      localStorage.removeItem('mapCenter')
     }
   }
 
