@@ -151,6 +151,8 @@ const GoogleMapContainer = () => {
       gestureHandling="none"
       zoomControl={false}
       options={{
+        minZoom: 3,
+        maxZoom: 20,
         scrollwheel: true,
         styles: defaultMapStyle,
         disableDefaultUI: true
