@@ -96,7 +96,7 @@ function ContactDialogComponent({
               {...a11yProps(1)}
             />
           </Tabs>
-          <TabPanel value={tabIndexValue} index={0} style={{ marginTop: '1rem', height: '83vh', overflowY: 'scroll' }}>
+          <TabPanel value={tabIndexValue} index={0} style={{ zIndex: '1100', marginTop: '1.3rem', height: '83vh', overflowY: 'scroll' }}>
             {contactDialogOptions.dialogType === 'call' ? (
               <Phone setContactDialogOptions={setContactDialogOptions} />
             ) : (

@@ -70,7 +70,7 @@ export function ContactForm({ emulatorId, showToast }) {
     }
   }
   return (
-    <div className="sms_form">
+    <div className="sms_form" style={{ zIndex: '100' }}>
       <form onSubmit={handleSubmit(handleSubmitForm)}>
         {/* Form inputs */}
         <PhoneInputWithCountry
