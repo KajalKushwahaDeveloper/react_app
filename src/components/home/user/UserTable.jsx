@@ -65,7 +65,7 @@ export default function UserTable({
           }
           return item
         })
-        showToast('Updated user table!', 'success')
+        // showToast('Updated user table!', 'success')
         setUserData(updatedData)
         console.error('updatedData : ', updatedData)
       } else {
@@ -119,7 +119,7 @@ export default function UserTable({
           }
           return item
         })
-        showToast('Updated user table!', 'success')
+        // showToast('Updated user table!', 'success')
         setUserData(updatedData)
       } catch (error) {
         console.error('refreshUser error : ' + error)
