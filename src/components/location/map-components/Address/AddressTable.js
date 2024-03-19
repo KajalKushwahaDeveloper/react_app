@@ -39,7 +39,6 @@ const AddressTable = () => {
 
     const toAddress = tripData ? getAddress(tripData.toAddress) : 'N/A'
 
-
     // NOTE: CONVERTING DEPART TIME AND ARRIVAL TIME TO UTC THEN TO READABLE...
     const arrivalDepartTime =
       emulator?.departTime && emulator?.arrivalTime
@@ -649,7 +648,6 @@ function calculateRemainingDistance(tripData, emulator) {
     parseInt(remainingDistanceInMeters / 1609) + ' miles'
 
   return { remainingTime, remainingDistance }
-
 }
 
 function readableTime(time) {
