@@ -18,16 +18,16 @@ const GoogleMapContainer = () => {
   const styleRef = useRef('default')
   const [savedZoom, setSavedZoom] = useState(null)
   const [savedCenter, setSavedCenter] = useState(null)
-  const isPrevioiusStateShowed = useRef(false);
+  const isPrevioiusStateShowed = useRef(false)
 
   const handleMapStateChange = () => {
-    if (mapRef.current && isPrevioiusStateShowed.current == true) {
-        // save the new zoom points only when the user intract with the map.
-        localStorage.setItem('mapZoom', mapRef.current.getZoom())
-        localStorage.setItem(
-          'mapCenter',
-          JSON.stringify(mapRef.current.getCenter().toJSON())
-        )
+    if (mapRef.current && isPrevioiusStateShowed.current === true) {
+      // save the new zoom points only when the user intract with the map.
+      localStorage.setItem('mapZoom', mapRef.current.getZoom())
+      localStorage.setItem(
+        'mapCenter',
+        JSON.stringify(mapRef.current.getCenter().toJSON())
+      )
     }
   }
 
@@ -160,7 +160,7 @@ const GoogleMapContainer = () => {
         }
       }
       // previous saved state is shown so start saving new zoom and map state.
-      isPrevioiusStateShowed.current = true;
+      isPrevioiusStateShowed.current = true
     }
   }
 
@@ -200,10 +200,10 @@ const GoogleMapContainer = () => {
         if (typeof mapCenter === 'string' && mapCenter !== '[object Object]') {
           // This will prevent to overwrite the previous saved zoom and the map state,
           // after drawing the map root we will set the previous state if any available for the emualtor.
-          isPrevioiusStateShowed.current = false;
+          isPrevioiusStateShowed.current = false
         } else {
-          // no previous saved state is available so start saving new state and zoom. 
-          isPrevioiusStateShowed.current = true;
+          // no previous saved state is available so start saving new state and zoom.
+          isPrevioiusStateShowed.current = true
         }
         // Add event listeners for map state changes (zoom and center)
         mapRef.current.addListener('zoom_changed', handleMapStateChange)
