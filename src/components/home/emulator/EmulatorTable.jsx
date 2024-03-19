@@ -28,7 +28,6 @@ import {
 import ApiService from './../../../ApiService'
 
 import { useStates } from '../../../StateProvider'
-import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import { CustomTablePagination } from '../../CustomTablePagination'
 
 export default function EmulatorTable({
