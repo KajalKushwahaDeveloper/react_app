@@ -96,7 +96,7 @@ function ContactDialogComponent({
               {...a11yProps(1)}
             />
           </Tabs>
-          <TabPanel value={tabIndexValue} index={0} style={{ height: '81vh', overflowY: 'scroll' }}>
+          <TabPanel value={tabIndexValue} index={0} style={{ zIndex: '1100', marginTop: '1.3rem', height: '83vh', overflowY: 'scroll' }}>
             {contactDialogOptions.dialogType === 'call' ? (
               <Phone setContactDialogOptions={setContactDialogOptions} />
             ) : (
@@ -106,7 +106,7 @@ function ContactDialogComponent({
               />
             )}
           </TabPanel>
-          <TabPanel value={tabIndexValue} index={1} style={{ height: '80vh', overflowY: 'scroll' }}>
+          <TabPanel value={tabIndexValue} index={1} style={{ marginTop: '2rem', height: '80vh', overflowY: 'scroll' }}>
             <ShowHistory
               dialogType={contactDialogOptions.dialogType}
               data={historyData}
