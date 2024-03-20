@@ -7,6 +7,7 @@ export function ConnectedEmulatorComponent() {
   const connectedEmulatorRef = useRef(
     useEmulatorStore.getState().connectedEmulator
   )
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
   const [showThis, setShowThis] = useState(false)
 
   useEffect(() =>
@@ -15,15 +16,23 @@ export function ConnectedEmulatorComponent() {
       (connectedEmulator) => {
         if (connectedEmulator !== null && connectedEmulator !== undefined) {
           if (!showThis) {
-            setShowThis(true)
+            // setShowThis(true)
           }
         } else {
-          setShowThis(false)
+          // setShowThis(false)
         }
         connectedEmulatorRef.current = connectedEmulator
       }
     )
   )
+
+  useEffect(() => {
+    if (selectedEmulator === null) {
+      setShowThis(false)
+    } else {
+      setShowThis(true)
+    }
+  }, [selectedEmulator])
 
   return (
     <>
