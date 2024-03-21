@@ -182,7 +182,7 @@ const MapButtons = () => {
     }
 
     if (showCancelSetPositionButton) {
-      cancelSetPositionButtonRef.current.innerText = 'Cancel Set Position'
+      cancelSetPositionButtonRef.current.innerText = 'Cancel Set Position_test'
     }
 
     setButtonVisibility(
@@ -257,8 +257,9 @@ const MapButtons = () => {
 
   // timer for draggedEmulatorsOnCountdown
   useEffect(() => {
+    const draggedEmulatorsList = draggedEmulatorsRef.current
+    console.log('draggedEmulatorsListData:', draggedEmulatorsList)
     const interval = setInterval(() => {
-      const draggedEmulatorsList = draggedEmulatorsRef.current
       // loop index and reduce 1 from each draggedEmulator's timeout in draggedEmulatorsList
       draggedEmulatorsList.forEach(async (draggedEmulator, index) => {
         if (draggedEmulator.timeout > 0) {

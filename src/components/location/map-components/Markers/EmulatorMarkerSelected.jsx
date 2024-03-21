@@ -14,6 +14,7 @@ const EmulatorMarkerSelected = () => {
 
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
   const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator)
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
 
   const draggedEmulatorOnTripRef = useRef(
     useEmulatorStore.getState().draggedEmulatorOnTrip
@@ -210,7 +211,10 @@ const EmulatorMarkerSelected = () => {
     []
   )
 
-  let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
+  console.log('testing_Shubham:', selectedEmulator?.tripStatus)
+  console.log('testing_Shubham1:', emulatorRef?.current)
+
+  let iconUrl = `images/${'STOP'}/`
   iconUrl = iconUrl + 'SELECT'
   if (
     emulatorRef.current?.velocity > MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS ||
@@ -225,6 +229,8 @@ const EmulatorMarkerSelected = () => {
     scaledSize: new window.google.maps.Size(20, 20),
     anchor: new window.google.maps.Point(10, 10)
   }
+
+  console.log('emulatorIconTesting:', emulatorIcon)
 
   function isThisEmulatorOnTrip() {
     let hasNoTrip = true

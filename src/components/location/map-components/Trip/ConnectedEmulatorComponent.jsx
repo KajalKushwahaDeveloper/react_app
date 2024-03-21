@@ -27,6 +27,8 @@ export function ConnectedEmulatorComponent() {
     selectedEmulator === null || selectedEmulator === undefined ? setShowThis(false) : setShowThis(true)
   }, [selectedEmulator])
 
+  console.log('showThistesting:', selectedEmulator?.tripStatus)
+
   return (
     <>
       {showThis && (
