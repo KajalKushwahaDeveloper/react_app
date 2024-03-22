@@ -1,3 +1,6 @@
+import AddLocationIcon from '@mui/icons-material/AddLocation'
+import CloseIcon from '@mui/icons-material/Close'
+import RadarIcon from '@mui/icons-material/Radar'
 import SyncIcon from '@mui/icons-material/Sync'
 import Button from '@mui/material/Button'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -165,12 +168,14 @@ const MapButtons = () => {
       // showCancel ? 310 : 190
       // showCancel ? 191 : 70
       if (tripDataRef.current !== null) {
-        setPositionButtonRef.current.style.right = '310px'
-        cancelSetPositionButtonRef.current.style.right = '310px'
-        cancelTripButtonRef.current.style.right = '189px'
+        setPositionButtonRef.current.style.right = isMobile ? '204px' : '310px'
+        cancelSetPositionButtonRef.current.style.right = isMobile ? '137px' : '310px'
+        cancelTripButtonRef.current.style.right = isMobile ? '137px' : '189px'
       } else {
-        setPositionButtonRef.current.style.right = '190px'
-        cancelSetPositionButtonRef.current.style.right = '190px'
+        setPositionButtonRef.current.style.right = isMobile ? '137px' : '190px'
+        cancelSetPositionButtonRef.current.style.right = isMobile
+          ? '137px'
+          : '190px'
         cancelTripButtonRef.current.style.right = '70px'
       }
     }
@@ -182,7 +187,9 @@ const MapButtons = () => {
     }
 
     if (showCancelSetPositionButton) {
-      cancelSetPositionButtonRef.current.innerText = 'Cancel Set Position'
+      cancelSetPositionButtonRef.current.innerText = isMobile
+        ? 'X'
+        : 'Cancel Set Position '
     }
 
     setButtonVisibility(
@@ -269,7 +276,9 @@ const MapButtons = () => {
         if (draggedEmulator.emulator.id === connectedEmulatorRef.current?.id) {
           // change CANCEL SET POSITION text to CANCEL SET POSITION (timeout seconds left)
           if (cancelSetPositionButtonRef.current) {
-            cancelSetPositionButtonRef.current.innerText = `Cancel Set Position (${draggedEmulator.timeout}s)`
+            cancelSetPositionButtonRef.current.innerText = isMobile
+              ? `X (${draggedEmulator.timeout}s)`
+              : `Cancel Set Position (${draggedEmulator.timeout}s)`
           }
         }
 
@@ -309,7 +318,9 @@ const MapButtons = () => {
               // But since we are not updating the state, and subscribe only responds to added draggedEmulators.
               // we need to update the buttons right now from here
               setupButtons()
-              cancelSetPositionButtonRef.current.innerText = 'Cancel Set Position'
+              cancelSetPositionButtonRef.current.innerText = isMobile
+                ? 'X'
+                : 'Cancel Set Position'
               moveEmulator(null)
             } else {
               throw new Error(error)
@@ -378,7 +389,8 @@ const MapButtons = () => {
             top: isMobile ? '100px' : '135px',
             right: 190,
             justifyContent: 'center',
-            backgroundColor: '#f44336'
+            backgroundColor: '#f44336',
+            fontSize: isMobile ? '17px' : ''
           }}
           onClick={handleSetPositionCancelClick}
         >
@@ -399,7 +411,7 @@ const MapButtons = () => {
           }}
           onClick={handleSetPositionClick}
         >
-          Set position
+          {isMobile ? <RadarIcon /> : 'Set position'}
         </Button>
 
         <Button
@@ -416,7 +428,7 @@ const MapButtons = () => {
           }}
           onClick={handleCreateTripButton}
         >
-          Create Trip
+          {isMobile ? <AddLocationIcon /> : 'Create Trip'}
         </Button>
 
         <Button
@@ -434,7 +446,7 @@ const MapButtons = () => {
           }}
           onClick={handleCancelTripClick}
         >
-          Cancel Trip
+          {isMobile ? <CloseIcon /> : 'Cancel Trip'}
         </Button>
         <Button
           variant="contained"
