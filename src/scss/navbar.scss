@@ -338,14 +338,14 @@
     }
   }
 
-  .mobile-menu-link {
-    position: relative;
-    z-index: 99;
-  }
+  // .mobile-menu-link {
+  //   position: relative;
+  //   z-index: 99;
+  // }
 
     .mobile-menu-link {
       background-color: $background-color;
-      position: absolute;
+      position: relative;
       left: 0;
       top: 3rem !important;
 
@@ -357,6 +357,7 @@
       align-items: center;
       justify-content: center;
       padding: 2rem 0;
+      z-index: 99;
     }
 
   .mobile-menu-link ul {

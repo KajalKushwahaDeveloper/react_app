@@ -274,6 +274,7 @@ const AddressTable = () => {
           {/* CURRENT ADDRESS */}
           <div
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[0]}
             style={{
               border: '2px solid',
               color: 'black',
@@ -285,9 +286,10 @@ const AddressTable = () => {
             <div className="address-table-heading">Current location</div>
             <div
               className="addressTable"
+              ref={elementRefs.current[0]}
               style={{
                 height: 'auto',
-                fontSize: '10px',
+                fontSize: '13px',
                 width: 'calc(100% - 5px)'
               }}
             >
@@ -297,6 +299,7 @@ const AddressTable = () => {
           {/* FROM ADDRESS */}
           <div
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[1]}
             style={{
               border: '2px solid',
               alignItems: 'center',
@@ -307,9 +310,10 @@ const AddressTable = () => {
             <div className="address-table-heading">From address</div>
             <div
               className="addressTable"
+              ref={elementRefs.current[1]}
               style={{
                 height: 'auto',
-                fontSize: '10px',
+                fontSize: '13px',
                 width: 'calc(100% - 5px)'
               }}
             >
@@ -319,6 +323,7 @@ const AddressTable = () => {
           {/* TO ADDRESS */}
           <div
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[2]}
             style={{
               border: '2px solid',
               alignItems: 'center',
@@ -329,9 +334,10 @@ const AddressTable = () => {
             <div className="address-table-heading">To address</div>
             <div
               className="addressTable"
+              ref={elementRefs.current[2]}
               style={{
                 height: 'auto',
-                fontSize: '10px',
+                fontSize: '13px',
                 width: 'calc(100% - 5px)'
               }}
             >
@@ -342,6 +348,7 @@ const AddressTable = () => {
           {/* ARRIVAL TIME */}
           <div
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[3]}
             style={{
               border: '2px solid',
               alignItems: 'center',
@@ -355,9 +362,11 @@ const AddressTable = () => {
                 marginTop: '5px !important',
                 height: '30px',
                 textAlign: 'center',
-                maxWidth: '20vw'
+                fontSize: '13px',
+                // maxWidth: '20vw'
               }}
               className="totalTimeSubContent"
+              ref={elementRefs.current[3]}
             >
               <div className="addressTable" style={{ wordWrap: 'break-word' }}>
                 N/A
@@ -368,6 +377,7 @@ const AddressTable = () => {
           {/* TIME */}
           <div
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[4]}
             style={{
               border: '2px solid',
               alignItems: 'center',
@@ -384,10 +394,11 @@ const AddressTable = () => {
             >
               <div
                 className="addressTable"
+                ref={elementRefs.current[4]}
                 style={{
                   wordWrap: 'break-word',
                   height: 'auto',
-                  fontSize: '10px',
+                  fontSize: '13px',
                   width: 'calc(100% - 0px)'
                 }}
               >
@@ -399,6 +410,7 @@ const AddressTable = () => {
           {/* REMAING DISTANCE */}
           <div
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[5]}
             style={{
               border: '2px solid',
               alignItems: 'center',
@@ -413,39 +425,17 @@ const AddressTable = () => {
                 marginTop: '5px !important',
                 height: '30px',
                 textAlign: 'center',
-                maxWidth: '20vw'
+                fontSize: '13px',
+                // maxWidth: '20vw'
               }}
               className=""
+              ref={elementRefs.current[5]}
             >
               <div className="addressTable" style={{ wordWrap: 'break-word' }}>
                 N/A miles
               </div>
             </div>
           </div>
-
-          {/* speedometer */}
-          {/* <div
-            className="col-6 d-flex flex-column"
-            style={{
-              border: '2px solid',
-              alignItems: 'center',
-              padding: '0px !important',
-              width: '200px'
-            }}
-          >
-            <div
-              style={{
-                marginTop: '5px !important',
-                height: '30px',
-                textAlign: 'center',
-                maxWidth: '20vw',
-                position: 'relative !important'
-              }}
-              className="speedooooo"
-            >
-              <Speedometer />
-            </div>
-          </div> */}
 
           {/* PLUS MINUS ICONS */}
 

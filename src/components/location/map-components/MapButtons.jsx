@@ -386,7 +386,7 @@ const MapButtons = () => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '105px' : '135px',
             right: 190,
             justifyContent: 'center',
             backgroundColor: '#f44336',
@@ -405,7 +405,7 @@ const MapButtons = () => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '105px' : '135px',
             right: 190,
             justifyContent: 'center'
           }}
@@ -422,7 +422,7 @@ const MapButtons = () => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '105px' : '135px',
             right: 70,
             justifyContent: 'center'
           }}
@@ -439,7 +439,7 @@ const MapButtons = () => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '105px' : '135px',
             right: 70,
             justifyContent: 'center',
             backgroundColor: '#f44336'
@@ -456,7 +456,7 @@ const MapButtons = () => {
             margin: '0 0.2rem',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '105px' : '135px',
             right: 0,
             justifyContent: 'center'
           }}
