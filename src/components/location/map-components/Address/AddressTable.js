@@ -265,7 +265,10 @@ const AddressTable = () => {
   }, [])
 
   return (
-    <div className="main-address-table">
+    <div className="main-address-table" style={{
+      position: 'absolute',
+      top: isMobile ? '3.2rem' : '4rem',
+    }}>
       {isMobile ? (
         <div className="row">
           {/* CURRENT ADDRESS */}
@@ -419,6 +422,30 @@ const AddressTable = () => {
               </div>
             </div>
           </div>
+
+          {/* speedometer */}
+          {/* <div
+            className="col-6 d-flex flex-column"
+            style={{
+              border: '2px solid',
+              alignItems: 'center',
+              padding: '0px !important',
+              width: '200px'
+            }}
+          >
+            <div
+              style={{
+                marginTop: '5px !important',
+                height: '30px',
+                textAlign: 'center',
+                maxWidth: '20vw',
+                position: 'relative !important'
+              }}
+              className="speedooooo"
+            >
+              <Speedometer />
+            </div>
+          </div> */}
 
           {/* PLUS MINUS ICONS */}
 

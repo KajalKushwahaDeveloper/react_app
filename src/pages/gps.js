@@ -169,7 +169,7 @@ const GPS = () => {
             </div>
           </div>
           <BottomSheet
-            className="bottom_sheet"
+            className="bottom_sheetmain"
             open={true}
             blocking={false}
             // header={
