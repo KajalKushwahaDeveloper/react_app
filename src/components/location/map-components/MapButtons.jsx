@@ -16,8 +16,6 @@ const MapButtons = (props) => {
   const breakpoint = 620
   const isMobile = width < breakpoint
 
-  const [isSpinning, setSpinning] = useState()
-
   console.log('TEST@ MapButtons Rendered!')
   const {
     showToast,
