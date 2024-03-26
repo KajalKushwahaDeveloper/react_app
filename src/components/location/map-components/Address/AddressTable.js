@@ -7,12 +7,12 @@ import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import CreateTripButton from '../MapButtons.jsx'
 import './ResizeContainer.css'
 
-const AddressTable = () => {
+const AddressTable = (props) => {
   const elementParentRefs = useRef(
     Array.from({ length: 6 }, () => React.createRef())
   )
   const elementRefs = useRef(Array.from({ length: 6 }, () => React.createRef()))
-
+  const { handleButtonClick, isSpinning } = props
   const { width } = useViewPort()
   const breakpoint = 620
   const isMobile = width < breakpoint
@@ -421,8 +421,7 @@ const AddressTable = () => {
           </div>
 
           {/* PLUS MINUS ICONS */}
-
-          <CreateTripButton />
+          <CreateTripButton handleButtonClick={handleButtonClick} isSpinning={isSpinning}/>
         </div>
       ) : (
         <div
