@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import RadarIcon from '@mui/icons-material/Radar'
 import SyncIcon from '@mui/icons-material/Sync'
 import Button from '@mui/material/Button'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import ApiService from '../../../ApiService.js'
 import { useStates } from '../../../StateProvider.js'
 import { useViewPort } from '../../../ViewportProvider.js'
@@ -11,7 +11,7 @@ import { EMULATOR_DRAG_URL } from '../../../constants.js'
 import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import Speedometer from './Address/Speedometer.jsx'
 
-const MapButtons = () => {
+const MapButtons = (props) => {
   const { width } = useViewPort()
   const breakpoint = 620
   const isMobile = width < breakpoint
@@ -86,13 +86,6 @@ const MapButtons = () => {
     } else {
       setIsTableVisible(!isTableVisible)
     }
-  }
-
-  const handleButtonClick = () => {
-    setSpinning(true)
-    setTimeout(() => {
-      window.location.reload()
-    }, 1000)
   }
 
   const handleCancelTripClick = async () => {
@@ -460,14 +453,14 @@ const MapButtons = () => {
             right: 0,
             justifyContent: 'center'
           }}
-          onClick={handleButtonClick}
+          onClick={props.handleButtonClick}
         >
           <SyncIcon
             sx={{
               width: '30px',
               height: '30px',
               transition: 'transform 1s ease-in-out', // CSS transition for smooth animation
-              transform: isSpinning ? 'rotate(360deg)' : '' // Apply rotation based on state
+              transform: props?.isSpinning ? 'rotate(360deg)' : '' // Apply rotation based on state
             }}
           />
         </Button>
