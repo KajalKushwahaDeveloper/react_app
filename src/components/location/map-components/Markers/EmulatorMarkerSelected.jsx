@@ -1,5 +1,5 @@
 import { Marker } from '@react-google-maps/api'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS,
   MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
@@ -14,6 +14,10 @@ const EmulatorMarkerSelected = () => {
 
   const emulatorRef = useRef(useEmulatorStore.getState().connectedEmulator)
   const movedEmulatorRef = useRef(useEmulatorStore.getState().movedEmulator)
+  const [isEmulatorOnTrip, setIsEmulatorOnTrip] = useState(false)
+
+  // Retrieve from local storage if the emulator has an active trip
+  // const isEmulatorOnTrip = localStorage.getItem('isEmulatorOnTrip') === 'true'
 
   const draggedEmulatorOnTripRef = useRef(
     useEmulatorStore.getState().draggedEmulatorOnTrip
@@ -37,6 +41,46 @@ const EmulatorMarkerSelected = () => {
   function isThisEmulatorMoved() {
     return movedEmulatorRef.current?.emulator?.id === emulatorRef.current?.id
   }
+
+  // Save to local storage when emulator's trip status changes
+  useEffect(() => {
+    // Retrieve from local storage if the emulator has an active trip
+    const storedIsEmulatorOnTrip =
+      localStorage.getItem('isEmulatorOnTrip') === 'true'
+    setIsEmulatorOnTrip(storedIsEmulatorOnTrip)
+  }, [])
+
+  // Save to local storage when emulator's trip status changes
+  // Save to local storage when emulator's trip status changes
+  useEffect(() => {
+    // Check if emulatorRef.current is not null before setting isEmulatorOnTrip
+    if (emulatorRef.current) {
+      const isEmulatorOnTrip =
+        emulatorRef.current.tripStatus !== 'PAUSED' &&
+        emulatorRef.current.status !== 'RESTING'
+      console.log(
+        'Setting isEmulatorOnTrip in local storage:',
+        isEmulatorOnTrip
+      )
+      localStorage.setItem('isEmulatorOnTrip', isEmulatorOnTrip.toString())
+    } else {
+      console.error(
+        'emulatorRef.current is null when setting isEmulatorOnTrip in local storage'
+      )
+    }
+  }, [emulatorRef.current?.id]) // Use a property of the emulatorRef.current object for the dependency array
+
+  // Use isEmulatorOnTrip for conditional rendering or actions
+  useEffect(() => {
+    // Use isEmulatorOnTrip for conditional rendering or actions
+    if (isEmulatorOnTrip) {
+      // console.log('Emulator is currently on a trip.')
+      // Perform actions specific to when the emulator is on a trip
+    } else {
+      // console.log('Emulator is not on a trip.')
+      // Perform actions specific to when the emulator is not on a trip
+    }
+  }, [isEmulatorOnTrip])
 
   // movedEmulator subscription
   useEffect(
@@ -209,7 +253,7 @@ const EmulatorMarkerSelected = () => {
       ),
     []
   )
-
+  // selected image
   let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
   iconUrl = iconUrl + 'SELECT'
   if (
