@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import ReactSpeedometer from 'react-d3-speedometer'
+import { useViewPort } from '../../../../ViewportProvider.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import './styles.css'
 
@@ -14,6 +15,10 @@ const Speedometer = () => {
   const [currentValueText, setCurrentValueText] = useState('N/A MPH')
   const emulator = useEmulatorStore.getState().connectedEmulator
   const speedometerRef = React.createRef()
+
+  const { width } = useViewPort()
+  const breakpoint = 620
+  const isMobile = width < breakpoint
 
   useEffect(() => {
     console.log('TEST@ emulator useEffect : ', emulator?.velocity)
@@ -65,37 +70,71 @@ const Speedometer = () => {
       <Container>
         <Row>
           <Col>
-            <div className="speedometer">
-              <ReactSpeedometer
-                needleHeightRatio={0.8}
-                labelFontSize={'10px'}
-                width={200}
-                height={130}
-                needleColor="#007fff"
-                maxValue={100}
-                ringWidth={20}
-                customSegmentStops={[
-                  0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
-                ]}
-                segmentColors={[
-                  '#FAFAFA',
-                  '#FAFAFA',
-                  '#FAFAFA',
-                  '#0058A54D',
-                  '#0058A54D',
-                  '#0058A54D',
-                  '#0058A54D',
-                  '#FAFAFA',
-                  '#FAFAFA',
-                  '#FAFAFA',
-                  '#FAFAFA'
-                ]}
-                needleTransitionDuration={3000}
-                needleTransition="easeElastic"
-                currentValueText={'AVG ' + currentValueText}
-                value={speed}
-              />
-            </div>
+            {!isMobile ? (
+              <div className="speedometer">
+                <ReactSpeedometer
+                  needleHeightRatio={0.8}
+                  labelFontSize={'10px'}
+                  width={200}
+                  height={130}
+                  needleColor="#007fff"
+                  maxValue={100}
+                  ringWidth={20}
+                  customSegmentStops={[
+                    0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+                  ]}
+                  segmentColors={[
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#0058A54D',
+                    '#0058A54D',
+                    '#0058A54D',
+                    '#0058A54D',
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#FAFAFA'
+                  ]}
+                  needleTransitionDuration={3000}
+                  needleTransition="easeElastic"
+                  currentValueText={'AVG ' + currentValueText}
+                  value={speed}
+                />
+              </div>
+            ) : (
+              <div className="speedometer">
+                <ReactSpeedometer
+                  needleHeightRatio={0.8}
+                  labelFontSize={'10px'}
+                  width={150}
+                  height={100}
+                  needleColor="#007fff"
+                  maxValue={100}
+                  ringWidth={20}
+                  customSegmentStops={[
+                    0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+                  ]}
+                  segmentColors={[
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#0058A54D',
+                    '#0058A54D',
+                    '#0058A54D',
+                    '#0058A54D',
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#FAFAFA',
+                    '#FAFAFA'
+                  ]}
+                  needleTransitionDuration={3000}
+                  needleTransition="easeElastic"
+                  currentValueText={'AVG ' + currentValueText}
+                  value={speed}
+                />
+              </div>
+            )}
           </Col>
         </Row>
       </Container>
