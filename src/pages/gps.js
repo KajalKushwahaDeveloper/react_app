@@ -177,7 +177,7 @@ const GPS = () => {
               //     INFO
               //   </div>
               // }
-              snapPoints={({ minHeight, maxHeight }) => [minHeight / 4.2, maxHeight / 5, maxHeight * 0.45]}
+              snapPoints={({ minHeight, maxHeight }) => [minHeight / 2.85, maxHeight / 3, maxHeight * 0.45]}
               defaultSnap={({ lastSnap, snapPoints }) => lastSnap ?? Math.min(...snapPoints)}
             >
               <GpsTable />

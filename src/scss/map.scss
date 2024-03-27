@@ -105,7 +105,7 @@ body {
     height: 4rem;
     width: 100%;
     .row {
-      height: 17vh;
+      height: calc(100% + 54px);
       background: white;
       margin: 0rem;
       overflow-y: hidden;

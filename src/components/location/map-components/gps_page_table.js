@@ -322,7 +322,8 @@ const GpsTable = () => {
           flexDirection: 'column',
           position: isMobile ? 'static' : 'absolute',
           top: isMobile ? '0px' : '128px',
-          width: '320px'
+          width: isMobile ? 'calc(100% - 20px)' : '320px',
+          marginLeft: isMobile ? '10px' : '0px'
         }}
       >
         <>
