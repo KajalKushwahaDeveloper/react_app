@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import RadarIcon from '@mui/icons-material/Radar'
 import SyncIcon from '@mui/icons-material/Sync'
 import Button from '@mui/material/Button'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ApiService from '../../../ApiService.js'
 import { useStates } from '../../../StateProvider.js'
 import { useViewPort } from '../../../ViewportProvider.js'
@@ -11,10 +11,12 @@ import { EMULATOR_DRAG_URL } from '../../../constants.js'
 import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import Speedometer from './Address/Speedometer.jsx'
 
-const MapButtons = (props) => {
+const MapButtons = () => {
   const { width } = useViewPort()
   const breakpoint = 620
   const isMobile = width < breakpoint
+
+  const [isSpinning, setSpinning] = useState()
 
   console.log('TEST@ MapButtons Rendered!')
   const {
@@ -84,6 +86,13 @@ const MapButtons = (props) => {
     } else {
       setIsTableVisible(!isTableVisible)
     }
+  }
+
+  const handleButtonClick = () => {
+    setSpinning(true)
+    setTimeout(() => {
+      window.location.reload()
+    }, 1000)
   }
 
   const handleCancelTripClick = async () => {
@@ -377,7 +386,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '120px' : '135px',
             right: 190,
             justifyContent: 'center',
             backgroundColor: '#f44336',
@@ -396,7 +405,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '120px' : '135px',
             right: 190,
             justifyContent: 'center'
           }}
@@ -413,7 +422,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '120px' : '135px',
             right: 70,
             justifyContent: 'center'
           }}
@@ -430,7 +439,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '120px' : '135px',
             right: 70,
             justifyContent: 'center',
             backgroundColor: '#f44336'
@@ -447,18 +456,18 @@ const MapButtons = (props) => {
             margin: '0 0.2rem',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '100px' : '135px',
+            top: isMobile ? '120px' : '135px',
             right: 0,
             justifyContent: 'center'
           }}
-          onClick={props.handleButtonClick}
+          onClick={handleButtonClick}
         >
           <SyncIcon
             sx={{
               width: '30px',
               height: '30px',
               transition: 'transform 1s ease-in-out', // CSS transition for smooth animation
-              transform: props?.isSpinning ? 'rotate(360deg)' : '' // Apply rotation based on state
+              transform: isSpinning ? 'rotate(360deg)' : '' // Apply rotation based on state
             }}
           />
         </Button>

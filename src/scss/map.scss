@@ -53,42 +53,6 @@ body {
     padding: 0rem !important;
     flex-shrink: 1 !important;
   }
-
-  @media screen and (max-width: 620px) {
-    .address-table-heading {
-      font-size: 12px;
-      font-weight: bold;
-      text-align: center;
-      height: auto;
-    }
-  }
-
-  .address-table-heading {
-    font-size: 0.92rem;
-    font-weight: 600;
-    text-align: center;
-    height: auto;
-  }
-
-  .addressTable {
-    text-align: center;
-    font-size: 0.83rem;
-    font-weight: 450;
-    overflow: hidden;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    hyphens: auto;
-    height: 40px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .address-table-heading {
-    font-size: 11px;
-  }
-  .totalTimeSubContent {
-    font-size: 11px;
-  }
 }
 
 .mapContainer {
@@ -107,3 +71,57 @@ body {
   align-items: center;
   background: $background-color;
 }
+.address-table-heading {
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-align: center;
+  height: auto;
+}
+
+.addressTable {
+  text-align: center;
+  font-size: 0.83rem;
+  font-weight: 450;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  height: 40px;
+}
+@media screen and (max-width: 768px) {
+  .address-table-heading {
+    font-size: 11px;
+  }
+  .totalTimeSubContent {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .main-address-table {
+    position: fixed;
+    top: 3.2rem !important;
+    z-index: 2;
+    height: 4rem;
+    width: 100%;
+    .row {
+      height: 17vh;
+      background: white;
+      margin: 0rem;
+      overflow-y: hidden;
+      overflow-x: auto;
+      flex-wrap: nowrap !important;
+      padding: 0rem !important;
+      flex-shrink: 1 !important;
+    }
+  }
+  .address-table-heading {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    height: auto;
+  }
+}
+
+
+

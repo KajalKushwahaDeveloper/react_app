@@ -17,8 +17,6 @@ import { useEmulatorStore } from '../stores/emulator/store.tsx'
 const GPS = () => {
   const setMicCheck = useEmulatorStore((state) => state.setMicEnabled)
   const [microphonePermission, setMicrophonePermission] = useState('prompt')
-  const [isSpinning, setSpinning] = useState(false)
-  const [seed, setSeed] = useState(1)
 
   const { width } = useViewPort()
   const breakpoint = 620
@@ -124,11 +122,6 @@ const GPS = () => {
     }
   }, [microphonePermission, setMicCheck])
 
-  const handleButtonClick = () => {
-    setSpinning(prevState => !prevState)
-    setSeed(Math.random())
-  }
-
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
@@ -154,24 +147,24 @@ const GPS = () => {
                 className="mapsContainer"
                 style={{ flex: '1', top: '128px' }}
               >
-                <GoogleMapContainer key={seed}/>
+                <GoogleMapContainer />
               </div>
             </div>
           </div>
 
-          <CreateTripButton handleButtonClick={handleButtonClick} isSpinning={isSpinning} />
+          <CreateTripButton />
         </>
       )}
       {isMobile && (
         <>
           <div style={{ flex: '1', height: '100vh' }}>
-            <GoogleMapContainer key={seed}/>
+            <GoogleMapContainer />
           </div>
           <div>
             ‎
             <div>
               <div>
-                <AddressTable handleButtonClick={handleButtonClick} isSpinning={isSpinning}/>
+                <AddressTable />
               </div>
             </div>
           </div>
@@ -184,7 +177,7 @@ const GPS = () => {
               //     INFO
               //   </div>
               // }
-              snapPoints={({ minHeight, maxHeight }) => [minHeight / 2.8, maxHeight / 3, maxHeight * 0.45]}
+              snapPoints={({ minHeight, maxHeight }) => [minHeight / 4.2, maxHeight / 5, maxHeight * 0.45]}
               defaultSnap={({ lastSnap, snapPoints }) => lastSnap ?? Math.min(...snapPoints)}
             >
               <GpsTable />

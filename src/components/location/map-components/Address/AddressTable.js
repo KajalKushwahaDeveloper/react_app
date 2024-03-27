@@ -7,12 +7,12 @@ import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 import CreateTripButton from '../MapButtons.jsx'
 import './ResizeContainer.css'
 
-const AddressTable = (props) => {
+const AddressTable = () => {
   const elementParentRefs = useRef(
     Array.from({ length: 6 }, () => React.createRef())
   )
   const elementRefs = useRef(Array.from({ length: 6 }, () => React.createRef()))
-  const { handleButtonClick, isSpinning } = props
+
   const { width } = useViewPort()
   const breakpoint = 620
   const isMobile = width < breakpoint
@@ -265,17 +265,20 @@ const AddressTable = (props) => {
   }, [])
 
   return (
-    <div className="main-address-table">
+    <div className="main-address-table" style={{
+      position: 'absolute',
+      top: isMobile ? '3.2rem' : '4rem'
+    }}>
       {isMobile ? (
         <div className="row">
           {/* CURRENT ADDRESS */}
           <div
-            ref={elementParentRefs.current[0]}
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[0]}
             style={{
               border: '2px solid',
+              color: 'black',
               alignItems: 'center',
-              height: 'auto',
               padding: '0',
               width: '200px'
             }}
@@ -283,26 +286,23 @@ const AddressTable = (props) => {
             <div className="address-table-heading">Current location</div>
             <div
               className="addressTable"
-              id="1"
+              ref={elementRefs.current[0]}
               style={{
                 height: 'auto',
-                fontSize: '10px',
+                fontSize: '13px',
                 width: 'calc(100% - 5px)'
               }}
-              ref={elementRefs.current[0]}
             >
               N/A
             </div>
           </div>
           {/* FROM ADDRESS */}
-
           <div
-            ref={elementParentRefs.current[1]}
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[1]}
             style={{
               border: '2px solid',
               alignItems: 'center',
-              height: 'auto',
               padding: '0',
               width: '200px'
             }}
@@ -310,26 +310,23 @@ const AddressTable = (props) => {
             <div className="address-table-heading">From address</div>
             <div
               className="addressTable"
-              id="1"
+              ref={elementRefs.current[1]}
               style={{
                 height: 'auto',
-                fontSize: '10px',
+                fontSize: '13px',
                 width: 'calc(100% - 5px)'
               }}
-              ref={elementRefs.current[1]}
             >
               N/A
             </div>
           </div>
           {/* TO ADDRESS */}
-
           <div
-            ref={elementParentRefs.current[2]}
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[2]}
             style={{
               border: '2px solid',
               alignItems: 'center',
-              height: 'auto',
               padding: '0',
               width: '200px'
             }}
@@ -337,13 +334,12 @@ const AddressTable = (props) => {
             <div className="address-table-heading">To address</div>
             <div
               className="addressTable"
-              id="1"
+              ref={elementRefs.current[2]}
               style={{
                 height: 'auto',
-                fontSize: '10px',
+                fontSize: '13px',
                 width: 'calc(100% - 5px)'
               }}
-              ref={elementRefs.current[2]}
             >
               N/A
             </div>
@@ -351,90 +347,99 @@ const AddressTable = (props) => {
 
           {/* ARRIVAL TIME */}
           <div
-            ref={elementParentRefs.current[3]}
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[3]}
             style={{
               border: '2px solid',
               alignItems: 'center',
-              height: 'auto',
-              padding: '0',
+              padding: '0px !important',
               width: '200px'
             }}
           >
-            <div className="address-table-heading">Depart/Arrival time</div>
+            <div className="address-table-heading">Arrival Time</div>
             <div
-              className="addressTable"
-              id="1"
               style={{
-                height: 'auto',
-                fontSize: '10px',
-                width: 'calc(100% - 5px)'
+                marginTop: '5px !important',
+                height: '30px',
+                textAlign: 'center',
+                fontSize: '13px'
+                // maxWidth: '20vw'
               }}
+              className="totalTimeSubContent"
               ref={elementRefs.current[3]}
             >
-              N/A
+              <div className="addressTable" style={{ wordWrap: 'break-word' }}>
+                N/A
+              </div>
             </div>
           </div>
 
-          {/* TOTAL TIME */}
+          {/* TIME */}
           <div
-            ref={elementParentRefs.current[4]}
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[4]}
             style={{
               border: '2px solid',
               alignItems: 'center',
-              height: 'auto',
-              padding: '0',
+              padding: '0px !important',
               width: '200px'
             }}
           >
-            <div className="address-table-heading">Total Time</div>
+            <div className="address-table-heading">Remaining Time</div>
             <div
-              className="addressTable"
-              id="1"
               style={{
-                height: 'auto',
-                fontSize: '10px',
-                width: 'calc(100% - 5px)'
+                marginTop: '5px !important'
               }}
-              ref={elementRefs.current[4]}
+              className="totalTimeSubContent"
             >
-              N/A
+              <div
+                className="addressTable"
+                ref={elementRefs.current[4]}
+                style={{
+                  wordWrap: 'break-word',
+                  height: 'auto',
+                  fontSize: '13px',
+                  width: 'calc(100% - 0px)'
+                }}
+              >
+                N/A
+              </div>
             </div>
           </div>
 
           {/* REMAING DISTANCE */}
           <div
-            ref={elementParentRefs.current[5]}
             className="col-6 d-flex flex-column"
+            ref={elementParentRefs.current[5]}
             style={{
               border: '2px solid',
               alignItems: 'center',
-              height: 'auto',
-              padding: '0',
+              padding: '0px !important',
               width: '200px'
             }}
           >
             <div className="address-table-heading">Remaining Distance</div>
+
             <div
-              className="addressTable"
-              id="1"
               style={{
-                height: 'auto',
-                fontSize: '10px',
-                width: 'calc(100% - 5px)'
+                marginTop: '5px !important',
+                height: '30px',
+                textAlign: 'center',
+                fontSize: '13px'
+                // maxWidth: '20vw'
               }}
+              className=""
               ref={elementRefs.current[5]}
             >
-              N/A
+              <div className="addressTable" style={{ wordWrap: 'break-word' }}>
+                N/A miles
+              </div>
             </div>
           </div>
 
           {/* PLUS MINUS ICONS */}
-          <CreateTripButton
-            handleButtonClick={handleButtonClick}
-            isSpinning={isSpinning}
-          />
+
+          <CreateTripButton />
         </div>
       ) : (
         <div

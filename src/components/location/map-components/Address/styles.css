@@ -21,3 +21,28 @@
   width: 200px;
   height: 130px;
 }
+
+@media screen and (max-width: 620px){
+  .center {
+    z-index: 3;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    bottom: 0px;
+    right: 0px;
+    box-shadow: 0px 0px 50px 10px rgba(0, 0, 0, 0.1);
+    vertical-align: top;
+    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+    justify-content: center;
+    border-radius: 5px;
+  }
+  .speedometer {
+    display: flex;
+    justify-content: center;
+    min-width: 180px;
+    min-height: 126px;
+    width: 200px;
+    height: 130px;
+  }
+}
