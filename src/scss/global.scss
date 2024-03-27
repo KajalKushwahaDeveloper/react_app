@@ -163,6 +163,12 @@ input {
   overflow-y: hidden !important;
   height: 93vh;
 }
+
+//bottomsheet on mobile view
+[data-rsbs-overlay] {
+  z-index: 1 !important;
+}
+
 @media screen and (max-width: 600px) {
   .css-tlc64q-MuiPaper-root-MuiDialog-paper{
     overflow-y: hidden !important;
