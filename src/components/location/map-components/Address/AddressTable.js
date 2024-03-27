@@ -267,7 +267,7 @@ const AddressTable = () => {
   return (
     <div className="main-address-table" style={{
       position: 'absolute',
-      top: isMobile ? '3.2rem' : '4rem',
+      top: isMobile ? '3.2rem' : '4rem'
     }}>
       {isMobile ? (
         <div className="row">
@@ -362,7 +362,7 @@ const AddressTable = () => {
                 marginTop: '5px !important',
                 height: '30px',
                 textAlign: 'center',
-                fontSize: '13px',
+                fontSize: '13px'
                 // maxWidth: '20vw'
               }}
               className="totalTimeSubContent"
@@ -425,7 +425,7 @@ const AddressTable = () => {
                 marginTop: '5px !important',
                 height: '30px',
                 textAlign: 'center',
-                fontSize: '13px',
+                fontSize: '13px'
                 // maxWidth: '20vw'
               }}
               className=""
