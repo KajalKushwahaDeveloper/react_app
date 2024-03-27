@@ -168,27 +168,28 @@ const GPS = () => {
               </div>
             </div>
           </div>
-          <BottomSheet
-            className="bottom_sheetmain"
-            open={true}
-            blocking={false}
-            // header={
-            //   <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
-            //     INFO
-            //   </div>
-            // }
-            snapPoints={({ maxHeight }) => [maxHeight / 15, maxHeight * 0.45]}
-          >
-            <GpsTable />
-            {/* <div>
-              ‎
-              <div>
+            <BottomSheet
+              className="bottom_sheet"
+              open={true}
+              blocking={false}
+              // header={
+              //   <div className="mt-1 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-300 focus:bg-white focus:ring-0">
+              //     INFO
+              //   </div>
+              // }
+              snapPoints={({ minHeight, maxHeight }) => [minHeight / 4.2, maxHeight / 5, maxHeight * 0.45]}
+              defaultSnap={({ lastSnap, snapPoints }) => lastSnap ?? Math.min(...snapPoints)}
+            >
+              <GpsTable />
+              {/* <div>
+                ‎
                 <div>
-                  <AddressTable />
+                  <div>
+                    <AddressTable />
+                  </div>
                 </div>
-              </div>
-            </div> */}
-          </BottomSheet>
+              </div> */}
+            </BottomSheet>
         </>
       )}
     </>
