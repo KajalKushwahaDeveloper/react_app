@@ -207,6 +207,13 @@ const GpsTable = () => {
     }
   }, []) // Empty dependency array to run the effect only once when the component mounts
 
+  useEffect(() => {
+    const ssidToString = selectedEmulator ? selectedEmulator?.emulatorSsid.toString() : ''
+    isMobile && (
+      setSearchInput(ssidToString)
+    )
+  }, [selectedEmulator, isMobile])
+
   const handleEmulatorCheckboxChange = (emulatorRow) => {
     if (selectedEmulator?.id !== emulatorRow.id) {
       selectEmulator(emulatorRow)
