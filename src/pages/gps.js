@@ -17,6 +17,8 @@ import { useEmulatorStore } from '../stores/emulator/store.tsx'
 const GPS = () => {
   const setMicCheck = useEmulatorStore((state) => state.setMicEnabled)
   const [microphonePermission, setMicrophonePermission] = useState('prompt')
+  const [isSpinning, setSpinning] = useState(false)
+  const [seed, setSeed] = useState(1)
 
   const { width } = useViewPort()
   const breakpoint = 620
@@ -122,6 +124,11 @@ const GPS = () => {
     }
   }, [microphonePermission, setMicCheck])
 
+  const handleButtonClick = () => {
+    setSpinning(prevState => !prevState)
+    setSeed(Math.random())
+  }
+
   return (
     <>
       <ToastContainer style={{ zIndex: 9999 }} /> {/* to show above all */}
@@ -147,24 +154,24 @@ const GPS = () => {
                 className="mapsContainer"
                 style={{ flex: '1', top: '128px' }}
               >
-                <GoogleMapContainer />
+                <GoogleMapContainer key={seed}/>
               </div>
             </div>
           </div>
 
-          <CreateTripButton />
+          <CreateTripButton handleButtonClick={handleButtonClick} isSpinning={isSpinning} />
         </>
       )}
       {isMobile && (
         <>
           <div style={{ flex: '1', height: '100vh' }}>
-            <GoogleMapContainer />
+            <GoogleMapContainer key={seed}/>
           </div>
           <div>
             ‎
             <div>
               <div>
-                <AddressTable />
+                <AddressTable handleButtonClick={handleButtonClick} isSpinning={isSpinning}/>
               </div>
             </div>
           </div>
