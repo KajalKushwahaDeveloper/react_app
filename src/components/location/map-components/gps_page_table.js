@@ -177,7 +177,7 @@ const GpsTable = () => {
     }
     console.log('updated Page', page)
     // FIXME: temporary fix for table rerendering
-  }, [selectedEmulator, hoveredEmulator])
+  }, [selectedEmulator, hoveredEmulator, rowsPerPage])
 
   // page changed from arrows
   useEffect(() => {
