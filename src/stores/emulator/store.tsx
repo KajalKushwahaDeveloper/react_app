@@ -3,6 +3,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { create, StateCreator } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
 import {
+  DRAG_TIMEOUT,
   EMULATOR_URL,
   SSE_ALL_EMULATORS_URL,
   SSE_CONNECTED_EMULATOR_URL
@@ -171,7 +172,7 @@ const createEmulatorsSlice: StateCreator<
         latitude: movedEmulator.latitude,
         longitude: movedEmulator.longitude,
         isDragMarkerDropped: true,
-        timeout: 15,
+        timeout: DRAG_TIMEOUT,
         retries: 0
       }
       get().dragEmulator(draggedEmulator)

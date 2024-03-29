@@ -71,3 +71,5 @@ export const EMULATOR_NOTIFICATION_URL = EMULATOR_SEND_URL + '/notification'
 export const SSE_URL = BASE_URL + '/sse'
 export const SSE_CONNECTED_EMULATOR_URL = SSE_URL + '/emulator'
 export const SSE_ALL_EMULATORS_URL = SSE_URL + '/emulators'
+
+export const DRAG_TIMEOUT = 15 // 15 seconds

@@ -4,6 +4,7 @@ import {
   MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS,
   MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
 } from '../../../../MetricsConstants.js'
+import { DRAG_TIMEOUT } from '../../../../constants.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 const EmulatorMarkerSelected = () => {
@@ -178,18 +179,25 @@ const EmulatorMarkerSelected = () => {
             return
           }
           // if current marker is being dragged or moved, skip
-          // FIXME: We just need to prevent setting new position when the marker is being dragged or moved
           if (isThisEmulatorDragged() || isThisEmulatorMoved()) {
-            console.log('skipping due to draggedEmulator or movedEmulator')
-            return
+            const thisDraggedEmulator = draggedEmulatorsRef.current.filter(
+              (draggedEmulator) =>
+                draggedEmulator.emulator.id === emulatorRef.current?.id
+            )
+            if (thisDraggedEmulator.length > 0) {
+              const position = new window.google.maps.LatLng(
+                thisDraggedEmulator[0]?.latitude,
+                thisDraggedEmulator[0]?.longitude
+              )
+              markerRef.current?.setPosition(position)
+            }
+          } else {
+            const newPosition = new window.google.maps.LatLng(
+              emulatorRef.current?.latitude,
+              emulatorRef.current?.longitude
+            )
+            markerRef.current?.setPosition(newPosition)
           }
-
-          const newPosition = new window.google.maps.LatLng(
-            emulatorRef.current?.latitude,
-            emulatorRef.current?.longitude
-          )
-          markerRef.current?.setPosition(newPosition)
-          // TODO: use animation instead
 
           let iconUrl = `images/${emulatorRef.current?.tripStatus}/`
           iconUrl = iconUrl + 'SELECT' // check velocity and add flash if velocity is greater than MAXIMUM_VELOCITY_METERS_PER_MILLISECONDS or less than MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
@@ -336,7 +344,7 @@ const EmulatorMarkerSelected = () => {
         latitude: latLng.lat(),
         longitude: latLng.lng(),
         isDragMarkerDropped: true,
-        timeout: 15,
+        timeout: DRAG_TIMEOUT,
         retries: 0
       })
     }
@@ -348,15 +356,15 @@ const EmulatorMarkerSelected = () => {
       (draggedEmulator) =>
         draggedEmulator.emulator.id === emulatorRef.current?.id
     )
-    if (draggedEmulator === null || draggedEmulator === undefined) {
+    if (draggedEmulator !== null && draggedEmulator !== undefined) {
       return new window.google.maps.LatLng(
-        emulatorRef.current?.latitude,
-        emulatorRef.current?.longitude
+        draggedEmulator.latitude,
+        draggedEmulator.longitude
       )
     }
     return new window.google.maps.LatLng(
-      draggedEmulator.latitude,
-      draggedEmulator.longitude
+      emulatorRef.current?.latitude,
+      emulatorRef.current?.longitude
     )
   }
 

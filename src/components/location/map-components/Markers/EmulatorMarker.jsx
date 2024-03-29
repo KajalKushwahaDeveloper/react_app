@@ -5,6 +5,7 @@ import {
   MINIMUM_VELOCITY_METERS_PER_MILLISECONDS
 } from '../../../../MetricsConstants.js'
 import { useStates } from '../../../../StateProvider.js'
+import { DRAG_TIMEOUT } from '../../../../constants.js'
 import useMarkerStore from '../../../../stores/emulator/markerStore.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
@@ -282,7 +283,7 @@ const EmulatorMarker = ({ id }) => {
       latitude: latLng.lat(),
       longitude: latLng.lng(),
       isDragMarkerDropped: true,
-      timeout: 15,
+      timeout: DRAG_TIMEOUT,
       retries: 0
     })
   }
