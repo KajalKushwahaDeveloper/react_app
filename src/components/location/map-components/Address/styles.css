@@ -36,6 +36,7 @@
     font-family: 'Open Sans', sans-serif;
     justify-content: center;
     border-radius: 5px;
+    overflow-y: scroll;
   }
   .speedometer {
     display: flex;

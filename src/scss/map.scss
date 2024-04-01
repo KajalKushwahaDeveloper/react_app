@@ -105,7 +105,8 @@ body {
     height: 4rem;
     width: 100%;
     .row {
-      height: calc(100% + 54px);
+      // height: calc(100% + 54px);
+      height: 14.2vh;
       background: white;
       margin: 0rem;
       overflow-y: hidden;
