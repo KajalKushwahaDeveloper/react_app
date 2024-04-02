@@ -103,36 +103,8 @@ const Speedometer = () => {
                 />
               </div>
             ) : (
-              <div className="speedometer">
-                <ReactSpeedometer
-                  needleHeightRatio={0.8}
-                  labelFontSize={'10px'}
-                  width={150}
-                  height={100}
-                  needleColor="#007fff"
-                  maxValue={100}
-                  ringWidth={20}
-                  customSegmentStops={[
-                    0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100
-                  ]}
-                  segmentColors={[
-                    '#FAFAFA',
-                    '#FAFAFA',
-                    '#FAFAFA',
-                    '#0058A54D',
-                    '#0058A54D',
-                    '#0058A54D',
-                    '#0058A54D',
-                    '#FAFAFA',
-                    '#FAFAFA',
-                    '#FAFAFA',
-                    '#FAFAFA'
-                  ]}
-                  needleTransitionDuration={3000}
-                  needleTransition="easeElastic"
-                  currentValueText={'AVG ' + currentValueText}
-                  value={speed}
-                />
+              <div className="mobileView_speedometer" style={{ textAlign: 'center', fontSize: '12px' }}>
+                {'AVG ' + currentValueText}
               </div>
             )}
           </Col>

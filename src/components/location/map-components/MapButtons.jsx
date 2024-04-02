@@ -377,7 +377,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '120px' : '135px',
+            top: isMobile ? '100px' : '135px',
             right: 190,
             justifyContent: 'center',
             backgroundColor: '#f44336',
@@ -396,7 +396,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '120px' : '135px',
+            top: isMobile ? '100px' : '135px',
             right: 190,
             justifyContent: 'center'
           }}
@@ -413,7 +413,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '120px' : '135px',
+            top: isMobile ? '100px' : '135px',
             right: 70,
             justifyContent: 'center'
           }}
@@ -430,7 +430,7 @@ const MapButtons = (props) => {
             height: '40px',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '120px' : '135px',
+            top: isMobile ? '100px' : '135px',
             right: 70,
             justifyContent: 'center',
             backgroundColor: '#f44336'
@@ -447,7 +447,7 @@ const MapButtons = (props) => {
             margin: '0 0.2rem',
             zIndex: 2,
             position: 'absolute',
-            top: isMobile ? '120px' : '135px',
+            top: isMobile ? '100px' : '135px',
             right: 0,
             justifyContent: 'center'
           }}
