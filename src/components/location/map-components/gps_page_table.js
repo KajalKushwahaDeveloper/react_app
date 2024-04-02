@@ -52,6 +52,7 @@ const GpsTable = () => {
   const fetchEmulators = useEmulatorStore((state) => state.fetchEmulators)
   const [searchInput, setSearchInput] = useState('')
 
+  const [mobileInput, setMobileInput] = useState('')
   const emulators = useEmulatorStore(
     (state) => state.emulators
   )
@@ -209,9 +210,9 @@ const GpsTable = () => {
 
   useEffect(() => {
     const ssidToString = selectedEmulator ? selectedEmulator?.emulatorSsid.toString() : ''
-    isMobile && (
-      setSearchInput(ssidToString)
-    )
+    if (isMobile) {
+      setMobileInput(ssidToString)
+    }
   }, [selectedEmulator, isMobile])
 
   const handleEmulatorCheckboxChange = (emulatorRow) => {
@@ -318,6 +319,11 @@ const GpsTable = () => {
     return ''
   }
 
+  const handleChangeInput = (e) => {
+    setMobileInput('')
+    setSearchInput(e.target.value)
+  }
+
   return (
     <div>
       <Backdrop color="primary" style={{ zIndex: 4 }} open={messageLoading}>
@@ -343,7 +349,7 @@ const GpsTable = () => {
             }}
             placeholder="Search by Number/Note/Ssid"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={(e) => handleChangeInput(e)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -367,7 +373,7 @@ const GpsTable = () => {
                     .includes(predicateArg.toLowerCase()))
               )
             }}
-            predicateArg={searchInput}
+            predicateArg={mobileInput || searchInput}
             render={(emulators) => (
               // Render filtered items...
               <table style={{ width: '100%' }}>
