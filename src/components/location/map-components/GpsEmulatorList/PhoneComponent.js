@@ -46,7 +46,7 @@ export default function PhoneComponent(
         <IconButton
           size="small"
           disabled={!emulator?.telephone || deviceState === undefined}
-          onClick={() => handleCallIconClicked(emulator)}
+          onClick={(e) => { e.stopPropagation(); handleCallIconClicked(emulator) }}
         >
           <CallRoundedIcon fontSize="small" />
         </IconButton>

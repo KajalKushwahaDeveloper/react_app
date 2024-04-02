@@ -456,9 +456,8 @@ const GpsTable = () => {
                                 <IconButton
                                   size="small"
                                   disabled={!emulator?.telephone}
-                                  onClick={() =>
-                                    handleMessageIconClicked(emulator)
-                                  }
+                                  onClick={(e) => { e.stopPropagation(); handleMessageIconClicked(emulator) }}
+
                                 >
                                   <MessageRoundedIcon fontSize="small" />
                                 </IconButton>
@@ -466,9 +465,7 @@ const GpsTable = () => {
                                 {/* message icon */}
                                 <IconButton
                                   size="small"
-                                  onClick={() =>
-                                    handleHistoryButtonClick(emulator)
-                                  }
+                                  onClick={(e) => { e.stopPropagation(); handleHistoryButtonClick(emulator) }}
                                 >
                                   <HistoryIcon fontSize="small" />
                                 </IconButton>
