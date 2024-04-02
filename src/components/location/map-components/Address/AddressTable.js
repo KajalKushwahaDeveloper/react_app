@@ -290,7 +290,7 @@ const AddressTable = (props) => {
               ref={elementRefs.current[0]}
               style={{
                 height: 'auto',
-                fontSize: '13px',
+                fontSize: '11px',
                 width: 'calc(100% - 5px)'
               }}
             >
@@ -314,7 +314,7 @@ const AddressTable = (props) => {
               ref={elementRefs.current[1]}
               style={{
                 height: 'auto',
-                fontSize: '13px',
+                fontSize: '11px',
                 width: 'calc(100% - 5px)'
               }}
             >
@@ -338,7 +338,7 @@ const AddressTable = (props) => {
               ref={elementRefs.current[2]}
               style={{
                 height: 'auto',
-                fontSize: '13px',
+                fontSize: '11px',
                 width: 'calc(100% - 5px)'
               }}
             >
@@ -363,7 +363,7 @@ const AddressTable = (props) => {
                 marginTop: '5px !important',
                 height: '30px',
                 textAlign: 'center',
-                fontSize: '13px'
+                fontSize: '11px'
                 // maxWidth: '20vw'
               }}
               className="totalTimeSubContent"
@@ -399,7 +399,7 @@ const AddressTable = (props) => {
                 style={{
                   wordWrap: 'break-word',
                   height: 'auto',
-                  fontSize: '13px',
+                  fontSize: '11px',
                   width: 'calc(100% - 0px)'
                 }}
               >
@@ -426,7 +426,7 @@ const AddressTable = (props) => {
                 marginTop: '5px !important',
                 height: '30px',
                 textAlign: 'center',
-                fontSize: '13px'
+                fontSize: '11px'
                 // maxWidth: '20vw'
               }}
               className=""
