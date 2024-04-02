@@ -1,5 +1,6 @@
 @import './variables';
 @import './mixins';
+
 button {
   border: none;
   background: $background-color;
@@ -12,4 +13,20 @@ button {
 
 .loader {
   margin: 30px;
+}
+
+//emulator history
+.emulator_history {
+  border-bottom: .5px solid #D9DDDC !important;
+  overflow: scroll !important;
+  -webkit-overflow-scrolling: touch;
+  font-size: 1rem !important;
+}
+
+@media screen and (max-width: 620px) {
+  .emulator_history {
+    border-bottom: .5px solid #D9DDDC !important;
+    overflow-x: scroll !important;
+    font-size: .8rem !important;
+  }
 }

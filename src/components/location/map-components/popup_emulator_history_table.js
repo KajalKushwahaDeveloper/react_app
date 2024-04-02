@@ -205,13 +205,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
                   : 'N/A'
 
               return (
-                <tr
-                  key={row.id || 'N/A'}
-                  style={{
-                    borderBottom: '.5px solid #D9DDDC',
-                    overflow: 'scroll'
-                  }}
-                >
+                <tr key={row.id || 'N/A'} className="emulator_history">
                   <td>{fromAddress || 'N/A'}</td>
                   <td>{toAddress || 'N/A'}</td>
                   <td>{distance}</td>
