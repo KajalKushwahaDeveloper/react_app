@@ -103,7 +103,7 @@ const Speedometer = () => {
                 />
               </div>
             ) : (
-              <div className="mobileView_speedometer" style={{ textAlign: 'center', fontSize: '12px' }}>
+              <div className="mobileView_speedometer" style={{ textAlign: 'center', fontSize: '12px', paddingTop: '.5rem' }}>
                 {'AVG ' + currentValueText}
               </div>
             )}
