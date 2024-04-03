@@ -53,13 +53,9 @@ const GpsTable = () => {
   const [searchInput, setSearchInput] = useState('')
 
   const [mobileInput, setMobileInput] = useState('')
-  const emulators = useEmulatorStore(
-    (state) => state.emulators
-  )
+  const emulators = useEmulatorStore((state) => state.emulators)
 
-  const selectedEmulator = useEmulatorStore(
-    (state) => state.selectedEmulator
-  )
+  const selectedEmulator = useEmulatorStore((state) => state.selectedEmulator)
 
   const selectEmulator = useEmulatorStore((state) => state.selectEmulator)
 
@@ -199,7 +195,10 @@ const GpsTable = () => {
     // Retrieve selected emulator from local storage
     const storedSelectedEmulatorStr = localStorage.getItem('selectedEmulator')
     let storedSelectedEmulator
-    if (typeof storedSelectedEmulatorStr === 'string' && storedSelectedEmulatorStr !== '[object Object]') {
+    if (
+      typeof storedSelectedEmulatorStr === 'string' &&
+      storedSelectedEmulatorStr !== '[object Object]'
+    ) {
       storedSelectedEmulator = JSON.parse(storedSelectedEmulatorStr)
 
       if (storedSelectedEmulator) {
@@ -209,7 +208,9 @@ const GpsTable = () => {
   }, []) // Empty dependency array to run the effect only once when the component mounts
 
   useEffect(() => {
-    const ssidToString = selectedEmulator ? selectedEmulator?.emulatorSsid.toString() : ''
+    const ssidToString = selectedEmulator
+      ? selectedEmulator?.emulatorSsid.toString()
+      : ''
     if (isMobile) {
       setMobileInput(ssidToString)
     }
@@ -380,9 +381,9 @@ const GpsTable = () => {
                 <tbody>
                   {(rowsPerPage > 0
                     ? emulators.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
                     : emulators
                   )?.map((emulator, index) => (
                     <tr
@@ -414,8 +415,8 @@ const GpsTable = () => {
                             emulator.status === 'ACTIVE'
                               ? '#16BA00'
                               : emulator.status === 'INACTIVE'
-                                ? '#FFA500'
-                                : '#ff4d4d',
+                              ? '#FFA500'
+                              : '#ff4d4d',
                           textAlign: 'center'
                         }}
                       >
@@ -456,8 +457,10 @@ const GpsTable = () => {
                                 <IconButton
                                   size="small"
                                   disabled={!emulator?.telephone}
-                                  onClick={(e) => { e.stopPropagation(); handleMessageIconClicked(emulator) }}
-
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleMessageIconClicked(emulator)
+                                  }}
                                 >
                                   <MessageRoundedIcon fontSize="small" />
                                 </IconButton>
@@ -465,7 +468,10 @@ const GpsTable = () => {
                                 {/* message icon */}
                                 <IconButton
                                   size="small"
-                                  onClick={(e) => { e.stopPropagation(); handleHistoryButtonClick(emulator) }}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleHistoryButtonClick(emulator)
+                                  }}
                                 >
                                   <HistoryIcon fontSize="small" />
                                 </IconButton>
@@ -517,7 +523,7 @@ const GpsTable = () => {
                                   </div>
                                 </Tooltip>
                               </IconButton>
-                          )}
+                            )}
                         </div>
                       </td>
                     </tr>

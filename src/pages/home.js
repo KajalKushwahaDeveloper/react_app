@@ -170,7 +170,7 @@ const Home = () => {
         <div className="container-fluid">
           <div className="row">
             <DownloadApk />
-            <div className="col-lg-6 hello">
+            <div className="col-lg-6">
               <EmulatorTable
                 showToast={showToast}
                 handleAssignUserButtonClick={handleAssignUserButtonClick}
