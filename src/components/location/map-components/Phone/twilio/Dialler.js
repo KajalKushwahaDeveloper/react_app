@@ -26,7 +26,7 @@ const Dialler = ({ number, setNumber }) => {
         value={number}
         onChange={handleNumberChange}
         className="smsInput"
-        maxLength='11'
+        // maxLength='11'
       />
 
       <ol className="keypad">
