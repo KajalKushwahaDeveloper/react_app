@@ -1,6 +1,4 @@
 import AddIcon from '@mui/icons-material/Add'
-import SearchIcon from '@mui/icons-material/Search'
-import { InputAdornment, TextField } from '@mui/material'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import TableCell from '@mui/material/TableCell'
@@ -151,9 +149,6 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired
 }
 export function EnhancedTableToolbar(props) {
-  const { setSearchInput, searchInput } = props
-  console.log('searchInput:', searchInput)
-
   return (
     <Toolbar
       sx={{
@@ -171,25 +166,6 @@ export function EnhancedTableToolbar(props) {
       >
         EMULATORS
       </Typography>
-      <TextField
-        style={{
-          height: 'auto',
-          minHeight: 'auto',
-          maxHeight: 'auto',
-          margin: '0',
-          borderColor: 'white'
-        }}
-        placeholder="Search by Number/Ssid/created/assigned"
-        value={searchInput}
-        onChange={(event) => setSearchInput(event.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          )
-        }}
-      />
       <Tooltip title="ADD EMULATOR">
         <IconButton onClick={props.handleOpen} sx={{ color: 'white' }}>
           <AddIcon />

@@ -9,13 +9,14 @@ import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
 import {
   EnhancedTableHead,
-  EnhancedTableToolbar
+  EnhancedTableToolbar,
+  getComparator,
+  stableSort
 } from './stableSort'
 
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
-import { useState } from 'react'
 import { useStates } from '../../../StateProvider'
 import { GetEmulatorApi } from '../../../components/api/emulator'
 import {
@@ -48,17 +49,10 @@ export default function EmulatorTable({
   const [error, setError] = React.useState(null)
 
   const [emulators, setEmulators] = React.useState([])
-  const [searchInput, setSearchInput] = useState('')
 
   const totalEmulators = useEmulatorStore.getState().emulators
   const updateEmulators = useEmulatorStore((state) => state.updateEmulators)
-console.log('totalEmulators:', totalEmulators)
-  // Filter emulator data based on search input
-  const filteredEmulators = emulators.filter((emulator) =>
-    Object.values(emulator).some((value) =>
-      value?.toString().toLowerCase().includes(searchInput.toLowerCase())
-    )
-  )
+
   React.useEffect(() => {
     setEmulators(emulatorData)
   }, [emulatorData])
@@ -255,14 +249,14 @@ console.log('totalEmulators:', totalEmulators)
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - emulators.length) : 0
 
-  // const visibleRows = React.useMemo(
-  //   () =>
-  //     stableSort(totalEmulators, getComparator(order, orderBy)).slice(
-  //       page * rowsPerPage,
-  //       page * rowsPerPage + rowsPerPage
-  //     ),
-  //   [order, orderBy, page, emulators, rowsPerPage]
-  // )
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(totalEmulators, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    [order, orderBy, page, emulators, rowsPerPage]
+  )
 
   if (loading) {
     return (
@@ -289,10 +283,7 @@ console.log('totalEmulators:', totalEmulators)
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar
-          filteredEmulators={filteredEmulators}
           handleOpen={handleCreateEmulator}
-          setSearchInput={setSearchInput}
-          searchInput={searchInput}
         />
         <TableContainer>
           <Table
@@ -307,7 +298,7 @@ console.log('totalEmulators:', totalEmulators)
               rowCount={emulators.length}
             />
             <TableBody>
-              {filteredEmulators.map((row, index) => {
+              {visibleRows.map((row, index) => {
                 const labelId = `enhanced-table-checkbox-${index}`
                 const createdAtDate = new Date(row.createdAt)
                 const formattedDate = createdAtDate.toISOString().split('T')[0]

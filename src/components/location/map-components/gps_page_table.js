@@ -381,9 +381,9 @@ const GpsTable = () => {
                 <tbody>
                   {(rowsPerPage > 0
                     ? emulators.slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
                     : emulators
                   )?.map((emulator, index) => (
                     <tr
@@ -415,8 +415,8 @@ const GpsTable = () => {
                             emulator.status === 'ACTIVE'
                               ? '#16BA00'
                               : emulator.status === 'INACTIVE'
-                              ? '#FFA500'
-                              : '#ff4d4d',
+                                ? '#FFA500'
+                                : '#ff4d4d',
                           textAlign: 'center'
                         }}
                       >
@@ -523,7 +523,7 @@ const GpsTable = () => {
                                   </div>
                                 </Tooltip>
                               </IconButton>
-                            )}
+                          )}
                         </div>
                       </td>
                     </tr>
