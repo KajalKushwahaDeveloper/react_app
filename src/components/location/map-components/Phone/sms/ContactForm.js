@@ -109,18 +109,41 @@ export function ContactForm({ emulatorId, showToast }) {
         />
         {messageError && <p className="error">{messageError}</p>}
 
-        <UploadFiles ref={uploadFilesRef} setFileNames={setFileNames} showToast={showToast} inputFile={inputFile} />
+        <UploadFiles
+          ref={uploadFilesRef}
+          setFileNames={setFileNames}
+          showToast={showToast}
+          inputFile={inputFile}
+        />
 
         {/* Submit button */}
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: '1rem' }}
-        >
-          {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />} {/* Show loader when loading */}
-          {!loading && 'SEND'}
-        </Button>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          {loading ? (
+            <CircularProgress
+              size={24}
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                marginTop: '1rem',
+                marginLeft: '-12px'
+              }}
+            />
+          ) : (
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{
+                marginTop: '1rem',
+                position: 'relative',
+                width: 'fit-content' // Ensure button width fits content
+              }}
+            >
+              SEND
+            </Button>
+          )}
+        </div>
       </form>
     </div>
   )
