@@ -10,7 +10,7 @@ export default class UploadFiles extends Component {
 
     this.selectFile = this.selectFile.bind(this)
     this.upload = this.upload.bind(this)
-    this.resetState = this.resetState.bind(this); 
+    this.resetState = this.resetState.bind(this)
 
     this.state = {
       selectedFiles: undefined,
@@ -30,7 +30,7 @@ export default class UploadFiles extends Component {
       progress: 0,
       message: '',
       fileInfos: []
-    });
+    })
   }
 
   handleDeleteButtonClick(index) {

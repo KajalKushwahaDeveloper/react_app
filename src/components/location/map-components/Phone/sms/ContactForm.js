@@ -7,20 +7,18 @@ import { MESSAGE_SEND_MSG } from '../../../../../constants'
 import '../../../../../scss/ContactForm.scss'
 import UploadFiles from './components/upload-files.component.js'
 
-
 export function ContactForm({ emulatorId, showToast }) {
-  const { control, handleSubmit , reset} = useForm()
+  const { control, handleSubmit, reset } = useForm()
   const [message, setMessage] = useState('')
-  const uploadFilesRef = useRef(); 
+  const uploadFilesRef = useRef()
   // Remove the unused variable declaration
   const [messageError, setMessageError] = useState('')
   const [numberError, setPhoneNumberError] = useState('')
 
   const [fileNames, setFileNames] = useState([])
-  const [loading, setLoading] = useState(false); // State for loading
+  const [loading, setLoading] = useState(false) // State for loading
 
   const validatePhoneNumber = (number) => {
-    console.log('handleSubmit',number)
     if (!number) {
       setPhoneNumberError('Phone number is required.')
       return false
@@ -45,7 +43,7 @@ export function ContactForm({ emulatorId, showToast }) {
 
   const handleSubmitForm = async (data) => {
     const { telephone } = data
-    setLoading(true); // Set loading state to true
+    setLoading(true) // Set loading state to true
 
     if (validatePhoneNumber(telephone) && validateMessage(message)) {
       const extractedNames = fileNames.map((file) => file.name)
@@ -69,14 +67,14 @@ export function ContactForm({ emulatorId, showToast }) {
         setPhoneNumberError('')
         setMessageError('')
         setFileNames([])
-        reset({ telephone: ''})
+        reset({ telephone: '' })
         setFileNames([])
-        uploadFilesRef.current.resetState(); 
+        uploadFilesRef.current.resetState()
         showToast('Message Submit Successfully', 'success')
       } else if (error) {
         showToast(`error: ${error}`, 'error')
       }
-      setLoading(false); // Set loading state to false after request completes
+      setLoading(false) // Set loading state to false after request completes
     }
   }
   return (
@@ -118,7 +116,7 @@ export function ContactForm({ emulatorId, showToast }) {
           sx={{ marginTop: '1rem' }}
         >
           {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />} {/* Show loader when loading */}
-          {!loading && 'SEND'} 
+          {!loading && 'SEND'}
         </Button>
       </form>
     </div>
