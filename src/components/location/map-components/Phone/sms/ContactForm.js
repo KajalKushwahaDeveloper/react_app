@@ -1,5 +1,5 @@
-import { Button } from '@mui/material'
-import React, { useState } from 'react'
+import { Button, CircularProgress } from '@mui/material'
+import React, { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form'
 import ApiService from '../../../../../ApiService'
@@ -8,13 +8,16 @@ import '../../../../../scss/ContactForm.scss'
 import UploadFiles from './components/upload-files.component.js'
 
 export function ContactForm({ emulatorId, showToast }) {
-  const { control, handleSubmit } = useForm()
+  const { control, handleSubmit, reset } = useForm()
   const [message, setMessage] = useState('')
+  const uploadFilesRef = useRef()
+  const inputFile = useRef(null)
   // Remove the unused variable declaration
   const [messageError, setMessageError] = useState('')
   const [numberError, setPhoneNumberError] = useState('')
 
   const [fileNames, setFileNames] = useState([])
+  const [loading, setLoading] = useState(false) // State for loading
 
   const validatePhoneNumber = (number) => {
     if (!number) {
@@ -40,7 +43,10 @@ export function ContactForm({ emulatorId, showToast }) {
   }
 
   const handleSubmitForm = async (data) => {
+    inputFile.current.value = ''
+    inputFile.current.type = 'file'
     const { telephone } = data
+    setLoading(true) // Set loading state to true
 
     if (validatePhoneNumber(telephone) && validateMessage(message)) {
       const extractedNames = fileNames.map((file) => file.name)
@@ -63,10 +69,15 @@ export function ContactForm({ emulatorId, showToast }) {
         setMessage('')
         setPhoneNumberError('')
         setMessageError('')
+        setFileNames([])
+        reset({ telephone: '' })
+        setFileNames([])
+        uploadFilesRef.current.resetState()
         showToast('Message Submit Successfully', 'success')
       } else if (error) {
         showToast(`error: ${error}`, 'error')
       }
+      setLoading(false) // Set loading state to false after request completes
     }
   }
   return (
@@ -98,7 +109,7 @@ export function ContactForm({ emulatorId, showToast }) {
         />
         {messageError && <p className="error">{messageError}</p>}
 
-        <UploadFiles setFileNames={setFileNames} showToast={showToast} />
+        <UploadFiles ref={uploadFilesRef} setFileNames={setFileNames} showToast={showToast} inputFile={inputFile} />
 
         {/* Submit button */}
         <Button
@@ -107,7 +118,8 @@ export function ContactForm({ emulatorId, showToast }) {
           color="primary"
           sx={{ marginTop: '1rem' }}
         >
-          SEND
+          {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', left: '50%', marginTop: '-12px', marginLeft: '-12px' }} />} {/* Show loader when loading */}
+          {!loading && 'SEND'}
         </Button>
       </form>
     </div>

@@ -10,6 +10,7 @@ export default class UploadFiles extends Component {
 
     this.selectFile = this.selectFile.bind(this)
     this.upload = this.upload.bind(this)
+    this.resetState = this.resetState.bind(this)
 
     this.state = {
       selectedFiles: undefined,
@@ -19,6 +20,17 @@ export default class UploadFiles extends Component {
 
       fileInfos: []
     }
+  }
+
+  resetState() {
+    // Reset state to initial values
+    this.setState({
+      selectedFiles: undefined,
+      currentFile: undefined,
+      progress: 0,
+      message: '',
+      fileInfos: []
+    })
   }
 
   handleDeleteButtonClick(index) {
@@ -147,6 +159,7 @@ export default class UploadFiles extends Component {
         <label className="btn btn-default" style={{ width: '100%' }}>
           <input
             type="file"
+            ref={this.props.inputFile}
             onChange={this.selectFile}
             className="inputField"
           />
