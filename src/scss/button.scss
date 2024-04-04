@@ -16,6 +16,11 @@ button {
 }
 
 //emulator history
+.emulator_history_table {
+  height: 51vh;
+  overflow: scroll;
+}
+
 .emulator_history {
   border-bottom: .5px solid #D9DDDC !important;
   overflow: scroll !important;

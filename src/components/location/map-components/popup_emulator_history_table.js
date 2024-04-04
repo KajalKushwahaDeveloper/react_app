@@ -55,7 +55,7 @@ const PopupEmulatorHistoryTable = ({ data, showToast }) => {
   //   rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
   return (
-    <div style={{ height: '51vh', overflow: 'scroll' }}>
+    <div className='emulator_history_table'>
       {/* Additional Dialog */}
       {showAdditionalDialog && historyRowSelected && (
         <Modal
