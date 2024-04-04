@@ -159,6 +159,7 @@ export default class UploadFiles extends Component {
         <label className="btn btn-default" style={{ width: '100%' }}>
           <input
             type="file"
+            ref={this.props.inputFile}
             onChange={this.selectFile}
             className="inputField"
           />

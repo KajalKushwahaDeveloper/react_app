@@ -11,6 +11,7 @@ export function ContactForm({ emulatorId, showToast }) {
   const { control, handleSubmit, reset } = useForm()
   const [message, setMessage] = useState('')
   const uploadFilesRef = useRef()
+  const inputFile = useRef(null)
   // Remove the unused variable declaration
   const [messageError, setMessageError] = useState('')
   const [numberError, setPhoneNumberError] = useState('')
@@ -42,6 +43,8 @@ export function ContactForm({ emulatorId, showToast }) {
   }
 
   const handleSubmitForm = async (data) => {
+    inputFile.current.value = ''
+    inputFile.current.type = 'file'
     const { telephone } = data
     setLoading(true) // Set loading state to true
 
@@ -106,7 +109,7 @@ export function ContactForm({ emulatorId, showToast }) {
         />
         {messageError && <p className="error">{messageError}</p>}
 
-        <UploadFiles ref={uploadFilesRef} setFileNames={setFileNames} showToast={showToast} />
+        <UploadFiles ref={uploadFilesRef} setFileNames={setFileNames} showToast={showToast} inputFile={inputFile} />
 
         {/* Submit button */}
         <Button
