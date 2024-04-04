@@ -174,4 +174,10 @@ input {
     overflow-y: hidden !important;
     height: 94vh;
   }
+  .mapsContainer > div > div{
+    position: absolute !important;
+    top: 135px !important;
+    bottom: 25px !important;
+    left: 0px !important;
+  }
 }

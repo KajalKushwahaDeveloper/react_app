@@ -5,33 +5,40 @@
   font-family: 'Roboto';
   justify-content: space-between;
   align-items: center;
+
   .selectedStopInfo {
     display: flex;
     // justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+
     // gap: 1rem;
-    h6{
+    h6 {
       color: black;
       font-size: .9rem;
       font-weight: bold;
       text-align: left;
     }
-      p {
-        color: gray;
-        font-size: .8rem;
-        text-align: left;
-      }
+
+    p {
+      color: gray;
+      font-size: .8rem;
+      text-align: left;
+    }
   }
 }
-.gm-style-iw{
+
+.gm-style-iw {
   transition: box-shadow 0.3s ease;
-  &:hover{
+
+  &:hover {
     box-shadow: #505355 0px 2px 10px;
   }
 }
+
 @media screen and (max-width:"660px") {
-    .selectedStopBox {
-        width: 60vw;
-    }
+  .selectedStopBox {
+    width: 60vw;
+    height: 42vh;
+  }
 }

@@ -164,7 +164,7 @@ const GPS = () => {
       )}
       {isMobile && (
         <>
-          <div style={{ flex: '1', height: '100vh' }}>
+          <div className='mapsContainer' style={{ flex: '1', height: '100vh' }}>
             <GoogleMapContainer key={seed}/>
           </div>
           <div>
