@@ -5,7 +5,6 @@ import '../scss/login.scss'
 import { useAuth } from './hooks/useAuth'
 
 const LoginPage = () => {
-  console.log('LoginPage rendered')
   const { login, client } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -54,8 +53,6 @@ const LoginPage = () => {
   const handleForgotPasswordClick = async () => {
     setIsForgotPasswordModalOpen(true)
   }
-
-  console.log('client', client)
   if (client) {
     let isAdmin = false
     client.role_TYPE?.forEach((role) => {

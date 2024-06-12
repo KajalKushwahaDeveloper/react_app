@@ -13,7 +13,6 @@ import { StopComponents } from './Trip/StopComponents.jsx'
 const libraries = ['drawing', 'places', 'autocomplete']
 
 const GoogleMapContainer = () => {
-  console.log('Google Map Rendered!')
   const mapRef = useRef(null)
   const styleRef = useRef('default')
   const [savedZoom, setSavedZoom] = useState(null)

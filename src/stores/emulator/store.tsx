@@ -192,7 +192,6 @@ const createTripDataSlice: StateCreator<
   pathNotTraveled: null,
   connectedEmulator: null,
   connectSelectedEmulatorSSE: (selectedEmulator: Emulator | null) => {
-    console.log('TEST@ connectSelectedEmulatorSSE')
     const selectedEmulatorEventSource = get().selectedEmulatorEventSource
     if (selectedEmulator === null || selectedEmulator === undefined) {
       selectedEmulatorEventSource?.abort() // abort the emulatorsEventSource
@@ -238,7 +237,6 @@ const createTripDataSlice: StateCreator<
         try {
           // check event.event with EmulatorEvent
           const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
-          console.log('TEST@ emulatorData: ', emulatorData)
           if (event.event === EmulatorEvent.EMULATOR_CONNECTED_NO_TRIP) {
             const emulatorData: SelectedEmulatorData = JSON.parse(event.data)
             set({ connectedEmulator: emulatorData.emulatorDetails })
@@ -273,7 +271,6 @@ const createTripDataSlice: StateCreator<
         set({ isLoading: false })
       },
       onerror(err) {
-        console.log('TEST@', err)
         console.error('There was an error from the server', err)
         set({ isLoading: false })
       },

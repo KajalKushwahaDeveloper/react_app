@@ -41,7 +41,9 @@ export function SelectedStopInfo(props) {
   const connectedEmulator = connectedEmulatorRef.current
   const tripData = tripDataRef.current
   const stop = props.selectedStop
-  const distanceFromStartToStops = stop ? (stop?.distance / 1609).toFixed(2) + ' miles' : 'N/A'
+  const distanceFromStartToStops = stop
+    ? (stop?.distance / 1609).toFixed(2) + ' miles'
+    : 'N/A'
 
   let timeToReachThisStop = null
   let distanceToThisStop = null
@@ -79,7 +81,7 @@ export function SelectedStopInfo(props) {
     }
     showToast('Deleting stop...', 'info')
     const token = localStorage.getItem('token')
-    const { success, data, error } = await ApiService.makeApiCall(
+    const { success, error } = await ApiService.makeApiCall(
       TRIP_STOPS_DELETE_URL,
       'GET',
       null,
@@ -93,7 +95,6 @@ export function SelectedStopInfo(props) {
       showToast(error, 'error')
       console.error('handleDeleteStop error : ', error)
     } else {
-      console.log('handleDeleteStop data : ', data)
       // setTripData(data); NOTE: THIS IS NOT NEEDED, THE SSE SHOULD BE ABLE TO RESPOND TO THIS CHANGE WITHIN 500 ms
       showToast('Stop deleted', 'success')
       props.handleInfoWindowClose()

@@ -75,7 +75,6 @@ export function toTripData(data: SelectedEmulatorData): TripData {
 }
 
 function generateTripPoint(str: string): TripPoint[] {
-  console.log(str)
   // list of TripPoints
   const tripPoints: TripPoint[] = []
 

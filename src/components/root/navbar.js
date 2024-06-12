@@ -1,6 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
+import { Device } from 'twilio-client'
 import { CLIENT_CURRENT } from '../../constants.js'
 import { useAuth } from '../../pages/hooks/useAuth.js'
 import '../../scss/navbar.scss'
@@ -11,7 +12,7 @@ const Navbar = ({ isAdmin }) => {
   const { logout } = useAuth()
   const [menuIcon, setMenuIcon] = useState(false)
   const [data, setData] = useState()
-
+  const [twilioDevice, setTwilioDevice] = useState(null)
   const isMicEnabled = useEmulatorStore((state) => state.isMicEnabled)
 
   const fetchClientData = async () => {
@@ -39,6 +40,8 @@ const Navbar = ({ isAdmin }) => {
 
   useEffect(() => {
     fetchClientData()
+    const device = new Device()
+    setTwilioDevice(device)
   }, [])
 
   useEffect(() => {
@@ -64,6 +67,20 @@ const Navbar = ({ isAdmin }) => {
       }
     }
   }, [window.location.pathname])
+
+  const disconnectTwilioDevice = () => {
+    if (twilioDevice) {
+      twilioDevice.disconnectAll()
+      twilioDevice.destroy()
+      console.log('Twilio device disconnected and destroyed.')
+    }
+  }
+
+  const handleLogout = () => {
+    logout()
+    disconnectTwilioDevice()
+    setTwilioDevice([])
+  }
 
   return (
     <>
@@ -116,7 +133,7 @@ const Navbar = ({ isAdmin }) => {
                 {data?.username || 'N/A'})
               </p>
               <li>
-                <NavLink to="/" onClick={() => logout()}>
+                <NavLink to="/login" onClick={handleLogout}>
                   Logout
                 </NavLink>
               </li>
