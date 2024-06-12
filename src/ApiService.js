@@ -1,5 +1,3 @@
-import { EMULATOR_URL } from './constants'
-
 class ApiService {
   static async makeApiCall(url, method, payload, token, pathVariable, params) {
     try {
@@ -32,8 +30,6 @@ class ApiService {
       }
 
       const response = await fetch(url, requestOptions)
-
-      console.log('response: ', response)
       if (!response.ok) {
         let errorData
         const contentType = response.headers.get('content-type')
@@ -51,15 +47,8 @@ class ApiService {
       } else {
         result = await response.text()
       }
-      if (url === EMULATOR_URL) {
-        console.log('response', result)
-      }
       return { success: true, data: result, error: null }
     } catch (error) {
-      console.log('error: 1 ')
-      console.log(error?.message)
-      console.log('error: 2 ')
-      console.log(error)
       return {
         success: false,
         data: null,

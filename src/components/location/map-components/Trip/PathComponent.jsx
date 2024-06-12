@@ -35,7 +35,6 @@ export function PathComponent() {
         (pathTraveled) => {
           pathTraveledRef.current = pathTraveled
           if (pathTraveled === null || pathTraveled === undefined) {
-            console.log('pathTraveled is null or undefined')
             // reset the path
             pathTraveledPolylineRef.current.setPath([])
             // update the path
@@ -57,7 +56,6 @@ export function PathComponent() {
         (pathNotTraveled) => {
           pathNotTraveledRef.current = pathNotTraveled
           if (pathNotTraveled === null || pathNotTraveled === undefined) {
-            console.log('pathNotTraveled is null or undefined')
             // reset the path
             pathNotTraveledPolylineRef.current.setPath([])
             // update the path

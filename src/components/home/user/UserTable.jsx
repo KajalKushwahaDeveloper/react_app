@@ -14,6 +14,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import ApiService from '../../../ApiService'
 import { USER_CHANGE_STATUS_URL, USER_URL } from '../../../constants'
+import { useEmulatorStore } from '../../../stores/emulator/store.tsx'
 import { CustomTablePagination } from '../../CustomTablePagination'
 import {
   EnhancedTableHead,
@@ -34,6 +35,8 @@ export default function UserTable({
   const [orderBy, setOrderBy] = React.useState('calories')
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+
+  const totalEmulators = useEmulatorStore.getState().emulators
 
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState(null)
@@ -168,24 +171,28 @@ export default function UserTable({
     const confirmed = window.confirm(
       'Delete this user : ' + user.firstName + ' ' + user.lastName + '?'
     )
-    if (confirmed) {
-      const token = localStorage.getItem('token')
-      const { success, error } = await ApiService.makeApiCall(
-        USER_URL,
-        'DELETE',
-        null,
-        token,
-        user.id
-      )
+    if (user.tripId === null) {
+      if (confirmed) {
+        const token = localStorage.getItem('token')
+        const { success, error } = await ApiService.makeApiCall(
+          USER_URL,
+          'DELETE',
+          null,
+          token,
+          user.id
+        )
 
-      if (success) {
-        const updatedData = userData.filter((item) => item.id !== user.id)
-        setUserData(updatedData)
-        showToast('User deleted', 'success')
-      } else {
-        console.error('Error occurred while deleting user:', error)
-        showToast('User not deleted', 'error')
+        if (success) {
+          const updatedData = userData.filter((item) => item.id !== user.id)
+          setUserData(updatedData)
+          showToast('User deleted', 'success')
+        } else {
+          console.error('Error occurred while deleting user:', error)
+          showToast('User not deleted', 'error')
+        }
       }
+    } else {
+      showToast('Cannot delete the user with an active trip!', 'error')
     }
   }
 
@@ -276,6 +283,18 @@ export default function UserTable({
     )
   }
 
+  // Get tripIds for users in visibleRows
+  const visibleRowsWithTripIds = visibleRows.map((visibleRow) => {
+    const matchingEmulator = totalEmulators.find(
+      (emulator) => emulator?.user?.id === visibleRow?.id
+    )
+
+    return {
+      ...visibleRow,
+      tripId: matchingEmulator ? matchingEmulator?.tripId : null
+    }
+  })
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -293,7 +312,7 @@ export default function UserTable({
               rowCount={userData.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
+              {visibleRowsWithTripIds.map((row, index) => {
                 const labelId = `enhanced-table-checkbox-${index}`
                 const createdAtDate = new Date(row.createdAt)
                 const formattedDate = createdAtDate.toISOString().split('T')[0]
@@ -332,6 +351,7 @@ export default function UserTable({
                               marginRight: '10px',
                               borderRadius: '50%',
                               backgroundColor: 'red',
+                              cursor: 'pointer',
                               color: '#fff'
                             }}
                             aria-label="delete"

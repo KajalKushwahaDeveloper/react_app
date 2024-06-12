@@ -6,7 +6,6 @@ import { useEmulatorStore } from '../stores/emulator/store.tsx'
 import { useAuth } from './hooks/useAuth'
 
 export const ProtectedLayout = () => {
-  console.log('ProtectedLayout')
   const { client } = useAuth()
   const outlet = useOutlet()
 

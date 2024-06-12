@@ -8,7 +8,6 @@ import { DRAG_TIMEOUT } from '../../../../constants.js'
 import { useEmulatorStore } from '../../../../stores/emulator/store.tsx'
 
 const EmulatorMarkerSelected = () => {
-  console.log('Selected Marker Created!')
   const markerRef = useRef(null)
   const dragEmulator = useEmulatorStore.getState().dragEmulator
   const moveEmulator = useEmulatorStore.getState().moveEmulator
