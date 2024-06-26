@@ -609,31 +609,17 @@ function calculateRemainingDistance(tripData, emulator) {
   const currentTripPointIndex = emulator.currentTripPointIndex
 
   // if currentTripPointIndex is more than middle of the tripPoints, then we need to calculate the remaining distance and time
-  if (currentTripPointIndex > tripDataPoints.length / 2) {
-    // get the remaining tripPoints by iterating above the currentTripPointIndex
-    remainingDistanceInMeters = tripDataPoints.reduce(
-      (acc, tripPoint, index) => {
-        if (index > currentTripPointIndex) {
-          return acc - tripPoint.distance
-        }
-        return acc
-      },
-      0
-    )
-    remainingDriveTimeInMilliseconds =
-      remainingDistanceInMeters / emulator.velocity
-  } else {
-    // get the remaining tripPoints by iterating below the currentTripPointIndex then delete the distance from totalDistance
-    const traveledDistance = tripDataPoints.reduce((acc, tripPoint, index) => {
-      if (index < currentTripPointIndex) {
-        return acc + tripPoint.distance
-      }
-      return acc
-    }, 0)
-    remainingDistanceInMeters = tripData.distance - traveledDistance
-    remainingDriveTimeInMilliseconds =
-      remainingDistanceInMeters / emulator.velocity
-  }
+
+  // get the remaining tripPoints by iterating below the currentTripPointIndex then delete the distance from totalDistance
+  const traveledDistance = tripDataPoints.reduce((acc, tripPoint, index) => {
+    if (index < currentTripPointIndex) {
+      return acc + tripPoint.distance
+    }
+    return acc
+  }, 0)
+  remainingDistanceInMeters = tripData.distance - traveledDistance
+  remainingDriveTimeInMilliseconds =
+    remainingDistanceInMeters / emulator.velocity
 
   console.log('remainingTime', remainingDriveTimeInMilliseconds)
   console.log('remainingDistance', remainingDistanceInMeters)
