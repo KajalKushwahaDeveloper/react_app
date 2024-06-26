@@ -266,10 +266,13 @@ const AddressTable = (props) => {
   }, [])
 
   return (
-    <div className="main-address-table" style={{
-      position: 'absolute',
-      top: isMobile ? '3.2rem' : '4rem'
-    }}>
+    <div
+      className="main-address-table"
+      style={{
+        position: 'absolute',
+        top: isMobile ? '3.2rem' : '4rem'
+      }}
+    >
       {isMobile ? (
         <div className="row">
           {/* CURRENT ADDRESS */}
@@ -440,7 +443,10 @@ const AddressTable = (props) => {
 
           {/* PLUS MINUS ICONS */}
 
-          <CreateTripButton handleButtonClick={handleButtonClick} isSpinning={isSpinning}/>
+          <CreateTripButton
+            handleButtonClick={handleButtonClick}
+            isSpinning={isSpinning}
+          />
         </div>
       ) : (
         <div
@@ -608,7 +614,7 @@ function calculateRemainingDistance(tripData, emulator) {
     remainingDistanceInMeters = tripDataPoints.reduce(
       (acc, tripPoint, index) => {
         if (index > currentTripPointIndex) {
-          return acc + tripPoint.distance
+          return acc - tripPoint.distance
         }
         return acc
       },
@@ -620,7 +626,7 @@ function calculateRemainingDistance(tripData, emulator) {
     // get the remaining tripPoints by iterating below the currentTripPointIndex then delete the distance from totalDistance
     const traveledDistance = tripDataPoints.reduce((acc, tripPoint, index) => {
       if (index < currentTripPointIndex) {
-        return acc - tripPoint.distance
+        return acc + tripPoint.distance
       }
       return acc
     }, 0)
