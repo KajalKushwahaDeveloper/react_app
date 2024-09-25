@@ -433,6 +433,34 @@ export default function EmulatorTable({
                         </div>
                       </div>
                     </TableCell>
+                    {/* real telephone */}
+                    <TableCell align="left">
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <div>
+                          <Tooltip
+                            title={row.realTelephone || 'N/A'}
+                            placement="top"
+                            alignItems="center"
+                            display="flex"
+                          >
+                            <div
+                              style={{
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap'
+                              }}
+                            >
+                              {row.realTelephone || 'N/A'}
+                            </div>
+                          </Tooltip>
+                        </div>
+                      </div>
+                    </TableCell>
                     {/* Assigned */}
                     <TableCell align="left">
                       <Tooltip

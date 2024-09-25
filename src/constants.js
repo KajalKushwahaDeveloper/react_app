@@ -4,7 +4,7 @@ export const BASE_URL = process.env.REACT_APP_BASE_URL
 export const RESET_PASSWORD = BASE_URL + '/reset-password'
 export const FORGOT_PASSWORD = BASE_URL + '/forgot-password'
 export const CLIENT_CURRENT = BASE_URL + '/current'
-export const CLIENT_LOGIN = BASE_URL + '/log-in'
+export const CLIENT_LOGIN = BASE_URL + '/admin/log-in'
 
 // ADMIN
 export const ADMIN_URL = BASE_URL + '/admin'
@@ -21,6 +21,7 @@ export const EMULATOR_ALT_TELEPHONE_UPDATE_URL =
   EMULATOR_URL + '/updateAlternatePhoneNumber'
 export const EMULATOR_DRAG_URL = EMULATOR_URL + '/dragEmulator'
 export const EMULATOR_NOTE_URL = EMULATOR_URL + '/note'
+export const REAL_TELEPHONE_MESSAGES = (realTelephone) => `${EMULATOR_URL}/getMessages/${realTelephone}`
 
 // USER
 export const USER_URL = BASE_URL + '/user'
