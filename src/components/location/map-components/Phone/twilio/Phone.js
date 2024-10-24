@@ -1,0 +1,130 @@
+import { CircularProgress } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useStates } from "../../../../../StateProvider.js";
+import { useEmulatorStore } from "../../../../../stores/emulator/store.tsx";
+import Dialler from "./Dialler";
+import Incoming from "./Incoming";
+import KeypadButton from "./KeypadButton";
+import OnCall from "./OnCall";
+import "./Phone.css";
+import states from "./states";
+import { CALL_MAKE_CALL } from "../../../../../constants.js";
+import ApiService from "../../../../../ApiService.js";
+
+const Phone = ({ setContactDialogOptions }) => {
+  const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
+
+  useEffect(() => {
+    if (selectedDevice === null) {
+      setContactDialogOptions({
+        open: false,
+        dialogType: "",
+        emulatorId: null,
+      });
+    }
+  }, [selectedDevice, setContactDialogOptions]);
+
+  const { showToast } = useStates();
+
+  const [number, setNumber] = useState("");
+  const [callState, setCallState] = useState(false);
+
+  useEffect(() => {
+    if (selectedDevice?.state === "On call") {
+      setCallState(false);
+    }
+  }, [selectedDevice?.state, callState]);
+
+  const acceptConnection = () => {
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.conn.accept();
+    }
+  };
+
+  const rejectConnection = () => {
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.conn.reject();
+    }
+  };
+
+  const handleHangup = () => {
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.device.disconnectAll();
+    }
+  };
+
+  const handleCall = async () => {
+    const payload = {
+      emulatorId: selectedDevice.emulatorId,
+      number: number,
+      message: null,
+      fileNames: null,
+    };
+
+    const token = localStorage.getItem("token");
+    const { success, error } = await ApiService.makeApiCall(
+      CALL_MAKE_CALL,
+      "POST",
+      payload,
+      token,
+      null
+    );
+
+    if (selectedDevice !== null && selectedDevice.index !== null) {
+      selectedDevice.device.connect({ To: number })
+    }
+    setCallState(true);
+  };
+
+  let render;
+
+  if (selectedDevice === null) {
+    render = <p>Something went wrong</p>;
+  } else if (selectedDevice?.state === states.INCOMING) {
+    render = (
+      <Incoming
+        callerName={selectedDevice.conn}
+        acceptConnection={acceptConnection}
+        rejectConnection={rejectConnection}
+      ></Incoming>
+    );
+  } else if (selectedDevice?.state === states.ON_CALL) {
+    render = (
+      <OnCall
+        handleHangup={handleHangup}
+        device={selectedDevice.device}
+        conn={selectedDevice.conn}
+        showToast={showToast}
+      ></OnCall>
+    );
+  } else {
+    render = (
+      <>
+        <Dialler number={number} setNumber={setNumber} />
+        <div className="call">
+          {callState === true ? (
+            <span style={{ display: "flex", justifyContent: "center" }}>
+              {" "}
+              <CircularProgress color="primary" />{" "}
+            </span>
+          ) : (
+            <KeypadButton handleClick={handleCall} color="green">
+              Call
+            </KeypadButton>
+          )}
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <p className="status">
+        {selectedDevice?.number + " : " + selectedDevice?.state}
+      </p>
+      {render}
+    </>
+  );
+};
+
+export default Phone;

@@ -1,0 +1,3 @@
+.MuiPickersLayout-toolbar > .MuiPickersToolbar-content {
+    display: none !important;
+}

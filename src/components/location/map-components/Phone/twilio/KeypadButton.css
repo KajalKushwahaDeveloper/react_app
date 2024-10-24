@@ -1,0 +1,30 @@
+.keypad-button {
+  border: none;
+  background-color: transparent;
+  color: #121c2d;
+  width: 100%;
+  height: 2em;
+  font-size: 24px;
+  line-height: 1;
+  padding: 0;
+}
+.keypad-button:hover {
+  background-color: transparent;
+}
+
+.keypad-button.green {
+  background-color: #3bb96d;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap:1rem;
+  margin:auto;
+  width:auto;
+  padding: 0 .8rem;
+}
+
+.keypad-button.red {
+  background-color: #f22f46;
+  color: #fff;
+  margin-top: 2.5rem;
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Circle with initial settings -->
+  <circle cx="50%" cy="50%" r="50%" fill="#C1C1C1">
+    <animate attributeName="fill" values="#ff4d4d;#FFFFFF;#ff4d4d" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="50%" cy="50%" r="42%" fill="#F09938">
+    <animate attributeName="r" values="42%;36%;42%" dur="3s" begin="0.25s" keyTimes="0;0.5;1"
+      repeatCount="indefinite" />
+  </circle>
+  <!-- Draw a Resting icon like zzz where each z goes bigger Icon Path -->
+  <text x="120" y="350" font-family="Arial" font-size="140" fill="#C1C1C1">z</text>
+  <text x="200" y="300" font-family="Arial" font-size="180" fill="#C1C1C1">z</text>
+  <text x="280" y="250" font-family="Arial" font-size="220" fill="#C1C1C1">z</text>
+</svg>

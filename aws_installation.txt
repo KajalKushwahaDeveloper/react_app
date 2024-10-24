@@ -1,0 +1,21 @@
+EC2 MASTER/WORKER k8s setup:
+
+https://github.com/AmanPathak-DevOps/30DaysOfKubernetes
+
+kubeadm join 172.31.85.47:6443 --token mocfl0.4n05i79ds1dtmdcx --discovery-token-ca-cert-hash sha256:aeb4f26fe967ea175d476ad0ec23400817066c8ec28644142bf0b656ab248c55
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+MONGO DB SETUP:
+
+https://medium.com/@tanmaybhandge/mongodb-from-basics-to-deployment-on-kubernetes-c1ced7143a6c
+
+kubectl get secret my-user-password -n mongodb -o json | jq -r '.data | with_entries(.value |= @base64d)'
+
+
+{
+  "password": "Ykc5blltOXZhMmR3YzE5d1lYTnpkMjl5WkE9PQ=="
+}

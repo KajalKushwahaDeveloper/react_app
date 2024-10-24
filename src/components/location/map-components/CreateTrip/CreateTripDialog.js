@@ -1,0 +1,435 @@
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  Modal,
+  TextField,
+  Typography,
+} from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import React, { useEffect, useRef, useState } from "react";
+import ApiService from "../../../../ApiService.js";
+import { CREATE_TRIP_URL } from "../../../../constants.js";
+import SearchBar from "./SearchBar.js";
+
+import { useViewPort } from "../../../.././ViewportProvider.js";
+import { useStates } from "../../../../StateProvider.js";
+import { useEmulatorStore } from "../../../../stores/emulator/store.tsx";
+
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import DateTimePickerValue from "./DateTimeFieldValue.tsx";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import axios from "axios";
+
+const CreateTripDialog = () => {
+  dayjs.extend(utc);
+  const { width } = useViewPort();
+  const breakpoint = 620;
+  const isMobile = width < breakpoint;
+
+  const { isTableVisible } = useStates();
+
+  const connectedEmulatorRef = useRef(
+    useEmulatorStore.getState().connectedEmulator
+  );
+
+  const draggedEmulatorsRef = useRef(
+    useEmulatorStore.getState().draggedEmulators
+  );
+
+  useEffect(() => {
+    setFromInputValue("");
+  }, [isTableVisible])
+
+  useEffect(() => {
+    useEmulatorStore.subscribe(
+      (state) => state.connectedEmulator,
+      (connectedEmulator) => (connectedEmulatorRef.current = connectedEmulator)
+    );
+  }, []);
+
+  useEffect(() => {
+    useEmulatorStore.subscribe(
+      (state) => state.draggedEmulators,
+      (draggedEmulators) => {
+        draggedEmulatorsRef.current = draggedEmulators;
+      }
+    );
+  }, []);
+
+  const [fromLat, setFromLat] = useState();
+  const [fromLong, setFromLong] = useState();
+  const [toLat, setToLat] = useState();
+  const [toLong, setToLong] = useState();
+  const [fromAddress, setFromAddress] = useState("");
+  const [toAddress, setToAddress] = useState("");
+  const [inputValue, setInputValue] = useState("");
+
+  const [departTime, setDepartTime] = React.useState(dayjs());
+  const [departNow, setDepartNow] = React.useState(true);
+  const [arrivalTime, setArrivalTime] = React.useState(dayjs().add(4, "day"));
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [fromInputValue, setFromInputValue] = useState(""); // For From Address input
+  const [toInputValue, setToInputValue] = useState(""); // For To Address input
+
+  const { setIsTableVisible, showToast } = useStates();
+
+  const handleClose = () => {
+    setIsTableVisible(false);
+  };
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleDraggedEmulatorsIfAny = () => {
+    const connectedEmulator = connectedEmulatorRef.current;
+    if (connectedEmulator !== null) {
+      // if draggedEmulators is not null, then find from draggedEmulators where id is equal to connectedEmulator.id
+      const draggedEmulatorsList = draggedEmulatorsRef.current;
+      let didRemove = false;
+      draggedEmulatorsList.forEach((draggedEmulator, index) => {
+        if (draggedEmulator.emulator.id === connectedEmulator.id) {
+          draggedEmulatorsList.splice(index, 1);
+          didRemove = true;
+        }
+      });
+      if (didRemove) {
+        useEmulatorStore.setState({
+          draggedEmulators: [...draggedEmulatorsList],
+        });
+      }
+    }
+  };
+
+  const handleUseCurrentLocation = async () => {
+    const connectedEmulator = connectedEmulatorRef.current;
+    if (
+      connectedEmulator &&
+      connectedEmulator.latitude &&
+      connectedEmulator.longitude
+    ) {
+      setFromLat(connectedEmulator.latitude);
+      setFromLong(connectedEmulator.longitude);
+      window.localStorage.setItem("lat", connectedEmulator.latitude);
+      window.localStorage.setItem("long", connectedEmulator.longitude);
+      await axios
+        .get(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${connectedEmulator.latitude},${connectedEmulator.longitude}&sensor=true&key=AIzaSyB1HsnCUe7p2CE8kgBjbnG-A8v8aLUFM1E`
+        )
+        .then((response) => {
+          setFromInputValue(response.data.results[0].formatted_address);
+          setFromAddress(response.data.results[0].address_components);
+          setFromLat(connectedEmulator.latitude);
+          setFromLong(connectedEmulator.longitude);
+        });
+      // setInputValue(`Lat: ${connectedEmulator.latitude}, Long: ${connectedEmulator.longitude}`);
+    } else {
+      showToast("No emulator connected or location not available.", "error");
+    }
+  };
+
+  const handleCreateTripClick = async () => {
+    if ((!fromLat && !fromLong) || (!toLat && !toLong)) {
+      showToast("Please fill both locations!", "error");
+      return;
+    }
+
+    setError("");
+
+    let confirmed = false;
+    const connectedEmulator = connectedEmulatorRef.current;
+    if (connectedEmulator === null) {
+      showToast("Please connect to an emulator!", "error");
+      return;
+    }
+    if (
+      connectedEmulator.startLat !== null &&
+      connectedEmulator.tripStatus !== "STOP"
+    ) {
+      confirmed = window.confirm(
+        "Creating new Trip will remove running trip for this emulator!! Continue?"
+      );
+    } else {
+      confirmed = true;
+    }
+    if (confirmed) {
+      setIsLoading(true);
+      const payload = {
+        startLat: fromLat,
+        startLong: fromLong,
+        endLat: toLat,
+        endLong: toLong,
+        fromAddress,
+        toAddress,
+        emulatorDetailsId: connectedEmulator.id,
+        fakeDepartTimeInUtc: departNow
+          ? dayjs().unix() * 1000
+          : departTime.unix() * 1000,
+        fakeArrivalTimeInUtc: arrivalTime.unix() * 1000,
+        departNow,
+      };
+      const token = localStorage.getItem("token");
+      const { success, error } = await ApiService.makeApiCall(
+        CREATE_TRIP_URL,
+        "POST",
+        payload,
+        token
+      );
+      if (success) {
+        showToast("Trip Added successfully", "success");
+        // fetchEmulators()
+        handleDraggedEmulatorsIfAny();
+        handleClose();
+      } else {
+        showToast(error, "error");
+      }
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="gps_createTrip_overlay">
+        <Modal
+          open={isTableVisible}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: isMobile ? "90vw" : "50vw",
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              paddingTop: "0px",
+              paddingLeft: "0px",
+              paddingRight: "0px",
+              paddingBottom: "1rem",
+              zIndex: "0px !important",
+              borderRadius: "1rem",
+              border: "none",
+            }}
+          >
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+              sx={{
+                position: "absolute",
+                top: 10,
+                right: 10,
+                color: "white",
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              component="h2"
+              style={{
+                padding: "10px",
+                backgroundColor: "#007dc6",
+                color: "white",
+                lineHeight: 2.6,
+                borderTopLeftRadius: "1rem",
+                borderTopRightRadius: "1rem",
+              }}
+            >
+              Create Trip
+            </Typography>
+            <div style={{ margin: "1rem 0" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <div>
+                  {fromInputValue === "" ? (
+                    <>
+                      <SearchBar
+                        setLat={setFromLat}
+                        setLong={setFromLong}
+                        setAddress={setFromAddress}
+                        inputValue={fromInputValue}
+                        setInputValue={setInputValue}
+                        handleInputChange={handleInputChange}
+                        label="From Address"
+                        style={{
+                          width: "80vw !important",
+                          background: "white !important",
+                        }}
+                      />
+                      {/* Add a button for using the current GPS location */}
+                      <Button
+                        onClick={handleUseCurrentLocation}
+                        variant="outlined"
+                        startIcon={<MyLocationIcon />}
+                        style={{
+                          marginLeft: "1rem",
+                          marginTop: "16px",
+                          float: "right",
+                          marginRight: "1rem",
+                        }}
+                        size="small"
+                      >
+                        Use Current Location
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="Demo__search-bar-container">
+                      <div className="Demo__search-input-container">
+                        <div
+                          style={{
+                            margin: "1rem 0",
+                            width: "80vw !important",
+                            background: "white !important",
+                          }}
+                        >
+                          <TextField
+                            id="filled-basic"
+                            label="From Address"
+                            variant="filled"
+                            value={fromInputValue}
+                            onChange={(event) => {
+                              setFromInputValue(event.target.value);
+                            }}
+                            fullWidth
+                          />
+                        </div>
+                      </div>
+                      {/* Add a button for using the current GPS location */}
+                      <Button
+                        onClick={handleUseCurrentLocation}
+                        variant="outlined"
+                        startIcon={<MyLocationIcon />}
+                        style={{
+                          marginLeft: "1rem",
+                          marginTop: "16px",
+                          float: "right",
+                          marginRight: "1rem",
+                        }}
+                        size="small"
+                      >
+                        Use Current Location
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  style={{
+                    margin: "1rem 0",
+                    width: "80vw !important",
+                    background: "white !important",
+                  }}
+                >
+                  <SearchBar
+                    setLat={setToLat}
+                    setLong={setToLong}
+                    setAddress={setToAddress}
+                    inputValue={toInputValue} // Use toInputValue for To Address
+                    setInputValue={setInputValue}
+                    handleInputChange={handleInputChange}
+                    label="To Address"
+                    style={{
+                      width: "80vw !important",
+                      background: "white !important",
+                    }}
+                  />
+                  {error && <p className="error">{error}</p>}
+                </div>
+                <div
+                  style={{
+                    margin: "1rem 0",
+                    width: isMobile ? "85vw" : "48vw",
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={departNow}
+                        onChange={() => {
+                          setDepartNow(!departNow);
+                        }}
+                      />
+                    }
+                    label="Depart Now"
+                  />
+                </div>
+                {!departNow && (
+                  <div
+                    style={{
+                      margin: "1rem 0",
+                      width: isMobile ? "85vw" : "48vw",
+                    }}
+                  >
+                    <DateTimePickerValue
+                      value={departTime}
+                      title={"Depart Time"}
+                      setValue={setDepartTime}
+                    />
+                    {error && <p className="error">{error}</p>}
+                  </div>
+                )}
+
+                <div
+                  style={{
+                    margin: "1rem 0",
+                    width: isMobile ? "85vw" : "48vw",
+                  }}
+                >
+                  <DateTimePickerValue
+                    value={arrivalTime}
+                    title={"Arrival Time"}
+                    setValue={setArrivalTime}
+                  />
+                  {error && <p className="error">{error}</p>}
+                </div>
+
+                <div style={{ margin: "1rem 0" }}>
+                  <Button
+                    onClick={handleCreateTripClick}
+                    style={{
+                      cursor: "pointer",
+                      width: "auto",
+                      textAlign: "center",
+                      float: "right",
+                      backgroundColor: "#1976d2",
+                      color: "white",
+                      marginRight: "0.7rem",
+                    }}
+                    disabled={!!isLoading}
+                  >
+                    Add
+                  </Button>
+                  {error && <p className="error">{error}</p>}
+                </div>
+
+                <div style={{ margin: "0" }}>
+                  {isLoading ? <CircularProgress color="primary" /> : ""}
+                </div>
+              </div>
+            </div>
+          </Box>
+        </Modal>
+      </div>
+    </>
+  );
+};
+export default CreateTripDialog;

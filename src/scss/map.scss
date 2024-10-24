@@ -1,0 +1,127 @@
+@import './mixins.scss';
+@import './variables.scss';
+
+body {
+  @include main;
+}
+
+.gps_createTrip_overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 3rem;
+  width: 40%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.gps_tables {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.create_trip_button {
+  position: absolute;
+  top: 0;
+  left: 50;
+  padding: 10px;
+}
+
+.create_trip_button button {
+  padding: 8px 12px;
+}
+
+.main-address-table {
+  position: fixed;
+  top: 4rem;
+  z-index: 2;
+  height: 4rem;
+  width: 100%;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  .row {
+    height: 12vh;
+    background: white;
+    margin: 0rem;
+    overflow-y: hidden;
+    overflow-x: auto;
+    flex-wrap: nowrap !important;
+    padding: 0rem !important;
+    flex-shrink: 1 !important;
+  }
+}
+
+.mapContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: static;
+  color: #fff;
+}
+
+.btnCont {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  background: $background-color;
+}
+.address-table-heading {
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-align: center;
+  height: auto;
+}
+
+.addressTable {
+  text-align: center;
+  font-size: 0.83rem;
+  font-weight: 450;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  height: 40px;
+}
+@media screen and (max-width: 768px) {
+  .address-table-heading {
+    font-size: 11px;
+  }
+  .totalTimeSubContent {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .main-address-table {
+    position: fixed;
+    top: 3.2rem !important;
+    z-index: 2;
+    height: 4rem;
+    width: 100%;
+    .row {
+      height: calc(100% + 24px);
+      background: white;
+      margin: 0rem;
+      overflow-y: hidden;
+      overflow-x: auto;
+      flex-wrap: nowrap !important;
+      padding: 0rem !important;
+      flex-shrink: 1 !important;
+    }
+  }
+  .address-table-heading {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    height: auto;
+  }
+}
+
+
+

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Circle with initial settings -->
+  <circle cx="50%" cy="50%" r="50%" fill="#0400FD">
+    <animate attributeName="fill" values="#ff4d4d;#0400FD;#ff4d4d" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="50%" cy="50%" r="42%" fill="#F09938">
+    <animate attributeName="r" values="42%;36%;42%" dur="0.5s" begin="0.25s" keyTimes="0;0.5;1"
+      repeatCount="indefinite" />
+  </circle>
+  <!-- Draw a PAUSE Icon Path -->
+  <path fill="#C1C1C1" d="M192 124l166 132-166 132z">
+    <animate attributeName="fill" values="#ff4d4d;#FFFFFF;#ff4d4d" dur="2s" repeatCount="indefinite" />
+  </path>
+</svg>
