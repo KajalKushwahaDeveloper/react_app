@@ -9,6 +9,7 @@ export interface Emulator {
   fcmToken: string;
   latitude: number;
   longitude: number;
+  realTelephone: string;
   telephone: string;
   alternateTelephone: string;
   status: string;

@@ -8,8 +8,8 @@ import KeypadButton from "./KeypadButton";
 import OnCall from "./OnCall";
 import "./Phone.css";
 import states from "./states";
-import { CALL_MAKE_CALL } from "../../../../../constants.js";
-import ApiService from "../../../../../ApiService.js";
+// import { CALL_MAKE_CALL } from "../../../../../constants.js";
+// import ApiService from "../../../../../ApiService.js";
 
 const Phone = ({ setContactDialogOptions }) => {
   const selectedDevice = useEmulatorStore((state) => state.selectedDevice);
@@ -61,17 +61,19 @@ const Phone = ({ setContactDialogOptions }) => {
       fileNames: null,
     };
 
-    const token = localStorage.getItem("token");
-    const { success, error } = await ApiService.makeApiCall(
-      CALL_MAKE_CALL,
-      "POST",
-      payload,
-      token,
-      null
-    );
+    
 
     if (selectedDevice !== null && selectedDevice.index !== null) {
       selectedDevice.device.connect({ To: number })
+
+    //   const token = localStorage.getItem("token");
+    // const { success, error } = await ApiService.makeApiCall(
+    //   CALL_MAKE_CALL,
+    //   "POST",
+    //   payload,
+    //   token,
+    //   null
+    // );
     }
     setCallState(true);
   };
