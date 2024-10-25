@@ -122,7 +122,7 @@ const Phone = ({ setContactDialogOptions }) => {
   return (
     <>
       <p className="status">
-        {selectedDevice?.number + " : " + selectedDevice?.state}
+        {(selectedDevice?.realNumber? selectedDevice?.realNumber : selectedDevice?.number) + " : " + selectedDevice?.state}
       </p>
       {render}
     </>

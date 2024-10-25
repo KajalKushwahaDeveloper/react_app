@@ -119,7 +119,7 @@ async function createDevicesFromEmulators(
           'GET',
           null,
           userToken,
-          emulator.realTelephone
+          emulator.telephone
         )
         console.log('get voice token: :', success)
         if (!success) {
@@ -133,7 +133,8 @@ async function createDevicesFromEmulators(
           state: states.CONNECTING,
           conn: null,
           device: new Device(),
-          number: emulator.realTelephone
+          number: emulator.telephone,
+          realNumber : emulator.realTelephone,
         }
 
         newDevices.push(deviceDataModel)
@@ -153,7 +154,8 @@ async function createDevicesFromEmulators(
             state: states.READY,
             conn: deviceDataModel.conn,
             device: deviceDataModel.device,
-            number: emulator.realTelephone
+            number: emulator.telephone,
+            realNumber : emulator.realTelephone,
           }
           get().updateDeviceState(deviceDataModelReady)
         })
@@ -165,7 +167,8 @@ async function createDevicesFromEmulators(
             state: states.ON_CALL,
             conn: connection,
             device: deviceDataModel.device,
-            number: emulator.realTelephone
+            number: emulator.telephone,
+            realNumber : emulator.realTelephone,
           }
           get().updateDeviceState(deviceDataModelConnect)
         })
@@ -180,7 +183,8 @@ async function createDevicesFromEmulators(
             state: states.READY,
             conn: null,
             device: deviceDataModel.device,
-            number: emulator.realTelephone
+            number: emulator.telephone,
+            realNumber : emulator.realTelephone,
           }
           get().updateDeviceState(deviceDataModelDisconnect)
         })
@@ -192,7 +196,8 @@ async function createDevicesFromEmulators(
             state: states.INCOMING,
             conn: incomingConnection,
             device: deviceDataModel.device,
-            number: emulator.realTelephone
+            number: emulator.telephone,
+            realNumber : emulator.realTelephone,
           }
           get().updateDeviceState(deviceDataModelIncoming)
 
@@ -204,7 +209,8 @@ async function createDevicesFromEmulators(
               state: states.READY,
               conn: null,
               device: deviceDataModel.device,
-              number: emulator.realTelephone
+              number: emulator.telephone,
+              realNumber : emulator.realTelephone,
             }
             get().updateDeviceState(deviceDataModelReject)
           })
@@ -217,7 +223,8 @@ async function createDevicesFromEmulators(
             state: states.READY,
             conn: null,
             device: deviceDataModel.device,
-            number: emulator.realTelephone
+            number: emulator.telephone,
+            realNumber : emulator.realTelephone,
           }
           get().updateDeviceState(deviceDataModelCancel)
         })
@@ -229,7 +236,8 @@ async function createDevicesFromEmulators(
             state: states.READY,
             conn: null,
             device: deviceDataModel.device,
-            number: emulator.realTelephone
+            number: emulator.telephone,
+            realNumber : emulator.realTelephone,
           }
           get().updateDeviceState(deviceDataModelReject)
         })
