@@ -119,7 +119,7 @@ async function createDevicesFromEmulators(
           'GET',
           null,
           userToken,
-          emulator.telephone
+          emulator.realTelephone
         )
         console.log('get voice token: :', success)
         if (!success) {
