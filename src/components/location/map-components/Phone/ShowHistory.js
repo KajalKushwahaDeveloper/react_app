@@ -248,7 +248,7 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Price:</Typography>
                       <Typography fontWeight={400}>
-                        {msgData.Price + ' ' + msgData.priceUnit}
+                        {msgData.Price}
                       </Typography>
                     </Grid>
                   </Grid>

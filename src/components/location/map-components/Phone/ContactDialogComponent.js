@@ -51,10 +51,6 @@ function ContactDialogComponent({ contactDialogOptions, setContactDialogOptions 
     }
   }, [contactDialogOptions, selectedDevice?.emulatorId]);
 
-  const realNumberMessages = historyData?.RealTelephoneMessages || [];
-  const emulatorMessages = historyData?.EmulatorMessages || [];
-console.log("realNumberMessages:", realNumberMessages);
-
   const handleTabChange = (event, newValue) => {
     setTabIndexSelected(newValue);
   };
@@ -113,8 +109,7 @@ console.log("realNumberMessages:", realNumberMessages);
           <TabPanel value={tabIndexValue} index={1} style={{ marginTop: '2rem', height: '80vh', overflowY: 'scroll' }}>
             <ShowHistory
               dialogType={contactDialogOptions.dialogType}
-              data={contactDialogOptions.dialogType === 'call' ?emulatorMessages  : realNumberMessages}
-              // data={contactDialogOptions.dialogType === 'call' ? realNumberMessages  : emulatorMessages}
+              data={historyData}
             />
             <Backdrop
               sx={{

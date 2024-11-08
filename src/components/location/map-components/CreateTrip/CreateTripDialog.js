@@ -94,6 +94,7 @@ const CreateTripDialog = () => {
       // if draggedEmulators is not null, then find from draggedEmulators where id is equal to connectedEmulator.id
       const draggedEmulatorsList = draggedEmulatorsRef.current;
       let didRemove = false;
+      console.log(draggedEmulatorsList);
       draggedEmulatorsList.forEach((draggedEmulator, index) => {
         if (draggedEmulator.emulator.id === connectedEmulator.id) {
           draggedEmulatorsList.splice(index, 1);
