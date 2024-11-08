@@ -3,6 +3,7 @@ import React from 'react'
 import './twilio/Phone.css'
 
 export function ShowHistory({ dialogType, data }) {
+  console.log("showHistoryData:", data);
   return (
     <div>
       {data && data.length ? (
@@ -155,6 +156,8 @@ export function ShowHistory({ dialogType, data }) {
           })
         ) : dialogType === 'message' ? (
           data.map((msgData) => {
+            console.log("msgData:",data);
+            
             return (
               <List key={msgData.sid} style={{ padding: '0px 5px' }}>
                 <Card
@@ -171,7 +174,7 @@ export function ShowHistory({ dialogType, data }) {
                       {console.log("MESGDATA", msgData)}
                       <Typography fontWeight={800}>From:</Typography>
                       <Typography fontWeight={400}>
-                        {msgData.from.endpoint}
+                        {msgData?.From}
                       </Typography>
                     </Grid>
                     <Grid
@@ -182,7 +185,7 @@ export function ShowHistory({ dialogType, data }) {
                     // gap={1}
                     >
                       <Typography fontWeight={800}>To:</Typography>
-                      <Typography fontWeight={400}>{msgData.to}</Typography>
+                      <Typography fontWeight={400}>{msgData?.To}</Typography>
                     </Grid>
                   </Grid>
                   <Grid className="showHistory" container>
@@ -195,7 +198,7 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Sent Date:</Typography>
                       <Typography fontWeight={400}>
-                        {new Date(msgData.dateSent).toLocaleDateString()}
+                        {new Date(msgData.SentDate).toLocaleDateString()}
                       </Typography>
                     </Grid>
                     <Grid
@@ -207,7 +210,7 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Sent Time:</Typography>
                       <Typography fontWeight={400}>
-                        {new Date(msgData.dateSent).toLocaleTimeString()}
+                        {msgData?.SentTime}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -220,7 +223,7 @@ export function ShowHistory({ dialogType, data }) {
                     // gap={1}
                     >
                       <Typography fontWeight={800}>Status:</Typography>
-                      <Typography fontWeight={400}>{msgData.status}</Typography>
+                      <Typography fontWeight={400}>{msgData?.Status}</Typography>
                     </Grid>
                     <Grid
                       item
@@ -231,7 +234,7 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Durations:</Typography>
                       <Typography fontWeight={400}>
-                        {msgData.direction}
+                        {msgData?.Duration}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -245,7 +248,7 @@ export function ShowHistory({ dialogType, data }) {
                     >
                       <Typography fontWeight={800}>Price:</Typography>
                       <Typography fontWeight={400}>
-                        {msgData.price + ' ' + msgData.priceUnit}
+                        {msgData.Price + ' ' + msgData.priceUnit}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -256,7 +259,7 @@ export function ShowHistory({ dialogType, data }) {
                         fontWeight={400}
                         style={{ wordBreak: 'break-word' }}
                       >
-                        {msgData.body}
+                        {msgData.Message}
                       </Typography>
                     </Grid>
                   </Grid>
