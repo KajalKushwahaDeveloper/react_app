@@ -163,7 +163,8 @@ const MapButtons = (props) => {
         cancelSetPositionButtonRef.current.style.right = isMobile ? '137px' : '310px'
         cancelTripButtonRef.current.style.right = isMobile ? '137px' : '189px'
       } else {
-        setPositionButtonRef.current.style.right = isMobile ? '137px' : '190px'
+        setPositionButtonRef.current.style.right = isMobile ? '137px' : ''
+        setPositionButtonRef.current.style.left = isMobile ? '137px' : '10px'
         cancelSetPositionButtonRef.current.style.right = isMobile
           ? '137px'
           : '190px'
@@ -360,12 +361,12 @@ const MapButtons = (props) => {
   return (
     <>
       <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-around',
-          flexShrink: '1',
-          padding: '0'
-        }}
+        // style={{
+        //   display: 'flex',
+        //   justifyContent: 'space-around',
+        //   flexShrink: '1',
+        //   padding: '0'
+        // }}
       >
         <Speedometer />
         {/* show cancel if movedEmulator.moveMarker or if draggedEmulatorRef.current includes a dragEmulator of same dragEmulator.emulator.id */}
@@ -397,7 +398,8 @@ const MapButtons = (props) => {
             zIndex: 2,
             position: 'absolute',
             top: isMobile ? '100px' : '135px',
-            right: 190,
+            // right: 190,
+            left: 10,
             justifyContent: 'center'
           }}
           onClick={handleSetPositionClick}
@@ -414,7 +416,8 @@ const MapButtons = (props) => {
             zIndex: 2,
             position: 'absolute',
             top: isMobile ? '100px' : '135px',
-            right: 70,
+            // right: 70,
+            left: 145,
             justifyContent: 'center'
           }}
           onClick={handleCreateTripButton}
@@ -431,7 +434,8 @@ const MapButtons = (props) => {
             zIndex: 2,
             position: 'absolute',
             top: isMobile ? '100px' : '135px',
-            right: 70,
+            // right: 70,
+            left: 200,
             justifyContent: 'center',
             backgroundColor: '#f44336'
           }}
@@ -448,7 +452,8 @@ const MapButtons = (props) => {
             zIndex: 2,
             position: 'absolute',
             top: isMobile ? '100px' : '135px',
-            right: 0,
+            // right: 0,
+            left: 269,
             justifyContent: 'center'
           }}
           onClick={props?.handleButtonClick}

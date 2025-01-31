@@ -147,14 +147,14 @@ const GPS = () => {
                 width: '100%'
               }}
             >
-              <div style={{ width: '320px', height: '100vh' }}>
-                <GpsTable />
-              </div>
               <div
                 className="mapsContainer"
                 style={{ flex: '1', top: '128px' }}
               >
                 <GoogleMapContainer key={seed}/>
+              </div>
+              <div style={{ width: '320px', height: '100vh' }}>
+                <GpsTable />
               </div>
             </div>
           </div>
