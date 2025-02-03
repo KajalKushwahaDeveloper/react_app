@@ -82,10 +82,10 @@ const LoginPage = () => {
             >
               <div className="Left_content">
                 <img
-                  src="images/logo/logbookgps_logo.png"
+                  src="images/logo/gps_logo.svg"
                   className="FrontImg"
                 />
-                <hr className="hr"></hr>
+                {/* <hr className="hr"></hr> */}
               </div>
             </div>
             <div

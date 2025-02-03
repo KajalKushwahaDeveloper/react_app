@@ -4,6 +4,7 @@
 $accent-color: rgb(47, 99, 117) 0, 97%, 38%, 0.485;
 $secondary-color: #e6f7d1;
 $main-color: hsla(180, 97%, 38%, 0.485);
+$background-login-color: #141d2b;
 
 body {
   @include main;
@@ -12,7 +13,7 @@ body {
 .authScreen {
   width: 100%;
   height: 100vh;
-  background-color: $background-color;
+  background-color: $background-login-color;
   position: relative;
 
   .container_div {
