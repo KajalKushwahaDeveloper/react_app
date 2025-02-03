@@ -75,7 +75,7 @@ const AddressTable = (props) => {
           emulator &&
           emulator.id === useEmulatorStore.getState().selectedEmulator?.id
         ) {
-          elementRef.current.style.backgroundColor = 'lightblue'
+          elementRef.current.style.backgroundColor = '#ffe4a573'
         } else {
           elementRef.current.style.backgroundColor = 'transparent'
         }

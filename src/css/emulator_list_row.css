@@ -53,7 +53,7 @@
 }
 
 .selected {
-  background-color: lightblue;
+  background-color: rgba(255, 228, 165, 0.45);
 }
 
 .hovered {
