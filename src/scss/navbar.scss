@@ -1,10 +1,12 @@
 @import './variables';
 @import './mixins';
 
+$black-color: black;
+
 .header {
   width: 100%;
   height: auto;
-  background-color: $background-color;
+  background-color: #F8F9FA;
   color: $white-color;
   position: fixed;
   z-index: 3;
@@ -76,7 +78,7 @@
 
   .menu-link ul li a {
     text-transform: capitalize;
-    color: $white-color;
+    color: $black-color;
     transition: 0.23s;
     font-size: 1.1rem;
   }

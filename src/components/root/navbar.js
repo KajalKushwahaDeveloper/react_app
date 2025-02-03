@@ -90,8 +90,8 @@ const Navbar = ({ isAdmin }) => {
           <div className="logo">
             <img
               className="logo_image"
-              style={{ width: '8rem', height: 'auto' }}
-              src="images/logo/logbookgps_logo.png"
+              style={{ width: '3.5rem', height: '3.5rem' }}
+              src="images/logo/gps_logo.svg"
               alt="logo"
             />
             {window.location.pathname === '/gps' &&
@@ -128,7 +128,7 @@ const Navbar = ({ isAdmin }) => {
                 </NavLink>
               </li>
 
-              <p className="username_para" style={{ margin: '1rem 0' }}>
+              <p className="username_para" style={{ margin: '1rem 0', color: 'black' }}>
                 {data?.firstName || 'N/A'} {data?.lastName || 'N/A'} (
                 {data?.username || 'N/A'})
               </p>

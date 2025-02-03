@@ -62,7 +62,8 @@ body {
 
           input {
             width: 100%;
-            background-color: rgba($color: $background-color, $alpha: 0.1);
+            // background-color: rgba($color: $background-color, $alpha: 0.1);
+            background-color: white;
 
             &:focus {
               box-shadow: none;
