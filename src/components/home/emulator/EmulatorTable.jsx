@@ -285,7 +285,15 @@ export default function EmulatorTable({
         <EnhancedTableToolbar
           handleOpen={handleCreateEmulator}
         />
-        <TableContainer>
+        <TableContainer
+          sx={{
+            overflowX: 'auto',
+            '&::-webkit-scrollbar': { height: '10px' },
+            '&::-webkit-scrollbar-track': { backgroundColor: '#e0e0e0', borderRadius: '10px' },
+            '&::-webkit-scrollbar-thumb': { backgroundColor: '#141d2b', borderRadius: '10px' },
+            '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#141d2b' }
+          }}
+        >
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

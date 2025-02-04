@@ -66,7 +66,20 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
+      width: 250,
+      '&::-webkit-scrollbar': {
+        width: '8px'
+      },
+      '&::-webkit-scrollbar-track': {
+        background: '#ffff'
+      },
+      '&::-webkit-scrollbar-thumb': {
+        background: '#141d2b',
+        borderRadius: '4px'
+      },
+      '&::-webkit-scrollbar-thumb:hover': {
+        background: '#141d2b'
+      }
     }
   }
 }
@@ -220,6 +233,10 @@ const ChangeEmulatorSsidPopup = (props) => {
                   <InputLabel
                     id="demo-multiple-name-label"
                     style={{ borderRadius: '2rem' }}
+                    sx={{
+                      color: '#141d2b', // Default label color
+                      '&.Mui-focused': { color: '#141d2b' } // Keep color when focused
+                    }}
                   >
                     Id
                   </InputLabel>
@@ -227,7 +244,18 @@ const ChangeEmulatorSsidPopup = (props) => {
                     labelId="demo-multiple-name-label"
                     id="demo-multiple-name"
                     onChange={handleChange}
-                    input={<OutlinedInput label="Name" />}
+                    input={<OutlinedInput label="Name"
+                      sx={{
+                        '& .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#ccc' // Default border color
+                        },
+                        '&:hover .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#141d2b' // Border color on hover
+                        },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                          borderColor: '#141d2b' // Border color when focused (clicked)
+                        }
+                      }}/>}
                     MenuProps={MenuProps}
                   >
                     {emulators?.map((emulator) => (
@@ -249,7 +277,7 @@ const ChangeEmulatorSsidPopup = (props) => {
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   variant="contained"
-                  style={{ width: '2rem', marginTop: '2em' }}
+                  style={{ width: '2rem', marginTop: '2em', backgroundColor: '#141d2b' }}
                   onClick={() => handleSubmitChangeSsid()}
                 >
                   Submit
