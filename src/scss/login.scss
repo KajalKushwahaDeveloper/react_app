@@ -14,11 +14,28 @@ body {
   background-color: #ffff;
   border: 1px solid #00000040;
   border-radius: 5px;
-  height: 7vh;;
+  height: 7vh;
 }
 
 .alignPhoneNumber > div{
   margin-left: 10px;
+}
+
+.editAddUserFieldsAlign {
+  background-color: #ffff;
+  border: 1px solid #00000040;
+  border-radius: 5px;
+  height: 5vh;
+  margin-left: 0;
+}
+
+.PhoneInput > .PhoneInputInput {
+  background-color: #ffff;
+  border: 1px solid #00000040;
+  border-radius: 5px;
+  height: 5vh;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .authScreen {
@@ -266,16 +283,19 @@ input {
 
 .login_button {
   @include default-view;
-  background: $background-color;
-  margin: 40px 15px 20px 0px;
+  // background: $background-color;
+  background: $background-login-color;
+  margin: 25px 15px 20px 0px;
   color: $white-color;
   transition: all 500ms ease-out;
   animation: lights 4000ms infinite ease-in;
   border: 0;
 
   &:hover {
-    border: 1px solid $background-color;
-    box-shadow: 0px 0px 10px 2px $background-color;
+    // border: 1px solid $background-color;
+    // box-shadow: 0px 0px 10px 2px $background-color;
+    border: 1px solid $background-login-color;
+    box-shadow: 0px 0px 2px 2px $background-login-color;
     animation: none;
   }
 }

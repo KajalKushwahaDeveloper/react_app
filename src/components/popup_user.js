@@ -145,7 +145,7 @@ const PopUpUser = ({
           <form onSubmit={handleSubmit(handleSubmitData)}>
             <h1
               style={{
-                marginBottom: '3rem',
+                marginBottom: '1.5rem',
                 fontSize: '1.5rem',
                 fontWeight: '600'
               }}
@@ -158,6 +158,7 @@ const PopUpUser = ({
               id="firstname"
               name="firstname"
               placeholder="Enter your first name"
+              className='editAddUserFieldsAlign'
               {...register('firstname', {
                 required: {
                   value: true,
@@ -180,6 +181,7 @@ const PopUpUser = ({
               id="lastname"
               name="lastname"
               placeholder="Enter your last name"
+              className='editAddUserFieldsAlign'
               {...register('lastname', {
                 required: {
                   value: true,
@@ -202,6 +204,7 @@ const PopUpUser = ({
               id="email"
               name="email"
               placeholder="Enter your email"
+              className='editAddUserFieldsAlign'
               {...register('email', {
                 required: {
                   value: true,
@@ -234,7 +237,6 @@ const PopUpUser = ({
                   message: 'Telephone is required!'
                 }
               }}
-              style={{ marginBottom: '12px' }}
             />
 
             {errors.telephone && (
@@ -247,6 +249,7 @@ const PopUpUser = ({
                 type="password"
                 id="password"
                 placeholder="password (empty if unchanged)"
+                className='editAddUserFieldsAlign'
                 value={password}
                 onChange={handleEditPassword}
               />
