@@ -3,8 +3,7 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
-  Select,
-  TextField
+  Select
 } from '@mui/material'
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
@@ -48,9 +47,22 @@ const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
 const MenuProps = {
   PaperProps: {
-    style: {
+    sx: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
+      width: 250,
+      '&::-webkit-scrollbar': {
+        width: '8px'
+      },
+      '&::-webkit-scrollbar-track': {
+        background: '#ffff'
+      },
+      '&::-webkit-scrollbar-thumb': {
+        background: '#141d2b',
+        borderRadius: '4px'
+      },
+      '&::-webkit-scrollbar-thumb:hover': {
+        background: '#141d2b'
+      }
     }
   }
 }
@@ -60,9 +72,9 @@ const DropDown = (props) => {
     setTwilioUpdatedPhone,
     alternateNumber,
     setAlternateNumber,
-    userToEdit,
-    voiceMsg,
-    setVoiceMsg
+    userToEdit
+    // voiceMsg,
+    // setVoiceMsg
   } = props
 
   const [phoneNumber, setPhoneNumber] = useState()
@@ -132,9 +144,16 @@ const DropDown = (props) => {
   }, [])
 
   return (
-    <div>
+    <div className='alignPhoneNumber'>
       <FormControl sx={{ m: 1, width: 300, margin: '2rem' }}>
-        <InputLabel id="tel-number-label" style={{ borderRadius: '2rem' }}>
+        <InputLabel
+          id="tel-number-label"
+          style={{ borderRadius: '2rem' }}
+          sx={{
+            color: '#141d2b', // Default label color
+            '&.Mui-focused': { color: '#141d2b' } // Keep color when focused
+          }}
+        >
           Tel. No.
         </InputLabel>
         <Select
@@ -143,7 +162,22 @@ const DropDown = (props) => {
           value={phoneNumber}
           // value={userToEdit?.telephone}
           onChange={handleChange}
-          input={<OutlinedInput label="Name" />}
+          input={
+            <OutlinedInput
+              label="Name"
+              sx={{
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#ccc' // Default border color
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#141d2b' // Border color on hover
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#141d2b' // Border color when focused (clicked)
+                }
+              }}
+            />
+          }
           MenuProps={MenuProps}
           defaultValue={userToEdit?.telephone}
         >
@@ -164,6 +198,7 @@ const DropDown = (props) => {
           value={userToEdit?.alternateTelephone}
           limitMaxLength={10}
           onChange={handleAlternateNumberChange}
+          className='phoneNumberInput'
         />
         {teleError && (
           <p className="ms-4 mb-1" style={{ fontSize: 14, color: 'red' }}>
@@ -171,7 +206,7 @@ const DropDown = (props) => {
           </p>
         )}
 
-        <TextField
+        {/* <TextField
           id="voice-message-basic"
           label="Voice Message"
           variant="outlined"
@@ -180,7 +215,7 @@ const DropDown = (props) => {
           onChange={(e) => setVoiceMsg(e.target.value)}
           defaultValue={voiceMsg}
           multiline
-        />
+        /> */}
       </FormControl>
     </div>
   )

@@ -17,11 +17,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
 import Radio from '@mui/material/Radio'
 import ApiService from '../ApiService'
-import {
-  EMULATOR_CHANGE_SSID_URL,
-  EMULATOR_URL,
-  USER_URL
-} from '../constants'
+import { EMULATOR_CHANGE_SSID_URL, EMULATOR_URL, USER_URL } from '../constants'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -62,9 +58,10 @@ BootstrapDialogTitle.propTypes = {
 }
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
+
 const MenuProps = {
   PaperProps: {
-    style: {
+    sx: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
       width: 250,
       '&::-webkit-scrollbar': {
@@ -244,18 +241,22 @@ const ChangeEmulatorSsidPopup = (props) => {
                     labelId="demo-multiple-name-label"
                     id="demo-multiple-name"
                     onChange={handleChange}
-                    input={<OutlinedInput label="Name"
-                      sx={{
-                        '& .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#ccc' // Default border color
-                        },
-                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#141d2b' // Border color on hover
-                        },
-                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#141d2b' // Border color when focused (clicked)
-                        }
-                      }}/>}
+                    input={
+                      <OutlinedInput
+                        label="Name"
+                        sx={{
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#ccc' // Default border color
+                          },
+                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#141d2b' // Border color on hover
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#141d2b' // Border color when focused (clicked)
+                          }
+                        }}
+                      />
+                    }
                     MenuProps={MenuProps}
                   >
                     {emulators?.map((emulator) => (
@@ -277,7 +278,11 @@ const ChangeEmulatorSsidPopup = (props) => {
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
                   variant="contained"
-                  style={{ width: '2rem', marginTop: '2em', backgroundColor: '#141d2b' }}
+                  style={{
+                    width: '2rem',
+                    marginTop: '2em',
+                    backgroundColor: '#141d2b'
+                  }}
                   onClick={() => handleSubmitChangeSsid()}
                 >
                   Submit

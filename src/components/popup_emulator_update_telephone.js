@@ -123,9 +123,10 @@ const PopUpEmulatorTelephone = ({
           <form onSubmit={handleSubmit}>
             <h1
               style={{
-                marginBottom: '2rem',
+                marginBottom: '1rem',
                 fontSize: '1.5rem',
-                fontWeight: '600'
+                fontWeight: '600',
+                textAlign: 'center'
               }}
             >
               {' '}
@@ -147,7 +148,8 @@ const PopUpEmulatorTelephone = ({
                 width: '6rem',
                 float: 'right',
                 marginRight: '0px',
-                padding: '.5rem 0'
+                padding: '.5rem 0',
+                backgroundColor: '#141d2b'
               }}
             >
               Add
