@@ -133,7 +133,7 @@ export function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
-              sx={{ fontWeight: 'bold', color: '#007dc6' }}
+              sx={{ fontWeight: 'bold', color: '#141d2b' }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -160,7 +160,8 @@ export function EnhancedTableToolbar(props) {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        backgroundColor: '#007dc6',
+        // backgroundColor: '#007dc6',
+        backgroundColor: '#141d2b',
         borderRadius: '5px 5px 0px 0px'
       }}
     >

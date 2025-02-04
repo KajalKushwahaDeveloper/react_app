@@ -135,12 +135,12 @@ const LoginPage = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-12 mt-3 btns" style={{}}>
+                    <div className="col-12 mt-3 btns mb-2" style={{}}>
                       <button
                         className="btn btn-main"
                         type="submit"
                         style={{
-                          background: '#007dc6',
+                          background: '#141d2b',
                           color: 'white',
                           width: '6rem'
                         }}
@@ -148,11 +148,11 @@ const LoginPage = () => {
                         Login
                       </button>
                     </div>
-                    {emailError && <p className="error">{emailError}</p>}
-                    {passwordError && <p className="error">{passwordError}</p>}
+                    {emailError && <p className="error text-danger">{emailError}</p>}
+                    {passwordError && <p className="error text-danger">{passwordError}</p>}
                     <div className="col-12 mt-3 btns">
                       {responseError && (
-                        <p className="error">Invalid Ceredentials</p>
+                        <p className="error text-danger">Invalid Ceredentials</p>
                       )}
                       <a
                         href="#forgot-password"

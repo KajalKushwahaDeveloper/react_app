@@ -314,7 +314,7 @@ export default function EmulatorTable({
                               width: '40px',
                               marginRight: '10px',
                               borderRadius: '50%',
-                              backgroundColor: 'red',
+                              backgroundColor: '#bf1515',
                               color: '#fff'
                             }}
                             aria-label="delete"
@@ -326,7 +326,7 @@ export default function EmulatorTable({
                             className="btn btn-sm"
                             style={{
                               backgroundColor:
-                                row.user === null ? 'green' : 'red',
+                                row.user === null ? '#176c35' : '#bf1515',
                               color: 'white'
                             }}
                             onClick={() => handleAssignButtonClick(row)}

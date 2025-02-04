@@ -335,7 +335,8 @@ export default function UserTable({
                               width: '40px',
                               marginRight: '10px',
                               borderRadius: '50%',
-                              backgroundColor: '#007dc6',
+                              // backgroundColor: '#007dc6',
+                              backgroundColor: '#141d2b',
                               color: '#fff'
                             }}
                             aria-label="edit"
@@ -350,7 +351,8 @@ export default function UserTable({
                               width: '40px',
                               marginRight: '10px',
                               borderRadius: '50%',
-                              backgroundColor: 'red',
+                              // backgroundColor: 'red',
+                              backgroundColor: '#bf1515',
                               cursor: 'pointer',
                               color: '#fff'
                             }}
@@ -363,7 +365,7 @@ export default function UserTable({
                             className="btn btn-sm"
                             style={{
                               backgroundColor:
-                                row.status === 'ENABLED' ? 'green' : 'red',
+                                row.status === 'ENABLED' ? '#176c35' : '#bf1515',
                               color: 'white',
                               height: '40px',
                               width: '7rem'

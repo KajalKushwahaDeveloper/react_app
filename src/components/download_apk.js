@@ -89,7 +89,7 @@ const DownloadApk = () => {
           <Typography
             variant="h5"
             component="h2"
-            style={{ fontSize: isMobile ? '1rem' : '1.5rem' }}
+            style={{ fontSize: isMobile ? '1rem' : '1.5rem', color: '#141d2b' }}
           >
             Mock Application APK
           </Typography>
@@ -98,7 +98,7 @@ const DownloadApk = () => {
             className="btn btn-main d-flex flex-column flex-sm-row px-5"
             startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
             onClick={handleDownloadFile}
-            style={{ marginLeft: '1.2rem', width: '12rem !important' }}
+            style={{ marginLeft: '1.2rem', width: '12rem !important', backgroundColor: '#141d2b' }}
             endIcon={loading && <CircularProgress color="inherit" size={20} />}
             disabled={loading}
           >
@@ -106,13 +106,15 @@ const DownloadApk = () => {
           </Button>
 
           <button
-            className="btn btn-green"
+            className="btn"
             onClick={handleCopyUrl}
             style={{
-              fontSize: isMobile ? '.7rem' : '.875rem'
+              fontSize: isMobile ? '.7rem' : '.875rem',
+              backgroundColor: '#176c35',
+              color: 'white'
             }}
           >
-            <i className="fa-solid fa-copy"></i> COPY DOWNLOAD LINK
+            <i className="fa-solid fa-copy text-white"></i> COPY DOWNLOAD LINK
           </button>
         </div>
       </CardContent>
