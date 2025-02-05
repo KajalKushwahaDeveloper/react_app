@@ -50,6 +50,8 @@ export default function EmulatorTable({
 
   const [emulators, setEmulators] = React.useState([])
 
+  const [emulatorDetails, setEmulatorDetails] = React.useState()
+
   const totalEmulators = useEmulatorStore.getState().emulators
   const updateEmulators = useEmulatorStore((state) => state.updateEmulators)
 
@@ -181,10 +183,10 @@ export default function EmulatorTable({
   // delete button
   const handleDeleteButtonClick = async (emulator) => {
     const totalEmulators = useEmulatorStore.getState().emulators
-    const confirmed = window.confirm(
-      'Delete this emulator : ' + emulator.emulatorSsid + '?'
-    )
-    if (confirmed) {
+    // const confirmed = window.confirm(
+    //   'Delete this emulator : ' + emulator.emulatorSsid + '?'
+    // )
+    if (emulator?.emulatorSsid) {
       const token = localStorage.getItem('token')
       const { success } = await ApiService.makeApiCall(
         EMULATOR_DELETE_URL,
@@ -282,18 +284,25 @@ export default function EmulatorTable({
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar
-          handleOpen={handleCreateEmulator}
-        />
+        <EnhancedTableToolbar handleOpen={handleCreateEmulator} />
         <TableContainer
           sx={{
             overflowX: 'auto',
             '&::-webkit-scrollbar': { height: '10px' },
-            '&::-webkit-scrollbar-track': { backgroundColor: '#e0e0e0', borderRadius: '10px' },
-            '&::-webkit-scrollbar-thumb': { backgroundColor: '#141d2b', borderRadius: '10px' },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: '#e0e0e0',
+              borderRadius: '10px'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: '#141d2b',
+              borderRadius: '10px'
+            },
             '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#141d2b' }
           }}
         >
+          {/* <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+            Open modal
+          </button> */}
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
@@ -326,7 +335,9 @@ export default function EmulatorTable({
                               color: '#fff'
                             }}
                             aria-label="delete"
-                            onClick={() => handleDeleteButtonClick(row)}
+                            data-bs-toggle="modal"
+                            data-bs-target="#myModal"
+                            onClick={() => setEmulatorDetails(row)}
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
@@ -523,6 +534,48 @@ export default function EmulatorTable({
           style={{ overflow: 'hidden' }}
         />
       </Paper>
+
+      {/* Delete Emulator Modal */}
+      <div className="modal" id="myModal">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Delete Emulator</h4>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+
+            <div className="modal-body">
+              Are you sure you want to delete this emulator: {emulatorDetails?.emulatorSsid}?
+            </div>
+
+            <div className="modal-footer">
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                style={{
+                  backgroundColor: '#141d2b',
+                  height: '4.7vh',
+                  width: '7vw'
+                }}
+                onClick={() => handleDeleteButtonClick(emulatorDetails)}
+              >
+                Ok
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </Box>
   )
 }
