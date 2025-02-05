@@ -260,15 +260,6 @@ export default function EmulatorTable({
     [order, orderBy, page, emulators, rowsPerPage]
   )
 
-  if (loading) {
-    return (
-      <>
-        <h3>loading Emulators...</h3>
-        <CircularProgress />
-      </>
-    )
-  }
-
   if (error) {
     return (
       <>
@@ -300,229 +291,240 @@ export default function EmulatorTable({
             '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#141d2b' }
           }}
         >
-          {/* <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
-            Open modal
-          </button> */}
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={'small'}
-          >
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={emulators.length}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`
-                const createdAtDate = new Date(row.createdAt)
-                const formattedDate = createdAtDate.toISOString().split('T')[0]
-                return (
-                  <TableRow hover tabIndex={-1} key={row.id}>
-                    <TableCell align="left">
-                      <div className="d-flex align-items-center justify-content-center flex-column">
-                        <div className="d-flex align-items-center justify-content-center flex-sm-row">
-                          <IconButton
-                            size="small"
-                            style={{
-                              height: '40px',
-                              width: '40px',
-                              marginRight: '10px',
-                              borderRadius: '50%',
-                              backgroundColor: '#bf1515',
-                              color: '#fff'
-                            }}
-                            aria-label="delete"
-                            data-bs-toggle="modal"
-                            data-bs-target="#myModal"
-                            onClick={() => setEmulatorDetails(row)}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                          <button
-                            className="btn btn-sm"
-                            style={{
-                              backgroundColor:
-                                row.user === null ? '#176c35' : '#bf1515',
-                              color: 'white'
-                            }}
-                            onClick={() => handleAssignButtonClick(row)}
-                          >
-                            {row.user === null ? 'ASSIGN__' : 'UNASSIGN'}
-                          </button>
-                        </div>
-                        {/* can use for vertical */}
-                      </div>
-                    </TableCell>
-                    {/* status */}
-                    <TableCell id={labelId} scope="row">
-                      {row.status || 'N/A'}
-                    </TableCell>
-                    {/* serial code */}
-                    <TableCell align="left">
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <div>
-                          <Tooltip
-                            title={row.emulatorSsid || 'N/A'}
-                            placement="top"
-                            alignItems="center"
-                            display="flex"
-                          >
-                            <div
+          {loading ? (
+            <div style={{ textAlign: 'center', marginTop: '20vh', marginBottom: '20vh' }}>
+              <CircularProgress />
+            </div>
+          ) : (
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={'small'}
+            >
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={emulators.length}
+              />
+              <TableBody>
+                {visibleRows.map((row, index) => {
+                  const labelId = `enhanced-table-checkbox-${index}`
+                  const createdAtDate = new Date(row.createdAt)
+                  const formattedDate = createdAtDate
+                    .toISOString()
+                    .split('T')[0]
+                  return (
+                    <TableRow hover tabIndex={-1} key={row.id}>
+                      <TableCell align="left">
+                        <div className="d-flex align-items-center justify-content-center flex-column">
+                          <div className="d-flex align-items-center justify-content-center flex-sm-row">
+                            <IconButton
+                              size="small"
                               style={{
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap',
-                                maxWidth: '150px'
+                                height: '40px',
+                                width: '40px',
+                                marginRight: '10px',
+                                borderRadius: '50%',
+                                backgroundColor: '#bf1515',
+                                color: '#fff'
                               }}
+                              aria-label="delete"
+                              data-bs-toggle="modal"
+                              data-bs-target="#myModal"
+                              onClick={() => setEmulatorDetails(row)}
                             >
-                              {row.emulatorSsid || 'N/A'}
-                            </div>
-                          </Tooltip>
-                        </div>
-
-                        <div>
-                          <IconButton
-                            size="small"
-                            style={{
-                              height: 'auto',
-                              width: '35px',
-                              float: 'right'
-                            }}
-                            aria-label="edit"
-                          >
-                            <EditIcon
-                              fontSize="small"
-                              onClick={() => handleGeneratedIdButtonClick(row)}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                    </TableCell>
-                    {/* telephone */}
-                    {/* FIXME: properly allign this */}
-                    <TableCell align="left">
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <div>
-                          <Tooltip
-                            title={row.telephone || 'N/A'}
-                            placement="top"
-                            alignItems="center"
-                            display="flex"
-                          >
-                            <div
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                            <button
+                              className="btn btn-sm"
                               style={{
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap'
+                                backgroundColor:
+                                  row.user === null ? '#176c35' : '#bf1515',
+                                color: 'white'
                               }}
+                              onClick={() => handleAssignButtonClick(row)}
                             >
-                              {row.telephone || 'N/A'}
-                            </div>
-                          </Tooltip>
+                              {row.user === null ? 'ASSIGN__' : 'UNASSIGN'}
+                            </button>
+                          </div>
+                          {/* can use for vertical */}
                         </div>
-
-                        <div>
-                          <IconButton
-                            size="small"
-                            style={{
-                              height: 'auto',
-                              width: '35px',
-                              float: 'right'
-                            }}
-                            aria-label="edit"
-                          >
-                            <EditIcon
-                              fontSize="small"
-                              onClick={() => handleEmulatorTelephonePopup(row)}
-                            />
-                          </IconButton>
-                        </div>
-                      </div>
-                    </TableCell>
-                    {/* real telephone */}
-                    <TableCell align="left">
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <div>
-                          <Tooltip
-                            title={row.realTelephone || 'N/A'}
-                            placement="top"
-                            alignItems="center"
-                            display="flex"
-                          >
-                            <div
-                              style={{
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                                whiteSpace: 'nowrap'
-                              }}
-                            >
-                              {row.realTelephone || 'N/A'}
-                            </div>
-                          </Tooltip>
-                        </div>
-                      </div>
-                    </TableCell>
-                    {/* Assigned */}
-                    <TableCell align="left">
-                      <Tooltip
-                        title={
-                          (row.user?.firstName || 'N/A') +
-                          ' ' +
-                          (row.user?.lastName || 'N/A')
-                        }
-                        placement="top"
-                        alignItems="start"
-                        display="flex"
-                      >
+                      </TableCell>
+                      {/* status */}
+                      <TableCell id={labelId} scope="row">
+                        {row.status || 'N/A'}
+                      </TableCell>
+                      {/* serial code */}
+                      <TableCell align="left">
                         <div
                           style={{
-                            textOverflow: 'ellipsis',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            maxWidth: '150px',
-                            textAlign: 'start'
+                            display: 'flex',
+                            alignItems: 'center'
                           }}
                         >
-                          {(row.user?.firstName || 'N/A') +
-                            ' ' +
-                            (row.user?.lastName || 'N/A')}
+                          <div>
+                            <Tooltip
+                              title={row.emulatorSsid || 'N/A'}
+                              placement="top"
+                              alignItems="center"
+                              display="flex"
+                            >
+                              <div
+                                style={{
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  whiteSpace: 'nowrap',
+                                  maxWidth: '150px'
+                                }}
+                              >
+                                {row.emulatorSsid || 'N/A'}
+                              </div>
+                            </Tooltip>
+                          </div>
+
+                          <div>
+                            <IconButton
+                              size="small"
+                              style={{
+                                height: 'auto',
+                                width: '35px',
+                                float: 'right'
+                              }}
+                              aria-label="edit"
+                            >
+                              <EditIcon
+                                fontSize="small"
+                                onClick={() =>
+                                  handleGeneratedIdButtonClick(row)
+                                }
+                              />
+                            </IconButton>
+                          </div>
                         </div>
-                      </Tooltip>
-                    </TableCell>
-                    {/* REGISTERED */}
-                    <TableCell align="left">{formattedDate || 'N/A'}</TableCell>
+                      </TableCell>
+                      {/* telephone */}
+                      {/* FIXME: properly allign this */}
+                      <TableCell align="left">
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <div>
+                            <Tooltip
+                              title={row.telephone || 'N/A'}
+                              placement="top"
+                              alignItems="center"
+                              display="flex"
+                            >
+                              <div
+                                style={{
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  whiteSpace: 'nowrap'
+                                }}
+                              >
+                                {row.telephone || 'N/A'}
+                              </div>
+                            </Tooltip>
+                          </div>
+
+                          <div>
+                            <IconButton
+                              size="small"
+                              style={{
+                                height: 'auto',
+                                width: '35px',
+                                float: 'right'
+                              }}
+                              aria-label="edit"
+                            >
+                              <EditIcon
+                                fontSize="small"
+                                onClick={() =>
+                                  handleEmulatorTelephonePopup(row)
+                                }
+                              />
+                            </IconButton>
+                          </div>
+                        </div>
+                      </TableCell>
+                      {/* real telephone */}
+                      <TableCell align="left">
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <div>
+                            <Tooltip
+                              title={row.realTelephone || 'N/A'}
+                              placement="top"
+                              alignItems="center"
+                              display="flex"
+                            >
+                              <div
+                                style={{
+                                  textOverflow: 'ellipsis',
+                                  overflow: 'hidden',
+                                  whiteSpace: 'nowrap'
+                                }}
+                              >
+                                {row.realTelephone || 'N/A'}
+                              </div>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      </TableCell>
+                      {/* Assigned */}
+                      <TableCell align="left">
+                        <Tooltip
+                          title={
+                            (row.user?.firstName || 'N/A') +
+                            ' ' +
+                            (row.user?.lastName || 'N/A')
+                          }
+                          placement="top"
+                          alignItems="start"
+                          display="flex"
+                        >
+                          <div
+                            style={{
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              maxWidth: '150px',
+                              textAlign: 'start'
+                            }}
+                          >
+                            {(row.user?.firstName || 'N/A') +
+                              ' ' +
+                              (row.user?.lastName || 'N/A')}
+                          </div>
+                        </Tooltip>
+                      </TableCell>
+                      {/* REGISTERED */}
+                      <TableCell align="left">
+                        {formattedDate || 'N/A'}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: 33 * emptyRows
+                    }}
+                  >
+                    <TableCell colSpan={6} />
                   </TableRow>
-                )
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 33 * emptyRows
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </TableContainer>
         <CustomTablePagination
           rowsPerPageOptions={[10, 30, 50]}
@@ -549,7 +551,8 @@ export default function EmulatorTable({
             </div>
 
             <div className="modal-body">
-              Are you sure you want to delete this emulator: {emulatorDetails?.emulatorSsid}?
+              Are you sure you want to delete this emulator:{' '}
+              {emulatorDetails?.emulatorSsid}?
             </div>
 
             <div className="modal-footer">

@@ -261,15 +261,15 @@ export default function UserTable({
       ),
     [order, orderBy, page, userData, rowsPerPage]
   )
-  if (loading) {
-    return (
-      <>
-        <h3>loading Users...</h3>
-        <CircularProgress />
-        <EnhancedTableToolbar handleOpen={handleOpen} />
-      </>
-    )
-  }
+  // if (loading) {
+  //   return (
+  //     <>
+  //       <h3>loading Users...</h3>
+  //       <CircularProgress />
+  //       <EnhancedTableToolbar handleOpen={handleOpen} />
+  //     </>
+  //   )
+  // }
 
   if (error) {
     return (
@@ -300,125 +300,152 @@ export default function UserTable({
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar handleOpen={handleOpen} />
         <TableContainer
-        sx={{
-          overflowX: 'auto',
-          '&::-webkit-scrollbar': { height: '10px' },
-          '&::-webkit-scrollbar-track': { backgroundColor: '#e0e0e0', borderRadius: '10px' },
-          '&::-webkit-scrollbar-thumb': { backgroundColor: '#141d2b', borderRadius: '10px' },
-          '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#141d2b' }
-        }}>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={'small'}
-          >
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={userData.length}
-            />
-            <TableBody>
-              {visibleRowsWithTripIds.map((row, index) => {
-                const labelId = `enhanced-table-checkbox-${index}`
-                const createdAtDate = new Date(row.createdAt)
-                const formattedDate = createdAtDate.toISOString().split('T')[0]
-                const onlineEmulator = row.emulatorCount?.activeEmulatorsCount
-                  ? row.emulatorCount?.activeEmulatorsCount
-                  : 0
-                const allEmulator = row.emulatorCount?.allEmulatorsCount
-                  ? row.emulatorCount?.allEmulatorsCount
-                  : 0
+          sx={{
+            overflowX: 'auto',
+            '&::-webkit-scrollbar': { height: '10px' },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: '#e0e0e0',
+              borderRadius: '10px'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: '#141d2b',
+              borderRadius: '10px'
+            },
+            '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#141d2b' }
+          }}
+        >
+          {loading ? (
+            <div
+              style={{
+                textAlign: 'center',
+                marginTop: '20vh',
+                marginBottom: '20vh'
+              }}
+            >
+              <CircularProgress />
+            </div>
+          ) : (
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={'small'}
+            >
+              <EnhancedTableHead
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={userData.length}
+              />
+              <TableBody>
+                {visibleRowsWithTripIds.map((row, index) => {
+                  const labelId = `enhanced-table-checkbox-${index}`
+                  const createdAtDate = new Date(row.createdAt)
+                  const formattedDate = createdAtDate
+                    .toISOString()
+                    .split('T')[0]
+                  const onlineEmulator = row.emulatorCount?.activeEmulatorsCount
+                    ? row.emulatorCount?.activeEmulatorsCount
+                    : 0
+                  const allEmulator = row.emulatorCount?.allEmulatorsCount
+                    ? row.emulatorCount?.allEmulatorsCount
+                    : 0
 
-                return (
-                  <TableRow hover tabIndex={-1} key={row.id}>
-                    <TableCell align="left">
-                      <div className="d-flex align-items-center justify-content-center flex-column">
-                        <div className="d-flex align-items-center justify-content-center flex-sm-row">
-                          <IconButton
-                            size="small"
-                            style={{
-                              height: '40px',
-                              width: '40px',
-                              marginRight: '10px',
-                              borderRadius: '50%',
-                              // backgroundColor: '#007dc6',
-                              backgroundColor: '#141d2b',
-                              color: '#fff'
-                            }}
-                            aria-label="edit"
-                            onClick={() => handleEditButtonClick(row)}
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            style={{
-                              height: '40px',
-                              width: '40px',
-                              marginRight: '10px',
-                              borderRadius: '50%',
-                              // backgroundColor: 'red',
-                              backgroundColor: '#bf1515',
-                              cursor: 'pointer',
-                              color: '#fff'
-                            }}
-                            aria-label="delete"
-                            data-bs-toggle="modal"
-                            data-bs-target="#myUserModal"
-                            onClick={() => setUserDetails(row)}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                          <button
-                            className="btn btn-sm"
-                            style={{
-                              backgroundColor:
-                                row.status === 'ENABLED' ? '#176c35' : '#bf1515',
-                              color: 'white',
-                              height: '40px',
-                              width: '7rem'
-                            }}
-                            onClick={() =>
-                              handleActionButtonClick(row.id, row.status)
-                            }
-                          >
-                            {row.status}
-                          </button>
+                  return (
+                    <TableRow hover tabIndex={-1} key={row.id}>
+                      <TableCell align="left">
+                        <div className="d-flex align-items-center justify-content-center flex-column">
+                          <div className="d-flex align-items-center justify-content-center flex-sm-row">
+                            <IconButton
+                              size="small"
+                              style={{
+                                height: '40px',
+                                width: '40px',
+                                marginRight: '10px',
+                                borderRadius: '50%',
+                                // backgroundColor: '#007dc6',
+                                backgroundColor: '#141d2b',
+                                color: '#fff'
+                              }}
+                              aria-label="edit"
+                              onClick={() => handleEditButtonClick(row)}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              style={{
+                                height: '40px',
+                                width: '40px',
+                                marginRight: '10px',
+                                borderRadius: '50%',
+                                // backgroundColor: 'red',
+                                backgroundColor: '#bf1515',
+                                cursor: 'pointer',
+                                color: '#fff'
+                              }}
+                              aria-label="delete"
+                              data-bs-toggle="modal"
+                              data-bs-target="#myUserModal"
+                              onClick={() => setUserDetails(row)}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                            <button
+                              className="btn btn-sm"
+                              style={{
+                                backgroundColor:
+                                  row.status === 'ENABLED'
+                                    ? '#176c35'
+                                    : '#bf1515',
+                                color: 'white',
+                                height: '40px',
+                                width: '7rem'
+                              }}
+                              onClick={() =>
+                                handleActionButtonClick(row.id, row.status)
+                              }
+                            >
+                              {row.status}
+                            </button>
+                          </div>
+                          {/* can use for vertical */}
                         </div>
-                        {/* can use for vertical */}
-                      </div>
-                    </TableCell>
-                    <TableCell id={labelId} scope="row">
-                      {row.firstName + ' ' + row.lastName || 'N/A'}
-                    </TableCell>
-                    <TableCell align="left"> {row.email || 'N/A'}</TableCell>
-                    <TableCell align="left">{row.telephone || 'N/A'}</TableCell>
-                    <TableCell align="left">
-                      {/** print online emulator, and if greater than 0, draw icon after number */}
-                      {onlineEmulator > 0 ? onlineEmulator : 0}
-                      {onlineEmulator > 0 ? (
-                        <OnlinePredictionIcon color="success" />
-                      ) : (
-                        ''
-                      )}
-                      /{allEmulator}
-                    </TableCell>
-                    <TableCell align="left">{formattedDate || 'N/A'}</TableCell>
+                      </TableCell>
+                      <TableCell id={labelId} scope="row">
+                        {row.firstName + ' ' + row.lastName || 'N/A'}
+                      </TableCell>
+                      <TableCell align="left"> {row.email || 'N/A'}</TableCell>
+                      <TableCell align="left">
+                        {row.telephone || 'N/A'}
+                      </TableCell>
+                      <TableCell align="left">
+                        {/** print online emulator, and if greater than 0, draw icon after number */}
+                        {onlineEmulator > 0 ? onlineEmulator : 0}
+                        {onlineEmulator > 0 ? (
+                          <OnlinePredictionIcon color="success" />
+                        ) : (
+                          ''
+                        )}
+                        /{allEmulator}
+                      </TableCell>
+                      <TableCell align="left">
+                        {formattedDate || 'N/A'}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: 33 * emptyRows
+                    }}
+                  >
+                    <TableCell colSpan={6} />
                   </TableRow>
-                )
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 33 * emptyRows
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </TableContainer>
         <CustomTablePagination
           rowsPerPageOptions={[10, 30, 50]}
@@ -445,7 +472,8 @@ export default function UserTable({
             </div>
 
             <div className="modal-body">
-              Are you sure you want to delete this user: {userDetails?.firstName + ' ' + userDetails?.lastName}?
+              Are you sure you want to delete this user:{' '}
+              {userDetails?.firstName + ' ' + userDetails?.lastName}?
             </div>
 
             <div className="modal-footer">

@@ -66,7 +66,7 @@ const Home = () => {
   }
 
   const handleCreateEmulator = async () => {
-    showToast('Creating Emulator', 'info')
+    // showToast('Creating Emulator', 'info')
     const { success, error } = await ApiService.makeApiCall(
       EMULATOR_CREATE_RANDOM_URL,
       'POST',
