@@ -44,6 +44,8 @@ export default function UserTable({
   const [userData, setUserData] = React.useState([])
   const [dataUpdated, setDataUpdated] = useState(false) // State to track if data has been updated
 
+  const [userDetails, setUserDetails] = React.useState()
+
   useEffect(() => {
     if (!dataUpdated) {
       fetchUsers() // Fetch data only if data hasn't been updated
@@ -168,11 +170,9 @@ export default function UserTable({
 
   // DELETED BUTTON
   const handleDeleteButtonClick = async (user) => {
-    const confirmed = window.confirm(
-      'Delete this user : ' + user.firstName + ' ' + user.lastName + '?'
-    )
+    console.log('testUser:', user)
     if (user.tripId === null) {
-      if (confirmed) {
+      if (user) {
         const token = localStorage.getItem('token')
         const { success, error } = await ApiService.makeApiCall(
           USER_URL,
@@ -364,7 +364,9 @@ export default function UserTable({
                               color: '#fff'
                             }}
                             aria-label="delete"
-                            onClick={() => handleDeleteButtonClick(row)}
+                            data-bs-toggle="modal"
+                            data-bs-target="#myUserModal"
+                            onClick={() => setUserDetails(row)}
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
@@ -428,6 +430,48 @@ export default function UserTable({
           style={{ overflow: 'hidden' }}
         />
       </Paper>
+
+      {/* Delete User Modal */}
+      <div className="modal" id="myUserModal">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h4 className="modal-title">Delete User</h4>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+
+            <div className="modal-body">
+              Are you sure you want to delete this user: {userDetails?.firstName + ' ' + userDetails?.lastName}?
+            </div>
+
+            <div className="modal-footer">
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                style={{
+                  backgroundColor: '#141d2b',
+                  height: '4.7vh',
+                  width: '7vw'
+                }}
+                onClick={() => handleDeleteButtonClick(userDetails)}
+              >
+                Ok
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </Box>
   )
 }
