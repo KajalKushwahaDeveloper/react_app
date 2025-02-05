@@ -454,8 +454,8 @@ export default function UserTable({
                 data-bs-dismiss="modal"
                 style={{
                   backgroundColor: '#141d2b',
-                  height: '4.7vh',
-                  width: '7vw'
+                  height: 38,
+                  width: 60
                 }}
                 onClick={() => handleDeleteButtonClick(userDetails)}
               >
