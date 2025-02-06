@@ -405,7 +405,7 @@ export default function EmulatorTable({
                       </TableCell>
                       {/* telephone */}
                       {/* FIXME: properly allign this */}
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         <div
                           style={{
                             display: 'flex',
@@ -450,9 +450,10 @@ export default function EmulatorTable({
                             </IconButton>
                           </div>
                         </div>
-                      </TableCell>
+                      </TableCell> */}
+
                       {/* real telephone */}
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         <div
                           style={{
                             display: 'flex',
@@ -478,14 +479,15 @@ export default function EmulatorTable({
                             </Tooltip>
                           </div>
                         </div>
-                      </TableCell>
+                      </TableCell> */}
+
                       {/* Assigned */}
                       <TableCell align="left">
                         <Tooltip
                           title={
                             (row.user?.firstName || 'N/A') +
                             ' ' +
-                            (row.user?.lastName || 'N/A')
+                            (row.user?.lastName || '')
                           }
                           placement="top"
                           alignItems="start"
@@ -502,7 +504,7 @@ export default function EmulatorTable({
                           >
                             {(row.user?.firstName || 'N/A') +
                               ' ' +
-                              (row.user?.lastName || 'N/A')}
+                              (row.user?.lastName || '')}
                           </div>
                         </Tooltip>
                       </TableCell>

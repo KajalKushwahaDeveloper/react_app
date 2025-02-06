@@ -89,18 +89,18 @@ const headCells = [
     disablePadding: false,
     label: 'SSID'
   },
-  {
-    id: 'telephone',
-    numeric: false,
-    disablePadding: false,
-    label: 'TEL. #'
-  },
-  {
-    id: 'realTelephone',
-    numeric: false,
-    disablePadding: false,
-    label: 'REAL TEL.'
-  },
+  // {
+  //   id: 'telephone',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'TEL. #'
+  // },
+  // {
+  //   id: 'realTelephone',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'REAL TEL.'
+  // },
   {
     id: 'user',
     numeric: false,

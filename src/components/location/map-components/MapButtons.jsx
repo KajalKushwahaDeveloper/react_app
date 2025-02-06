@@ -400,7 +400,8 @@ const MapButtons = (props) => {
             top: isMobile ? '100px' : '135px',
             // right: 190,
             left: 10,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            width: '8rem'
           }}
           onClick={handleSetPositionClick}
         >
@@ -435,9 +436,10 @@ const MapButtons = (props) => {
             position: 'absolute',
             top: isMobile ? '100px' : '135px',
             // right: 70,
-            left: 200,
+            left: 344,
             justifyContent: 'center',
-            backgroundColor: '#f44336'
+            backgroundColor: '#f44336',
+            width: '8rem'
           }}
           onClick={handleCancelTripClick}
         >
