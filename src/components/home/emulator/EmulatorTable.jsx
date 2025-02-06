@@ -481,7 +481,7 @@ export default function EmulatorTable({
                         </div>
                       </TableCell> */}
 
-                      {/* Assigned */}
+                      {/* Assigned Emulator */}
                       <TableCell align="left">
                         <Tooltip
                           title={
