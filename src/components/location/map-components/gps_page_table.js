@@ -437,14 +437,15 @@ const GpsTable = () => {
                             alignItems: 'center'
                           }}
                         >
+                          {console.log('emulatorTest:', emulator)}
                           <Tooltip
-                            title={emulator.telephone || 'N/A'}
+                            title={emulator?.emulatorSsid || 'N/A'}
                             placement="top"
                           >
                             <div
                               style={{ display: 'flex', alignItems: 'center' }}
                             >
-                              <div>{emulator.telephone || 'N/A'}</div>
+                              <div className='alignSsid'>{emulator?.emulatorSsid || 'N/A'}</div>
                               {/* Icons */}
                               <div style={{ display: 'flex' }}>
                                 {/* calling icon */}
