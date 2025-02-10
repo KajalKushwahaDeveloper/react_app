@@ -44,6 +44,11 @@ body {
   letter-spacing: -0.015rem;
 }
 
+.custom-focus:focus {
+  border-color: #A1A3AD !important;
+  box-shadow: 0 0 0 0.15rem rgba(161, 163, 173, 0.25) !important;
+}
+
 .PhoneInput > .PhoneInputInput {
   background-color: #ffff;
   border: 1px solid #00000040;

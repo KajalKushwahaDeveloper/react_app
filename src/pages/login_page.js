@@ -92,7 +92,7 @@ const LoginPage = () => {
                   type="email"
                   placeholder="m@example.com"
                   required
-                  className="rounded-2 ms-0 mt-2"
+                  className="rounded-2 ms-0 mt-2 custom-focus"
                   value={email}
                   onChange={handleEmailChange}
                 />
@@ -114,7 +114,7 @@ const LoginPage = () => {
                 <Form.Control
                   type="password"
                   required
-                  className="rounded-2 ms-0 mt-1"
+                  className="rounded-2 ms-0 mt-1 custom-focus"
                   placeholder="Enter Password"
                   value={password}
                   onChange={handlePasswordChange}
@@ -135,6 +135,11 @@ const LoginPage = () => {
               {passwordError && (
                 <p className="error text-danger text-center">{passwordError}</p>
               )}
+              {responseError && (
+                <p className="error text-danger text-center">
+                  {'Invalid Credentials'}
+                </p>
+              )}
               <Button
                 variant="outline-secondary"
                 className="global-font w-100 rounded-2 py-2 fw-medium ms-0 custom-google-btn text-black"
@@ -154,11 +159,6 @@ const LoginPage = () => {
                 {'Sign up'}
               </Link>
             </div>
-            {responseError && (
-              <p className="error text-danger text-center mt-2 mb-1">
-                {'Invalid Ceredentials'}
-              </p>
-            )}
             {isForgotPasswordModalOpen === true && (
               <ForgotPasswordModal
                 isOpen={isForgotPasswordModalOpen}
