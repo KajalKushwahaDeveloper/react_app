@@ -118,9 +118,9 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                 placeholder='Enter email'
                 className="form-control global-font custom-focus"
               />
-              {emailError && <p className="error global-font">{emailError}</p>}
+              {emailError && <p className="error global-font text-danger resetPasswordBtn fw-bold">{emailError}</p>}
               {responseError && (
-                <p className="error global-font">{responseError}</p>
+                <p className="error global-font text-danger resetPasswordBtn fw-bold">{responseError}</p>
               )}
             </div>
             <Button
