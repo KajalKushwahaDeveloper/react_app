@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
 import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
 import ApiService from '../../../ApiService'
 import { FORGOT_PASSWORD } from '../../../constants'
 
@@ -65,16 +65,22 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           left: '50%',
           transform: 'translate(-50%, -50%)'
         }}
+        className="shadow-sm p4 border rounded-4"
+        style={{ maxWidth: '20rem', width: '20rem' }}
       >
         <span
           className="close"
           onClick={onClose}
           style={{
             float: 'right',
-            marginTop: '.5rem',
+            marginTop: '-1.5rem',
+            marginRight: '0.5rem',
             height: '2rem',
             width: '2rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            textAlign: 'center',
+            position: 'absolute',
+            right: 0
           }}
         >
           &times;
@@ -83,7 +89,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           id="modal-modal-title"
           variant="h6"
           component="h2"
-          style={{ paddingTop: '5px' }}
+          className="global-font fw-bold text-start mb-2 fs-4 pt-1"
         >
           Forgot Password
         </Typography>
@@ -93,11 +99,13 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           </Typography>
         ) : (
           <form onSubmit={handleSubmit}>
-            <div className="form-group" style={{ paddingTop: '40px' }}>
-              <label htmlFor="email">Email Address:</label>
+            <div className="form-group" style={{ paddingTop: '10px' }}>
+              <label htmlFor="email" className="global-font">
+                Email Address:
+              </label>
               <input
                 style={{
-                  marginTop: '20px',
+                  marginTop: '7px',
                   marginBottom: '20px',
                   marginLeft: '0px',
                   marginRight: '0px'
@@ -107,18 +115,20 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                 name="email"
                 value={email}
                 onChange={handleEmailChange}
-                className="form-control"
+                placeholder='Enter email'
+                className="form-control global-font custom-focus"
               />
-              {emailError && <p className="error">{emailError}</p>}
-              {responseError && <p className="error">{responseError}</p>}
+              {emailError && <p className="error global-font">{emailError}</p>}
+              {responseError && (
+                <p className="error global-font">{responseError}</p>
+              )}
             </div>
             <Button
+              variant="dark"
+              className="global-font w-50 mb-3 rounded-2 py-2 fw-medium ms-0 resetPasswordBtn"
               type="submit"
-              variant="contained"
-              color="primary"
-              style={{ marginTop: '30px', float: 'right' }}
             >
-              Reset Password
+              Send Email
             </Button>
           </form>
         )}
