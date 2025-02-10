@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@geist-ui/react": "^2.2.5",
     "@iconify/icons-mdi": "^1.2.46",
     "@iconify/react": "^4.1.0",
     "@microsoft/fetch-event-source": "^2.0.1",
@@ -19,6 +20,7 @@
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "env-cmd": "^10.1.0",
+    "force": "^0.0.3",
     "geographiclib": "^1.52.2",
     "geographiclib-geodesic": "^2.0.0",
     "geolib": "^3.3.4",

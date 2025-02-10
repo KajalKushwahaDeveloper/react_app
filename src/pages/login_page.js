@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Button, Card, Container, Form } from 'react-bootstrap'
+import { Link, Navigate } from 'react-router-dom'
 import ForgotPasswordModal from '../components/location/map-components/ForgotPasswordModal'
 import '../scss/login.scss'
 import { useAuth } from './hooks/useAuth'
@@ -69,113 +70,104 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="authScreen">
-        <div className="container_div container-fluid h-100">
-          <div className="row h-100">
-            <div
-              className="col-md-6 centerMid d-none d-md-flex"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
+      <Container className="d-flex justify-content-center align-items-center min-vh-100">
+        <Card
+          className="shadow-sm p-3 border rounded-4"
+          style={{ maxWidth: '24rem', width: '100%' }}
+        >
+          <Card.Body>
+            <h2 className="global-font fw-bold text-start mb-2 fs-4">Login</h2>
+
+            <p
+              className="custom-muted-text text-start mb-4"
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              <div className="Left_content">
-                <img
-                  src="images/logo/gps_logo.svg"
-                  className="FrontImg"
+              Enter your email below to login to your account
+            </p>
+
+            <Form>
+              <Form.Group className="global-font mb-3">
+                <label>Email</label>
+                <Form.Control
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  className="rounded-2 ms-0 mt-2"
+                  value={email}
+                  onChange={handleEmailChange}
                 />
-                {/* <hr className="hr"></hr> */}
-              </div>
-            </div>
-            <div
-              className="col-md-6 formBox bg-light  centerMid flex-column"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <div className="authCard shadow">
-                <div className="Left_content d-block d-md-none">
-                  {/* <img src="images/logo/logbookgps_logo.png" /> */}
-                  <img src="images/logo/logbookgps_logo.svg" />
-                  {/* <p className="para">
-                    Vivamus at dui consequat, dapibus tellus vitae
-                  </p> */}
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <div className="d-flex justify-content-between">
+                  <Form.Label className=" global-font fw-medium">
+                    Password
+                  </Form.Label>
+                  <a
+                    href="#"
+                    className="global-font text-decoration-underline text-dark small"
+                    onClick={handleForgotPasswordClick}
+                  >
+                    Forgot your password?
+                  </a>
                 </div>
-                <form onSubmit={handleSubmit}>
-                  <h1>Log in </h1>
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="inputField">
-                        <input
-                          style={{ margin: '0px' }}
-                          type="email"
-                          id="content_input"
-                          name="email"
-                          placeholder="Enter your email"
-                          value={email}
-                          onChange={handleEmailChange}
-                          className="form-control"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12">
-                      <div className="inputField">
-                        <input
-                          style={{ margin: '0px' }}
-                          type="password"
-                          id="content_input"
-                          name="password"
-                          placeholder="Enter your password"
-                          value={password}
-                          onChange={handlePasswordChange}
-                          className="form-control"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-12 mt-3 btns mb-2" style={{}}>
-                      <button
-                        className="btn btn-main"
-                        type="submit"
-                        style={{
-                          background: '#141d2b',
-                          color: 'white',
-                          width: '6rem'
-                        }}
-                      >
-                        Login
-                      </button>
-                    </div>
-                    {emailError && <p className="error text-danger">{emailError}</p>}
-                    {passwordError && <p className="error text-danger">{passwordError}</p>}
-                    <div className="col-12 mt-3 btns">
-                      {responseError && (
-                        <p className="error text-danger">Invalid Ceredentials</p>
-                      )}
-                      <a
-                        href="#forgot-password"
-                        onClick={handleForgotPasswordClick}
-                      >
-                        Forgot Password?
-                      </a>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              {isForgotPasswordModalOpen === true && (
-                <ForgotPasswordModal
-                  isOpen={isForgotPasswordModalOpen}
-                  onClose={closeForgotPasswordModal}
+                <Form.Control
+                  type="password"
+                  required
+                  className="rounded-2 ms-0 mt-1"
+                  placeholder="Enter Password"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
+              </Form.Group>
+
+              <Button
+                variant="dark"
+                className="global-font w-100 mb-3 rounded-2 py-2 fw-medium ms-0"
+                type="submit"
+                onClick={handleSubmit}
+              >
+                Login
+              </Button>
+              {emailError && (
+                <p className="error text-danger text-center">{emailError}</p>
               )}
+              {passwordError && (
+                <p className="error text-danger text-center">{passwordError}</p>
+              )}
+              <Button
+                variant="outline-secondary"
+                className="global-font w-100 rounded-2 py-2 fw-medium ms-0 custom-google-btn text-black"
+              >
+                Login with Google
+              </Button>
+            </Form>
+
+            <div className="text-center mt-3">
+              <span className="global-font text-black">
+                {"Don't have an account?"}
+              </span>
+              <Link
+                href="#"
+                className="global-font text-decoration-underline text-black fs-6 ms-2"
+              >
+                {'Sign up'}
+              </Link>
             </div>
-            <img src="images/map-location.svg" alt="" className="gps" />
-            <img src="images/middleImg.svg" alt="" className="middle" />
-          </div>
-        </div>
-      </div>
+            {responseError && (
+              <p className="error text-danger text-center mt-2 mb-1">
+                {'Invalid Ceredentials'}
+              </p>
+            )}
+            {isForgotPasswordModalOpen === true && (
+              <ForgotPasswordModal
+                isOpen={isForgotPasswordModalOpen}
+                onClose={closeForgotPasswordModal}
+              />
+            )}
+          </Card.Body>
+        </Card>
+      </Container>
     </>
   )
 }
