@@ -276,6 +276,7 @@ export default function EmulatorTable({
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar handleOpen={handleCreateEmulator} />
+        <hr style={{ marginTop: '0px' }} />
         <TableContainer
           sx={{
             overflowX: 'auto',
@@ -285,10 +286,10 @@ export default function EmulatorTable({
               borderRadius: '10px'
             },
             '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#141d2b',
+              backgroundColor: '#212529',
               borderRadius: '10px'
             },
-            '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#141d2b' }
+            '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#212529' }
           }}
         >
           {loading ? (
@@ -326,7 +327,7 @@ export default function EmulatorTable({
                                 width: '40px',
                                 marginRight: '10px',
                                 borderRadius: '50%',
-                                backgroundColor: '#bf1515',
+                                backgroundColor: '#212529',
                                 color: '#fff'
                               }}
                               aria-label="delete"
@@ -340,12 +341,13 @@ export default function EmulatorTable({
                               className="btn btn-sm"
                               style={{
                                 backgroundColor:
-                                  row.user === null ? '#176c35' : '#bf1515',
-                                color: 'white'
+                                  row.user === null ? '#E4E5E9' : '#212529',
+                                color: row.user === null ? '#212529' : '#FFFF',
+                                width: '85px'
                               }}
                               onClick={() => handleAssignButtonClick(row)}
                             >
-                              {row.user === null ? 'ASSIGN__' : 'UNASSIGN'}
+                              <span style={{ fontFamily: '"Inter", sans-serif !important' }}>{row.user === null ? 'ASSIGN' : 'UNASSIGN'}</span>
                             </button>
                           </div>
                           {/* can use for vertical */}
@@ -369,13 +371,15 @@ export default function EmulatorTable({
                               placement="top"
                               alignItems="center"
                               display="flex"
+                              fontFamily= '"Inter", sans-serif !important'
                             >
                               <div
                                 style={{
                                   textOverflow: 'ellipsis',
                                   overflow: 'hidden',
                                   whiteSpace: 'nowrap',
-                                  maxWidth: '150px'
+                                  maxWidth: '150px',
+                                  fontFamily: '"Inter", sans-serif !important'
                                 }}
                               >
                                 {row.emulatorSsid || 'N/A'}

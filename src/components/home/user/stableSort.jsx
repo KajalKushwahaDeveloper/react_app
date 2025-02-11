@@ -136,13 +136,12 @@ export function EnhancedTableToolbar(props) {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        // backgroundColor: '#007dc6',
         backgroundColor: '#141d2b',
         borderRadius: '5px 5px 0px 0px'
       }}
     >
       <Typography
-        sx={{ flex: '1 1 100%', color: 'white' }}
+        sx={{ flex: '1 1 100%', color: '#212529', fontFamily: '"Inter", sans-serif !important' }}
         variant="h6"
         id="tableTitle"
         component="div"

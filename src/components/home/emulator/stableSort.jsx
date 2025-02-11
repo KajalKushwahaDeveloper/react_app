@@ -133,7 +133,7 @@ export function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
-              sx={{ fontWeight: 'bold', color: '#141d2b' }}
+              sx={{ fontWeight: 'bold', color: '#141d2b', fontFamily: '"Inter", sans-serif !important' }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -160,13 +160,12 @@ export function EnhancedTableToolbar(props) {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        // backgroundColor: '#007dc6',
-        backgroundColor: '#141d2b',
+        backgroundColor: '#FFFFF',
         borderRadius: '5px 5px 0px 0px'
       }}
     >
       <Typography
-        sx={{ flex: '1 1 100%', color: 'white' }}
+        sx={{ flex: '1 1 100%', color: '#212529', fontFamily: '"Inter", sans-serif !important' }}
         variant="h6"
         id="tableTitle"
         component="div"
@@ -174,7 +173,7 @@ export function EnhancedTableToolbar(props) {
         EMULATORS
       </Typography>
       <Tooltip title="ADD EMULATOR">
-        <IconButton onClick={props.handleOpen} sx={{ color: 'white' }}>
+        <IconButton onClick={props.handleOpen} sx={{ color: '#212529' }}>
           <AddIcon />
         </IconButton>
       </Tooltip>
