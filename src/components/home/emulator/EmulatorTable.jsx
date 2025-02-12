@@ -17,6 +17,7 @@ import {
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
+import { Button } from 'react-bootstrap'
 import { useStates } from '../../../StateProvider'
 import { GetEmulatorApi } from '../../../components/api/emulator'
 import {
@@ -550,7 +551,7 @@ export default function EmulatorTable({
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title">Delete Emulator</h4>
+              <h4 className="modal-title custom-font">Delete Emulator</h4>
               <button
                 type="button"
                 className="btn-close"
@@ -558,31 +559,30 @@ export default function EmulatorTable({
               ></button>
             </div>
 
-            <div className="modal-body">
+            <div className="modal-body custom-font">
               Are you sure you want to delete this emulator:{' '}
               {emulatorDetails?.emulatorSsid}?
             </div>
 
             <div className="modal-footer">
-              <button
-                type="button"
+
+              <Button
+                variant="dark"
                 data-bs-dismiss="modal"
-                style={{
-                  backgroundColor: '#141d2b',
-                  height: 38,
-                  width: 60
-                }}
+                className="global-font w-45 rounded-2 py-2 fw-medium ms-0"
+                type="submit"
                 onClick={() => handleDeleteButtonClick(emulatorDetails)}
               >
                 Ok
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
+              </Button>
+
+              <Button
+                variant="dark"
                 data-bs-dismiss="modal"
+                className="global-font w-45 rounded-2 py-2 fw-medium ms-0"
               >
                 Close
-              </button>
+              </Button>
             </div>
           </div>
         </div>
