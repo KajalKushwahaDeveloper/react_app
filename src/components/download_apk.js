@@ -90,15 +90,16 @@ const DownloadApk = () => {
             variant="h5"
             component="h2"
             style={{ fontSize: isMobile ? '1rem' : '1.5rem', color: '#141d2b' }}
+            className='custom-font'
           >
             Mock Application APK
           </Typography>
           <Button
             variant="contained"
-            className="btn btn-main d-flex flex-column flex-sm-row px-5"
+            className="btn btn-main d-flex flex-column flex-sm-row px-5 custom-font"
             startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
             onClick={handleDownloadFile}
-            style={{ marginLeft: '1.2rem', width: '12rem !important', backgroundColor: '#141d2b' }}
+            style={{ marginLeft: '1.2rem', width: '12rem !important', backgroundColor: '#212529' }}
             endIcon={loading && <CircularProgress color="inherit" size={20} />}
             disabled={loading}
           >
@@ -106,11 +107,11 @@ const DownloadApk = () => {
           </Button>
 
           <button
-            className="btn"
+            className="btn custom-font"
             onClick={handleCopyUrl}
             style={{
               fontSize: isMobile ? '.7rem' : '.875rem',
-              backgroundColor: '#176c35',
+              backgroundColor: '#212529',
               color: 'white'
             }}
           >

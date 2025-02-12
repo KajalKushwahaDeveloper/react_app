@@ -299,6 +299,7 @@ export default function UserTable({
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar handleOpen={handleOpen} />
+        <hr style={{ marginTop: '0px' }} />
         <TableContainer
           sx={{
             overflowX: 'auto',
@@ -308,10 +309,10 @@ export default function UserTable({
               borderRadius: '10px'
             },
             '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#141d2b',
+              backgroundColor: '#212529',
               borderRadius: '10px'
             },
-            '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#141d2b' }
+            '&::-webkit-scrollbar-thumb:hover': { backgroundColor: '#212529' }
           }}
         >
           {loading ? (
@@ -362,8 +363,7 @@ export default function UserTable({
                                 width: '40px',
                                 marginRight: '10px',
                                 borderRadius: '50%',
-                                // backgroundColor: '#007dc6',
-                                backgroundColor: '#141d2b',
+                                backgroundColor: '#212529',
                                 color: '#fff'
                               }}
                               aria-label="edit"
@@ -378,8 +378,7 @@ export default function UserTable({
                                 width: '40px',
                                 marginRight: '10px',
                                 borderRadius: '50%',
-                                // backgroundColor: 'red',
-                                backgroundColor: '#bf1515',
+                                backgroundColor: '#212529',
                                 cursor: 'pointer',
                                 color: '#fff'
                               }}
@@ -391,13 +390,13 @@ export default function UserTable({
                               <DeleteIcon fontSize="small" />
                             </IconButton>
                             <button
-                              className="btn btn-sm"
+                              className="btn btn-sm custom-font"
                               style={{
                                 backgroundColor:
                                   row.status === 'ENABLED'
-                                    ? '#176c35'
-                                    : '#bf1515',
-                                color: 'white',
+                                    ? '#212529'
+                                    : '#E4E5E9',
+                                color: row.status === 'ENABLED' ? '#FFFF' : '#212529',
                                 height: '40px',
                                 width: '7rem'
                               }}
@@ -411,14 +410,14 @@ export default function UserTable({
                           {/* can use for vertical */}
                         </div>
                       </TableCell>
-                      <TableCell id={labelId} scope="row">
+                      <TableCell id={labelId} scope="row" className='custom-font'>
                         {row.firstName + ' ' + row.lastName || 'N/A'}
                       </TableCell>
-                      <TableCell align="left"> {row.email || 'N/A'}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" className='custom-font'> {row.email || 'N/A'}</TableCell>
+                      <TableCell align="left" className='custom-font'>
                         {row.telephone || 'N/A'}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" className='custom-font'>
                         {/** print online emulator, and if greater than 0, draw icon after number */}
                         {onlineEmulator > 0 ? onlineEmulator : 0}
                         {onlineEmulator > 0 ? (
@@ -428,7 +427,7 @@ export default function UserTable({
                         )}
                         /{allEmulator}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left" className='custom-font'>
                         {formattedDate || 'N/A'}
                       </TableCell>
                     </TableRow>

@@ -136,7 +136,7 @@ export function EnhancedTableToolbar(props) {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        backgroundColor: '#141d2b',
+        backgroundColor: '#FFFFF',
         borderRadius: '5px 5px 0px 0px'
       }}
     >
@@ -149,7 +149,7 @@ export function EnhancedTableToolbar(props) {
         USERS
       </Typography>
       <Tooltip title="ADD USER">
-        <IconButton onClick={props.handleOpen} sx={{ color: 'white' }}>
+        <IconButton onClick={props.handleOpen} sx={{ color: '#212529' }}>
           <AddIcon />
         </IconButton>
       </Tooltip>

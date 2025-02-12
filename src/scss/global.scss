@@ -169,6 +169,11 @@ input {
   z-index: 1 !important;
 }
 
+.custom-font {
+  font-family: "Inter", sans-serif !important;
+  font-weight: bold !important
+}
+
 @media screen and (max-width: 600px) {
   .css-tlc64q-MuiPaper-root-MuiDialog-paper{
     overflow-y: hidden !important;

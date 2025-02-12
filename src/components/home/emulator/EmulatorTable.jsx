@@ -342,19 +342,18 @@ export default function EmulatorTable({
                               style={{
                                 backgroundColor:
                                   row.user === null ? '#E4E5E9' : '#212529',
-                                color: row.user === null ? '#212529' : '#FFFF',
-                                width: '85px'
+                                color: row.user === null ? '#212529' : '#FFFF'
                               }}
                               onClick={() => handleAssignButtonClick(row)}
                             >
-                              <span style={{ fontFamily: '"Inter", sans-serif !important' }}>{row.user === null ? 'ASSIGN' : 'UNASSIGN'}</span>
+                              <span className="custom-font">{row.user === null ? 'ASSIGN' : 'UNASSIGN'}</span>
                             </button>
                           </div>
                           {/* can use for vertical */}
                         </div>
                       </TableCell>
                       {/* status */}
-                      <TableCell id={labelId} scope="row">
+                      <TableCell id={labelId} scope="row" className="custom-font custom-muted-text">
                         {row.status || 'N/A'}
                       </TableCell>
                       {/* serial code */}
@@ -371,16 +370,16 @@ export default function EmulatorTable({
                               placement="top"
                               alignItems="center"
                               display="flex"
-                              fontFamily= '"Inter", sans-serif !important'
+                              className="custom-font"
                             >
                               <div
                                 style={{
                                   textOverflow: 'ellipsis',
                                   overflow: 'hidden',
                                   whiteSpace: 'nowrap',
-                                  maxWidth: '150px',
-                                  fontFamily: '"Inter", sans-serif !important'
+                                  maxWidth: '150px'
                                 }}
+                                className="custom-font"
                               >
                                 {row.emulatorSsid || 'N/A'}
                               </div>
@@ -496,6 +495,7 @@ export default function EmulatorTable({
                           placement="top"
                           alignItems="start"
                           display="flex"
+                          className="custom-font"
                         >
                           <div
                             style={{
@@ -505,6 +505,7 @@ export default function EmulatorTable({
                               maxWidth: '150px',
                               textAlign: 'start'
                             }}
+                            className="custom-font"
                           >
                             {(row.user?.firstName || 'N/A') +
                               ' ' +
@@ -513,7 +514,7 @@ export default function EmulatorTable({
                         </Tooltip>
                       </TableCell>
                       {/* REGISTERED */}
-                      <TableCell align="left">
+                      <TableCell align="left" className="custom-font">
                         {formattedDate || 'N/A'}
                       </TableCell>
                     </TableRow>
