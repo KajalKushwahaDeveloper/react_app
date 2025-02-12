@@ -14,7 +14,7 @@ import {
   stableSort
 } from './stableSort'
 
-import DeleteIcon from '@mui/icons-material/Delete'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import { useStates } from '../../../StateProvider'
@@ -327,22 +327,23 @@ export default function EmulatorTable({
                                 width: '40px',
                                 marginRight: '10px',
                                 borderRadius: '50%',
-                                backgroundColor: '#212529',
-                                color: '#fff'
+                                backgroundColor: '#FFFF',
+                                color: '#212529'
                               }}
                               aria-label="delete"
                               data-bs-toggle="modal"
                               data-bs-target="#myModal"
                               onClick={() => setEmulatorDetails(row)}
                             >
-                              <DeleteIcon fontSize="small" />
+                              <DeleteForeverIcon fontSize="large" />
                             </IconButton>
                             <button
                               className="btn btn-sm"
                               style={{
                                 backgroundColor:
                                   row.user === null ? '#E4E5E9' : '#212529',
-                                color: row.user === null ? '#212529' : '#FFFF'
+                                color: row.user === null ? '#212529' : '#FFFF',
+                                width: '6rem'
                               }}
                               onClick={() => handleAssignButtonClick(row)}
                             >

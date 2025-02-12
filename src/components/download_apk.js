@@ -96,7 +96,7 @@ const DownloadApk = () => {
           </Typography>
           <Button
             variant="contained"
-            className="btn btn-main d-flex flex-column flex-sm-row px-5 custom-font"
+            className="global-font w-40 rounded-2 py-2 fw-medium ms-0"
             startIcon={<GetAppIcon />} // Add the GetAppIcon at the starting of the button
             onClick={handleDownloadFile}
             style={{ marginLeft: '1.2rem', width: '12rem !important', backgroundColor: '#212529' }}
@@ -107,7 +107,7 @@ const DownloadApk = () => {
           </Button>
 
           <button
-            className="btn custom-font"
+            className="global-font w-40 rounded-2 py-2 px-3 fw-medium ms-0"
             onClick={handleCopyUrl}
             style={{
               fontSize: isMobile ? '.7rem' : '.875rem',

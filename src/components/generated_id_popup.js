@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -16,6 +15,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import IconButton from '@mui/material/IconButton'
 import Radio from '@mui/material/Radio'
+import { Button } from 'react-bootstrap'
 import ApiService from '../ApiService'
 import { EMULATOR_CHANGE_SSID_URL, EMULATOR_URL, USER_URL } from '../constants'
 
@@ -194,6 +194,11 @@ const ChangeEmulatorSsidPopup = (props) => {
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        sx={{
+          '& .MuiPaper-root': {
+            borderRadius: '15px' // Adjust the radius as needed
+          }
+        }}
       >
         <BootstrapDialogTitle
           style={{
@@ -201,7 +206,9 @@ const ChangeEmulatorSsidPopup = (props) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            fontWeight: '75px'
+            fontWeight: '75px',
+            width: '24rem',
+            padding: '1rem'
           }}
           id="customized-dialog-title"
           onClose={handleClose}
@@ -211,7 +218,12 @@ const ChangeEmulatorSsidPopup = (props) => {
         <div>
           <DialogContent
             dividers
-            sx={{ display: 'flex', flexDirection: 'column' }}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              borderRadius: '15px',
+              overflow: 'hidden'
+            }}
           >
             <FormControl sx={{ marginTop: '2rem' }}>
               <FormControlLabel
@@ -222,8 +234,14 @@ const ChangeEmulatorSsidPopup = (props) => {
                   />
                 }
                 label="Generate new UUID"
+                sx={{
+                  '& .MuiFormControlLabel-label': {
+                    fontFamily: '"Inter", sans-serif'
+                  }
+                }}
               />
             </FormControl>
+
             <FormControl sx={{ m: 1, margin: '2rem' }}>
               {!generateIdChecked && (
                 <>
@@ -277,12 +295,9 @@ const ChangeEmulatorSsidPopup = (props) => {
               )}
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button
-                  variant="contained"
-                  style={{
-                    width: '2rem',
-                    marginTop: '2em',
-                    backgroundColor: '#141d2b'
-                  }}
+                  variant="dark"
+                  className="global-font w-40 mt-4 rounded-2 py-2 fw-medium ms-0 me-0"
+                  type="submit"
                   onClick={() => handleSubmitChangeSsid()}
                 >
                   Submit

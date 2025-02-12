@@ -64,16 +64,16 @@ $black-color: black;
 
     &:hover {
       background: $active_color;
-      padding: 0.4rem 0.6rem;
+      padding: 0.5rem 0.6rem;
       border-radius: 0.2rem;
     }
   }
 
   .active {
     background: $active_color;
-    padding: 0.4rem 0.5rem;
+    padding: 0.5rem 0.5rem;
     border-radius: 0.2rem;
-    color: white;
+    color: white !important;
   }
 
   .menu-link ul li a {
@@ -83,10 +83,12 @@ $black-color: black;
     font-size: 1.1rem;
   }
 
+  .menu-link ul li a:hover {
+    color: $white-color;
+  }
+
   .menu-link ul li:hover>a {
-    transform-origin: left;
-    opacity: 0.9;
-    transition: 0.5s;
+    color: $white-color;
   }
 
   .social-media {

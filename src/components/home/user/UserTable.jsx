@@ -1,4 +1,4 @@
-import DeleteIcon from '@mui/icons-material/Delete'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import EditIcon from '@mui/icons-material/Edit'
 import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction'
 import { CircularProgress } from '@mui/material'
@@ -363,13 +363,13 @@ export default function UserTable({
                                 width: '40px',
                                 marginRight: '10px',
                                 borderRadius: '50%',
-                                backgroundColor: '#212529',
-                                color: '#fff'
+                                backgroundColor: '#FFFF',
+                                color: '#212529'
                               }}
                               aria-label="edit"
                               onClick={() => handleEditButtonClick(row)}
                             >
-                              <EditIcon fontSize="small" />
+                              <EditIcon fontSize="medium" />
                             </IconButton>
                             <IconButton
                               size="small"
@@ -378,16 +378,16 @@ export default function UserTable({
                                 width: '40px',
                                 marginRight: '10px',
                                 borderRadius: '50%',
-                                backgroundColor: '#212529',
+                                backgroundColor: '#FFFF',
                                 cursor: 'pointer',
-                                color: '#fff'
+                                color: '#212529'
                               }}
                               aria-label="delete"
                               data-bs-toggle="modal"
                               data-bs-target="#myUserModal"
                               onClick={() => setUserDetails(row)}
                             >
-                              <DeleteIcon fontSize="small" />
+                              <DeleteForeverIcon fontSize="large" />
                             </IconButton>
                             <button
                               className="btn btn-sm custom-font"

@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
 import React, { useEffect, useState } from 'react'
+import { Button } from 'react-bootstrap'
 import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form'
 import 'react-phone-number-input/style.css'
 import ApiService from '../ApiService'
@@ -130,7 +131,14 @@ const PopUpUser = ({
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <Box sx={{ ...style, width: 400 }}>
+        <Box
+          sx={{
+            ...style,
+            width: 400,
+            borderRadius: '15px',
+            overflow: 'hidden'
+          }}
+        >
           <IconButton
             sx={{
               position: 'absolute',
@@ -145,10 +153,11 @@ const PopUpUser = ({
           <form onSubmit={handleSubmit(handleSubmitData)}>
             <h1
               style={{
-                marginBottom: '1.5rem',
+                marginBottom: '0.5rem',
                 fontSize: '1.5rem',
                 fontWeight: '600'
               }}
+              className="global-font"
             >
               {userToEdit === null ? 'Add User' : 'Edit User'}
             </h1>
@@ -158,7 +167,7 @@ const PopUpUser = ({
               id="firstname"
               name="firstname"
               placeholder="Enter your first name"
-              className='editAddUserFieldsAlign'
+              className="editAddUserFieldsAlign global-font"
               {...register('firstname', {
                 required: {
                   value: true,
@@ -181,7 +190,7 @@ const PopUpUser = ({
               id="lastname"
               name="lastname"
               placeholder="Enter your last name"
-              className='editAddUserFieldsAlign'
+              className="editAddUserFieldsAlign global-font"
               {...register('lastname', {
                 required: {
                   value: true,
@@ -204,7 +213,7 @@ const PopUpUser = ({
               id="email"
               name="email"
               placeholder="Enter your email"
-              className='editAddUserFieldsAlign'
+              className="editAddUserFieldsAlign global-font"
               {...register('email', {
                 required: {
                   value: true,
@@ -249,14 +258,18 @@ const PopUpUser = ({
                 type="password"
                 id="password"
                 placeholder="password (empty if unchanged)"
-                className='editAddUserFieldsAlign'
+                className="editAddUserFieldsAlign"
                 value={password}
                 onChange={handleEditPassword}
               />
             )}
-            <button className="login_button" type="submit">
+            <Button
+              variant="dark"
+              className="global-font w-100 mb-1 rounded-2 py-2 fw-medium ms-0"
+              type="submit"
+            >
               {userToEdit === null ? 'Add User' : 'Edit User'}
-            </button>
+            </Button>
             {/* {error && <p className="error">{error}</p>} */}
           </form>
         </Box>
