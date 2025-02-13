@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 
+import { FaCheckCircle } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { EMULATOR_URL } from './constants.js'
 import useFetch from './hooks/useFetch'
@@ -44,7 +45,11 @@ export const StateProvider = ({ children }) => {
   const [hoveredMarker, setHoveredMarker] = useState(null)
 
   const showToast = useCallback((message, type) => {
-    toast[type](message) // Use the 'type' argument to determine the toast type
+    // toast[type](message) // Use the 'type' argument to determine the toast type
+    toast[type](message, {
+      icon: <FaCheckCircle style={{ color: '#212529' }} />,
+      progressStyle: { backgroundColor: '#212529' }
+    })
   }, [])
 
   return (

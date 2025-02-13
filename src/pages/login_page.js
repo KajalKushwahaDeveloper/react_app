@@ -3,6 +3,7 @@ import { Button, Card, Container, Form } from 'react-bootstrap'
 import { Link, Navigate } from 'react-router-dom'
 import ForgotPasswordModal from '../components/location/map-components/ForgotPasswordModal'
 import '../scss/login.scss'
+import { useStates } from '../StateProvider'
 import { useAuth } from './hooks/useAuth'
 
 const LoginPage = () => {
@@ -12,6 +13,7 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [responseError, setResponseError] = useState('')
+  const { showToast } = useStates()
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] =
     useState(false)
   const handleEmailChange = (e) => {
@@ -39,6 +41,8 @@ const LoginPage = () => {
         })
         if (!data.success) {
           setResponseError(data.error)
+        } else {
+          showToast('Login Sucessfully', 'success')
         }
       } catch (error) {
         console.error('Error occurred during login:', error)

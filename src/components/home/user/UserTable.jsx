@@ -158,6 +158,10 @@ export default function UserTable({
     })
     if (!response.ok || response.status !== 200) {
       return { success: false, error: 'Failed to add user' }
+    } else {
+      status === 'ENABLED'
+        ? showToast('User Enabled Successfully', 'success')
+        : showToast('User Disabled Successfully', 'success')
     }
     const updatedData = userData.map((item) => {
       if (item.id === id) {
@@ -505,7 +509,13 @@ export default function UserTable({
                 type="button"
                 className="btn"
                 data-bs-dismiss="modal"
-                style={{ backgroundColor: '#E4E5E9', color: '#000', border: 'none', width: '65px', height: '45px' }}
+                style={{
+                  backgroundColor: '#E4E5E9',
+                  color: '#000',
+                  border: 'none',
+                  width: '65px',
+                  height: '45px'
+                }}
               >
                 Close
               </button>

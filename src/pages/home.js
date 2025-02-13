@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { FaCheckCircle } from 'react-icons/fa'
 import { Navigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -46,7 +47,10 @@ const Home = () => {
   } = useForm()
 
   const showToast = (message, type) => {
-    toast[type](message) // Use the 'type' argument to determine the toast type
+    toast[type](message, {
+      icon: <FaCheckCircle style={{ color: '#212529' }} />,
+      progressStyle: { backgroundColor: '#212529' }
+    })
   }
 
   const handleOpen = () => {

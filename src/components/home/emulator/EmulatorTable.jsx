@@ -198,14 +198,14 @@ export default function EmulatorTable({
       )
 
       if (success) {
-        showToast('emulator deleted', 'success')
+        showToast('Emulator deleted', 'success')
         const updatedData = totalEmulators.filter(
           (item) => item.emulatorSsid !== emulator.emulatorSsid
         )
         useEmulatorStore.getState().updateEmulators(updatedData)
         fetchData()
       } else {
-        showToast('emulator not deleted', 'error')
+        showToast('Emulator not deleted', 'error')
       }
     }
   }
