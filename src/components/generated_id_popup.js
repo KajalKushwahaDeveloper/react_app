@@ -233,6 +233,15 @@ const ChangeEmulatorSsidPopup = (props) => {
                   <Checkbox
                     checked={generateIdChecked}
                     onChange={handleGenerateIdChange}
+                    sx={{
+                      color: '#212529', // Unchecked state color
+                      '&.Mui-checked': {
+                        color: '#212529' // Check color
+                      },
+                      '& .MuiSvgIcon-root': {
+                        fill: '#212529' // Fill the check icon with the desired color
+                      }
+                    }}
                   />
                 }
                 label="Generate new UUID"

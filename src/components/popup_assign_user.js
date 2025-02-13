@@ -102,7 +102,7 @@ const UserAssignDropDown = (props) => {
         } else {
           handleAssignedUserToEmulator(success, error, null)
         }
-        showToast('User Added', 'success')
+        showToast('User Assign', 'success')
       } else {
         showToast(error || 'Failed to add user', 'error')
       }
