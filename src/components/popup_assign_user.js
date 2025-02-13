@@ -66,11 +66,11 @@ const MenuProps = {
         background: '#ffff'
       },
       '&::-webkit-scrollbar-thumb': {
-        background: '#141d2b',
+        background: '#212529',
         borderRadius: '4px'
       },
       '&::-webkit-scrollbar-thumb:hover': {
-        background: '#141d2b'
+        background: '#212529'
       }
     }
   }
@@ -178,6 +178,9 @@ const UserAssignDropDown = (props) => {
         onClose={close}
         aria-labelledby="customized-dialog-title"
         open={open}
+        sx={{
+          '& .MuiPaper-root': { borderRadius: '10px' } // Applies radius to modal container
+        }}
       >
         <BootstrapDialogTitle
           style={{
@@ -187,18 +190,19 @@ const UserAssignDropDown = (props) => {
             fontWeight: '100px'
           }}
           id="customized-dialog-title"
+          className="global-font"
           onClose={close}
         >
-          Select User:
+          Select User
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <FormControl sx={{ m: 1, width: 300, margin: '2rem' }}>
+          <FormControl sx={{ m: 1, width: 300, margin: '2rem', padding: 0 }}>
             <InputLabel
               id="demo-multiple-name-label"
               style={{ borderRadius: '2rem' }}
               sx={{
-                color: '#141d2b', // Default label color
-                '&.Mui-focused': { color: '#141d2b' } // Keep color when focused
+                color: '#212529',
+                '&.Mui-focused': { color: '#212529' }
               }}
             >
               Users
@@ -208,19 +212,22 @@ const UserAssignDropDown = (props) => {
               id="demo-multiple-name"
               value={userName}
               onChange={handleChange}
-              input={<OutlinedInput label="Name"
-                sx={{
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#ccc' // Default border color
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#141d2b' // Border color on hover
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#141d2b' // Border color on focus (click)
-                  }
-                }}
-              />}
+              input={
+                <OutlinedInput
+                  label="Name"
+                  sx={{
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#ccc' // Default border color
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#212529' // Border color on hover
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#212529' // Border color on focus (click)
+                    }
+                  }}
+                />
+              }
               MenuProps={MenuProps}
             >
               {users
@@ -234,7 +241,11 @@ const UserAssignDropDown = (props) => {
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button
                 variant="contained"
-                style={{ width: '2rem', marginTop: '2em', backgroundColor: '#141d2b' }}
+                style={{
+                  width: '2rem',
+                  marginTop: '2em',
+                  backgroundColor: '#212529'
+                }}
                 onClick={() => handleUserSelect()}
               >
                 Add

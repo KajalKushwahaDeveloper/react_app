@@ -396,7 +396,10 @@ export default function UserTable({
                                   row.status === 'ENABLED'
                                     ? '#212529'
                                     : '#E4E5E9',
-                                color: row.status === 'ENABLED' ? '#FFFF' : '#212529',
+                                color:
+                                  row.status === 'ENABLED'
+                                    ? '#FFFF'
+                                    : '#212529',
                                 height: '40px',
                                 width: '7rem'
                               }}
@@ -410,14 +413,21 @@ export default function UserTable({
                           {/* can use for vertical */}
                         </div>
                       </TableCell>
-                      <TableCell id={labelId} scope="row" className='custom-font'>
+                      <TableCell
+                        id={labelId}
+                        scope="row"
+                        className="custom-font"
+                      >
                         {row.firstName + ' ' + row.lastName || 'N/A'}
                       </TableCell>
-                      <TableCell align="left" className='custom-font'> {row.email || 'N/A'}</TableCell>
-                      <TableCell align="left" className='custom-font'>
+                      <TableCell align="left" className="custom-font">
+                        {' '}
+                        {row.email || 'N/A'}
+                      </TableCell>
+                      <TableCell align="left" className="custom-font">
                         {row.telephone || 'N/A'}
                       </TableCell>
-                      <TableCell align="left" className='custom-font'>
+                      <TableCell align="left" className="custom-font">
                         {/** print online emulator, and if greater than 0, draw icon after number */}
                         {onlineEmulator > 0 ? onlineEmulator : 0}
                         {onlineEmulator > 0 ? (
@@ -427,7 +437,7 @@ export default function UserTable({
                         )}
                         /{allEmulator}
                       </TableCell>
-                      <TableCell align="left" className='custom-font'>
+                      <TableCell align="left" className="custom-font">
                         {formattedDate || 'N/A'}
                       </TableCell>
                     </TableRow>
@@ -462,7 +472,7 @@ export default function UserTable({
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title">Delete User</h4>
+              <h4 className="modal-title global-font">Delete User</h4>
               <button
                 type="button"
                 className="btn-close"
@@ -470,7 +480,7 @@ export default function UserTable({
               ></button>
             </div>
 
-            <div className="modal-body">
+            <div className="modal-body global-font">
               Are you sure you want to delete this user:{' '}
               {userDetails?.firstName + ' ' + userDetails?.lastName}?
             </div>
@@ -480,9 +490,11 @@ export default function UserTable({
                 type="button"
                 data-bs-dismiss="modal"
                 style={{
-                  backgroundColor: '#141d2b',
+                  backgroundColor: '#E4E5E9',
                   height: 38,
-                  width: 60
+                  width: 60,
+                  color: '#000',
+                  border: 'none'
                 }}
                 onClick={() => handleDeleteButtonClick(userDetails)}
               >
@@ -490,8 +502,9 @@ export default function UserTable({
               </button>
               <button
                 type="button"
-                className="btn btn-danger"
+                className="btn"
                 data-bs-dismiss="modal"
+                style={{ backgroundColor: '#212529', color: '#FFFF' }}
               >
                 Close
               </button>

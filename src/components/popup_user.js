@@ -135,7 +135,7 @@ const PopUpUser = ({
           sx={{
             ...style,
             width: 400,
-            borderRadius: '15px',
+            borderRadius: '12px',
             overflow: 'hidden'
           }}
         >

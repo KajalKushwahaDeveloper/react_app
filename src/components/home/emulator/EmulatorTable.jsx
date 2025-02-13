@@ -551,7 +551,7 @@ export default function EmulatorTable({
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title custom-font">Delete Emulator</h4>
+              <h4 className="modal-title global-font">Delete Emulator</h4>
               <button
                 type="button"
                 className="btn-close"
@@ -559,17 +559,16 @@ export default function EmulatorTable({
               ></button>
             </div>
 
-            <div className="modal-body custom-font">
+            <div className="modal-body global-font">
               Are you sure you want to delete this emulator:{' '}
               {emulatorDetails?.emulatorSsid}?
             </div>
 
-            <div className="modal-footer">
-
+            <div className="modal-footer d-flex">
               <Button
-                variant="dark"
+                style={{ backgroundColor: '#E4E5E9', color: '#000', border: 'none', width: '59.5px', height: '45px' }}
                 data-bs-dismiss="modal"
-                className="global-font w-45 rounded-2 py-2 fw-medium ms-0"
+                className="global-font rounded-2 py-2 fw-medium ms-0"
                 type="submit"
                 onClick={() => handleDeleteButtonClick(emulatorDetails)}
               >
@@ -579,7 +578,7 @@ export default function EmulatorTable({
               <Button
                 variant="dark"
                 data-bs-dismiss="modal"
-                className="global-font w-45 rounded-2 py-2 fw-medium ms-0"
+                className="global-font w-45 rounded-2 py-2 fw-medium ms-1"
               >
                 Close
               </Button>

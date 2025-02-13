@@ -71,11 +71,11 @@ const MenuProps = {
         background: '#ffff'
       },
       '&::-webkit-scrollbar-thumb': {
-        background: '#141d2b',
+        background: '#212529',
         borderRadius: '4px'
       },
       '&::-webkit-scrollbar-thumb:hover': {
-        background: '#141d2b'
+        background: '#212529'
       }
     }
   }
@@ -196,7 +196,7 @@ const ChangeEmulatorSsidPopup = (props) => {
         open={open}
         sx={{
           '& .MuiPaper-root': {
-            borderRadius: '15px' // Adjust the radius as needed
+            borderRadius: '12px' // Adjust the radius as needed
           }
         }}
       >
@@ -249,8 +249,8 @@ const ChangeEmulatorSsidPopup = (props) => {
                     id="demo-multiple-name-label"
                     style={{ borderRadius: '2rem' }}
                     sx={{
-                      color: '#141d2b', // Default label color
-                      '&.Mui-focused': { color: '#141d2b' } // Keep color when focused
+                      color: '#212529', // Default label color
+                      '&.Mui-focused': { color: '#212529' } // Keep color when focused
                     }}
                   >
                     Id
@@ -267,10 +267,10 @@ const ChangeEmulatorSsidPopup = (props) => {
                             borderColor: '#ccc' // Default border color
                           },
                           '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: '#141d2b' // Border color on hover
+                            borderColor: '#212529' // Border color on hover
                           },
                           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderColor: '#141d2b' // Border color when focused (clicked)
+                            borderColor: '#212529' // Border color when focused (clicked)
                           }
                         }}
                       />
