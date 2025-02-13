@@ -221,8 +221,10 @@ const ChangeEmulatorSsidPopup = (props) => {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              borderRadius: '15px',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              '& .MuiMenuItem-root.Mui-selected': {
+                backgroundColor: '#FFFF'
+              }
             }}
           >
             <FormControl sx={{ marginTop: '2rem' }}>
@@ -263,6 +265,7 @@ const ChangeEmulatorSsidPopup = (props) => {
                       <OutlinedInput
                         label="Name"
                         sx={{
+                          backgroundColor: 'white',
                           '& .MuiOutlinedInput-notchedOutline': {
                             borderColor: '#ccc' // Default border color
                           },

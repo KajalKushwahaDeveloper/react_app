@@ -548,7 +548,7 @@ export default function EmulatorTable({
 
       {/* Delete Emulator Modal */}
       <div className="modal" id="myModal">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h4 className="modal-title global-font">Delete Emulator</h4>
@@ -566,7 +566,7 @@ export default function EmulatorTable({
 
             <div className="modal-footer d-flex">
               <Button
-                style={{ backgroundColor: '#E4E5E9', color: '#000', border: 'none', width: '59.5px', height: '45px' }}
+                style={{ backgroundColor: '#212529', color: '#ffff', border: 'none', width: '60px', height: '44.5px' }}
                 data-bs-dismiss="modal"
                 className="global-font rounded-2 py-2 fw-medium ms-0"
                 type="submit"
@@ -576,9 +576,9 @@ export default function EmulatorTable({
               </Button>
 
               <Button
-                variant="dark"
+                style={{ backgroundColor: '#E4E5E9', color: '#000', border: 'none', width: '65px', height: '45px' }}
                 data-bs-dismiss="modal"
-                className="global-font w-45 rounded-2 py-2 fw-medium ms-1"
+                className="global-font w-45 rounded-2 fw-medium ms-1"
               >
                 Close
               </Button>

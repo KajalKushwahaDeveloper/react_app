@@ -469,7 +469,7 @@ export default function UserTable({
 
       {/* Delete User Modal */}
       <div className="modal" id="myUserModal">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
               <h4 className="modal-title global-font">Delete User</h4>
@@ -490,11 +490,12 @@ export default function UserTable({
                 type="button"
                 data-bs-dismiss="modal"
                 style={{
-                  backgroundColor: '#E4E5E9',
-                  height: 38,
+                  backgroundColor: '#212529',
+                  height: 42,
                   width: 60,
-                  color: '#000',
-                  border: 'none'
+                  color: '#FFFF',
+                  border: 'none',
+                  borderRadius: '5px'
                 }}
                 onClick={() => handleDeleteButtonClick(userDetails)}
               >
@@ -504,7 +505,7 @@ export default function UserTable({
                 type="button"
                 className="btn"
                 data-bs-dismiss="modal"
-                style={{ backgroundColor: '#212529', color: '#FFFF' }}
+                style={{ backgroundColor: '#E4E5E9', color: '#000', border: 'none', width: '65px', height: '45px' }}
               >
                 Close
               </button>
