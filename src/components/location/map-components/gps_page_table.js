@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useEffect, useState } from 'react'
-import { FiSend } from "react-icons/fi"
+import { FiSend } from 'react-icons/fi'
 
 import SearchIcon from '@mui/icons-material/Search'
 import {
@@ -351,7 +351,7 @@ const GpsTable = () => {
               minHeight: isMobile ? 'auto' : '55px',
               maxHeight: isMobile ? 'auto' : '55px',
               margin: '0',
-              marginBottom: '15px'
+              marginBottom: '12px'
             }}
             placeholder="Search by Number/Note/Ssid"
             value={searchInput}
@@ -361,7 +361,11 @@ const GpsTable = () => {
                 <InputAdornment position="start">
                   <SearchIcon />
                 </InputAdornment>
-              )
+              ),
+              sx: {
+                borderRadius: '10px', // Ensures rounded corners inside InputProps
+                backgroundColor: '#fff', // Optional: Keeps background clean
+              }
             }}
           />
           <OptimizedFilter
@@ -382,13 +386,21 @@ const GpsTable = () => {
             predicateArg={mobileInput || searchInput}
             render={(emulators) => (
               // Render filtered items...
-              <table style={{ width: '100%' }}>
+              <table
+                style={{
+                  width: '100%',
+                  borderCollapse: 'separate',
+                  borderSpacing: '0px', // Removes any gaps
+                  outline: 'none', // Ensures no table outline
+                  border: 'none' // Removes table border
+                }}
+              >
                 <tbody>
                   {(rowsPerPage > 0
                     ? emulators.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
                     : emulators
                   )?.map((emulator, index) => (
                     <tr
@@ -397,7 +409,8 @@ const GpsTable = () => {
                         height: isMobile ? 'auto' : '100px',
                         minHeight: isMobile ? 'auto' : '100px',
                         maxHeight: isMobile ? 'auto' : '100px',
-                        border: '2px solid #E6E6E6'
+                        border: '2px solid #E6E6E6',
+                        borderRadius: '20px'
                       }}
                       className={`${getBlinkClass(
                         emulator,
@@ -425,135 +438,162 @@ const GpsTable = () => {
                           textAlign: 'center'
                         }}
                       > */}
-                        {/* Restart/Reset Button */}
-                        {/* <RestartAltIcon
+                      {/* Restart/Reset Button */}
+                      {/* <RestartAltIcon
                           fontSize="small"
                           onClick={() => handleRestartButtonClick(emulator)}
                         /> */}
                       {/* </td> */}
 
-                      <div className='emulator-gps'>
-                        <td>
-                          <FiSend size={24} color="#28A745" fill="#28A745" />
-                        </td>
-                        <td className='alignEmuName'>
-                          { emulator?.user ? emulator?.user?.firstName + ' ' + emulator?.user?.lastName : "NA"}
-                        </td>
-                      </div>
-
-                      <div className='emulator-gps-sub-details'>
-                        {/* TELEPHONE */}
-                        <td>
-                          <div
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center'
-                            }}
-                          >
-                            {console.log('emulatorTest:', emulator)}
-                            <Tooltip
-                              title={emulator?.emulatorSsid || 'N/A'}
-                              placement="top"
-                            >
-                              <div
-                                style={{ display: 'flex', alignItems: 'center' }}
-                              >
-                                <div className='alignSsid'>{emulator?.emulatorSsid || 'N/A'}</div>
-                                {/* Icons */}
-                                <div style={{ display: 'flex' }}>
-                                  {/* calling icon */}
-                                  {PhoneComponent(
-                                    devices,
-                                    emulator,
-                                    handleCallIconClicked
-                                  )}
-                                  {/* message icon */}
-                                  <IconButton
-                                    size="small"
-                                    disabled={!emulator?.telephone}
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      handleMessageIconClicked(emulator)
-                                    }}
-                                  >
-                                    <MessageRoundedIcon fontSize="small" />
-                                  </IconButton>
-
-                                  {/* message icon */}
-                                  <IconButton
-                                    size="small"
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      handleHistoryButtonClick(emulator)
-                                    }}
-                                  >
-                                    <HistoryIcon fontSize="small" />
-                                  </IconButton>
-
-                                  <IconButton
-                                    size="small"
-                                    onClick={() => handleRestartButtonClick(emulator)}
-                                  >
-                                    <RestartAltIcon
-                                      fontSize="small"
-                                    />
-                                  </IconButton>
-                                </div>
-                              </div>
-                            </Tooltip>
-                            {/* custom notes */}
-                            {/* <div style={{ marginBottom: '0.2rem' }}>
-                              <CustomNoteComponent emulator={emulator} />
-                            </div> */}
-                          </div>
-                        </td>
-                        <td align="right">
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              maxWidth: 85,
-                              marginBottom: '7px'
-                            }}
-                          >
-                            {/* Trip Status Action */}
-                            {emulator.startLat !== null &&
-                              emulator.startLat !== undefined &&
-                              emulator.startLat !== 0 && (
-                                <IconButton
-                                  size="small"
-                                  onClick={() =>
-                                    handleActionButtonClick(emulator)
-                                  }
-                                >
-                                  <Tooltip title={emulator.tripStatus}>
-                                    <div style={{ width: 20, height: 20 }}>
-                                      {emulator.tripStatus === 'RUNNING' && (
-                                        <PauseCircleOutlineIcon fontSize="small" style={{ marginBottom: '6px' }} />
-                                      )}
-                                      {emulator.tripStatus === 'PAUSED' && (
-                                        <PlayCircleOutlineIcon fontSize="small" style={{ marginBottom: '6px' }} />
-                                      )}
-                                      {emulator.tripStatus === 'STOP' && (
-                                        <PlayCircleOutlineIcon fontSize="small" />
-                                      )}
-                                      {emulator.tripStatus === 'RESTING' && (
-                                        <PlayCircleOutlineIcon fontSize="small" />
-                                      )}
-                                      {emulator.tripStatus === 'FINISHED' && (
-                                        <CheckCircleOutlineIcon fontSize="small" />
-                                      )}
-                                    </div>
-                                  </Tooltip>
-                                </IconButton>
+                      <td
+                        style={{
+                          borderRadius: '10px',
+                          border: '1px solid #E6E6E6'
+                        }}
+                      >
+                        <div className="emulator-gps">
+                          <td>
+                            {emulator.status === 'ACTIVE' ? (
+                              <FiSend size={24} color="#28A745" fill="#28A745" />
+                            ): emulator.status === 'INACTIVE' ? (
+                              <FiSend size={24} color="#FFA500" fill="#FFA500" />
+                            ) : (
+                              <FiSend size={24} color="#ff4d4d" fill="#ff4d4d" />
                             )}
-                          </div>
-                        </td>
-                      </div>
+                          </td>
+                          <td className="alignEmuName">
+                            {emulator?.user
+                              ? emulator?.user?.firstName +
+                                ' ' +
+                                emulator?.user?.lastName
+                              : 'NA'}
+                          </td>
+                        </div>
 
+                        <div className="emulator-gps-sub-details">
+                          {/* TELEPHONE */}
+                          <td>
+                            <div
+                              style={{
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center'
+                              }}
+                            >
+                              {console.log('emulatorTest:', emulator)}
+                              <Tooltip
+                                title={emulator?.emulatorSsid || 'N/A'}
+                                placement="top"
+                              >
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                  }}
+                                >
+                                  <div className="alignSsid">
+                                    {emulator?.emulatorSsid || 'N/A'}
+                                  </div>
+                                  {/* Icons */}
+                                  <div style={{ display: 'flex' }}>
+                                    {/* calling icon */}
+                                    {PhoneComponent(
+                                      devices,
+                                      emulator,
+                                      handleCallIconClicked
+                                    )}
+                                    {/* message icon */}
+                                    <IconButton
+                                      size="small"
+                                      disabled={!emulator?.telephone}
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        handleMessageIconClicked(emulator)
+                                      }}
+                                    >
+                                      <MessageRoundedIcon fontSize="small" />
+                                    </IconButton>
+
+                                    {/* message icon */}
+                                    <IconButton
+                                      size="small"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        handleHistoryButtonClick(emulator)
+                                      }}
+                                    >
+                                      <HistoryIcon fontSize="small" />
+                                    </IconButton>
+
+                                    <IconButton
+                                      size="small"
+                                      onClick={() =>
+                                        handleRestartButtonClick(emulator)
+                                      }
+                                    >
+                                      <RestartAltIcon fontSize="small" />
+                                    </IconButton>
+                                  </div>
+                                </div>
+                              </Tooltip>
+                              {/* custom notes */}
+                              {/* <div style={{ marginBottom: '0.2rem' }}>
+                                <CustomNoteComponent emulator={emulator} />
+                              </div> */}
+                            </div>
+                          </td>
+                          <td align="right">
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                maxWidth: 85,
+                                marginBottom: '7px'
+                              }}
+                            >
+                              {/* Trip Status Action */}
+                              {emulator.startLat !== null &&
+                                emulator.startLat !== undefined &&
+                                emulator.startLat !== 0 && (
+                                  <IconButton
+                                    size="small"
+                                    onClick={() =>
+                                      handleActionButtonClick(emulator)
+                                    }
+                                  >
+                                    <Tooltip title={emulator.tripStatus}>
+                                      <div style={{ width: 20, height: 20 }}>
+                                        {emulator.tripStatus === 'RUNNING' && (
+                                          <PauseCircleOutlineIcon
+                                            fontSize="small"
+                                            style={{ marginBottom: '6px' }}
+                                          />
+                                        )}
+                                        {emulator.tripStatus === 'PAUSED' && (
+                                          <PlayCircleOutlineIcon
+                                            fontSize="small"
+                                            style={{ marginBottom: '6px' }}
+                                          />
+                                        )}
+                                        {emulator.tripStatus === 'STOP' && (
+                                          <PlayCircleOutlineIcon fontSize="small" />
+                                        )}
+                                        {emulator.tripStatus === 'RESTING' && (
+                                          <PlayCircleOutlineIcon fontSize="small" />
+                                        )}
+                                        {emulator.tripStatus === 'FINISHED' && (
+                                          <CheckCircleOutlineIcon fontSize="small" />
+                                        )}
+                                      </div>
+                                    </Tooltip>
+                                  </IconButton>
+                                )}
+                            </div>
+                          </td>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -595,7 +635,7 @@ const GpsTable = () => {
           backgroundColor: '#fff',
           zIndex: 2,
           height: '50px',
-          width: isMobile ? '100vw' : '320px'
+          width: isMobile ? '100vw' : '370px',
         }}
       />
     </div>
@@ -631,7 +671,8 @@ const CustomTablePagination = styled(TablePagination)(
     align-items: center;
     // justify-content:space-around;
     gap: 0px;
-    margin: 0 5px;
+    // margin: 0 5px;
+    margin: 0 -65px;
   }
   
   /* Update the select label styles */

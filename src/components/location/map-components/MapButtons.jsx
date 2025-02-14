@@ -401,6 +401,7 @@ const MapButtons = (props) => {
             // right: 190,
             left: 10,
             justifyContent: 'center',
+            backgroundColor: '#212529',
             width: '8rem'
           }}
           onClick={handleSetPositionClick}
@@ -419,7 +420,8 @@ const MapButtons = (props) => {
             top: isMobile ? '100px' : '135px',
             // right: 70,
             left: 145,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            backgroundColor: '#212529'
           }}
           onClick={handleCreateTripButton}
         >
@@ -438,7 +440,7 @@ const MapButtons = (props) => {
             // right: 70,
             left: 344,
             justifyContent: 'center',
-            backgroundColor: '#f44336',
+            backgroundColor: '#212529',
             width: '8rem'
           }}
           onClick={handleCancelTripClick}
@@ -456,7 +458,8 @@ const MapButtons = (props) => {
             top: isMobile ? '100px' : '135px',
             // right: 0,
             left: 269,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            backgroundColor: '#212529'
           }}
           onClick={props?.handleButtonClick}
         >
