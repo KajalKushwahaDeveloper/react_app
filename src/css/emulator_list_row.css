@@ -63,7 +63,20 @@
 .alignSsid {
   text-overflow: ellipsis;
   overflow: hidden; 
-  width: 160px; 
+  width: 125px; 
   height: 1.2em; 
   white-space: nowrap;
+}
+
+.emulator-gps {
+  padding: 10px 0px 0px 10px;
+  display: flex;
+}
+
+.emulator-gps-sub-details {
+  padding: 0px 0px 0px 44px;
+}
+
+.alignEmuName {
+  margin-left: 7px;
 }
